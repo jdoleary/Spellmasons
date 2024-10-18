@@ -12,6 +12,7 @@ import { easeOutCubic } from '../jmath/Easing';
 import { isPickup } from '../entity/Pickup';
 import { HasSpace } from '../entity/Type';
 import filter from '../graphics/shaders/unusued';
+import Underworld from '../Underworld';
 
 const id = 'Connect';
 const numberOfTargetsPerQuantity = 2;
@@ -35,10 +36,9 @@ const spell: Spell = {
       // mutates state.targetedUnits as it iterates.  Otherwise it will continue to loop as it grows
       const targets = getCurrentTargets(state);
       const length = targets.length;
-      const animationPromises = [];
+      const linkGroups: AnimateConnectLinks[][] = [];
       for (let i = 0; i < length; i++) {
         const target = targets[i];
-        let animationPromise = Promise.resolve();
         if (target) {
           const filterFn = (x: any) => {
             if (Unit.isUnit(x) && Unit.isUnit(target)) {
@@ -79,24 +79,13 @@ const spell: Spell = {
               drawPredictionLine(chained_entity.chainSource, chained_entity.entity);
             });
           } else {
-            for (let { chainSource, entity } of chained) {
-              playSFXKey('targeting');
-              animationPromise = animationPromise.then(() => animate(chainSource, [entity]));
-            }
-            // Draw all final circles for a moment before casting
-            animationPromise = animationPromise.then(() => animate({ x: 0, y: 0 }, []));
-            animationPromises.push(animationPromise);
+            linkGroups.push(chained.map(x => ({ from: x.chainSource, targets: [{ to: x.entity, playedSound: false }] })));
           }
           // Update effectState targets
           chained.forEach(u => addTarget(u.entity, state, underworld, prediction))
         }
       }
-      await Promise.all(animationPromises).then(() => {
-        // Only clear graphics once all lines are done animating
-        if (!prediction) {
-          globalThis.predictionGraphics?.clear();
-        }
-      });
+      await animate(linkGroups, underworld, prediction);
 
       return state;
     },
@@ -183,52 +172,85 @@ export function getNextConnectingEntities(
   return connected;
 }
 
-async function animate(pos: Vec2, newTargets: Vec2[]) {
-  if (globalThis.headless) {
+const timeoutMsAnimation = 2000;
+async function animate(links: AnimateConnectLinks[][], underworld: Underworld, prediction: boolean) {
+  if (globalThis.headless || prediction) {
     // Animations do not occur on headless, so resolve immediately or else it
     // will just waste cycles on the server
     return Promise.resolve();
   }
-  const iterations = 100;
-  const millisBetweenIterations = 3;
-  let playedSound = false;
-  // "iterations + 10" gives it a little extra time so it doesn't timeout right when the animation would finish on time
-  return raceTimeout(millisBetweenIterations * (iterations + 10), 'animatedConnect', new Promise<void>(resolve => {
-    for (let i = 0; i < iterations; i++) {
-
-      setTimeout(() => {
-        if (globalThis.predictionGraphics) {
-          // globalThis.predictionGraphics.clear();
-          globalThis.predictionGraphics.lineStyle(2, colors.targetingSpellGreen, 1.0);
-          // iterations - 10 allows the lerp value to stay over 1 for a time so that it will animate the final
-          // select circle
-          // ---
-          // between 0 and 1;
-          const proportionComplete = easeOutCubic((i + 1) / (iterations - 10));
-          newTargets.forEach(target => {
-
-            globalThis.predictionGraphics?.moveTo(pos.x, pos.y);
-            const dist = distance(pos, target)
-            const edgeOfCircle = add(target, math.similarTriangles(pos.x - target.x, pos.y - target.y, dist, config.COLLISION_MESH_RADIUS));
-            const pointApproachingTarget = add(pos, math.similarTriangles(edgeOfCircle.x - pos.x, edgeOfCircle.y - pos.y, dist, dist * Math.min(1, proportionComplete)));
-            globalThis.predictionGraphics?.lineTo(pointApproachingTarget.x, pointApproachingTarget.y);
+  if (links.length == 0) {
+    // Prevent this function from running if there is nothing to animate
+    return Promise.resolve();
+  }
+  // Keep track of which entities have been targeted so far for the sake
+  // of making a new sfx when a new entity gets targeted
+  const entitiesTargeted: HasSpace[] = [];
+  playSFXKey('targeting');
+  return raceTimeout(timeoutMsAnimation, 'animatedConnect', new Promise<void>(resolve => {
+    animateFrame(links, Date.now(), entitiesTargeted, underworld, resolve, prediction)();
+  }));
+}
+interface AnimateConnectLinks {
+  from: Vec2;
+  targets: { to: Vec2, playedSound: boolean }[];
+}
+const millisToGrow = 1000;
+// Smaller circle is more asethetic for connect since the line grows from one circle's edge to another
+const circleRadius = config.COLLISION_MESH_RADIUS / 2;
+function animateFrame(linkGroups: AnimateConnectLinks[][], startTime: number, entitiesTargeted: HasSpace[], underworld: Underworld, resolve: (value: void | PromiseLike<void>) => void, prediction: boolean) {
+  return function animateFrameInner() {
+    if (globalThis.headless || prediction) {
+      resolve();
+      return;
+    }
+    if (globalThis.predictionGraphics) {
+      globalThis.predictionGraphics.clear();
+      globalThis.predictionGraphics.lineStyle(2, colors.targetingSpellGreen, 1.0)
+      globalThis.predictionGraphics.beginFill(colors.targetingSpellGreen, 0.2);
+      const now = Date.now();
+      const timeDiff = now - startTime;
+      for (let links of linkGroups) {
+        for (let i = 0; i < links.length; i++) {
+          const link = links[i];
+          if (!link) {
+            continue;
+          }
+          const { from, targets } = link;
+          const proportionComplete = math.lerpSegmented(0, 1, timeDiff / millisToGrow, i, links.length);
+          for (let target of targets) {
+            if (proportionComplete === 0) {
+              continue;
+            }
+            const { to } = target;
+            const dist = distance(from, to)
+            const edgeOfStartCircle = add(from, math.similarTriangles(to.x - from.x, to.y - from.y, dist, circleRadius));
+            globalThis.predictionGraphics.moveTo(edgeOfStartCircle.x, edgeOfStartCircle.y);
+            const edgeOfCircle = add(to, math.similarTriangles(from.x - to.x, from.y - to.y, dist, circleRadius));
+            const pointApproachingTarget = add(edgeOfStartCircle, math.similarTriangles(edgeOfCircle.x - edgeOfStartCircle.x, edgeOfCircle.y - edgeOfStartCircle.y, dist, dist * Math.min(1, proportionComplete)));
+            globalThis.predictionGraphics.lineTo(pointApproachingTarget.x, pointApproachingTarget.y);
             if (proportionComplete >= 1) {
-              globalThis.predictionGraphics?.drawCircle(target.x, target.y, config.COLLISION_MESH_RADIUS);
+              globalThis.predictionGraphics.drawCircle(to.x, to.y, circleRadius);
               // Play sound when new target is animated to be selected
-              if (!playedSound) {
-                playedSound = true;
+              if (!target.playedSound) {
+                target.playedSound = true;
                 playSFXKey('targetAquired');
               }
             }
-          });
-
+          }
         }
-        if (i >= iterations - 1) {
-          resolve();
-        }
-
-      }, millisBetweenIterations * i)
+      }
+      // + 250 to give time for the final circles to show
+      if (timeDiff > millisToGrow + 250) {
+        resolve();
+        return;
+      } else {
+        requestAnimationFrame(animateFrame(linkGroups, startTime, entitiesTargeted, underworld, resolve, prediction));
+      }
+    } else {
+      resolve();
     }
-  }));
+  }
 }
+
 export default spell;

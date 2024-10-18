@@ -1,6 +1,7 @@
 import {
   similarTriangles,
-  getCoordsAtDistanceTowardsTarget, honeycombGenerator, rotateMatrix
+  getCoordsAtDistanceTowardsTarget, honeycombGenerator, rotateMatrix,
+  lerpSegmented
 } from '../math';
 
 describe('math', () => {
@@ -170,5 +171,41 @@ describe('math', () => {
       const expected = target;
       expect(actual).toEqual(expected);
     });
+  });
+  describe('lerpSegmented', () => {
+    const length = 4;
+    [
+      { t: 0, i: 0, expected: 0 },
+      { t: 0, i: 1, expected: 0 },
+      { t: 0, i: 2, expected: 0 },
+      { t: 0, i: 3, expected: 0 },
+
+      { t: 0.25, i: 0, expected: 1 },
+      { t: 0.25, i: 1, expected: 0 },
+      { t: 0.25, i: 2, expected: 0 },
+      { t: 0.25, i: 3, expected: 0 },
+
+      { t: 0.5, i: 0, expected: 1 },
+      { t: 0.5, i: 1, expected: 1 },
+      { t: 0.5, i: 2, expected: 0 },
+      { t: 0.5, i: 3, expected: 0 },
+
+      { t: 0.75, i: 0, expected: 1 },
+      { t: 0.75, i: 1, expected: 1 },
+      { t: 0.75, i: 2, expected: 1 },
+      { t: 0.75, i: 3, expected: 0 },
+
+      { t: 1, i: 0, expected: 1 },
+      { t: 1, i: 1, expected: 1 },
+      { t: 1, i: 2, expected: 1 },
+      { t: 1, i: 3, expected: 1 },
+    ].map(({ t, i, expected }) => {
+      it(`t:${t}, i:${i}, length:${length}, expected: ${expected}`, () => {
+        expect(lerpSegmented(0, 1, t, i, length)).toEqual(expected);
+
+      })
+
+    })
+
   });
 });

@@ -70,7 +70,7 @@ const spell: Spell = {
         // Add entities to target
         withinColumn.forEach(e => addTarget(e, state, underworld, prediction));
       }
-      await animate(animateColumns, underworld);
+      await animate(animateColumns, underworld, prediction);
 
       return state;
     },
@@ -89,8 +89,8 @@ interface Column {
   width: number;
   depth: number;
 }
-async function animate(columns: Column[], underworld: Underworld) {
-  if (globalThis.headless) {
+async function animate(columns: Column[], underworld: Underworld, prediction: boolean) {
+  if (globalThis.headless || prediction) {
     // Animations do not occur on headless, so resolve immediately or else it
     // will just waste cycles on the server
     return Promise.resolve();

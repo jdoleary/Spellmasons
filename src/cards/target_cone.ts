@@ -67,7 +67,7 @@ const spell: Spell = {
         // Add entities to target
         withinRadiusAndAngle.forEach(e => addTarget(e, state, underworld, prediction));
       }
-      await animate(animatedCones, underworld);
+      await animate(animatedCones, underworld, prediction);
 
       return state;
     },
@@ -92,8 +92,8 @@ interface Cone {
   startAngle: number;
   endAngle: number;
 }
-async function animate(cones: Cone[], underworld: Underworld) {
-  if (globalThis.headless) {
+async function animate(cones: Cone[], underworld: Underworld, prediction: boolean) {
+  if (globalThis.headless || prediction) {
     // Animations do not occur on headless, so resolve immediately or else it
     // will just waste cycles on the server
     return Promise.resolve();

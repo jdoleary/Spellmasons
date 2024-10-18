@@ -12,6 +12,26 @@ export function lerp(start: number, end: number, time: number, goBeyondEnd?: boo
   return start * (1 - time) + end * time;
 }
 
+// Returns 0-1 split into segments based on i and length.  For example:
+// If length is 4;
+// t=0; i=0:0, i=1:0, i=2:0, i3:0
+// t=.25; i=0:1, i=1:0, i=2:0, i3:0
+// t=.5; i=0:1, i=1:1, i=2:0, i3:0
+// t=.75; i=0:1, i=1:1, i=2:1, i3:0
+// t=1; i=0:1, i=1:1, i=2:1, i3:1
+export function lerpSegmented(start: number, end: number, time: number, i: number, length: number): number {
+  if (time >= 1) {
+    return end;
+  }
+  if (time <= 0) {
+    return start;
+  }
+  const zeroToOne = start * (1 - time) + end * time;
+  const zeroToSegment = zeroToOne - i / length;
+  return Math.min(1, Math.max(0, zeroToSegment * length));
+
+}
+
 // For a triangle with sides x,y, and d (desired distance / hypotenuse), find the value
 // of x and y given a known h and a known similar triangle of X,Y, and D (distance / hypotenuse)
 export function similarTriangles(X: number, Y: number, D: number, d: number): Vec2 {

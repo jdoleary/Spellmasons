@@ -67,14 +67,14 @@ const spell: Spell = {
         // Add entities to target
         withinRadius.forEach(e => addTarget(e, state, underworld, prediction));
       }
-      await animate(animateCircles, underworld);
+      await animate(animateCircles, underworld, prediction);
 
       return state;
     },
   },
 };
-async function animate(circles: Circle[], underworld: Underworld) {
-  if (globalThis.headless) {
+async function animate(circles: Circle[], underworld: Underworld, prediction: boolean) {
+  if (globalThis.headless || prediction) {
     // Animations do not occur on headless, so resolve immediately or else it
     // will just waste cycles on the server
     return Promise.resolve();
