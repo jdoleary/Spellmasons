@@ -85,7 +85,7 @@ const spell: Spell = {
           chained.forEach(u => addTarget(u.entity, state, underworld, prediction))
         }
       }
-      await animate(linkGroups, underworld, prediction);
+      await animateConnections(linkGroups, underworld, prediction);
 
       return state;
     },
@@ -173,7 +173,7 @@ export function getNextConnectingEntities(
 }
 
 const timeoutMsAnimation = 2000;
-async function animate(links: AnimateConnectLinks[][], underworld: Underworld, prediction: boolean) {
+export async function animateConnections(links: AnimateConnectLinks[][], underworld: Underworld, prediction: boolean) {
   if (globalThis.headless || prediction) {
     // Animations do not occur on headless, so resolve immediately or else it
     // will just waste cycles on the server
@@ -195,7 +195,7 @@ interface AnimateConnectLinks {
   from: Vec2;
   targets: { to: Vec2, playedSound: boolean }[];
 }
-const millisToGrow = 1000;
+const millisToGrow = 750;
 // Smaller circle is more asethetic for connect since the line grows from one circle's edge to another
 const circleRadius = config.COLLISION_MESH_RADIUS / 2;
 function animateFrame(linkGroups: AnimateConnectLinks[][], startTime: number, entitiesTargeted: HasSpace[], underworld: Underworld, resolve: (value: void | PromiseLike<void>) => void, prediction: boolean) {
