@@ -420,16 +420,16 @@ export function updateCameraPosition(underworld: Underworld, deltaTime: number) 
         let targetCameraVelocity = { x: 0, y: 0 }
         // Allow camera movement via WSAD
         if (keyDown.cameraUp) {
-          targetCameraVelocity.y -= 1;
+          targetCameraVelocity.y -= .5;
         }
         if (keyDown.cameraDown) {
-          targetCameraVelocity.y += 1
+          targetCameraVelocity.y += .5;
         }
         if (keyDown.cameraLeft) {
-          targetCameraVelocity.x -= 1;
+          targetCameraVelocity.x -= .5;
         }
         if (keyDown.cameraRight) {
-          targetCameraVelocity.x += 1;
+          targetCameraVelocity.x += .5;
         }
 
         if (targetCameraVelocity.x == 0 && targetCameraVelocity.y == 0) {
