@@ -98,6 +98,9 @@ export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
     return;
   }
   //console.warn("CODE: ", event.code);
+  if (globalThis.adminMode && event.code === 'Period' && overworld.underworld) {
+    // Custom trigger for recording yt videos and shorts
+  }
   // Disable default chromium actions to prevent weird behavior
   if (event.code == 'ShiftLeft' || event.code == 'ShiftRight') {
     event.preventDefault();
