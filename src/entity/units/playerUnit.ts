@@ -11,6 +11,7 @@ import { add, clampVector, clone, getDirectionVector, isVec2, jitter, Vec2 } fro
 import { teachCardId } from '../../cards/teach';
 import { getCardsFromIds } from '../../cards';
 import floatingText from '../../graphics/FloatingText';
+import { slashCardId } from '../../cards/slash';
 
 export const spellmasonUnitId = 'Spellmason';
 const playerUnit: UnitSource = {
@@ -39,7 +40,7 @@ const playerUnit: UnitSource = {
 
     // Attack
     if (vec2Target && ((attackTarget && canAttackTarget) || (!Unit.isUnit(groundTarget) && isVec2(groundTarget)))) {
-      const cardIds = unit.modifiers[teachCardId]?.spell || ['slash'];
+      const cardIds = unit.modifiers[teachCardId]?.spell || [slashCardId];
       const cards = getCardsFromIds(cardIds);
       const cost = calculateCost(cards, {})
       const sufficientMana = cost.manaCost <= unit.mana;
@@ -48,7 +49,6 @@ const playerUnit: UnitSource = {
         // `target as Vec2` because above typeGuard narrows it
         Unit.orient(unit, vec2Target);
         const keyMoment = async () => {
-          console.log('jtest', attackTarget, cardIds, vec2Target);
           await underworld.castCards({
             casterCardUsage: {},
             casterUnit: unit,
