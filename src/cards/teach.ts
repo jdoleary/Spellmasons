@@ -4,7 +4,7 @@ import * as Image from '../graphics/Image';
 import { Spell } from './index';
 import * as Unit from '../entity/Unit';
 import Underworld from '../Underworld';
-import { CardCategory } from '../types/commonTypes';
+import { CardCategory, UnitType } from '../types/commonTypes';
 import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
 import floatingText from '../graphics/FloatingText';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
@@ -34,16 +34,19 @@ const spell: Spell = {
       if (targets.length) {
         await Promise.all([playDefaultSpellAnimation(card, targets, prediction), playDefaultSpellSFX(card, prediction)]);
         for (let unit of targets) {
-          if (unit.unitSourceId == spellmasonUnitId) {
+          if (unit.unitSourceId == spellmasonUnitId && unit.unitType == UnitType.AI) {
             const teachIndex = state.cardIds.indexOf(teachCardId);
             const learnedSpell = state.cardIds.slice(teachIndex + 1);
             Unit.addModifier(unit, teachCardId, underworld, prediction, quantity, { spell: learnedSpell });
             if (!prediction) {
-
               floatingText({ coords: unit, text: `${i18n('Learned')}: ${learnedSpell.map(i18n).join(',')}`, style: { fill: 'blue' } });
             }
           } else {
-            floatingText({ coords: unit, text: i18n('teach npc error'), style: { fill: 'red' } });
+            // Omit error notification for self since it's obvious that you can't target yourself with teach,
+            // and players may want to chain teach off of Ultra clone in which case this notification is annoying
+            if (unit !== state.casterUnit) {
+              floatingText({ coords: unit, text: i18n('teach npc error'), style: { fill: 'red' } });
+            }
           }
         }
         // Clear out the rest of the spell so it doesn't actually cast it
@@ -73,6 +76,9 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
 
   if (extra && extra.spell != undefined) {
     modifier.spell = extra.spell;
+    // Once a spell is assigned, set their damage to 0 so as to not mess up smartTargeting since
+    // their predicted damage is now unknown
+    unit.damage = 0;
   }
 }
 

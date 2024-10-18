@@ -1331,6 +1331,12 @@ export function canMove(unit: IUnit): boolean {
   }
   return true;
 }
+export function deadUnits(unit: IUnit, units: IUnit[]) {
+  // u !== unit excludes self from returning as the closest unit
+  return units.filter(
+    u => u !== unit && !u.alive && u.unitSubType !== UnitSubType.DOODAD,
+  );
+}
 export function livingUnitsInSameFaction(unit: IUnit, units: IUnit[]) {
   // u !== unit excludes self from returning as the closest unit
   return units.filter(
