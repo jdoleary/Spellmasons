@@ -1,4 +1,6 @@
 ## 2024
+Player animation's move speed 0.045
+Golem's animation move speed 0.07
 ```
 // animate mana
 function a(){
