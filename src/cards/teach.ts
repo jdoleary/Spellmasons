@@ -20,7 +20,7 @@ const spell: Spell = {
     requires: [clone_id],
     sfx: 'teach',
     supportQuantity: false,
-    manaCost: 20,
+    manaCost: 80,
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.SPECIAL],
