@@ -169,6 +169,7 @@ export function queueCenteredFloatingText(text: Localizable, fill: string | numb
 }
 export function centeredFloatingText(text: Localizable, fill: string | number = 'white') {
   if (globalThis.headless) { return; }
+  if (globalThis.recordingShorts) { return; }
   centeredTextAnimating = true;
   floatingText({
     coords: {
