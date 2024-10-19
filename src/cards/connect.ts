@@ -243,6 +243,7 @@ function animateFrame(linkGroups: AnimateConnectLinks[][], startTime: number, en
       // + 250 to give time for the final circles to show
       if (timeDiff > millisToGrow + 250) {
         resolve();
+        globalThis.predictionGraphics.clear();
         return;
       } else {
         requestAnimationFrame(animateFrame(linkGroups, startTime, entitiesTargeted, underworld, resolve, prediction));
