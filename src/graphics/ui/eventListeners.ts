@@ -43,6 +43,7 @@ import { isSinglePlayer } from '../../network/wsPieSetup';
 import { elAdminPowerBar, elAdminPowerBarInput, elAdminPowerBarOptions } from '../../HTMLElements';
 import { targetCursedId } from '../../cards/target_curse';
 import { distance } from '../../jmath/math';
+import { glow } from '../../jmath/YTShorts';
 
 export const keyDown = {
   showWalkRope: false,
@@ -100,6 +101,8 @@ export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
   //console.warn("CODE: ", event.code);
   if (globalThis.adminMode && event.code === 'Period' && overworld.underworld) {
     // Custom trigger for recording yt videos and shorts
+    if (selectedUnit)
+      glow(selectedUnit);
   }
   // Disable default chromium actions to prevent weird behavior
   if (event.code == 'ShiftLeft' || event.code == 'ShiftRight') {
