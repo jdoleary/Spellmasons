@@ -95,6 +95,10 @@ export function setupDevGlobalFunctions(overworld: Overworld) {
             player.unit.staminaMax = 10000;
             player.unit.stamina = player.unit.staminaMax;
             player.unit.moveSpeed = 0.3;
+            if (globalThis.recordingShorts) {
+                // Move in alignment with the walk animation
+                player.unit.moveSpeed = 0.045;
+            }
             // Now that player's health and mana has changed we must sync
             // unitsPrediction so that the player's prediction copy
             // has the same mana and health

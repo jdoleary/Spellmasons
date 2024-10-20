@@ -1148,6 +1148,9 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       action: () => {
         document.body?.classList.toggle(CLASS_RECORDING_SHORTS);
         globalThis.recordingShorts = !globalThis.recordingShorts;
+        if (player) {
+          player.unit.moveSpeed = 0.045;
+        }
       },
       supportInMultiplayer: false,
       domQueryContainer: '#menu-self',
