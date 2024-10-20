@@ -20,7 +20,7 @@ import {
 import { toggleMenu } from '../../views';
 import { View } from '../../View';
 import * as config from '../../config';
-import { cleanBlood, cameraAutoFollow, getCamera, moveCamera, toggleHUD, setCameraToMapCenter } from '../PixiUtils';
+import { cleanBlood, cameraAutoFollow, getCamera, moveCamera, toggleHUD, setCameraToMapCenter, CLASS_HUD_HIDDEN } from '../PixiUtils';
 import { isOutOfRange } from '../../PlayerUtils';
 import { vec2ToOneDimentionIndexPreventWrap } from '../../jmath/ArrayUtil';
 import * as Vec from '../../jmath/Vec';
@@ -53,6 +53,7 @@ export const keyDown = {
   cameraRight: false
 }
 
+const CLASS_RECORDING_SHORTS = 'recording-shorts';
 let runPredictionsIdleCallbackId: number;
 globalThis.addEventListener('keydown', nonUnderworldKeydownListener);
 function nonUnderworldKeydownListener(event: KeyboardEvent) {
@@ -101,8 +102,10 @@ export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
   //console.warn("CODE: ", event.code);
   if (globalThis.adminMode && event.code === 'Period' && overworld.underworld) {
     // Custom trigger for recording yt videos and shorts
-    if (selectedUnit)
+    if (selectedUnit) {
+
       glow(selectedUnit);
+    }
   }
   // Disable default chromium actions to prevent weird behavior
   if (event.code == 'ShiftLeft' || event.code == 'ShiftRight') {
@@ -1028,7 +1031,7 @@ function tryShowDevContextMenu(overworld: Overworld, e: MouseEvent, mousePos: Ve
 }
 export const adminCommands: { [label: string]: AdminContextMenuOption } = {};
 export function triggerAdminCommand(label: string, clientId: string, payload: any) {
-  const { action } = adminCommands[label] || {};
+  const { action, isActiveClass } = adminCommands[label] || {};
   if (action) {
     action({ clientId, ...payload });
   } else {
@@ -1046,8 +1049,12 @@ interface AdminContextMenuOption {
   action: AdminAction;
   supportInMultiplayer: boolean;
   label: string;
+  // Shows an "on" label if this class exists on the body
+  isActiveClass?: string;
   domQueryContainer: string;
 }
+const CLASS_HIDE_LOBBY = 'hide-lobby';
+const CLASS_HIDE_CARD_HOLDERS = 'hide-card-holders';
 export function registerAdminContextMenuOptions(overworld: Overworld) {
 
   const options: AdminContextMenuOption[] = [
@@ -1119,6 +1126,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
     },
     {
       label: '🎥 Toggle game screen UI',
+      isActiveClass: CLASS_HUD_HIDDEN,
       action: () => {
         toggleHUD();
       },
@@ -1127,16 +1135,18 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
     },
     {
       label: '📹 Toggle Player List Visibility',
+      isActiveClass: CLASS_HIDE_LOBBY,
       action: () => {
-        document.body?.classList.toggle('hide-lobby');
+        document.body?.classList.toggle(CLASS_HIDE_LOBBY);
       },
       supportInMultiplayer: false,
       domQueryContainer: '#menu-self',
     },
     {
       label: '📱 Recording Shorts',
+      isActiveClass: CLASS_RECORDING_SHORTS,
       action: () => {
-        document.body?.classList.toggle('recording-shorts');
+        document.body?.classList.toggle(CLASS_RECORDING_SHORTS);
         globalThis.recordingShorts = !globalThis.recordingShorts;
       },
       supportInMultiplayer: false,
@@ -1144,9 +1154,10 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
     },
     {
       label: '🃏 Toggle UI',
+      isActiveClass: CLASS_HIDE_CARD_HOLDERS,
       action: () => {
         // Hides a portion of the UI but not all of it for recording or screenshots
-        document.body?.classList.toggle('hide-card-holders');
+        document.body?.classList.toggle(CLASS_HIDE_CARD_HOLDERS);
       },
       supportInMultiplayer: false,
       domQueryContainer: '#menu-self',
@@ -1976,14 +1987,15 @@ function createContextMenuOptions(menu: HTMLElement, overworld: Overworld) {
     return;
   }
   for (let option of Object.values(adminCommands)) {
-    const { label, domQueryContainer } = option;
+    const { label, domQueryContainer, isActiveClass } = option;
     // Make DOM button to trigger command
     let el = document.createElement('li');
     if (Object.keys(allUnits).includes(label)) {
       // Add unit summon image to help identify them
       el.innerHTML = `<img width="32px" height="32px" src="${CardUI.getSpellThumbnailPath(`spellIconSummon_${label.split(' ').join('').toLowerCase()}.png`)}"/>&nbsp;${label}`
     } else {
-      el.innerHTML = label;
+      const isActive = document && isActiveClass && document.body.classList.contains(isActiveClass);
+      el.innerHTML = isActive ? `✅ ON: ${label}` : label;
     }
     // cache mouse position when context menu is created
     const pos = overworld.underworld.getMousePos();

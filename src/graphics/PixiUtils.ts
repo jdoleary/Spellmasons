@@ -942,12 +942,13 @@ export function tickParticle(particle: BloodParticle) {
   return false;
 }
 
+export const CLASS_HUD_HIDDEN = 'HUD-hidden';
 // Used for disabling the HUD for recording
 export function toggleHUD() {
   globalThis.isHUDHidden = !globalThis.isHUDHidden;
   const visible = !globalThis.isHUDHidden;
   if (document) {
-    document.body?.classList.toggle('HUD-hidden', !visible);
+    document.body?.classList.toggle(CLASS_HUD_HIDDEN, !visible);
   }
   console.log(`Togggle hud to ${visible ? 'visible' : 'hidden'}`)
   // Toggling HUD off should also set the music to 0 since music will
