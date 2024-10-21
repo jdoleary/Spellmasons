@@ -1563,6 +1563,16 @@ export async function runTurnStartEvents(unit: IUnit, underworld: Underworld, pr
     },
   ));
 }
+export function runLevelStartEvents(unit: IUnit, underworld: Underworld) {
+  const events = [...unit.events];
+  events.map((eventName) => {
+    const fn = Events.onLevelStartSource[eventName];
+    if (fn) {
+      fn(unit, underworld);
+    }
+  },
+  );
+}
 
 export async function runTurnEndEvents(unit: IUnit, underworld: Underworld, prediction: boolean) {
   const events = [...unit.events];
@@ -1574,6 +1584,17 @@ export async function runTurnEndEvents(unit: IUnit, underworld: Underworld, pred
       }
     },
   ));
+}
+
+export function runLevelEndEvents(unit: IUnit, underworld: Underworld) {
+  const events = [...unit.events];
+  events.map((eventName) => {
+    const fn = Events.onLevelEndSource[eventName];
+    if (fn) {
+      fn(unit, underworld);
+    }
+  },
+  );
 }
 
 export async function runPickupEvents(unit: IUnit, pickup: IPickup, underworld: Underworld, prediction: boolean) {
