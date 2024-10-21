@@ -35,73 +35,70 @@ export function cloneEffect(addClonesToTargetArray: boolean): EffectFn {
     // Batch find targets that should be cloned
     // Note: They need to be batched so that the new clones don't get cloned
     // Note: Limit max quantity to 10 or else is spawns so many units that it breaks the game
-    for (let q = 0; q < Math.min(10, quantity); q++) {
-      const clonePairs: Vec2[][] = [];
-      let targets: Vec2[] = getCurrentTargets(state);
+    let targets: Vec2[] = getCurrentTargets(state);
 
-      targets = targets.length ? targets : [state.castLocation];
-      for (let target of targets) {
-        clonePairs.push([target, { x: target.x, y: target.y }]);
+    targets = targets.length ? targets : [state.castLocation];
+    let animationPromise = Promise.resolve();
+    // Animate all the clonings
+    for (let target of targets) {
+      if (target) {
+        animationPromise = animateMitosis((target as any).image);
       }
-      let animationPromise = Promise.resolve();
-      // Animate all the clonings
-      for (let [target, cloneSourceCoords] of clonePairs) {
-        if (target) {
-          animationPromise = animateMitosis((target as any).image);
-        }
-      }
-      if (!prediction) {
-        playSFXKey('clone');
-      }
-      // Note: animationPromise is overwritten over and over because each animateMitosis will take the same amount of time
-      // and they are all triggered at once so we only need to wait for one of them.
-      await raceTimeout(600, 'clone', animationPromise);
-      // Clone all the batched clone jobs
-      for (let [target, cloneSourceCoords] of clonePairs) {
-        if (target) {
-          // If there is are clone coordinates to clone into
-          if (cloneSourceCoords) {
-            if (Unit.isUnit(target)) {
-              const clone = doCloneUnit(target, underworld, prediction, state.casterUnit, cloneSourceCoords);
-              // This is super powerful as it allows for exponential clones
-              if (clone && addClonesToTargetArray) {
+    }
+    if (!prediction) {
+      playSFXKey('clone');
+    }
+    // Note: animationPromise is overwritten over and over because each animateMitosis will take the same amount of time
+    // and they are all triggered at once so we only need to wait for one of them.
+    await raceTimeout(600, 'clone', animationPromise);
+    // Clone all the batched clone jobs
+    for (let target of targets) {
+      if (target) {
+        const targetIsUnit = Unit.isUnit(target);
+        const ringLimit = 10;
+        const validSpawnCoords = underworld.findValidSpawns({ spawnSource: target, ringLimit, prediction, radius: config.spawnSize }, { allowLiquid: !!(targetIsUnit && target.inLiquid), });
+        // If there is are clone coordinates to clone into
+        if (targetIsUnit) {
+          const numberOfClones = (quantity > 1 && addClonesToTargetArray) ? Math.pow(2, quantity) - 1 : quantity;
+          for (let q = 0; q < numberOfClones; q++) {
+            const clone = doCloneUnit(target, underworld, prediction, state.casterUnit, validSpawnCoords[q]);
+            // This is super powerful as it allows for exponential clones
+            if (clone && addClonesToTargetArray) {
+              // Add clones to target list
+              addTarget(clone, state, underworld, prediction);
+            }
+          }
+        } else if (Pickup.isPickup(target)) {
+          const targetName = target.name;
+          const validSpawnCoords = underworld.findValidSpawnInRadius(target, prediction, { allowLiquid: target.inLiquid });
+          if (validSpawnCoords) {
+            let foundPickup = Pickup.pickups.find((p) => p.name == targetName);
+            if (foundPickup) {
+              const clone = Pickup.create({ pos: target, pickupSource: foundPickup, logSource: 'Clone' }, underworld, prediction);
+              if (clone) {
+                Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
+                Pickup.setPower(clone, target.power);
                 // Add clones to target list
                 addTarget(clone, state, underworld, prediction);
               }
-            } else if (Pickup.isPickup(target)) {
-              const targetName = target.name;
-              const validSpawnCoords = underworld.findValidSpawnInRadius(target, prediction, { allowLiquid: target.inLiquid });
-              if (validSpawnCoords) {
-                let foundPickup = Pickup.pickups.find((p) => p.name == targetName);
-                if (foundPickup) {
-                  const clone = Pickup.create({ pos: target, pickupSource: foundPickup, logSource: 'Clone' }, underworld, prediction);
-                  if (clone) {
-                    Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
-                    Pickup.setPower(clone, target.power);
-                    // Add clones to target list
-                    addTarget(clone, state, underworld, prediction);
-                  }
-                } else {
-                  console.log('Pickup', target);
-                  console.error('Could not clone pickup because source could not be found');
-                }
-              } else {
-                floatingText({ coords: cloneSourceCoords, text: 'No space to clone into!' });
-              }
+            } else {
+              console.log('Pickup', target);
+              console.error('Could not clone pickup because source could not be found');
             }
+          } else {
+            floatingText({ coords: target, text: 'No space to clone into!' });
           }
         }
       }
-      if (clonePairs.length == 0) {
-        refundLastSpell(state, prediction, 'no target, mana refunded')
-      }
+    }
+    if (targets.length == 0) {
+      refundLastSpell(state, prediction, 'no target, mana refunded')
     }
     return state;
   }
 }
-export function doCloneUnit(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, summoner: Unit.IUnit, spawnSource?: Vec2): Unit.IUnit | undefined {
-  const validSpawnCoords = underworld.findValidSpawnInRadius(unit, prediction, { allowLiquid: unit.inLiquid });
-  if (validSpawnCoords) {
+export function doCloneUnit(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, summoner: Unit.IUnit, spawnLocation?: Vec2): Unit.IUnit | undefined {
+  if (spawnLocation) {
     const clone = Unit.load(Unit.serialize(unit), underworld, prediction);
     clone.summonedBy = summoner;
     if (!prediction) {
@@ -122,8 +119,8 @@ export function doCloneUnit(unit: Unit.IUnit, underworld: Underworld, prediction
       clone.unitType = UnitType.AI;
       returnToDefaultSprite(clone);
     }
-    clone.x = validSpawnCoords.x;
-    clone.y = validSpawnCoords.y;
+    clone.x = spawnLocation.x;
+    clone.y = spawnLocation.y;
     // // If cloned unit is a player unit, set the mana to be
     // // the value of the mana AFTER the player casts clone.
     // // This is to balance the infinite-mana clone merge exploit

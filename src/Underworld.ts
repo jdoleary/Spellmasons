@@ -2142,7 +2142,7 @@ export default class Underworld {
   //   return undefined;
   // }
   // Same as above "findValidSpawn", but returns an array of valid spawns
-  findValidSpawns({ spawnSource, ringLimit, radius = config.COLLISION_MESH_RADIUS / 4, prediction }: { spawnSource: Vec2, ringLimit: number, radius?: number, prediction: boolean }): Vec2[] {
+  findValidSpawns({ spawnSource, ringLimit, radius = config.COLLISION_MESH_RADIUS / 4, prediction }: { spawnSource: Vec2, ringLimit: number, radius?: number, prediction: boolean }, extra?: { allowLiquid?: boolean, unobstructedPoint?: Vec2, radiusOverride?: number }): Vec2[] {
     const validSpawns: Vec2[] = [];
     const honeycombRings = ringLimit;
     // The radius passed into honeycombGenerator is how far between vec2s each honeycomb cell is
@@ -2150,7 +2150,7 @@ export default class Underworld {
       // attemptSpawns radius must be the full config.COLLISION_MESH_RADIUS to ensure
       // that the spawning unit wont intersect something it shouldn't
       const attemptSpawn = { ...s, radius: config.COLLISION_MESH_RADIUS };
-      if (this.isPointValidSpawn(attemptSpawn, prediction)) {
+      if (this.isPointValidSpawn(attemptSpawn, prediction, extra)) {
         // Return the first valid spawn found
         validSpawns.push(attemptSpawn);
       }
