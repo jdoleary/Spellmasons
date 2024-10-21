@@ -9,7 +9,8 @@ import * as inLiquid from '../inLiquid';
 import { HasSpace } from './Type';
 import * as config from '../config';
 import * as math from '../jmath/math';
-import { IUnit } from './Unit';
+import { isUnit, IUnit } from './Unit';
+import Events from '../Events';
 export interface IObstacle {
   x: number;
   y: number;
@@ -132,6 +133,24 @@ export function tryFallInOutOfLiquid(entity: HasSpace, underworld: Underworld, p
     fallInOrOutToSafeDistanceFromEdge(entity, insideLiquidPoly, underworld);
     inLiquid.add(entity, underworld, prediction, sourceUnit);
   } else {
+    const wasInLiquid = entity.inLiquid;
     inLiquid.remove(entity);
+    // If coming out of liquid...
+    if (wasInLiquid) {
+      if (isUnit(entity)) {
+        // Trigger fall out of liquid events
+        // Note: fall in liquid events occur inside the doLiquidEffect
+        // function because that function triggers for each turn spent in liquid,
+        // not just when they fall in.
+        const events = [...entity.events];
+        for (let eventName of events) {
+          const fn = Events.onLiquidSource[eventName];
+          const isInLiquid = false;
+          if (fn) {
+            fn(entity, isInLiquid, 0, underworld, prediction);
+          }
+        }
+      }
+    }
   }
 }

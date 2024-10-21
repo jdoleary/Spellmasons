@@ -23,6 +23,14 @@ export type onTakeDamage = {
   (unit: IUnit, amount: number, underworld: Underworld, prediction: boolean, damageDealer?: IUnit): number;
 };
 const onTakeDamageSource: { [name: string]: onTakeDamage } = {};
+export type onLiquid = {
+  // Returns a possibly modified damage
+  // currentlyInLiquid is set based on wether the unit is exiting the liquid,
+  // or wether they are in the liquid either because they just entered it or
+  // started a new turn in it.
+  (unit: IUnit, currentlyInLiquid: boolean, amount: number, underworld: Underworld, prediction: boolean, damageDealer?: IUnit): number;
+};
+const onLiquidSource: { [name: string]: onLiquid } = {};
 
 export type onKill = {
   (unit: IUnit, killedUnit: IUnit, underworld: Underworld, prediction: boolean): Promise<void>;
@@ -98,6 +106,7 @@ export default {
   onAgroSource,
   onDealDamageSource,
   onTakeDamageSource,
+  onLiquidSource,
   onKillSource,
   onTooltipSource,
   onDeathSource,

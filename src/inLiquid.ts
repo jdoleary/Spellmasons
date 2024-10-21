@@ -1,5 +1,6 @@
 import { HasSpace } from "./entity/Type";
 import { isUnit, IUnit, takeDamage } from "./entity/Unit";
+import Events from "./Events";
 import { explain, EXPLAIN_LIQUID_DAMAGE } from "./graphics/Explain";
 import { addMask, removeMask } from "./graphics/Image";
 import { liquidmancerId } from "./modifierLiquidmancer";
@@ -17,24 +18,25 @@ export function doLiquidEffect(underworld: Underworld, unit: IUnit, prediction: 
       liquidDamageMultiplier += 0.01 * liquidmancerModifier.quantity;
     }
   });
+  let damage = {
+    'water': 20,
+    'lava': 30,
+    'blood': 40,
+    'ghost': 50
+  }[underworld.lastLevelCreated.biome] * liquidDamageMultiplier;
 
-  switch (underworld.lastLevelCreated.biome) {
-    case 'water':
-      takeDamage({ unit, amount: 20 * liquidDamageMultiplier, sourceUnit }, underworld, prediction);
-      break;
-    case 'lava':
-      takeDamage({ unit, amount: 30 * liquidDamageMultiplier, sourceUnit }, underworld, prediction);
-      break;
-    case 'blood':
-      takeDamage({ unit, amount: 40 * liquidDamageMultiplier, sourceUnit }, underworld, prediction);
-      break;
-    case 'ghost':
-      takeDamage({ unit, amount: 50 * liquidDamageMultiplier, sourceUnit }, underworld, prediction);
-      break;
-    default:
-      console.error('Unknown biome')
-      break;
+  let adjustedDamage = damage;
+
+  // Trigger in liquid events
+  const events = [...unit.events];
+  for (let eventName of events) {
+    const fn = Events.onLiquidSource[eventName];
+    if (fn) {
+      adjustedDamage = fn(unit, true, damage, underworld, prediction, sourceUnit);
+    }
   }
+
+  takeDamage({ unit, amount: adjustedDamage, sourceUnit }, underworld, prediction);
 
 }
 
