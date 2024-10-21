@@ -5,6 +5,7 @@ import * as Player from './entity/Player';
 import * as Projectile from './entity/Projectile';
 import * as Type from './entity/Type';
 import * as Pickup from './entity/Pickup';
+import * as Obstacle from './entity/Obstacle';
 import * as rangedAction from './entity/units/actions/rangedAction';
 import * as meleeAction from './entity/units/actions/meleeAction';
 import * as Angle from './jmath/Angle';
@@ -94,6 +95,7 @@ const SpellmasonsAPI = {
   moveWithCollision,
   MultiColorReplaceFilter,
   Overworld,
+  Obstacle,
   ParticleCollection,
   particleEmitter,
   Particles,
