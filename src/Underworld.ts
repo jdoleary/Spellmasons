@@ -255,6 +255,7 @@ export default class Underworld {
   // significant happenings.  The battleLog is used for players to view
   // what has happened
   _battleLog: string[] = [];
+  cachedValidSpawnPoints: { key: string, points: Vec2[] } = { key: '', points: [] };
 
   constructor(overworld: Overworld, pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     // Clean up previous underworld:
@@ -2055,7 +2056,7 @@ export default class Underworld {
     // Prevents units from spawning directly on top of eachother
     // Ensure spawnPoint doesn't share coordinates with any other entity
     const entities = this.getPotentialTargets(prediction);
-    if (entities.some(entity => Vec.equal(Vec.round(entity), Vec.round(spawnPoint)))) {
+    if (entities.some(entity => math.distance(entity, spawnPoint) < config.spawnSize)) {
       return false;
     }
 
@@ -2104,18 +2105,32 @@ export default class Underworld {
     let allowLiquid = extra?.allowLiquid || false;
     let unobstructedPoint = extra?.unobstructedPoint || undefined;
 
-    let spawnPoint = undefined;
+    let spawnPoint: Vec2 | undefined = undefined;
     const radius = extra?.radiusOverride !== undefined ? extra.radiusOverride : config.COLLISION_MESH_RADIUS / 4;
     for (let s of math.honeycombGenerator(radius, center, 7)) {
-      spawnPoint = s;
-
-      // If spawnPoint is valid, break the loop
-      if (this.isPointValidSpawn(spawnPoint, prediction, { allowLiquid, unobstructedPoint })) {
+      spawnPoint = Vec.vecToMultipleOf(s, config.spawnSize);
+      if (this.cachedValidSpawnPoints.points.find(x => spawnPoint && Vec.equal(spawnPoint, x))) {
+        console.count('found cached point')
         break;
-      }
+      } else {
+        console.count('no cache')
 
-      // spawnPoint was invalid, set to undefined and continue loop
-      spawnPoint = undefined;
+        // if (!window.t) {
+        //   window.t = [];
+        // }
+        // if (!window.t.find(x => Vec.equal(x, s))) {
+        //   window.t.push(spawnPoint);
+        // }
+        // console.log('jtest', window.t);
+
+        // If spawnPoint is valid, break the loop
+        if (this.isPointValidSpawn(spawnPoint, prediction, { allowLiquid, unobstructedPoint })) {
+          break;
+        }
+
+        // spawnPoint was invalid, set to undefined and continue loop
+        spawnPoint = undefined;
+      }
     }
 
     if (spawnPoint == undefined) {
@@ -2142,7 +2157,7 @@ export default class Underworld {
   //   return undefined;
   // }
   // Same as above "findValidSpawn", but returns an array of valid spawns
-  findValidSpawns({ spawnSource, ringLimit, radius = config.COLLISION_MESH_RADIUS / 4, prediction }: { spawnSource: Vec2, ringLimit: number, radius?: number, prediction: boolean }): Vec2[] {
+  findValidSpawns({ spawnSource, ringLimit, radius = config.COLLISION_MESH_RADIUS / 4, prediction }: { spawnSource: Vec2, ringLimit: number, radius?: number, prediction: boolean }, extra?: { allowLiquid?: boolean, unobstructedPoint?: Vec2, radiusOverride?: number }): Vec2[] {
     const validSpawns: Vec2[] = [];
     const honeycombRings = ringLimit;
     // The radius passed into honeycombGenerator is how far between vec2s each honeycomb cell is
@@ -2150,7 +2165,7 @@ export default class Underworld {
       // attemptSpawns radius must be the full config.COLLISION_MESH_RADIUS to ensure
       // that the spawning unit wont intersect something it shouldn't
       const attemptSpawn = { ...s, radius: config.COLLISION_MESH_RADIUS };
-      if (this.isPointValidSpawn(attemptSpawn, prediction)) {
+      if (this.isPointValidSpawn(attemptSpawn, prediction, extra)) {
         // Return the first valid spawn found
         validSpawns.push(attemptSpawn);
       }
@@ -3898,6 +3913,21 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       tutorialCompleteTask('cast');
       tutorialCompleteTask('castMultipleInOneTurn', () => !!globalThis.castThisTurn);
       globalThis.castThisTurn = true;
+    }
+    const cachedSpawnPointsKey = `${this.turn_number}${cardIds.join('')}`;
+    if (casterPlayer && cachedSpawnPointsKey !== this.cachedValidSpawnPoints.key) {
+      console.log('jtest recalc cached spawn points', cachedSpawnPointsKey, ';', this.cachedValidSpawnPoints.key)
+      // regenerate cachedValidSpawns:
+      this.cachedValidSpawnPoints = { key: cachedSpawnPointsKey, points: [] };
+      for (let x = this.limits.xMin; x < this.limits.xMax; x += config.spawnSize) {
+
+        for (let y = this.limits.yMin; y < this.limits.yMax; y += config.spawnSize) {
+          const point = Vec.vecToMultipleOf({ x, y }, config.spawnSize);
+          if (this.isPointValidSpawn(point, prediction, { allowLiquid: false })) {
+            this.cachedValidSpawnPoints.points.push(point);
+          }
+        }
+      }
     }
 
     let effectState: Cards.EffectState = {

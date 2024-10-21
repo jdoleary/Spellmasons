@@ -1,6 +1,6 @@
 
 import { LineSegment } from "./lineSegment";
-import { distance, similarTriangles, lerp } from "./math";
+import { distance, similarTriangles, lerp, toMultipleOf } from "./math";
 import { prng, randInt } from "./rand";
 export interface Vec2 {
   x: number;
@@ -164,4 +164,7 @@ export function clampVector(vector: Vec2, maxMagnitude: number): Vec2 {
 }
 export function isInvalid(vector: Vec2 | undefined): boolean {
   return !vector || isNaN(vector.x) || isNaN(vector.y);
+}
+export function vecToMultipleOf(vec: Vec2, multiple: number): Vec2 {
+  return { x: toMultipleOf(vec.x, multiple), y: toMultipleOf(vec.y, multiple) };
 }

@@ -138,3 +138,7 @@ export function rotateMatrix(array: any[], width: number): { contents: any[], wi
   }
   return { contents: rotated, width: height };
 }
+
+export function toMultipleOf(num: number, multiple: number): number {
+  return Math.floor(num / multiple) * multiple;
+}

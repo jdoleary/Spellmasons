@@ -1,7 +1,8 @@
 import {
   similarTriangles,
   getCoordsAtDistanceTowardsTarget, honeycombGenerator, rotateMatrix,
-  lerpSegmented
+  lerpSegmented,
+  toMultipleOf
 } from '../math';
 
 describe('math', () => {
@@ -207,5 +208,18 @@ describe('math', () => {
 
     })
 
+  });
+  describe('toMultipleOf', () => {
+    [
+      { num: 8, multiple: 8, expected: 8 },
+      { num: 16, multiple: 8, expected: 16 },
+      { num: 17, multiple: 8, expected: 16 },
+      { num: 15, multiple: 8, expected: 8 },
+    ].map(({ num, multiple, expected }) => {
+      it(`should floor ${num} to a multiple of ${multiple}`, () => {
+        const actual = toMultipleOf(num, multiple);
+        expect(actual).toEqual(expected);
+      });
+    })
   });
 });

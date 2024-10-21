@@ -133,6 +133,14 @@ export function updatePlanningView(underworld: Underworld) {
         }
         lastSpotCurrentPlayerTurnCircle = clone(globalThis.player.unit);
       }
+      // test:
+      if (globalThis.predictionGraphics) {
+        globalThis.predictionGraphics.clear();
+        for (let point of underworld.cachedValidSpawnPoints.points) {
+          globalThis.predictionGraphics.lineStyle(2, colors.targetingSpellGreen, 1.0)
+          globalThis.predictionGraphics.drawCircle(point.x, point.y, config.spawnSize / 2);
+        }
+      }
     }
 
     // Draw warnings

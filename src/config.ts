@@ -95,3 +95,4 @@ export const WALL_BOUNDS_OFFSET = 14;
 export const STAT_POINTS_PER_LEVEL = 120;
 export const RUNES_PER_LEVEL = 6;
 export const getSmartTargetsChunkSize = 50;
+export const spawnSize = 16;
