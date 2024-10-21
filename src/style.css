@@ -148,6 +148,10 @@ body.view-Game.showUpgrades #upgrade-picker {
   max-height: 50%;
 }
 
+body.recording-shorts #upgrade-picker-content {
+  max-height: 28%;
+}
+
 #upgrade-picker-label {
   text-align: center;
   color: white;
