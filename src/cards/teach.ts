@@ -1,6 +1,3 @@
-import type * as PIXI from 'pixi.js';
-import { IUnit, takeDamage } from '../entity/Unit';
-import * as Image from '../graphics/Image';
 import { Spell } from './index';
 import * as Unit from '../entity/Unit';
 import Underworld from '../Underworld';
@@ -10,20 +7,19 @@ import floatingText from '../graphics/FloatingText';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 import { spellmasonUnitId } from '../entity/units/playerUnit';
-import { clone_id } from './clone';
 
 export const teachCardId = 'teach';
 const spell: Spell = {
   card: {
     id: teachCardId,
     category: CardCategory.Blessings,
-    requires: [clone_id],
+    requires: [],
     sfx: 'teach',
     supportQuantity: false,
     manaCost: 80,
     healthCost: 0,
     expenseScaling: 1,
-    probability: probabilityMap[CardRarity.SPECIAL],
+    probability: probabilityMap[CardRarity.RARE],
     thumbnail: 'spellIconTeach.png',
     animationPath: '',
     requiresFollowingCard: true,
