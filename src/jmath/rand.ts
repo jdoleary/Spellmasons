@@ -1,7 +1,9 @@
-import type seedrandom from 'seedrandom';
+import seedrandom from 'seedrandom';
 import { IPlayer } from '../entity/Player';
 import Underworld from '../Underworld';
 
+// reexported for use in mods
+export { default as seedrandom } from 'seedrandom';
 // from @types/seedrandom
 export interface prng {
   (): number;
