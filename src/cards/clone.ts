@@ -54,11 +54,10 @@ export function cloneEffect(addClonesToTargetArray: boolean): EffectFn {
     // Clone all the batched clone jobs
     for (let target of targets) {
       if (target) {
-        const targetIsUnit = Unit.isUnit(target);
         const ringLimit = 10;
-        const validSpawnCoords = underworld.findValidSpawns({ spawnSource: target, ringLimit, prediction, radius: config.spawnSize }, { allowLiquid: !!(targetIsUnit && target.inLiquid), });
+        const validSpawnCoords = underworld.findValidSpawns({ spawnSource: target, ringLimit, prediction, radius: config.spawnSize }, { allowLiquid: !!(Unit.isUnit(target) && target.inLiquid) });
         // If there is are clone coordinates to clone into
-        if (targetIsUnit) {
+        if (Unit.isUnit(target)) {
           const numberOfClones = (quantity > 1 && addClonesToTargetArray) ? Math.pow(2, quantity) - 1 : quantity;
           for (let q = 0; q < numberOfClones; q++) {
             const clone = doCloneUnit(target, underworld, prediction, state.casterUnit, validSpawnCoords[q]);
