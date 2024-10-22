@@ -1095,6 +1095,20 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       domQueryContainer: '#menu-self'
 
     },
+    ...globalThis.mods.map(mod => ({
+      label: `Mod: Give cards: ${mod.modName}`,
+      action: ({ playerId }: { playerId?: string }) => {
+        const player = overworld.underworld?.players.find(p => p.playerId == playerId);
+        (mod.spells || []).forEach(spell => {
+          if (player && overworld.underworld) {
+            Player.addCardToHand(spell.card, player, overworld.underworld);
+          }
+        })
+      },
+      supportInMultiplayer: false,
+      domQueryContainer: '',
+
+    })),
     ...Object.values(allCards).map(x => ({
       label: `Give card: ${x.id}`,
       action: ({ playerId }: { playerId?: string }) => {
