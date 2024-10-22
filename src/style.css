@@ -1297,12 +1297,6 @@ body.showUpgrades #inspector-tooltip {
   user-select: none;
 }
 
-.route-PLAY #menu-app {
-  background-image: url('/ui/4masons1920-1080.png');
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-
 .route-PLAY #menu-app button.button-wrapper {
   filter: drop-shadow(0px 0px 10px #000000);
 }

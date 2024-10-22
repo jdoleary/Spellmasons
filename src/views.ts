@@ -22,6 +22,9 @@ import { Overworld } from './Overworld';
 import { View } from './View';
 import { getSelectedCardIds, renderBattleLog, renderRunesMenu } from './graphics/ui/CardUI';
 import Underworld from './Underworld';
+import { distance, similarTriangles } from './jmath/math';
+import { jitter } from './jmath/Vec';
+import { easeOutCubic } from './jmath/Easing';
 
 const elUpgradePicker = document.getElementById('upgrade-picker') as HTMLElement;
 let lastNonMenuView: View | undefined;
@@ -88,6 +91,7 @@ export function setView(v: View) {
   elUpgradePicker.classList.remove('active');
   switch (v) {
     case View.Menu:
+      animateMenu();
       elMenu.classList.remove('hidden');
       if (globalThis.updateInGameMenuStatus) {
         globalThis.updateInGameMenuStatus();
@@ -371,4 +375,50 @@ export function chooseBookmark(bookmark: string, forceActive?: true | undefined,
     }
   }
 
+}
+const elBgGolem = document.querySelector('.bg.golem') as HTMLElement;
+const elBgBlue = document.querySelector('.bg.blue') as HTMLElement;
+const elBgGreen = document.querySelector('.bg.green') as HTMLElement;
+const elBgPriest = document.querySelector('.bg.priest') as HTMLElement;
+const elBgRed = document.querySelector('.bg.red') as HTMLElement;
+const elBgVamp = document.querySelector('.bg.vampire') as HTMLElement;
+function animateMenu() {
+  [
+    { el: elBgGolem, speed: 0.05, maxDriftDist: 40 },
+    { el: elBgBlue, speed: 0.05, maxDriftDist: 30 },
+    { el: elBgGreen, speed: 0.05, maxDriftDist: 25 },
+    { el: elBgPriest, speed: 0.05, maxDriftDist: 25 },
+    { el: elBgRed, speed: 0.05, maxDriftDist: 25 },
+    { el: elBgVamp, speed: 0.02, maxDriftDist: 10 },
+
+  ].forEach(({ el, speed, maxDriftDist }) => {
+
+    if (el) {
+      const tx = parseInt(el.dataset.tx || '0');
+      const ty = parseInt(el.dataset.ty || '0');
+      const x = parseFloat(el.dataset.x || '0');
+      const y = parseFloat(el.dataset.y || '0');
+      const distToTarget = distance({ x, y }, { x: tx, y: ty });
+      // Pick new point to float to
+      if (distToTarget <= 1) {
+        const newLocation = jitter({ x: 0, y: 0 }, maxDriftDist);
+        const newTx = Math.floor(newLocation.x);
+        const newTy = Math.floor(newLocation.y);
+        el.dataset.tx = newTx.toString();
+        el.dataset.ty = newTy.toString();
+        el.dataset.startDist = distance({ x, y }, { x: newTx, y: newTy }).toString();
+      }
+      const distFromStart = distToTarget / (parseFloat(el.dataset.startDist || '1') || 1);
+      const result = similarTriangles(tx - x, ty - y, distToTarget, easeOutCubic(distFromStart) * speed)
+      el.dataset.x = (x + result.x).toString();
+      el.dataset.y = (y + result.y).toString();
+      el.style.transform = `translate(${x + result.x}px, ${y + result.y}px)`;
+
+    }
+  })
+
+
+  if (globalThis.view === View.Menu) {
+    requestAnimationFrame(animateMenu);
+  }
 }
