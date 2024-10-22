@@ -79,20 +79,10 @@ export type onTurnStart = {
 };
 const onTurnStartSource: { [name: string]: onTurnStart } = {};
 
-export type onLevelStart = {
-  (unit: IUnit, underworld: Underworld): void;
-};
-const onLevelStartSource: { [name: string]: onLevelStart } = {};
-
 export type onTurnEnd = {
   (unit: IUnit, underworld: Underworld, prediction: boolean): Promise<void>;
 };
 const onTurnEndSource: { [name: string]: onTurnEnd } = {};
-
-export type onLevelEnd = {
-  (unit: IUnit, underworld: Underworld): void;
-};
-const onLevelEndSource: { [name: string]: onLevelEnd } = {};
 
 export type onDrawSelected = {
   (unit: IUnit, underworld: Underworld, prediction: boolean): Promise<void>;
@@ -114,9 +104,7 @@ export default {
   onPickupSource,
   onFullTurnCycleSource,
   onTurnStartSource,
-  onLevelStartSource,
   onTurnEndSource,
-  onLevelEndSource,
   onDrawSelectedSource,
   onProjectileCollisionSource,
   onTeleportSource,

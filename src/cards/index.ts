@@ -12,9 +12,7 @@ import Events, {
   onMove,
   onAgro,
   onTurnStart,
-  onLevelStart,
   onTurnEnd,
-  onLevelEnd,
   onDrawSelected,
   onProjectileCollision,
   onTeleport,
@@ -300,9 +298,7 @@ export interface Events {
   // When all factions and turn phases have taken their turn.
   onFullTurnCycle?: onFullTurnCycle;
   onTurnStart?: onTurnStart;
-  onLevelStart?: onLevelStart;
   onTurnEnd?: onTurnEnd;
-  onLevelEnd?: onLevelEnd;
   onDrawSelected?: onDrawSelected;
   onProjectileCollision?: onProjectileCollision;
 }
@@ -366,14 +362,8 @@ export function registerEvents(id: string, events: Events) {
   if (events.onTurnStart) {
     Events.onTurnStartSource[id] = events.onTurnStart;
   }
-  if (events.onLevelStart) {
-    Events.onLevelStartSource[id] = events.onLevelStart;
-  }
   if (events.onTurnEnd) {
     Events.onTurnEndSource[id] = events.onTurnEnd;
-  }
-  if (events.onLevelEnd) {
-    Events.onLevelEndSource[id] = events.onLevelEnd;
   }
   if (events.onDrawSelected) {
     Events.onDrawSelectedSource[id] = events.onDrawSelected;

@@ -2228,13 +2228,6 @@ export default class Underworld {
     if (this.players.length > 1 && this.levelIndex > 2) {
       explain(EXPLAIN_PING);
     }
-    // To ensure this isn't running when a player loads into the game, it should
-    // only run on level start
-    if (this.players.every(p => !p.isSpawned)) {
-      for (let u of this.units) {
-        Unit.runLevelStartEvents(u, this);
-      }
-    }
   }
   // creates a level from levelData
   createLevelSyncronous(levelData: LevelData) {
@@ -2242,16 +2235,6 @@ export default class Underworld {
     console.log('Setup: createLevelSyncronous');
     this.lastLevelCreated = levelData;
     setAbyssColor(levelData.biome);
-
-    // Only run when 0th level and greater finishes
-    // so it doesn't run on creation of the 0th level at
-    // which point levelIndex == -1.
-    if (this.levelIndex >= 0) {
-      for (let u of this.units) {
-        Unit.runLevelEndEvents(u, this);
-      }
-    }
-
     // Clean up the previous level
     this.cleanUpLevel();
 
