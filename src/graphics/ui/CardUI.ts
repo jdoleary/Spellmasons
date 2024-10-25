@@ -59,7 +59,7 @@ export const elInvButton = document.getElementById('inventory-icon') as HTMLElem
 const elBookmarkRunes = document.getElementById('bookmark-runes')
 export function tryShowStatPointsSpendable() {
   // Only show glow if player can afford a rune upgrade
-  const hasStatPointsToSpend = globalThis.player && globalThis.player.statPointsUnspent >= (globalThis.cheapestAvailableRune || 1);
+  const hasStatPointsToSpend = globalThis.player && globalThis.player.statPointsUnspent > 0 && globalThis.player.statPointsUnspent >= (globalThis.cheapestAvailableRune || 1);
   if (elInvButton) {
     elInvButton.classList.toggle('goldGlow', hasStatPointsToSpend);
   }
