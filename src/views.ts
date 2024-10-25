@@ -384,14 +384,14 @@ const elBgRed = document.querySelector('.bg.red') as HTMLElement;
 const elBgVamp = document.querySelector('.bg.vampire') as HTMLElement;
 function animateMenu() {
   [
-    { el: elBgGolem, speed: 0.05, maxDriftDist: 40 },
+    { el: elBgGolem, speed: 0.05, maxDriftDist: 40, excludeNegativeJitter: true },
     { el: elBgBlue, speed: 0.05, maxDriftDist: 30 },
     { el: elBgGreen, speed: 0.05, maxDriftDist: 25 },
     { el: elBgPriest, speed: 0.05, maxDriftDist: 25 },
     { el: elBgRed, speed: 0.05, maxDriftDist: 25 },
     { el: elBgVamp, speed: 0.02, maxDriftDist: 10 },
 
-  ].forEach(({ el, speed, maxDriftDist }) => {
+  ].forEach(({ el, speed, maxDriftDist, excludeNegativeJitter }) => {
 
     if (el) {
       const tx = parseInt(el.dataset.tx || '0');
@@ -402,6 +402,12 @@ function animateMenu() {
       // Pick new point to float to
       if (distToTarget <= 1) {
         const newLocation = jitter({ x: 0, y: 0 }, maxDriftDist);
+        // The golem image is clipped at the bottom and so shall not drift to negative
+        // coordinates or else the clipping will show
+        if (excludeNegativeJitter) {
+          newLocation.x = Math.abs(newLocation.x);
+          newLocation.y = Math.abs(newLocation.y);
+        }
         const newTx = Math.floor(newLocation.x);
         const newTy = Math.floor(newLocation.y);
         el.dataset.tx = newTx.toString();
@@ -410,9 +416,13 @@ function animateMenu() {
       }
       const distFromStart = distToTarget / (parseFloat(el.dataset.startDist || '1') || 1);
       const result = similarTriangles(tx - x, ty - y, distToTarget, easeOutCubic(distFromStart) * speed)
-      el.dataset.x = (x + result.x).toString();
-      el.dataset.y = (y + result.y).toString();
-      el.style.transform = `translate(${x + result.x}px, ${y + result.y}px)`;
+      const newX = x + result.x;
+      const newY = y + result.y;
+      if (!isNaN(newX) && !isNaN(newY)) {
+        el.dataset.x = (x + result.x).toString();
+        el.dataset.y = (y + result.y).toString();
+        el.style.transform = `translate(${x + result.x}px, ${y + result.y}px)`;
+      }
 
     }
   })
