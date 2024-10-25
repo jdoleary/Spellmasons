@@ -1,3 +1,34 @@
+## 1.46.0
+content: Add `Teach` Spell
+    You can now Teach any spell to NPC Spellmasons
+mod: Bogiac's Spells
+    Thanks @Bogiac!
+mod-api: Expose Obstacle in the API
+mod-api: Expose seedrandom in the rand export for the API
+mod-api: Add Upgrade.ts to spellmasons api
+    so that modded spells can grant other spells to player
+    Thanks @Rosan
+mod-api: onLiquid event
+    The onLiquid event is called when a unit either first enters liquid, starts a turn in liquid or exits liquid.
+    For the first two scenarios `currentlyInLiquid` will be true, when exiting liquid, it will be false.
+    This is for the modder Rosan!
+admin-toolbar: Add hotbar shortcut to give all cards
+    from a mod
+
+optimize: Clone FPS
+optimize: Target Similar and Target Kind
+optimize: Connect
+    Vastly improved framerate with requestAnimationFrame
+
+juice: Animate characters on menu
+juice: Improve resurrect with outer glow (lightsaber style)
+juice: Add a small pause after merge
+    and swap
+
+fix: BountyGolem's not triggering bounties
+when they kill an enemy with a bounty.
+    Thanks Scojbo!
+
 ## 1.45.2
 
 This patch contains LOTS of FPS optimizations and bug fixes!
