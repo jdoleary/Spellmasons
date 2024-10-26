@@ -34,7 +34,7 @@ const spell: Spell = {
         unitTakeDamageFX(state.casterUnit, underworld, prediction);
         if (prediction) {
           // Prediction circles to show affected targets
-          const graphics = globalThis.predictionGraphics;
+          const graphics = globalThis.predictionGraphicsBlue;
           if (graphics) {
             for (let target of targets) {
               drawDiamond(target, graphics);

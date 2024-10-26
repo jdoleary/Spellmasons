@@ -15,7 +15,6 @@
 - Test tutorial ALWAYS on electron build
 
 --- Archived
-- Test mod thumbnail paths on electron build
 - Test loading a saved multiplayer game
 - Test Hotseat multiplayer basics
     - Test one player dying and next player carrying on to next level and make sure they both spawn

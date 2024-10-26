@@ -94,22 +94,22 @@ const spell: Spell = {
       // This ensures combos like [Ricochet Arrow + Target Cone] behave predictably
       state.castLocation = targets.length ? initialCastLocation : state.castLocation;
 
-      if (!prediction && !globalThis.headless && globalThis.predictionGraphics) {
+      if (!prediction && !globalThis.headless && globalThis.predictionGraphicsGreen) {
         const promises: Promise<void>[] = [];
         targets.forEach(t => {
           // Animations do not occur on headless
           promises.push(new Promise<void>((resolve) => {
-            if (globalThis.predictionGraphics) {
-              globalThis.predictionGraphics.lineStyle(2, colors.targetingSpellGreen, 1.0)
+            if (globalThis.predictionGraphicsGreen) {
+              globalThis.predictionGraphicsGreen.lineStyle(2, 0xffffff, 1.0)
               playSFXKey('targetAquired');
-              globalThis.predictionGraphics.drawCircle(t.x, t.y, config.COLLISION_MESH_RADIUS);
+              globalThis.predictionGraphicsGreen.drawCircle(t.x, t.y, config.COLLISION_MESH_RADIUS);
               // Show the targeting circle for a moment
               setTimeout(resolve, 300);
             }
           }));
         });
         await Promise.all(promises);
-        globalThis.predictionGraphics.clear();
+        globalThis.predictionGraphicsGreen.clear();
       }
       return state;
     },

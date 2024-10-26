@@ -204,10 +204,9 @@ function animateFrame(linkGroups: AnimateConnectLinks[][], startTime: number, en
       resolve();
       return;
     }
-    if (globalThis.predictionGraphics) {
-      globalThis.predictionGraphics.clear();
-      globalThis.predictionGraphics.lineStyle(2, colors.targetingSpellGreen, 1.0)
-      globalThis.predictionGraphics.beginFill(colors.targetingSpellGreen, 0.2);
+    if (globalThis.predictionGraphicsGreen) {
+      globalThis.predictionGraphicsGreen.clear();
+      globalThis.predictionGraphicsGreen.lineStyle(2, 0xffffff, 1.0)
       const now = Date.now();
       const timeDiff = now - startTime;
       for (let links of linkGroups) {
@@ -225,12 +224,12 @@ function animateFrame(linkGroups: AnimateConnectLinks[][], startTime: number, en
             const { to } = target;
             const dist = distance(from, to)
             const edgeOfStartCircle = add(from, math.similarTriangles(to.x - from.x, to.y - from.y, dist, circleRadius));
-            globalThis.predictionGraphics.moveTo(edgeOfStartCircle.x, edgeOfStartCircle.y);
+            globalThis.predictionGraphicsGreen.moveTo(edgeOfStartCircle.x, edgeOfStartCircle.y);
             const edgeOfCircle = add(to, math.similarTriangles(from.x - to.x, from.y - to.y, dist, circleRadius));
             const pointApproachingTarget = add(edgeOfStartCircle, math.similarTriangles(edgeOfCircle.x - edgeOfStartCircle.x, edgeOfCircle.y - edgeOfStartCircle.y, dist, dist * Math.min(1, proportionComplete)));
-            globalThis.predictionGraphics.lineTo(pointApproachingTarget.x, pointApproachingTarget.y);
+            globalThis.predictionGraphicsGreen.lineTo(pointApproachingTarget.x, pointApproachingTarget.y);
             if (proportionComplete >= 1) {
-              globalThis.predictionGraphics.drawCircle(to.x, to.y, circleRadius);
+              globalThis.predictionGraphicsGreen.drawCircle(to.x, to.y, circleRadius);
               // Play sound when new target is animated to be selected
               if (!target.playedSound) {
                 target.playedSound = true;
@@ -243,7 +242,7 @@ function animateFrame(linkGroups: AnimateConnectLinks[][], startTime: number, en
       // + 250 to give time for the final circles to show
       if (timeDiff > millisToGrow + 250) {
         resolve();
-        globalThis.predictionGraphics.clear();
+        globalThis.predictionGraphicsGreen.clear();
         return;
       } else {
         requestAnimationFrame(animateFrame(linkGroups, startTime, entitiesTargeted, underworld, resolve, prediction));

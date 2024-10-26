@@ -106,7 +106,7 @@ async function animate(targets: HasSpace[]) {
     return new Promise<void>((resolve) => {
       doDraw(resolve, targets, Date.now() + 700);
     }).then(() => {
-      globalThis.predictionGraphics?.clear();
+      globalThis.predictionGraphicsBlue?.clear();
     });
   }
 }
@@ -127,20 +127,20 @@ function doDraw(resolve: (value: void | PromiseLike<void>) => void, targets: Has
 function drawLineBetweenTargets(targets: HasSpace[]): boolean {
   // Animations do not occur on headless
   if (!globalThis.headless) {
-    if (globalThis.predictionGraphics) {
+    if (globalThis.predictionGraphicsBlue) {
       if (targets[0] === undefined) {
         return false;
       }
-      globalThis.predictionGraphics.clear();
-      globalThis.predictionGraphics.lineStyle(4, soulBindLineColor, 1.0);
-      globalThis.predictionGraphics.moveTo(targets[0].x, targets[0].y);
+      globalThis.predictionGraphicsBlue.clear();
+      globalThis.predictionGraphicsBlue.lineStyle(4, soulBindLineColor, 1.0);
+      globalThis.predictionGraphicsBlue.moveTo(targets[0].x, targets[0].y);
       let from = targets[0];
       for (let target of targets) {
         for (let i = 0; i < 5; i++) {
           const intermediaryPoint = jitter(lerpVec2(from, target, 0.2 * i), 1);
-          globalThis.predictionGraphics.lineTo(intermediaryPoint.x, intermediaryPoint.y);
+          globalThis.predictionGraphicsBlue.lineTo(intermediaryPoint.x, intermediaryPoint.y);
         }
-        globalThis.predictionGraphics.lineTo(target.x, target.y);
+        globalThis.predictionGraphicsBlue.lineTo(target.x, target.y);
         from = target;
       }
       return true;

@@ -116,13 +116,12 @@ export function mergeUnits(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], under
   for (const unit of unitsToMerge) {
     // Prediction Lines
     if (prediction) {
-      const graphics = globalThis.predictionGraphics;
+      const graphics = globalThis.predictionGraphicsBlue;
       if (graphics) {
-        const lineColor = colors.manaBlue;
-        graphics.lineStyle(3, lineColor, 0.7);
+        graphics.lineStyle(2, 0xffffff, 1);
         graphics.moveTo(unit.x, unit.y);
         graphics.lineTo(target.x, target.y);
-        graphics.drawCircle(target.x, target.y, 3);
+        graphics.drawCircle(target.x, target.y, 2);
       }
     }
 
@@ -197,13 +196,13 @@ export function mergePickups(target: Pickup.IPickup, pickupsToMerge: Pickup.IPic
 
     // Prediction Lines
     if (prediction) {
-      const graphics = globalThis.predictionGraphics;
+      const graphics = globalThis.predictionGraphicsBlue;
       if (graphics) {
         const lineColor = colors.manaBlue;
-        graphics.lineStyle(3, lineColor, 0.7);
+        graphics.lineStyle(2, lineColor, 1.0);
         graphics.moveTo(pickup.x, pickup.y);
         graphics.lineTo(target.x, target.y);
-        graphics.drawCircle(target.x, target.y, 3);
+        graphics.drawCircle(target.x, target.y, 2);
       }
     }
 

@@ -12,15 +12,13 @@ import Events from "../Events";
 export function teleport(object: HasSpace, newLocation: Vec2, underworld: Underworld, prediction: boolean, usePredictionLines?: boolean, sourceUnit?: Unit.IUnit) {
   if (usePredictionLines) {
     // Show prediction lines before the move actually occurs
-    if (prediction && globalThis.predictionGraphics) {
-      globalThis.predictionGraphics.lineStyle(4, colors.forceMoveColor, 1.0);
-      globalThis.predictionGraphics.moveTo(object.x, object.y);
-      globalThis.predictionGraphics.lineTo(newLocation.x, newLocation.y);
+    if (prediction && globalThis.predictionGraphicsWhite) {
+      globalThis.predictionGraphicsWhite.lineStyle(1.5, colors.forceMoveColor, 1.0);
+      globalThis.predictionGraphicsWhite.moveTo(object.x, object.y);
+      globalThis.predictionGraphicsWhite.lineTo(newLocation.x, newLocation.y);
       // Draw circle at the end so the line path isn't a trail of rectangles with sharp edges
-      globalThis.predictionGraphics.lineStyle(1, colors.forceMoveColor, 1.0);
-      globalThis.predictionGraphics.beginFill(colors.forceMoveColor);
-      globalThis.predictionGraphics.drawCircle(newLocation.x, newLocation.y, 3);
-      globalThis.predictionGraphics.endFill();
+      globalThis.predictionGraphicsWhite.lineStyle(1.5, colors.forceMoveColor, 1.0);
+      globalThis.predictionGraphicsWhite.drawCircle(newLocation.x, newLocation.y, 3);
     }
   }
 

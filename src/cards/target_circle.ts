@@ -49,11 +49,7 @@ const spell: Spell = {
         }
         // Draw visual circle for prediction
         if (prediction) {
-          if (outOfRange) {
-            drawUICirclePrediction(target, adjustedRange, colors.outOfRangeGrey);
-          } else {
-            drawUICirclePrediction(target, adjustedRange, colors.targetingSpellGreen, 'Target Radius');
-          }
+          drawUICirclePrediction(target, adjustedRange, 0xffffff, !outOfRange ? 'Target Radius' : undefined);
         } else {
           animateCircles.push({ pos: target, radius: adjustedRange });
         }
@@ -90,25 +86,24 @@ async function animate(circles: Circle[], underworld: Underworld, prediction: bo
   return raceTimeout(timeoutMsAnimation, 'animatedExpand', new Promise<void>(resolve => {
     animateFrame(circles, Date.now(), entitiesTargeted, underworld, resolve)();
   })).then(() => {
-    globalThis.predictionGraphics?.clear();
+    globalThis.predictionGraphicsGreen?.clear();
   });
 }
 
 const millisToGrow = 1000;
 function animateFrame(circles: Circle[], startTime: number, entitiesTargeted: HasSpace[], underworld: Underworld, resolve: (value: void | PromiseLike<void>) => void) {
   return function animateFrameInner() {
-    if (globalThis.predictionGraphics) {
-      globalThis.predictionGraphics.clear();
-      globalThis.predictionGraphics.lineStyle(2, colors.targetingSpellGreen, 1.0)
-      globalThis.predictionGraphics.beginFill(colors.targetingSpellGreen, 0.2);
+    if (globalThis.predictionGraphicsGreen) {
+      globalThis.predictionGraphicsGreen.clear();
+      globalThis.predictionGraphicsGreen.lineStyle(2, 0xffffff, 1.0)
       const now = Date.now();
       const timeDiff = now - startTime;
       for (let circle of circles) {
         const { pos, radius } = circle;
 
         const animatedRadius = radius * easeOutCubic(Math.min(1, timeDiff / millisToGrow));
-        globalThis.predictionGraphics.drawCircle(pos.x, pos.y, animatedRadius);
-        globalThis.predictionGraphics.endFill();
+        globalThis.predictionGraphicsGreen.drawCircle(pos.x, pos.y, animatedRadius);
+        globalThis.predictionGraphicsGreen.endFill();
         // Draw circles around new targets
         const withinRadius = underworld.getEntitiesWithinDistanceOfTarget(
           pos,
@@ -120,7 +115,7 @@ function animateFrame(circles: Circle[], startTime: number, entitiesTargeted: Ha
             entitiesTargeted.push(v);
             playSFXKey('targetAquired');
           }
-          globalThis.predictionGraphics?.drawCircle(v.x, v.y, config.COLLISION_MESH_RADIUS);
+          globalThis.predictionGraphicsGreen?.drawCircle(v.x, v.y, config.COLLISION_MESH_RADIUS);
         })
       }
       if (timeDiff > millisToGrow) {

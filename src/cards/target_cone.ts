@@ -52,8 +52,7 @@ const spell: Spell = {
         }
         // Draw visual circle for prediction
         if (prediction) {
-          const color = outOfRange ? colors.outOfRangeGrey : colors.targetingSpellGreen
-          drawUIConePrediction(target, adjustedRange, startAngle, endAngle, color);
+          drawUIConePrediction(target, adjustedRange, startAngle, endAngle, 0xffffff);
         } else {
           animatedCones.push({ origin: state.casterUnit, coneStartPoint: target, radius: adjustedRange, startAngle, endAngle });
         }
@@ -109,15 +108,14 @@ async function animate(cones: Cone[], underworld: Underworld, prediction: boolea
   return raceTimeout(timeoutMsAnimation, 'animatedExpand', new Promise<void>(resolve => {
     animateFrame(cones, Date.now(), entitiesTargeted, underworld, resolve)();
   })).then(() => {
-    globalThis.predictionGraphics?.clear();
+    globalThis.predictionGraphicsGreen?.clear();
   });
 }
 const millisToGrow = 1000;
 function animateFrame(cones: Cone[], startTime: number, entitiesTargeted: HasSpace[], underworld: Underworld, resolve: (value: void | PromiseLike<void>) => void) {
   return function animateFrameInner() {
-    if (globalThis.predictionGraphics) {
-      globalThis.predictionGraphics.clear();
-      globalThis.predictionGraphics.beginFill(colors.targetingSpellGreen, 0.2);
+    if (globalThis.predictionGraphicsGreen) {
+      globalThis.predictionGraphicsGreen.clear();
       const now = Date.now();
       const timeDiff = now - startTime;
       for (let cone of cones) {
@@ -126,8 +124,8 @@ function animateFrame(cones: Cone[], startTime: number, entitiesTargeted: HasSpa
 
         const animatedRadius = radius * easeOutCubic(Math.min(1, timeDiff / millisToGrow));
 
-        drawUICone(globalThis.predictionGraphics, coneStartPoint, animatedRadius, startAngle, endAngle, colors.targetingSpellGreen);
-        globalThis.predictionGraphics.endFill();
+        drawUICone(globalThis.predictionGraphicsGreen, coneStartPoint, animatedRadius, startAngle, endAngle, 0xffffff);
+        globalThis.predictionGraphicsGreen.endFill();
         // Draw circles around new targets
         const withinRadiusAndAngle = underworld.getPotentialTargets(
           false
@@ -139,7 +137,7 @@ function animateFrame(cones: Cone[], startTime: number, entitiesTargeted: HasSpa
             entitiesTargeted.push(v);
             playSFXKey('targetAquired');
           }
-          globalThis.predictionGraphics?.drawCircle(v.x, v.y, config.COLLISION_MESH_RADIUS);
+          globalThis.predictionGraphicsGreen?.drawCircle(v.x, v.y, config.COLLISION_MESH_RADIUS);
         })
       }
       if (timeDiff > millisToGrow) {

@@ -25,13 +25,12 @@ import { getSuffocateBuildup, suffocateCardId } from '../cards/suffocate';
 import * as Cards from '../cards';
 import { ANCIENT_UNIT_ID } from '../entity/units/ancient';
 import { isRune } from '../cards/cardUtils';
+import { GlowFilter } from '@pixi/filter-glow';
 
 const TEXT_OUT_OF_RANGE = 'Out of Range';
 // Graphics for rendering above board and walls but beneath units and doodads,
 // see containerPlanningView for exact render order.
 let planningViewGraphics: PIXI.Graphics | undefined;
-// Graphics for drawing the spell effects during the dry run phase
-let predictionGraphics: PIXI.Graphics | undefined;
 // labelText is used to add a label to planningView circles 
 // so that the player knows what the circle is referencing.
 let labelText = !globalThis.pixi ? undefined : new globalThis.pixi.Text('', { fill: 'white', ...config.PIXI_TEXT_DROP_SHADOW, fontFamily: 'Forum' });
@@ -41,9 +40,23 @@ export function initPlanningView() {
     planningViewGraphics = new globalThis.pixi.Graphics();
     globalThis.planningViewGraphics = planningViewGraphics;
     containerPlanningView.addChild(planningViewGraphics);
-    predictionGraphics = new globalThis.pixi.Graphics();
-    globalThis.predictionGraphics = predictionGraphics;
-    containerUI.addChild(predictionGraphics);
+    globalThis.predictionGraphicsGreen = new globalThis.pixi.Graphics();
+    globalThis.predictionGraphicsGreen.filters = [
+      new GlowFilter({ distance: 15, outerStrength: config.predictionGlowStrength, innerStrength: 0, color: colors.targetingSpellGreen })
+    ];
+    containerUI.addChild(globalThis.predictionGraphicsGreen);
+
+    globalThis.predictionGraphicsWhite = new globalThis.pixi.Graphics();
+    globalThis.predictionGraphicsWhite.filters = [
+      new GlowFilter({ distance: 15, outerStrength: config.predictionGlowStrength, innerStrength: 0, color: 0xffffff })
+    ];
+    containerUI.addChild(globalThis.predictionGraphicsWhite);
+
+    globalThis.predictionGraphicsBlue = new globalThis.pixi.Graphics();
+    globalThis.predictionGraphicsBlue.filters = [
+      new GlowFilter({ distance: 15, outerStrength: config.predictionGlowStrength, innerStrength: 0, color: colors.predictionBlue })
+    ];
+    containerUI.addChild(globalThis.predictionGraphicsBlue);
     if (labelText) {
       labelText.style.fontSize = 100;
       labelText.anchor.x = 0.5;
@@ -263,6 +276,16 @@ export function clearTints(underworld: Underworld) {
     }
   });
 }
+function updatePredictionGlow(graphics: PIXI.Graphics | undefined, outOfRange: boolean) {
+  if (graphics) {
+    const glowFilter = (graphics.filters || [])[0];
+    if (glowFilter) {
+      // @ts-ignore
+      glowFilter.outerStrength = outOfRange ? 0 : config.predictionGlowStrength;
+    }
+  }
+
+}
 
 // Returns true if castCards has effect
 async function showCastCardsPrediction(underworld: Underworld, target: Vec2, casterUnit: Unit.IUnit, cardIds: string[], outOfRange: boolean): Promise<boolean> {
@@ -273,7 +296,10 @@ async function showCastCardsPrediction(underworld: Underworld, target: Vec2, cas
   if (globalThis.player) {
     // Note: setPredictionGraphicsLineStyle must be called before castCards (because castCards may use it
     // to draw predictions) and after clearSpellEffectProjection, which clears predictionGraphics.
-    setPredictionGraphicsLineStyle(outOfRange ? 0xaaaaaa : colors.targetBlue);
+
+    // Handle out of range colors for prediction graphics
+    [globalThis.predictionGraphicsBlue, globalThis.predictionGraphicsGreen, globalThis.predictionGraphicsWhite].forEach(g => updatePredictionGlow(g, outOfRange));
+
     const effectState = await underworld.castCards({
       // Make a copy of cardUsageCounts for prediction so it can accurately
       // calculate mana for multiple copies of one spell in one cast
@@ -616,18 +642,18 @@ export async function _runPredictions(underworld: Underworld) {
       // draw spell predictions
       // Modify and draw all of the stored predictions
       // If out of range, set color to grey
-      if (predictionGraphics && !globalThis.isHUDHidden) {
+      if (globalThis.predictionGraphicsGreen && !globalThis.isHUDHidden) {
         for (let { points, color, text } of predictionPolys) {
           const colorOverride = outOfRange ? colors.outOfRangeGrey : color;
-          drawUIPoly(predictionGraphics, points, colorOverride, text);
+          drawUIPoly(globalThis.predictionGraphicsGreen, points, colorOverride, text);
         }
         for (let { target, color, radius, startArc, endArc, text } of predictionCones) {
           const colorOverride = outOfRange ? colors.outOfRangeGrey : color;
-          drawUICone(predictionGraphics, target, radius, startArc, endArc, colorOverride);
+          drawUICone(globalThis.predictionGraphicsGreen, target, radius, startArc, endArc, colorOverride);
         }
         for (let { target, color, radius, text } of predictionCircles) {
-          const colorOverride = outOfRange ? colors.outOfRangeGrey : color;
-          drawUICircle(predictionGraphics, target, radius, colorOverride, text);
+          const colorOverride = outOfRange ? colors.outOfRangeGrey : 0xffffff;
+          drawUICircle(globalThis.predictionGraphicsGreen, target, radius, colorOverride, text);
         }
       }
       if (globalThis.radiusGraphics) {
@@ -733,8 +759,14 @@ export function predictAIActions(underworld: Underworld, restartChunks: boolean)
 // SpellEffectProjection are images to denote some information, such as the spell or action about to be cast/taken when clicked
 export function clearSpellEffectProjection(underworld: Underworld, forceClear?: boolean) {
   if (!globalThis.animatingSpells || forceClear) {
-    if (predictionGraphics) {
-      predictionGraphics.clear();
+    if (globalThis.predictionGraphicsGreen) {
+      globalThis.predictionGraphicsGreen.clear();
+    }
+    if (globalThis.predictionGraphicsWhite) {
+      globalThis.predictionGraphicsWhite.clear();
+    }
+    if (globalThis.predictionGraphicsBlue) {
+      globalThis.predictionGraphicsBlue.clear();
     }
     if (globalThis.radiusGraphics) {
       globalThis.radiusGraphics.clear();
@@ -752,10 +784,10 @@ export function clearSpellEffectProjection(underworld: Underworld, forceClear?: 
 }
 
 export function drawPredictionLine(start: Vec2, end: Vec2) {
-  if (predictionGraphics && !globalThis.isHUDHidden) {
-    predictionGraphics.lineStyle(3, colors.targetingSpellGreen, 1.0);
-    predictionGraphics.moveTo(start.x, start.y);
-    predictionGraphics.lineTo(end.x, end.y);
+  if (predictionGraphicsGreen && !globalThis.isHUDHidden) {
+    predictionGraphicsGreen.lineStyle(2, 0xffffff, 1.0);
+    predictionGraphicsGreen.moveTo(start.x, start.y);
+    predictionGraphicsGreen.lineTo(end.x, end.y);
   }
 }
 
@@ -824,12 +856,6 @@ export function drawUICircleFillPrediction(target: Vec2, radius: number, color: 
   // Note: The actual drawing now happens inside of runPredictions
   // clone target so it's not a reference, it should draw what the value was when it was passed into this function
   predictionCirclesFill.push({ target: Vec.clone(target), radius, color, text });
-}
-
-export function setPredictionGraphicsLineStyle(color: number) {
-  if (predictionGraphics) {
-    predictionGraphics.lineStyle(3, color, 1.0)
-  }
 }
 
 export function isOutOfBounds(target: Vec2, underworld: Underworld) {

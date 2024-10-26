@@ -51,7 +51,6 @@ declare global {
   // var radiusGraphics: undefined;
   // var thinkingPlayerGraphics: undefined;
   // var unitOverlayGraphics: undefined;
-  // var predictionGraphics: undefined;
   // var planningViewGraphics: undefined;
   // var debugCave: undefined;
   // var privacyPolicyAndEULAConsent: undefined;
@@ -135,7 +134,9 @@ declare global {
   // Graphics for drawing unit attack radius and such
   var selectedUnitGraphics: PIXI.Graphics | undefined;
   // Graphics for drawing the spell effects during the dry run phase
-  var predictionGraphics: PIXI.Graphics | undefined;
+  var predictionGraphicsGreen: PIXI.Graphics | undefined;
+  var predictionGraphicsWhite: PIXI.Graphics | undefined;
+  var predictionGraphicsBlue: PIXI.Graphics | undefined;
   // Graphics for rendering above board and walls but beneath units and doodads,
   // see containerPlanningView for exact render order.
   var planningViewGraphics: PIXI.Graphics | undefined;

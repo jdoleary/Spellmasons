@@ -53,8 +53,7 @@ const spell: Spell = {
         const targetingColumn = getColumnPoints(target, vector, width, depth);
         // Draw visual circle for prediction
         if (prediction) {
-          const color = outOfRange ? colors.outOfRangeGrey : colors.targetingSpellGreen
-          drawUIPolyPrediction(targetingColumn, color);
+          drawUIPolyPrediction(targetingColumn, 0xffffff);
         } else {
           animateColumns.push({ castLocation: target, vector, width, depth });
         }
@@ -106,15 +105,14 @@ async function animate(columns: Column[], underworld: Underworld, prediction: bo
   return raceTimeout(timeoutMsAnimation, 'animatedExpand', new Promise<void>(resolve => {
     animateFrame(columns, Date.now(), entitiesTargeted, underworld, resolve)();
   })).then(() => {
-    globalThis.predictionGraphics?.clear();
+    globalThis.predictionGraphicsGreen?.clear();
   });
 }
 const millisToGrow = 1000;
 function animateFrame(columns: Column[], startTime: number, entitiesTargeted: HasSpace[], underworld: Underworld, resolve: (value: void | PromiseLike<void>) => void) {
   return function animateFrameInner() {
-    if (globalThis.predictionGraphics) {
-      globalThis.predictionGraphics.clear();
-      globalThis.predictionGraphics.beginFill(colors.targetingSpellGreen, 0.2);
+    if (globalThis.predictionGraphicsGreen) {
+      globalThis.predictionGraphicsGreen.clear();
       const now = Date.now();
       const timeDiff = now - startTime;
       for (let column of columns) {
@@ -123,9 +121,8 @@ function animateFrame(columns: Column[], startTime: number, entitiesTargeted: Ha
         const animatedDepth = depth * easeOutCubic(Math.min(1, timeDiff / millisToGrow));
 
         const targetingColumn = getColumnPoints(castLocation, vector, width, animatedDepth);
-        globalThis.predictionGraphics.lineStyle(2, colors.targetingSpellGreen, 1.0)
-        globalThis.predictionGraphics.drawPolygon(targetingColumn as PIXI.Point[]);
-        globalThis.predictionGraphics.endFill();
+        globalThis.predictionGraphicsGreen.lineStyle(2, 0xffffff, 1.0)
+        globalThis.predictionGraphicsGreen.drawPolygon(targetingColumn as PIXI.Point[]);
         const withinColumn = underworld.getPotentialTargets(
           false
         ).filter(t => {
@@ -136,7 +133,7 @@ function animateFrame(columns: Column[], startTime: number, entitiesTargeted: Ha
             entitiesTargeted.push(v);
             playSFXKey('targetAquired');
           }
-          globalThis.predictionGraphics?.drawCircle(v.x, v.y, config.COLLISION_MESH_RADIUS);
+          globalThis.predictionGraphicsGreen?.drawCircle(v.x, v.y, config.COLLISION_MESH_RADIUS);
         })
       }
 
@@ -158,18 +155,18 @@ function distanceAlongColumn(point: Vec2, columnOrigin: Vec2, vector: Vec2): num
   // Vector is already normalized in effect, so no need to normalize it again here
   const projection = Vec.projectOnNormal(vectorToPoint, vector);
 
-  // if (predictionGraphics) {
+  // if (predictionGraphicsGreen) {
   //   const projectionEnd = Vec.add(columnOrigin, projection);
-  //   predictionGraphics.lineStyle(4, colors.trueBlue, 1.0)
-  //   predictionGraphics.moveTo(columnOrigin.x, columnOrigin.y);
-  //   predictionGraphics.lineTo(projectionEnd.x, projectionEnd.y);
-  //   predictionGraphics.endFill();
+  //   predictionGraphicsGreen.lineStyle(4, colors.trueBlue, 1.0)
+  //   predictionGraphicsGreen.moveTo(columnOrigin.x, columnOrigin.y);
+  //   predictionGraphicsGreen.lineTo(projectionEnd.x, projectionEnd.y);
+  //   predictionGraphicsGreen.endFill();
 
   //   const columnEnd = Vec.add(columnOrigin, vector);
-  //   predictionGraphics.lineStyle(2, colors.trueRed, 1.0)
-  //   predictionGraphics.moveTo(columnOrigin.x, columnOrigin.y);
-  //   predictionGraphics.lineTo(columnEnd.x, columnEnd.y);
-  //   predictionGraphics.endFill();
+  //   predictionGraphicsGreen.lineStyle(2, colors.trueRed, 1.0)
+  //   predictionGraphicsGreen.moveTo(columnOrigin.x, columnOrigin.y);
+  //   predictionGraphicsGreen.lineTo(columnEnd.x, columnEnd.y);
+  //   predictionGraphicsGreen.endFill();
   // }
 
   return Vec.magnitude(projection);

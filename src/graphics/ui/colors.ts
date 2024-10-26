@@ -18,6 +18,7 @@ export const manaBrightBlue = 0x6699ff;
 export const manaBlue = 0x5656d5;
 export const manaDarkBlue = 0x282863;
 export const targetingSpellGreen = 0x57ed61;
+export const predictionBlue = 0x5773ed;
 export const outOfRangeGrey = 0xaaaaaa;
 export const errorRed = 0xF93943;
 export const abyss = {

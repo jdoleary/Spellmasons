@@ -127,7 +127,7 @@ async function animate(chains: { entity: HasSpace, chainsRemaining: number }[][]
     return new Promise<void>((resolve) => {
       doDraw(resolve, chains, Date.now() + boltAnimationTime);
     }).then(() => {
-      globalThis.predictionGraphics?.clear();
+      globalThis.predictionGraphicsBlue?.clear();
     });
   }
 }
@@ -148,9 +148,9 @@ function doDraw(resolve: (value: void | PromiseLike<void>) => void, chains: { en
 function drawLineBetweenTargets(chains: { entity: HasSpace, chainsRemaining: number }[][], endTime: number): boolean {
   // Animations do not occur on headless
   if (!globalThis.headless) {
-    if (globalThis.predictionGraphics) {
+    if (globalThis.predictionGraphicsBlue) {
       // Clear last animation frame
-      globalThis.predictionGraphics.clear();
+      globalThis.predictionGraphicsBlue.clear();
 
       // All chain groups animate simultaneously
       for (let g = 0; g < chains.length; g++) {
@@ -164,7 +164,7 @@ function drawLineBetweenTargets(chains: { entity: HasSpace, chainsRemaining: num
           const boltsToDraw = Math.min(targets.length * timePassed / (boltAnimationTime * (1 - hangtime)), targets.length - 1);
 
           let from = targets[0];
-          globalThis.predictionGraphics.moveTo(from.entity.x, from.entity.y);
+          globalThis.predictionGraphicsBlue.moveTo(from.entity.x, from.entity.y);
 
           for (let i = 0; i <= boltsToDraw; i++) {
             // Draw lightning to the next target if it exists, else draw lightning on self
@@ -173,13 +173,13 @@ function drawLineBetweenTargets(chains: { entity: HasSpace, chainsRemaining: num
               // bolt size should increase with chains remaining to
               // emphasize mechanic of inc. damage/ranged per chain left
               const boltSize = Math.sqrt(from.chainsRemaining) * 2;
-              globalThis.predictionGraphics.lineStyle(boltSize, 0xffffff, 1.0)
+              globalThis.predictionGraphicsBlue.lineStyle(boltSize, 0xffffff, 1.0)
 
               // pow function creates more impact/pause between chains hit
               const progress = Math.pow(Math.min(boltsToDraw - i, 1), 10);
               for (let j = 1; j <= 5; j++) {
                 const intermediaryPoint = jitter(lerpVec2(from.entity, target.entity, 0.2 * progress * j), boltSize * 3);
-                globalThis.predictionGraphics.lineTo(intermediaryPoint.x, intermediaryPoint.y);
+                globalThis.predictionGraphicsBlue.lineTo(intermediaryPoint.x, intermediaryPoint.y);
               }
               from = target;
             }

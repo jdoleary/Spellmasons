@@ -370,8 +370,8 @@ export default class Underworld {
     const prediction = true;
     const PREVENT_INFINITE_WITH_WARN_LOOP_THRESHOLD = 1000;
     let loopCount = 0;
-    if (globalThis.predictionGraphics) {
-      globalThis.predictionGraphics.beginFill(colors.forceMoveColor);
+    if (globalThis.predictionGraphicsWhite) {
+      globalThis.predictionGraphicsWhite.beginFill(colors.forceMoveColor);
     }
     while (this.forceMovePrediction.length > 0 && loopCount < PREVENT_INFINITE_WITH_WARN_LOOP_THRESHOLD) {
       loopCount++;
@@ -381,18 +381,16 @@ export default class Underworld {
           const startPos = Vec.clone(forceMoveInst.pushedObject);
           const done = this.runForceMove(forceMoveInst, EXPECTED_MILLIS_PER_GAMELOOP, prediction);
           // Draw prediction lines
-          if (globalThis.predictionGraphics && !globalThis.isHUDHidden) {
-            globalThis.predictionGraphics.lineStyle(4, colors.forceMoveColor, 1.0);
-            globalThis.predictionGraphics.moveTo(startPos.x, startPos.y);
-            globalThis.predictionGraphics.lineTo(forceMoveInst.pushedObject.x, forceMoveInst.pushedObject.y);
+          if (globalThis.predictionGraphicsWhite && !globalThis.isHUDHidden) {
+            globalThis.predictionGraphicsWhite.lineStyle(2, colors.forceMoveColor, 1.0);
+            globalThis.predictionGraphicsWhite.moveTo(startPos.x, startPos.y);
+            globalThis.predictionGraphicsWhite.lineTo(forceMoveInst.pushedObject.x, forceMoveInst.pushedObject.y);
             // Draw circle at the end so the line path isn't a trail of rectangles with sharp edges
-            globalThis.predictionGraphics.lineStyle(1, colors.forceMoveColor, 1.0);
-            globalThis.predictionGraphics.drawCircle(forceMoveInst.pushedObject.x, forceMoveInst.pushedObject.y, 1);
           }
           if (done) {
             // Draw a circle at the end position
-            if (globalThis.predictionGraphics && !globalThis.isHUDHidden) {
-              globalThis.predictionGraphics.drawCircle(forceMoveInst.pushedObject.x, forceMoveInst.pushedObject.y, 3);
+            if (globalThis.predictionGraphicsWhite && !globalThis.isHUDHidden) {
+              globalThis.predictionGraphicsWhite.drawCircle(forceMoveInst.pushedObject.x, forceMoveInst.pushedObject.y, 2);
             }
             if (isForceMoveUnitOrPickup(forceMoveInst)) {
               forceMoveInst.resolve();
@@ -402,8 +400,8 @@ export default class Underworld {
         }
       }
     }
-    if (globalThis.predictionGraphics) {
-      globalThis.predictionGraphics.endFill();
+    if (globalThis.predictionGraphicsWhite) {
+      globalThis.predictionGraphicsWhite.endFill();
     }
     if (loopCount >= PREVENT_INFINITE_WITH_WARN_LOOP_THRESHOLD) {
       console.error('forceMove simulation hit PREVENT_INFINITE threshold');

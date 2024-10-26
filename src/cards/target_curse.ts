@@ -62,15 +62,17 @@ export async function animateTargetCursed(newTargets: Vec2[]) {
     // Await delay between iterations
     await new Promise(resolve => setTimeout(resolve, starAnimationTime / iterations));
 
-    if (globalThis.predictionGraphics) {
-      globalThis.predictionGraphics.clear();
-      globalThis.predictionGraphics.lineStyle(1.5, 0x9933FF, 0.8);
+    // between 0 and 1;
+    const progress = easeOutCubic((i + 1) / iterations);
+    const graphics = progress >= 1 ? globalThis.predictionGraphicsGreen : globalThis.predictionGraphicsBlue;
+    if (graphics) {
+      globalThis.predictionGraphicsBlue?.clear();
+      globalThis.predictionGraphicsGreen?.clear();
+      graphics.lineStyle(1.5, 0x9933FF, 0.8);
       for (let target of newTargets) {
 
-        // between 0 and 1;
-        const progress = easeOutCubic((i + 1) / iterations);
         if (progress >= 1) {
-          globalThis.predictionGraphics.lineStyle(2, colors.targetingSpellGreen, 1);
+          graphics.lineStyle(2, 0xffffff, 1);
         }
 
 
@@ -80,12 +82,12 @@ export async function animateTargetCursed(newTargets: Vec2[]) {
 
         let currentPoint = points[0];
         if (!currentPoint) return;
-        globalThis.predictionGraphics.moveTo(currentPoint.x, currentPoint.y);
+        graphics.moveTo(currentPoint.x, currentPoint.y);
 
         for (let i = 0; i < completedLines; i++) {
           const nextPoint = getNextPoint(points, points.indexOf(currentPoint));
           if (nextPoint) {
-            globalThis.predictionGraphics.lineTo(nextPoint.x, nextPoint.y);
+            graphics.lineTo(nextPoint.x, nextPoint.y);
             currentPoint = nextPoint;
           }
         }
@@ -94,12 +96,12 @@ export async function animateTargetCursed(newTargets: Vec2[]) {
           const nextPoint = getNextPoint(points, points.indexOf(currentPoint));;
           if (nextPoint) {
             const lerp = lerpVec2(currentPoint, nextPoint, partialProgress);
-            globalThis.predictionGraphics.lineTo(lerp.x, lerp.y);
+            graphics.lineTo(lerp.x, lerp.y);
           }
         }
 
         if (progress >= 1) {
-          globalThis.predictionGraphics?.drawCircle(target.x, target.y, radius);
+          graphics?.drawCircle(target.x, target.y, radius);
           playSFXKey('targetAquired');
         }
       }
@@ -108,7 +110,7 @@ export async function animateTargetCursed(newTargets: Vec2[]) {
 
   // Await the post animation delay
   await new Promise(resolve => setTimeout(resolve, postAnimationDelay));
-  globalThis.predictionGraphics?.clear();
+  graphics?.clear();
   return;
 }
 
