@@ -1,6 +1,6 @@
 # QA Protocol
 ## Regular
-- **new** check spritesheet paths in mods
+- **new** is background animating?
 - Run `npm run build_types` to keeps mods types up to date (and push the changes to github)
     - Test mods
     - Push types to spellmasons-mods
