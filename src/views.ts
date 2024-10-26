@@ -376,13 +376,22 @@ export function chooseBookmark(bookmark: string, forceActive?: true | undefined,
   }
 
 }
-const elBgGolem = document.querySelector('.bg.golem') as HTMLElement;
-const elBgBlue = document.querySelector('.bg.blue') as HTMLElement;
-const elBgGreen = document.querySelector('.bg.green') as HTMLElement;
-const elBgPriest = document.querySelector('.bg.priest') as HTMLElement;
-const elBgRed = document.querySelector('.bg.red') as HTMLElement;
-const elBgVamp = document.querySelector('.bg.vampire') as HTMLElement;
+let elBgGolem = document.querySelector('.bg.golem') as HTMLElement;
+let elBgBlue = document.querySelector('.bg.blue') as HTMLElement;
+let elBgGreen = document.querySelector('.bg.green') as HTMLElement;
+let elBgPriest = document.querySelector('.bg.priest') as HTMLElement;
+let elBgRed = document.querySelector('.bg.red') as HTMLElement;
+let elBgVamp = document.querySelector('.bg.vampire') as HTMLElement;
 function animateMenu() {
+  if (!elBgGolem || !elBgBlue || !elBgGreen || !elBgPriest || !elBgRed || !elBgVamp) {
+    elBgGolem = document.querySelector('.bg.golem') as HTMLElement;
+    elBgBlue = document.querySelector('.bg.blue') as HTMLElement;
+    elBgGreen = document.querySelector('.bg.green') as HTMLElement;
+    elBgPriest = document.querySelector('.bg.priest') as HTMLElement;
+    elBgRed = document.querySelector('.bg.red') as HTMLElement;
+    elBgVamp = document.querySelector('.bg.vampire') as HTMLElement;
+  }
+
   [
     { el: elBgGolem, speed: 0.05, maxDriftDist: 40, excludeNegativeJitter: true },
     { el: elBgBlue, speed: 0.05, maxDriftDist: 30 },
