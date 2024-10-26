@@ -58,13 +58,14 @@ export async function animateTargetCursed(newTargets: Vec2[]) {
   const starAnimationTime = 1000; //ms
   const postAnimationDelay = 500; //ms
 
+  let graphics;
   for (let i = 0; i < iterations; i++) {
     // Await delay between iterations
     await new Promise(resolve => setTimeout(resolve, starAnimationTime / iterations));
 
     // between 0 and 1;
     const progress = easeOutCubic((i + 1) / iterations);
-    const graphics = progress >= 1 ? globalThis.predictionGraphicsGreen : globalThis.predictionGraphicsBlue;
+    graphics = progress >= 1 ? globalThis.predictionGraphicsGreen : globalThis.predictionGraphicsBlue;
     if (graphics) {
       globalThis.predictionGraphicsBlue?.clear();
       globalThis.predictionGraphicsGreen?.clear();
