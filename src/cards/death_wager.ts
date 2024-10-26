@@ -34,7 +34,7 @@ const spell: Spell = {
     effect: async (state, card, quantity, underworld, prediction) => {
       const player = underworld.players.find(p => prediction ? p.unit.predictionCopy == state.casterUnit : p.unit == state.casterUnit);
       if (player) {
-        if (state.casterUnit.healthMax !== state.casterUnit.health) {
+        if (state.casterUnit.health < state.casterUnit.healthMax) {
           if (prediction) {
             addWarningAtMouse('death_wager_error1');
           } else {
