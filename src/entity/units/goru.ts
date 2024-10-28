@@ -16,7 +16,7 @@ import { makeManaTrail } from '../../graphics/Particles';
 import seedrandom from 'seedrandom';
 import { Vec2 } from '../../jmath/Vec';
 import { summoningSicknessId } from '../../modifierSummoningSickness';
-import { chooseOneOfSeeded, getUniqueSeedString } from '../../jmath/rand';
+import { chooseOneOfSeeded, getUniqueSeedString, shuffle } from '../../jmath/rand';
 import { oneOffImage } from '../../cards/cardUtils';
 import { containerUnits } from '../../graphics/PixiUtils';
 import { BLOOD_GOLEM_ID } from './bloodGolem';
@@ -328,8 +328,10 @@ const unit: UnitSource = {
         const summonTypes = [allUnits[BLOOD_GOLEM_ID], allUnits[BLOOD_ARCHER_ID]];
         const summons: { coords: Vec2, sourceUnit: UnitSource }[] = [];
         const seed = seedrandom(`${getUniqueSeedString(underworld)}-${unit.id}`);
+        const validSpawnCoords = underworld.findValidSpawns({ spawnSource: unit, ringLimit: 10, prediction: false, radius: config.spawnSize }, { allowLiquid: false });
+        const chosenCoords = shuffle(validSpawnCoords, seed).slice(0, numberOfSummons);
         for (let i = 0; i < numberOfSummons; i++) {
-          const coords = underworld.findValidSpawnInRadius(unit, false, { unobstructedPoint: unit });
+          const coords = chosenCoords[i];
           if (coords) {
             const sourceUnit = chooseOneOfSeeded(summonTypes, seed);
             if (sourceUnit) {

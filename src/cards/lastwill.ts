@@ -33,6 +33,8 @@ const spell: Spell = {
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       for (let unit of state.targetedUnits.filter(u => u.alive)) {
+        // Last Will does not stack for balance reasons
+        const quantity = 1;
         Unit.addModifier(unit, lastWillId, underworld, prediction, quantity);
         if (!prediction) {
           floatingText({ coords: unit, text: `Added ${lastWillId}` });
@@ -58,36 +60,32 @@ const spell: Spell = {
   },
   events: {
     onDeath: async (unit: IUnit, underworld: Underworld, prediction: boolean) => {
-      // Last Will should not stack for balance reasons
-      const quantity = 1;
       // Unique for the unit and for quantity and same across all clients due to turn_number and unit.id
       const seed = seedrandom(`${getUniqueSeedString(underworld)}-${unit.id}`);
-      for (let i = 0; i < quantity; i++) {
-        const coord = underworld.findValidSpawnInRadius(unit, prediction, { allowLiquid: unit.inLiquid });
-        const choice = chooseObjectWithProbability(Pickup.pickups.map((p, index) => {
-          return {
-            index, probability: p.name.includes('Potion') ? p.probability : 0
-          }
-        }), seed);
-        if (choice) {
-          const { index } = choice;
-          if (coord) {
-            const pickup = underworld.spawnPickup(index, coord, prediction);
-            if (!prediction && pickup) {
-              // Notify spawn after a delay so it's appearance doesn't compete with
-              // the visuals and the audio of the unit dying
-              setTimeout(() => {
-                playSFXKey('spawnPotion');
-                floatingText({ coords: pickup, text: lastWillId });
-              }, 1000);
-            }
-          } else {
-            console.warn(`Could not find spawn for pickup from ${lastWillId} `);
+      const coord = underworld.findValidSpawnInRadius(unit, prediction, { allowLiquid: unit.inLiquid });
+      const choice = chooseObjectWithProbability(Pickup.pickups.map((p, index) => {
+        return {
+          index, probability: p.name.includes('Potion') ? p.probability : 0
+        }
+      }), seed);
+      if (choice) {
+        const { index } = choice;
+        if (coord) {
+          const pickup = underworld.spawnPickup(index, coord, prediction);
+          if (!prediction && pickup) {
+            // Notify spawn after a delay so it's appearance doesn't compete with
+            // the visuals and the audio of the unit dying
+            setTimeout(() => {
+              playSFXKey('spawnPotion');
+              floatingText({ coords: pickup, text: lastWillId });
+            }, 1000);
           }
         } else {
-          console.warn(`Could not choose valid pickup for ${lastWillId}`);
-
+          console.warn(`Could not find spawn for pickup from ${lastWillId} `);
         }
+      } else {
+        console.warn(`Could not choose valid pickup for ${lastWillId}`);
+
       }
 
     }

@@ -1,5 +1,5 @@
 import * as Unit from '../Unit';
-import { prng } from '../../jmath/rand';
+import { prng, shuffle } from '../../jmath/rand';
 import { allUnits, UnitSource } from './index';
 import { UnitSubType, UnitType } from '../../types/commonTypes';
 import * as math from '../../jmath/math';
@@ -54,14 +54,17 @@ const unit: UnitSource = {
   getUnitAttackTargets: summonerGetUnitAttackTargets
 };
 export async function summonerAction(unit: Unit.IUnit, ableToSummon: boolean, underworld: Underworld, { closeUnit, farUnit }: { closeUnit: UnitSource | undefined, farUnit: UnitSource | undefined }, baseNumberOfSummons: number) {
+  const seed = seedrandom(`${underworld.seed}-${underworld.turn_number}-${unit.id}`);
   // Summon unit
   if (ableToSummon) {
     unit.mana -= unit.manaCostToCast;
     await Unit.playComboAnimation(unit, unit.animations.attack, async () => {
       let numberOfSummons = baseNumberOfSummons * (unit.isMiniboss ? 2 : 1);
       let lastPromise = Promise.resolve();
+      const validSpawnCoords = underworld.findValidSpawns({ spawnSource: unit, ringLimit: 10, prediction: false, radius: config.spawnSize }, { allowLiquid: false });
+      const chosenSpawnCoords = shuffle(validSpawnCoords, seed);
       for (let i = 0; i < numberOfSummons; i++) {
-        const coords = underworld.findValidSpawnInRadius(unit, false, { unobstructedPoint: unit });
+        const coords = chosenSpawnCoords[i];
         if (coords) {
           const enemyIsClose = underworld.units.filter(u => u.faction !== unit.faction).some(u => math.distance(coords, u) <= PLAYER_BASE_ATTACK_RANGE)
           let sourceUnit = farUnit;
@@ -107,7 +110,8 @@ export async function summonerAction(unit: Unit.IUnit, ableToSummon: boolean, un
     if (enemyIsClose) {
       // Teleport away
       const teleportFromLocation = clone(unit);
-      const teleportToLocation = underworld.findValidSpawnInRadius(unit, false, { unobstructedPoint: unit });
+      const validSpawnCoords = underworld.findValidSpawns({ spawnSource: unit, ringLimit: 10, prediction: false, radius: config.spawnSize }, { allowLiquid: false });
+      const teleportToLocation = shuffle(validSpawnCoords, seed)[0];
       if (teleportToLocation) {
         await new Promise<void>(resolveTeleport => {
           new Promise<void>(resolve => oneOffImage(unit, 'summonerMagic', containerUnits, resolve)).then(() => {
