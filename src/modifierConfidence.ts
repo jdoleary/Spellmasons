@@ -1,5 +1,4 @@
 import { registerEvents, registerModifiers } from "./cards";
-import { animateMitosis, doCloneUnit } from "./cards/clone";
 import { getOrInitModifier } from "./cards/util";
 import * as Unit from './entity/Unit';
 import floatingText from "./graphics/FloatingText";

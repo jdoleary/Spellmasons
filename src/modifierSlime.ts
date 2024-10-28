@@ -5,6 +5,7 @@ import * as Image from './graphics/Image';
 import * as Unit from './entity/Unit';
 import floatingText from "./graphics/FloatingText";
 import Underworld from './Underworld';
+import * as config from './config';
 
 export const slimeId = 'Slime';
 const subspriteId = 'slime';
@@ -41,7 +42,8 @@ export default function registerSlime() {
         return;
       }
       await animateMitosis(unit.image);
-      const clone = doCloneUnit(unit, underworld, prediction, unit);
+      const validSpawnCoords = underworld.findValidSpawns({ spawnSource: unit, ringLimit: 5, prediction, radius: config.spawnSize }, { allowLiquid: unit.inLiquid });
+      const clone = doCloneUnit(unit, underworld, prediction, unit, validSpawnCoords[0]);
       if (clone) {
         floatingText({ coords: unit, text: slimeId, prediction });
         // Only the source unit maintains slimeId or else it gets exponential

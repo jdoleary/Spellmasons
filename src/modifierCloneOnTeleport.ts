@@ -6,6 +6,7 @@ import * as Unit from './entity/Unit';
 import floatingText from "./graphics/FloatingText";
 import { equal, Vec2 } from "./jmath/Vec";
 import Underworld from './Underworld';
+import * as config from './config';
 
 export const cloneOnTeleportId = 'Changeling';
 export default function registerContaminateSelfOnTeleport() {
@@ -27,8 +28,9 @@ export default function registerContaminateSelfOnTeleport() {
       }
       const modifier = unit.modifiers[cloneOnTeleportId];
       if (modifier) {
+        const validSpawnCoords = underworld.findValidSpawns({ spawnSource: unit, ringLimit: 5, prediction, radius: config.spawnSize }, { allowLiquid: unit.inLiquid });
         for (let i = 0; i < modifier.quantity; i++) {
-          const clone = doCloneUnit(unit, underworld, prediction, unit);
+          const clone = doCloneUnit(unit, underworld, prediction, unit, validSpawnCoords[i]);
           // Attempt to put the Changling where the player was, but in the event
           // that the player is swapping that location might now be full
           let coords = originalLocation;

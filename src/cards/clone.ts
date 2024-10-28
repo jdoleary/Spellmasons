@@ -96,7 +96,7 @@ export function cloneEffect(addClonesToTargetArray: boolean): EffectFn {
     return state;
   }
 }
-export function doCloneUnit(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, summoner: Unit.IUnit, spawnLocation?: Vec2): Unit.IUnit | undefined {
+export function doCloneUnit(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, summoner: Unit.IUnit, spawnLocation: Vec2 | undefined): Unit.IUnit | undefined {
   if (spawnLocation) {
     const clone = Unit.load(Unit.serialize(unit), underworld, prediction);
     clone.summonedBy = summoner;
@@ -140,6 +140,8 @@ export function doCloneUnit(unit: Unit.IUnit, underworld: Underworld, prediction
       Unit.removeModifier(clone, soulShardOwnerModifierId, underworld)
     }
     return clone;
+  } else {
+    console.warn('No spawn location supplied to doCloneUnit');
   }
   return undefined;
 
