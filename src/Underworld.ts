@@ -4375,6 +4375,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         // Default to container unit outlines
         const outlineFilter = new OutlineFilter(2, 0x000000, 0.1);
         containerUnits.filters = [outlineFilter];
+        globalThis.unitOutlineFilter = outlineFilter;
       }
     }
   }

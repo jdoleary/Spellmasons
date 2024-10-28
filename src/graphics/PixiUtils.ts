@@ -400,6 +400,11 @@ export function updateCameraPosition(underworld: Underworld, deltaTime: number) 
   const zoom = !app ? 0 : app.stage.scale.x + ((globalThis.zoomTarget || 1) - app.stage.scale.x) / 8;
   app.stage.scale.x = zoom;
   app.stage.scale.y = zoom;
+  // Make unit outlines relative to zoom so they stay the same
+  // size regardless of zoom level
+  if (globalThis.unitOutlineFilter) {
+    globalThis.unitOutlineFilter.thickness = zoom;
+  }
 
   switch (globalThis.view) {
     case View.Game:

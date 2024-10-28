@@ -314,4 +314,5 @@ declare global {
   var alwaysDrawHealthBars: boolean | undefined;
   var currentChunk: number;
   var recordingShorts: boolean;
+  var unitOutlineFilter: any;
 }

@@ -379,4 +379,5 @@ declare global {
   var alwaysDrawHealthBars: boolean | undefined;
   var currentChunk: number | undefined;
   var recordingShorts: boolean | undefined;
+  var unitOutlineFilter: any;
 }
