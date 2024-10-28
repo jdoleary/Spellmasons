@@ -86,6 +86,9 @@ export function setView(v: View) {
   if (v !== View.Menu) {
     elMenu.classList.add('hidden');
     lastNonMenuView = v;
+
+    // Close all prompts
+    document.querySelectorAll('.prompt .no').forEach(el => (el as HTMLElement).click());
   }
   // Hide the upgrade picker when the view changes
   elUpgradePicker.classList.remove('active');

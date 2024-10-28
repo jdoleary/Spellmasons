@@ -134,14 +134,14 @@ async function JtextPrompt(prompt: PromptArgs): Promise<string> {
     <form style="width:auto">
         <input style="min-width:300px" class='${inputClass}'/>
         <div class="button-holder">
-            ${noBtnText ? `<button type="button" class="no button-wrapper" data-key="${noBtnKey}"> 
+            <button type="button" class="no button-wrapper" style="${!noBtnText ? 'visibility:hidden' : ''}" data-key="${noBtnKey}"> 
                 <div class="button-inner">
-                    ${globalThis.i18n(noBtnText)}
+                    ${noBtnText ? globalThis.i18n(noBtnText) : ''}
                     <div class="hotkey-badge-holder">
                         <kbd class="hotkey-badge">${noBtnKey}</kbd>
                     </div>
                 </div>
-            </button>` : ''}
+            </button>
             <button type="submit" class="yes button-wrapper" ${yesKey ? `data-key="${yesKey}"` : ''}>
                 <div class="button-inner">
                     ${globalThis.i18n(yesText)}
