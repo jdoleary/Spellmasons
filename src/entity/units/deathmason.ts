@@ -20,6 +20,7 @@ import { BLOOD_GOLEM_ID } from './bloodGolem';
 import { BLOOD_ARCHER_ID } from './blood_archer';
 import { registerEvents } from '../../cards';
 import floatingText from '../../graphics/FloatingText';
+import { shuffle } from '../../jmath/rand';
 
 export const bossmasonUnitId = 'Deathmason';
 const NUMBER_OF_ATTACK_TARGETS = 8;
@@ -74,33 +75,12 @@ const deathmason: UnitSource = {
       if (deathmasonPortals.length == 0 && unit.mana >= portalCastCost) {
         unit.mana -= portalCastCost;
         // Spawn new red portals
-        let numberOfSummons = 8;
+        let numberOfSummons = unit.events.includes(ORIGINAL_DEATHMASON_DEATH) ? 8 : 4;
         const keyMoment = () => {
           let lastPromise = Promise.resolve();
-          const portalCoords = [];
-          for (let i = 0; i < numberOfSummons; i++) {
-            const coords = underworld.findValidSpawnInRadius(unit, false, { unobstructedPoint: unit });
-            if (coords) {
-              portalCoords.push(coords);
-            } else {
-              console.log("Summoner could not find valid spawn");
-            }
-          }
+          const validSpawnCoords = underworld.findValidSpawns({ spawnSource: unit, ringLimit: 10, prediction: false, radius: config.spawnSize }, { allowLiquid: false });
+          const portalCoords = shuffle(validSpawnCoords, seed).slice(0, numberOfSummons);
           for (let coord of portalCoords) {
-            // Prevent red portals from spawning too close to each other which could cause
-            // the player to teleport through more than one
-            if (portalCoords.some(p => {
-              // Don't compare with self
-              if (p == coord) {
-                return false;
-              }
-              const dist = math.distance(p, coord);
-              // + 10 is just extra margin to be sure
-              return dist <= config.COLLISION_MESH_RADIUS + 10;
-            })) {
-              // Don't allow spawning 2 red portals on top of each other
-              continue;
-            }
             // Spawn the portals
             lastPromise = makeManaTrail(unit, coord, underworld, unit.faction == Faction.ENEMY ? '#930e0e' : '#0e0e93', '#ff0000').then(() => {
               const portal = Pickup.create({ pos: coord, pickupSource: deathmasonPortalPickupSource, logSource: 'deathmason' }, underworld, false);
@@ -205,48 +185,44 @@ export function registerDeathmasonEvents() {
             ? underworld.unitsPrediction
             : underworld.units).filter(u => u.unitType == UnitType.AI && u.unitSubType !== UnitSubType.DOODAD).forEach(u => Unit.die(u, underworld, prediction, unit));
           if (!prediction) {
-            let retryAttempts = 0;
-            for (let i = 0; (i < 3 && retryAttempts < 10); i++) {
-              const coords = underworld.findValidSpawnInRadius(unit, false);
-              if (!coords) {
-                console.warn("Deathmason onDeath() spawning failed attempt: ", retryAttempts);
-                retryAttempts++;
-                i--;
-                continue;
-              } else {
-                retryAttempts = 0;
-              }
-              // Animate effect of unit spawning from the sky
-              const newBossmason = Unit.create(
-                bossmasonUnitId,
-                coords.x,
-                coords.y,
-                Faction.ENEMY,
-                deathmason.info.image,
-                UnitType.AI,
-                deathmason.info.subtype,
-                deathmason.unitProps,
-                underworld,
-                prediction
-              );
-              // This ensures that the deathmason brothers don't trigger this block "the original deathmason death event"
-              newBossmason.originalLife = false;
-              const givenName = ['Darius', 'Magnus', 'Lucius'][i] || '';
-              const dialogue = [
-                'deathmason dialogue 1',
-                'deathmason dialogue 2',
-                'deathmason dialogue 3',
-              ][i];
-              newBossmason.name = `${givenName}`;
-              // If deathmasons are spawned during the NPC_ALLY turn
-              // meaning an ally killed the first deathmason, give them
-              // summoning sickness so they can't attack right after spawning
-              if (underworld.turn_phase == turn_phase.NPC_ALLY) {
-                Unit.addModifier(newBossmason, summoningSicknessId, underworld, false);
-              }
-              skyBeam(newBossmason);
-              if (dialogue) {
-                floatingText({ coords: newBossmason, text: dialogue, valpha: 0.005, aalpha: 0 })
+            const seed = seedrandom(`${underworld.seed}-${underworld.turn_number}-${unit.id}`);
+            const validSpawnCoords = underworld.findValidSpawns({ spawnSource: unit, ringLimit: 10, prediction: false, radius: config.spawnSize }, { allowLiquid: false });
+            const chosenSpawnCoords = shuffle(validSpawnCoords, seed).slice(0, 3);
+            for (let i = 0; i < chosenSpawnCoords.length; i++) {
+              const coords = chosenSpawnCoords[i];
+              if (coords) {
+                // Animate effect of unit spawning from the sky
+                const newBossmason = Unit.create(
+                  bossmasonUnitId,
+                  coords.x,
+                  coords.y,
+                  Faction.ENEMY,
+                  deathmason.info.image,
+                  UnitType.AI,
+                  deathmason.info.subtype,
+                  deathmason.unitProps,
+                  underworld,
+                  prediction
+                );
+                // This ensures that the deathmason brothers don't trigger this block "the original deathmason death event"
+                newBossmason.originalLife = false;
+                const givenName = ['Darius', 'Magnus', 'Lucius'][i] || '';
+                const dialogue = [
+                  'deathmason dialogue 1',
+                  'deathmason dialogue 2',
+                  'deathmason dialogue 3',
+                ][i];
+                newBossmason.name = `${givenName}`;
+                // If deathmasons are spawned during the NPC_ALLY turn
+                // meaning an ally killed the first deathmason, give them
+                // summoning sickness so they can't attack right after spawning
+                if (underworld.turn_phase == turn_phase.NPC_ALLY) {
+                  Unit.addModifier(newBossmason, summoningSicknessId, underworld, false);
+                }
+                skyBeam(newBossmason);
+                if (dialogue) {
+                  floatingText({ coords: newBossmason, text: dialogue, valpha: 0.005, aalpha: 0 })
+                }
               }
             }
           }
