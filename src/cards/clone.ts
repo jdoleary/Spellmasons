@@ -53,39 +53,39 @@ export function cloneEffect(addClonesToTargetArray: boolean): EffectFn {
     await raceTimeout(600, 'clone', animationPromise);
     // Clone all the batched clone jobs
     for (let target of targets) {
+      const ringLimit = 10;
+      const validSpawnCoords = underworld.findValidSpawns({ spawnSource: target, ringLimit, prediction, radius: config.spawnSize }, { allowLiquid: !!(Unit.isUnit(target) && target.inLiquid) });
+      const numberOfClones = (quantity > 1 && addClonesToTargetArray) ? Math.pow(2, quantity) - 1 : quantity;
       if (target) {
-        const ringLimit = 10;
-        const validSpawnCoords = underworld.findValidSpawns({ spawnSource: target, ringLimit, prediction, radius: config.spawnSize }, { allowLiquid: !!(Unit.isUnit(target) && target.inLiquid) });
         // If there is are clone coordinates to clone into
-        if (Unit.isUnit(target)) {
-          const numberOfClones = (quantity > 1 && addClonesToTargetArray) ? Math.pow(2, quantity) - 1 : quantity;
-          for (let q = 0; q < numberOfClones; q++) {
-            const clone = doCloneUnit(target, underworld, prediction, state.casterUnit, validSpawnCoords[q]);
+        for (let q = 0; q < numberOfClones; q++) {
+          const spawnCoords = validSpawnCoords[q];
+          if (Unit.isUnit(target)) {
+            const clone = doCloneUnit(target, underworld, prediction, state.casterUnit, spawnCoords);
             // This is super powerful as it allows for exponential clones
             if (clone && addClonesToTargetArray) {
               // Add clones to target list
               addTarget(clone, state, underworld, prediction);
             }
-          }
-        } else if (Pickup.isPickup(target)) {
-          const targetName = target.name;
-          const validSpawnCoords = underworld.findValidSpawnInRadius(target, prediction, { allowLiquid: target.inLiquid });
-          if (validSpawnCoords) {
-            let foundPickup = Pickup.pickups.find((p) => p.name == targetName);
-            if (foundPickup) {
-              const clone = Pickup.create({ pos: target, pickupSource: foundPickup, logSource: 'Clone' }, underworld, prediction);
-              if (clone) {
-                Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
-                Pickup.setPower(clone, target.power);
-                // Add clones to target list
-                addTarget(clone, state, underworld, prediction);
+          } else if (Pickup.isPickup(target)) {
+            const targetName = target.name;
+            if (spawnCoords) {
+              let foundPickup = Pickup.pickups.find((p) => p.name == targetName);
+              if (foundPickup) {
+                const clone = Pickup.create({ pos: target, pickupSource: foundPickup, logSource: 'Clone' }, underworld, prediction);
+                if (clone) {
+                  Pickup.setPosition(clone, spawnCoords.x, spawnCoords.y);
+                  Pickup.setPower(clone, target.power);
+                  // Add clones to target list
+                  addTarget(clone, state, underworld, prediction);
+                }
+              } else {
+                console.log('Pickup', target);
+                console.error('Could not clone pickup because source could not be found');
               }
             } else {
-              console.log('Pickup', target);
-              console.error('Could not clone pickup because source could not be found');
+              floatingText({ coords: target, text: 'No space to clone into!' });
             }
-          } else {
-            floatingText({ coords: target, text: 'No space to clone into!' });
           }
         }
       }
