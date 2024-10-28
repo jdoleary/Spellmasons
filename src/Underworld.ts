@@ -2097,7 +2097,10 @@ export default class Underworld {
     return spawnPoint;
   }
 
-  findValidSpawnInRadius(center: Vec2, prediction: boolean,
+  // WARNING: Do NOT use this function for batching or else it will choose the same location over
+  // and over and everything will spawn on top of each other. Instead, see how Deathmason handles
+  // finding multiple random spawns in a radius
+  DEPRECIATED_findValidSpawnInRadius(center: Vec2, prediction: boolean,
     extra?: { allowLiquid?: boolean, unobstructedPoint?: Vec2, radiusOverride?: number }): Vec2 | undefined {
     let allowLiquid = extra?.allowLiquid || false;
     let unobstructedPoint = extra?.unobstructedPoint || undefined;
@@ -2639,7 +2642,7 @@ export default class Underworld {
 
     // Spawn a portal near each remaining player
     for (let playerUnit of remainingPlayers) {
-      const portalSpawnLocation = this.findValidSpawnInRadius(playerUnit, false, { radiusOverride: config.COLLISION_MESH_RADIUS });
+      const portalSpawnLocation = this.DEPRECIATED_findValidSpawnInRadius(playerUnit, false, { radiusOverride: config.COLLISION_MESH_RADIUS });
       if (portalSpawnLocation) {
         spawnedPortals.push(Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup, logSource: 'Portal' }, this, false));
       }
@@ -2987,7 +2990,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
             // whereas without this ranged units would be content to just sit in liquid and die from the DOT
             if (u.unitSubType !== UnitSubType.MELEE && u.inLiquid) {
               // Using attackRange instead of maxStamina ensures they'll eventually walk out of liquid
-              const coords = this.findValidSpawnInRadius(u, false, { radiusOverride: config.COLLISION_MESH_RADIUS });
+              const coords = this.DEPRECIATED_findValidSpawnInRadius(u, false, { radiusOverride: config.COLLISION_MESH_RADIUS });
               if (coords) {
                 await Unit.moveTowards(u, coords, this);
               }

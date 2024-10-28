@@ -60,7 +60,7 @@ function spawnGolems(unit: Unit.IUnit, quantity: number, underworld: Underworld,
     // Summon ally golems up to quantity
     const golemsToSummon = quantity - ownGolems.length;
     for (let i = 0; i < golemsToSummon; i++) {
-      const coords = underworld.findValidSpawnInRadius(unit, prediction, { allowLiquid: unit.inLiquid });
+      const coords = underworld.DEPRECIATED_findValidSpawnInRadius(unit, prediction, { allowLiquid: unit.inLiquid });
       if (coords) {
         let sourceUnit = allUnits[golem_unit_id];
         if (sourceUnit) {

@@ -36,7 +36,7 @@ export default function registerBountyGolem() {
           // Summon quantity ally golems
           const golemsToSummon = modifier.quantity;
           for (let i = 0; i < golemsToSummon; i++) {
-            const coords = underworld.findValidSpawnInRadius(killedUnit, prediction, { allowLiquid: killedUnit.inLiquid });
+            const coords = underworld.DEPRECIATED_findValidSpawnInRadius(killedUnit, prediction, { allowLiquid: killedUnit.inLiquid });
             if (coords) {
               let sourceUnit = allUnits[BLOOD_GOLEM_ID];
               if (sourceUnit) {

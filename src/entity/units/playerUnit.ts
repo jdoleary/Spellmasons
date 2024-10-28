@@ -150,7 +150,7 @@ function getTargets(self: Unit.IUnit, targetingInstructions: TargetingInstructio
   } else {
     const closestEnemy = Unit.findClosestUnitInDifferentFactionSmartTarget(self, underworld.units);
     if (targetingInstructions.nonUnitTarget && closestEnemy) {
-      return underworld.findValidSpawnInRadius(self, false, { allowLiquid: false }) || self;
+      return underworld.DEPRECIATED_findValidSpawnInRadius(self, false, { allowLiquid: false }) || self;
     } else if (targetingInstructions.targetEnemies && closestEnemy) {
       return closestEnemy;
     } else if (!targetingInstructions.targetEnemies) {

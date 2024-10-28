@@ -31,7 +31,7 @@ export default function registerBountyPotion() {
         // Only drop a potion if the killed unit has a bounty
         if (killedUnit.modifiers[bountyId]) {
           const random = seedrandom(`${getUniqueSeedString(underworld)}-${killedUnit.id}`);
-          const coords = underworld.findValidSpawnInRadius(killedUnit, prediction, { allowLiquid: killedUnit.inLiquid });
+          const coords = underworld.DEPRECIATED_findValidSpawnInRadius(killedUnit, prediction, { allowLiquid: killedUnit.inLiquid });
           if (coords) {
             const pickupChoice = chooseObjectWithProbability(Pickup.pickups.map((p, index) => {
               return { index, probability: p.name.includes('Potion') ? p.probability : 0 }

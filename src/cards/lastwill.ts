@@ -62,7 +62,7 @@ const spell: Spell = {
     onDeath: async (unit: IUnit, underworld: Underworld, prediction: boolean) => {
       // Unique for the unit and for quantity and same across all clients due to turn_number and unit.id
       const seed = seedrandom(`${getUniqueSeedString(underworld)}-${unit.id}`);
-      const coord = underworld.findValidSpawnInRadius(unit, prediction, { allowLiquid: unit.inLiquid });
+      const coord = underworld.DEPRECIATED_findValidSpawnInRadius(unit, prediction, { allowLiquid: unit.inLiquid });
       const choice = chooseObjectWithProbability(Pickup.pickups.map((p, index) => {
         return {
           index, probability: p.name.includes('Potion') ? p.probability : 0
