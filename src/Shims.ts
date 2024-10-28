@@ -52,6 +52,7 @@ global.radiusGraphics = undefined;
 global.thinkingPlayerGraphics = undefined;
 global.unitOverlayGraphics = undefined;
 global.predictionGraphicsGreen = undefined;
+global.predictionGraphicsRed = undefined;
 global.predictionGraphicsWhite = undefined;
 global.predictionGraphicsBlue = undefined;
 global.planningViewGraphics = undefined;

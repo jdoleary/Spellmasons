@@ -73,6 +73,7 @@ declare global {
   var selectedUnitGraphics: PIXI.Graphics | undefined;
   // Graphics for drawing the spell effects during the dry run phase
   var predictionGraphicsGreen: PIXI.Graphics | undefined;
+  var predictionGraphicsRed: PIXI.Graphics | undefined;
   var predictionGraphicsWhite: PIXI.Graphics | undefined;
   var predictionGraphicsBlue: PIXI.Graphics | undefined;
   // Graphics for rendering above board and walls but beneath units and doodads,

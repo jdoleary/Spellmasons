@@ -46,6 +46,12 @@ export function initPlanningView() {
     ];
     containerUI.addChild(globalThis.predictionGraphicsGreen);
 
+    globalThis.predictionGraphicsRed = new globalThis.pixi.Graphics();
+    globalThis.predictionGraphicsRed.filters = [
+      new GlowFilter({ distance: 15, outerStrength: config.predictionGlowStrength, innerStrength: 1, color: colors.trueRed })
+    ];
+    containerUI.addChild(globalThis.predictionGraphicsRed);
+
     globalThis.predictionGraphicsWhite = new globalThis.pixi.Graphics();
     globalThis.predictionGraphicsWhite.filters = [
       new GlowFilter({ distance: 15, outerStrength: config.predictionGlowStrength, innerStrength: 0, color: 0xffffff })
@@ -653,7 +659,11 @@ export async function _runPredictions(underworld: Underworld) {
         }
         for (let { target, color, radius, text } of predictionCircles) {
           const colorOverride = outOfRange ? colors.outOfRangeGrey : 0xffffff;
-          drawUICircle(globalThis.predictionGraphicsGreen, target, radius, colorOverride, text);
+          if (globalThis.predictionGraphicsRed && color == colors.healthRed) {
+            drawUICircle(globalThis.predictionGraphicsRed, target, radius, colorOverride, text);
+          } else {
+            drawUICircle(globalThis.predictionGraphicsGreen, target, radius, colorOverride, text);
+          }
         }
       }
       if (globalThis.radiusGraphics) {
@@ -761,6 +771,9 @@ export function clearSpellEffectProjection(underworld: Underworld, forceClear?: 
   if (!globalThis.animatingSpells || forceClear) {
     if (globalThis.predictionGraphicsGreen) {
       globalThis.predictionGraphicsGreen.clear();
+    }
+    if (globalThis.predictionGraphicsRed) {
+      globalThis.predictionGraphicsRed.clear();
     }
     if (globalThis.predictionGraphicsWhite) {
       globalThis.predictionGraphicsWhite.clear();
