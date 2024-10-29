@@ -2803,6 +2803,11 @@ body.dragging-card .floating-card-holder .empty-slot {
   animation: drift 15s ease-in-out infinite;
   filter: drop-shadow(6px 6px 3px rgba(20, 20, 20, 0.5));
 }
+/* Turn off card shadow when screenshotting card */
+.screenshot .card-inspect .card {
+  animation: none;
+  filter: none;
+}
 
 @keyframes drift  {
   0% {
