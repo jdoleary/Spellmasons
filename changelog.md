@@ -1,3 +1,29 @@
+## 1.48.1
+    fix: summoner, goru and last will spawn locations
+    fix: Cloning pickups multiple times
+    fix: Deathmason not spawning portals
+    juice:  Make unit outlines relative to zoom so they stay the same
+      size regardless of zoom level
+    juice: Add drop shadow and movement to cards
+    juice: Add glow to prediction graphics.
+    menu: fix space in save name ends turn
+    
+    You could open the save modal and then press escape and it would go to View.Game, then if you pressed space in the name of the save modal it would advance the turn.
+    
+    Now escape closes all modals.
+    
+    Fixes #1186
+    fix: Changeling not working
+    Thanks Haze and Bogiac
+    fix: Death Wager to work when
+    greater than full HP.
+    Thanks @Xulqelyat
+    
+    fix: Book glow to only occur
+    when player has stat points.
+    Before, DareDevil would make the book glow which was an obnoxious exception.  Now it will only show as glowing
+    if you have points unspent.
+
 ## 1.46.0
 content: Add `Teach` Spell
     You can now Teach any spell to NPC Spellmasons
