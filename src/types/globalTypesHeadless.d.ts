@@ -9,9 +9,10 @@ import type { View } from '../View';
 import type { IHostApp } from '../network/networkUtil';
 import type { Localizable } from '../localization';
 import type { PromptArgs } from '../graphics/Jprompt';
-import { Faction, JEmitter, Mod } from './commonTypes';
-import { ICard } from '../cards';
-import keyMapping from '../graphics/ui/keyMapping';
+import type { Faction, JEmitter, Mod } from './commonTypes';
+import type { ICard } from '../cards';
+import type keyMapping from '../graphics/ui/keyMapping';
+import type { LogLevel } from '../RemoteLogging';
 
 declare global {
   var SPELLMASONS_PACKAGE_VERSION: string;
@@ -340,6 +341,7 @@ declare global {
   var rerollOmit: string[] | undefined;
   var saveASAP: undefined | string;
   var remoteLog: undefined | ((...args: any[]) => void);
+  var remoteLogWithContext: undefined | ((message: string, level: LogLevel, context: string) => void);
   // Used for the menu and inventory
   var allCards: { [cardId: string]: ICard } | undefined;
   // For menu

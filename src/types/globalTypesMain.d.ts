@@ -16,6 +16,7 @@ import type * as particles from 'jdoleary-fork-pixi-particle-emitter'
 import type { PromptArgs } from '../graphics/Jprompt';
 import keyMapping from '../graphics/ui/keyMapping';
 import api from '../api';
+import type { LogLevel } from '../RemoteLogging';
 
 declare global {
   var pixi: typeof PIXI | undefined;
@@ -277,6 +278,7 @@ declare global {
   // Will save the game as soon as possible with the name stored in this string
   var saveASAP: string | undefined;
   var remoteLog: undefined | ((...args: any[]) => void);
+  var remoteLogWithContext: undefined | ((message: string, level: LogLevel, context: string) => void);
   // Used for the menu and inventory
   var allCards: { [cardId: string]: ICard } | undefined;
   // For menu

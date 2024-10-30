@@ -36,6 +36,11 @@ globalThis.remoteLog = (...args: any[]) => {
         sendLogToServerHub(args, LogLevel.LOG);
     }
 }
+globalThis.remoteLogWithContext = (message: string, level: LogLevel, context: string) => {
+    if (globalThis.headless || globalThis.privacyPolicyAndEULAConsent) {
+        sendLogToServerHub([message], level, context);
+    }
+}
 // Copied from spellmasons-server-hub
 interface EventGroupMessage {
     seed: string; // Required to identify EventGroup
@@ -71,7 +76,8 @@ export function sendEventToServerHub(eventG: Partial<EventGroupMessage>, underwo
 // recentLogs holds logs for an amount of time to prevent oversending
 // the same logs that may occur, for example, if mousemove causes an error
 let recentLogs: { m: string, d: number }[] = [];
-function sendLogToServerHub(args: any[], l: LogLevel) {
+// ctx represents individual context for a particular error that will still be grouped under message
+function sendLogToServerHub(args: any[], l: LogLevel, ctx?: string) {
     if (!globalThis.headless && !globalThis.privacyPolicyAndEULAConsent) {
         return;
     }
@@ -85,7 +91,8 @@ function sendLogToServerHub(args: any[], l: LogLevel) {
         r: globalThis.headless ? RUNNER.SERVER : RUNNER.BROWSER,
         l,
         d: Date.now(),
-        e: ENV.UNKNOWN
+        e: ENV.UNKNOWN,
+        ctx
     }
     const now = Date.now();
     // Only hold logs for 10 seconds
@@ -109,7 +116,7 @@ function sendLogToServerHub(args: any[], l: LogLevel) {
 }
 
 // START: interfaces and enums copied from spellmasons-server-hub/app/logs.ts
-enum LogLevel {
+export enum LogLevel {
     DEBUG,
     TRACE,
     LOG,
@@ -140,6 +147,9 @@ export interface Log {
     // date
     d: number;
     // environment
-    e: ENV;
+    e: ENV
+    // optional context for the message, will be aggregated into
+    // a revolving array
+    ctx?: string;
 }
 // END: interfaces and enums copied from spellmasons-server-hub/app/logs.ts
