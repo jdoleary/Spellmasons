@@ -458,7 +458,7 @@ const spell$o = {
             makeFlameStrikeWithParticles(unit, prediction);
           } else {
             if (prediction) {
-              drawUICircle(globalThis.predictionGraphics, unit, adjustedRadius, 13981270);
+              drawUICircle(globalThis.predictionGraphicsRed, unit, adjustedRadius, 13981270);
             }
             explosionTargets.forEach((t) => {
               const damage = t == unit ? quantityAdjustedDamageMain : quantityAdjustedDamageSplash;
@@ -2259,16 +2259,16 @@ async function animateTargetAlly(newTargets) {
   const animationDelay = 600;
   await new Promise((resolve) => {
     for (let target of newTargets) {
-      if (globalThis.predictionGraphics) {
-        globalThis.predictionGraphics.lineStyle(2, colors$1.targetingSpellGreen, 1);
-        globalThis.predictionGraphics.drawCircle(target.x, target.y, config$1.COLLISION_MESH_RADIUS);
+      if (globalThis.predictionGraphicsGreen) {
+        globalThis.predictionGraphicsGreen.lineStyle(2, colors$1.targetingSpellGreen, 1);
+        globalThis.predictionGraphicsGreen.drawCircle(target.x, target.y, config$1.COLLISION_MESH_RADIUS);
         setTimeout(resolve, animationDelay);
       } else {
         resolve();
       }
     }
   });
-  (_a = globalThis.predictionGraphics) == null ? void 0 : _a.clear();
+  (_a = globalThis.predictionGraphicsGreen) == null ? void 0 : _a.clear();
   return;
 }
 const {
@@ -2325,16 +2325,16 @@ async function animateTargetPlayer(newTargets) {
   const animationDelay = 600;
   await new Promise((resolve) => {
     for (let target of newTargets) {
-      if (globalThis.predictionGraphics) {
-        globalThis.predictionGraphics.lineStyle(2, colors.targetingSpellGreen, 1);
-        globalThis.predictionGraphics.drawCircle(target.x, target.y, config.COLLISION_MESH_RADIUS);
+      if (globalThis.predictionGraphicsGreen) {
+        globalThis.predictionGraphicsGreen.lineStyle(2, colors.targetingSpellGreen, 1);
+        globalThis.predictionGraphicsGreen.drawCircle(target.x, target.y, config.COLLISION_MESH_RADIUS);
         setTimeout(resolve, animationDelay);
       } else {
         resolve();
       }
     }
   });
-  (_a = globalThis.predictionGraphics) == null ? void 0 : _a.clear();
+  (_a = globalThis.predictionGraphicsGreen) == null ? void 0 : _a.clear();
   return;
 }
 const slashCardId = "Slash";
@@ -2417,6 +2417,7 @@ const mod = {
   author: "Bogiac",
   description: "Adds some new spells to the game",
   screenshot: "spellmasons-mods/Bogiacs_Spells/graphics/icons/Bogiacs_Spells_icon.png",
+  spritesheet: "spellmasons-mods/Bogiacs_Spells/graphics/spritesheet.json",
   spells: [
     //Add or Remove spells here.
     spell$a,
