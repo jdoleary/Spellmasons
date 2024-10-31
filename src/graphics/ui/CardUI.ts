@@ -654,10 +654,24 @@ export function renderRunesMenu(underworld: Underworld) {
         if (isDisabled) {
           playSFXKey('deny');
         } else {
-          underworld.pie.sendData({
-            type: MESSAGE_TYPES.CHOOSE_RUNE,
-            stat
-          })
+          const modifier = Cards.allModifiers[stat];
+          if (modifier) {
+            const modifierCost = Cards.calcluateModifierCostPerUpgrade(modifier, underworld, player);
+            // Do not allow overspend
+            if (globalThis.player && globalThis.player.statPointsUnspent < modifierCost) {
+              console.error('Client rune overspend early return')
+              playSFXKey('deny');
+              return;
+            }
+            underworld.pie.sendData({
+              type: MESSAGE_TYPES.CHOOSE_RUNE,
+              stat,
+              cost: modifierCost,
+              debug_playerStatPoints: player?.statPointsUnspent,
+            })
+          } else {
+            console.error('Unexpected: Attempted to upgrade rune but modifier was not found:' + stat);
+          }
         }
       });
       elPlusBtn.addEventListener('mouseenter', (e) => {

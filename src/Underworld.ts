@@ -113,6 +113,7 @@ import { bountyHunterId } from './modifierBountyHunter';
 import { placeRandomBounty } from './modifierBounty';
 import { heavyImpactsId } from './modifierHeavyImpact';
 import { OutlineFilter } from '@pixi/filter-outline';
+import { LogLevel } from './RemoteLogging';
 
 const loopCountLimit = 10000;
 export enum turn_phase {
@@ -3408,7 +3409,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // .filter out freeSpells because they shouldn't count against upgrades available since they are given to you
     return this.cardDropsDropped + config.STARTING_CARD_COUNT - player.inventory.filter(spellId => (player.freeSpells || []).indexOf(spellId) == -1).length;
   }
-  upgradeRune(runeModifierId: string, player: Player.IPlayer) {
+  upgradeRune(runeModifierId: string, player: Player.IPlayer, payload: { cost: number, debug_playerStatPoints?: number }) {
     const isCurrentPlayer = player == globalThis.player;
     if (remoteLog) {
       remoteLog(`Buy Rune: ${runeModifierId}`);
@@ -3419,14 +3420,14 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       console.error(`Failed to upgrade rune ${runeModifierId}`)
       return;
     }
-    const modifierCost = Cards.calcluateModifierCostPerUpgrade(modifier, this, player)
-    // Do not allow overspend
-    if (player.statPointsUnspent < modifierCost) {
-      console.error(`Failed to upgrade rune, attempted overspend`);
-      return;
+    // Debug: check for desync between server and client
+    const modifierCost = Cards.calcluateModifierCostPerUpgrade(modifier, this, player);
+    const cost = payload.cost !== undefined ? payload.cost : modifierCost;
+    if (payload.cost !== modifierCost) {
+      globalThis.remoteLogWithContext(`Rune overspend desync`, LogLevel.ERROR, `server: Player stat points: ${player.statPointsUnspent}  cost: ${modifierCost} client player stat points: ${payload.debug_playerStatPoints} client rune cost: ${payload.cost}`);
     }
 
-    player.statPointsUnspent -= modifierCost;
+    player.statPointsUnspent -= cost;
 
     if (isCurrentPlayer) {
       playSFXKey('levelUp');

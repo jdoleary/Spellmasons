@@ -233,7 +233,7 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         const { stat } = payload;
         if (stat) {
           if (fromPlayer) {
-            underworld.upgradeRune(stat, fromPlayer);
+            underworld.upgradeRune(stat, fromPlayer, payload);
             if (fromPlayer === globalThis.player) {
               tutorialCompleteTask('spendUpgradePoints');
               // Some runes may change player's stats, so sync the UI
