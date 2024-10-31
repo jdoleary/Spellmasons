@@ -341,7 +341,7 @@ declare global {
   var rerollOmit: string[] | undefined;
   var saveASAP: undefined | string;
   var remoteLog: undefined | ((...args: any[]) => void);
-  var remoteLogWithContext: undefined | ((message: string, level: LogLevel, context: string) => void);
+  var remoteLogWithContext: ((message: string, level: LogLevel, context: string) => void);
   // Used for the menu and inventory
   var allCards: { [cardId: string]: ICard } | undefined;
   // For menu

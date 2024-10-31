@@ -278,7 +278,7 @@ declare global {
   // Will save the game as soon as possible with the name stored in this string
   var saveASAP: string | undefined;
   var remoteLog: undefined | ((...args: any[]) => void);
-  var remoteLogWithContext: undefined | ((message: string, level: LogLevel, context: string) => void);
+  var remoteLogWithContext: ((message: string, level: LogLevel, context: string) => void);
   // Used for the menu and inventory
   var allCards: { [cardId: string]: ICard } | undefined;
   // For menu
