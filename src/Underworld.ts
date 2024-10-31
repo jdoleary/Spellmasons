@@ -2306,19 +2306,11 @@ export default class Underworld {
         const points = config.STAT_POINTS_PER_LEVEL;
         player.statPointsUnspent += points;
         Player.incrementPresentedRunesForPlayer(player, this);
-        if (!tutorialChecklist.spendUpgradePoints.complete) {
+        if (!tutorialChecklist.spendUpgradePoints.complete && this.levelIndex > 3) {
           tutorialShowTask('spendUpgradePoints');
         }
         CardUI.tryShowStatPointsSpendable();
         console.log("Setup: Gave player: [" + player.clientId + "] " + points + " upgrade points for level index: " + levelIndex);
-        // If the player hasn't completed first steps, autospend stat points on health
-        // We don't want to cause information overload during tutorial
-        if (!isTutorialFirstStepsComplete()) {
-          for (let i = 0; i < points; i++) {
-            console.log("Autospend stat point on max health because tutorial");
-            this.upgradeRune('healthMax', player);
-          }
-        }
       }
     }
     // Update toolbar (since some card's disabledLabel needs updating on every new label)
