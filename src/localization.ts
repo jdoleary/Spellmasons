@@ -33,7 +33,7 @@ function returnTranslation(keyOrArray: Localizable, map: LanguageMapping): strin
     } else {
         // Prevent reporting error more than once
         if (!cachedErrorsReported.includes(key)) {
-            console.warn(`i18n: Language ${map.language} has no value for key ${keyOrArray}`);
+            console.debug(`i18n: Language ${map.language} has no value for key ${keyOrArray}`);
             cachedErrorsReported.push(key);
         }
         return key;
