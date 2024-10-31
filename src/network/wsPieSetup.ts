@@ -209,9 +209,8 @@ ${explainUpdateText}
         elVersionInfoHeadless.innerText = '';
       }
     }
-    if (o?.hostAppVersion !== version) {
+    if (o.hostAppVersion !== undefined && o.hostAppVersion !== version) {
       console.warn('Host app version does not match client version');
-
     }
     globalThis.clientId = o.clientId;
   };
