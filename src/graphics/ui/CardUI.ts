@@ -854,7 +854,7 @@ async function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: 
     // No title for selected cards, icon only
     clone.querySelector('.card-title')?.remove();
     addListenersToCardElement(player, clone, cardId, underworld);
-    clone.classList.add('selected');
+    clone.classList.add('slot', 'selected');
     if (card.requiresFollowingCard) {
       const selectedCards = getSelectedCards();
       // Show that you need a non frontload card for the spell to work
