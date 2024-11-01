@@ -1211,7 +1211,6 @@ body.showUpgrades #inspector-tooltip {
   height: 24px;
   padding: 0 8px;
   white-space: nowrap;
-  line-height: 70px;
 }
 
 #selected-cards .card.requires-following-card.blink:last-child:before {
