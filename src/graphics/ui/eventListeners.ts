@@ -102,10 +102,9 @@ export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
   //console.warn("CODE: ", event.code);
   if (globalThis.adminMode && event.code === 'Period' && overworld.underworld) {
     // Custom trigger for recording yt videos and shorts
-    if (selectedUnit) {
-
-      glow(selectedUnit);
-    }
+    overworld.underworld.units.filter(u => u.id === 28 || u.id === 29).forEach(u => {
+      glow(u);
+    });
   }
   // Disable default chromium actions to prevent weird behavior
   if (event.code == 'ShiftLeft' || event.code == 'ShiftRight') {
@@ -1429,6 +1428,30 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
             return;
           }
           underworld.generateLevelData(config.LAST_LEVEL_INDEX);
+        }
+      },
+      supportInMultiplayer: false,
+      domQueryContainer: '#menu-global'
+    },
+    {
+      label: 'Skip to mid game with skills',
+      action: () => {
+        if (globalThis.player) {
+          const underworld = overworld.underworld;
+          if (!underworld) {
+            console.error('Cannot "Skip to Lava Biome", underworld does not exist');
+            return;
+          }
+          if (!globalThis.isHost(underworld.pie)) {
+            console.error('Cannot "Skip to Lava Biome", player is not the host');
+            return;
+          }
+          underworld.generateLevelData(3);
+          globalThis.player.statPointsUnspent = 480;
+          for (let i = 0; i < 28; i++) {
+            // @ts-ignore: Incorrectly typed arg on purpose to just get through for admin command
+            underworld.reportEnemyKilled({ unitSubType: UnitSubType.MELEE })
+          }
         }
       },
       supportInMultiplayer: false,
