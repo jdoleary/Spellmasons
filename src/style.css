@@ -546,7 +546,9 @@ invisibly blocked, change with caution! */
   left: -12px;
 }
 
-.card.selected .card-badge-holder {
+.card-inspect .card .card-badge-holder {
+  top:-10px;
+  left:-10px;
 }
 
 .card-badge {
