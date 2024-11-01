@@ -404,7 +404,10 @@ invisibly blocked, change with caution! */
   overflow-x: hidden;
   /* Unusual padding is so that the mana badge has room
   and there must be enough room for the glow on hover */
-  padding: 22px 12px 12px 22px;
+  padding: 4px 0px 0px 5px;
+  /* Center elements due to manabadges being bumped out*/
+  position:relative;
+  top:2px;
 }
 
 #card-hand .card img {
@@ -421,6 +424,12 @@ invisibly blocked, change with caution! */
 }
 
 
+#selected-cards .card:hover .card-inner {
+  box-shadow: 0px 0px 8px 1px rgba(255,255,255,0.9);
+}
+#selected-cards .card:hover {
+  filter:none;
+}
 .card:hover {
   filter: drop-shadow(0 0 0.4rem rgb(255, 255, 255));
 }
@@ -437,6 +446,9 @@ invisibly blocked, change with caution! */
   margin-right: 8px;
   display: flex;
   width: 40px;
+}
+.card.selected:last-child {
+  margin-right:0;
 }
 
 .card.selected:last-child:after {
@@ -535,8 +547,6 @@ invisibly blocked, change with caution! */
 }
 
 .card.selected .card-badge-holder {
-  top: -10px;
-  left: -10px;
 }
 
 .card-badge {
@@ -554,36 +564,15 @@ invisibly blocked, change with caution! */
 }
 
 .card-mana-badge {
-  background-color: #5656d5;
-  border: 2px solid #3c3c94;
-  transform-style: preserve-3d;
+  background-image: url('/ui/badgeMana.png');
+  background-size:contain;
+  background-repeat: no-repeat;
 }
 
 .card-mana-badge.modified-by-usage {
-  border: 2px solid #04042b;
-  color: #04042b;
-  /* Bumping a modified card-mana-badge to the right 5px
-  is a visual trick to make the :before element
-  appear to be the original cost */
-  left: 5px;
-  position: relative;
-
+  background-image: url('/ui/badgeManaUsed.png');
 }
 
-.card-mana-badge.modified-by-usage:before {
-  content: "";
-  width: 24px;
-  height: 24px;
-  border: 2px solid #04042b;
-  /* translateZ and transform-style:preserve-3d on .card-mana-badge makes sure
-  the :before renders behind the regular one */
-  transform: translateX(-5px) translateY(0px) translateZ(-1px);
-  background-color: #5656d5;
-  display: block;
-  border-radius: 24px;
-  /* Prevents pushing badge label to next line */
-  position: absolute;
-}
 
 #upgrade-picker .card-badge.modified-by-usage:before,
 .card-inspect .card-badge.modified-by-usage:before {
@@ -609,13 +598,13 @@ invisibly blocked, change with caution! */
 }
 
 .card-health-badge {
-  background-color: #d55656;
-  border: 2px solid #d55656;
+  background-image: url('/ui/badgeHealth.png');
+  background-size:contain;
+  background-repeat: no-repeat;
 }
 
 .card-health-badge.modified-by-usage {
-  border: 2px solid #522626;
-  color: #522626;
+  background-image: url('/ui/badgeHealthUsed.png');
 }
 
 .button-wrapper .hotkey-badge-holder {
