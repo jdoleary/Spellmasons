@@ -55,6 +55,7 @@ import { isRune } from '../cards/cardUtils';
 import { VAMPIRE_ID } from './units/vampire';
 import { growthId } from '../modifierGrowth';
 import { resurrect_id } from '../cards/resurrect';
+import { doubledamageId } from '../modifierDoubleDamage';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -1641,7 +1642,7 @@ export function makeMiniboss(unit: IUnit, underworld: Underworld) {
   //// start: Special Modifier Exceptions
   // ban "Slime" from Support classes and bosses
   if (unit.unitSubType === UnitSubType.SUPPORT_CLASS || unit.unitSourceId === GORU_UNIT_ID || unit.unitSourceId === bossmasonUnitId) {
-    availableSpawnModifiers = availableSpawnModifiers.filter(x => x.id !== slimeId);
+    availableSpawnModifiers = availableSpawnModifiers.filter(x => x.id !== slimeId && x.id !== doubledamageId);
   }
   // Growth is OP on vampires because of the extra health on blood curse
   if (unit.unitSourceId === VAMPIRE_ID) {
