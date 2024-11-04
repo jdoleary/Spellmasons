@@ -317,6 +317,4 @@ declare global {
   var currentChunk: number;
   var recordingShorts: boolean;
   var unitOutlineFilter: any;
-  var serverStabilityMaxUnits: number | undefined;
-  var serverStabilityMaxPickups: number | undefined;
 }

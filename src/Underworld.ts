@@ -114,8 +114,6 @@ import { placeRandomBounty } from './modifierBounty';
 import { heavyImpactsId } from './modifierHeavyImpact';
 import { OutlineFilter } from '@pixi/filter-outline';
 import { LogLevel } from './RemoteLogging';
-import { primedCorpseId } from './modifierPrimedCorpse';
-import { animateMerge, merge_id, mergeUnits } from './cards/merge';
 
 const loopCountLimit = 10000;
 export enum turn_phase {
@@ -4392,106 +4390,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       return;
     }
     this._battleLog.push(happening);
-  }
-  // To prevent servers from crashing, public community servers will have limits on the max number of units and pickups that
-  // can exist.
-  // To provide the best User Experience, if a unit is created beyond the max units limit:
-  // 1. Dead units will be removed to make space
-  // 2. If there are no dead units, units will be merged to make space
-  // If there are too many pickups:
-  // 1. Potions will be merged to make space
-  // 2. Worst Case Scenario, the pickup will not be created.
-  async runServerStability(prediction: boolean) {
-    if (prediction) {
-      return;
-    }
-    const promises = [];
-    const removeDeadUnitsPerCleanup = 50;
-    if (globalThis.serverStabilityMaxUnits && this.units.length > globalThis.serverStabilityMaxUnits) {
-      // const playerUnits = this.units.filter(u => u.unitType === UnitType.PLAYER_CONTROLLED);
-      const seed = seedrandom(getUniqueSeedString(this));
-      const deadNonPlayerUnits = shuffle(this.units.filter(u => !u.flaggedForRemoval && !u.alive && u.unitType !== UnitType.PLAYER_CONTROLLED), seed);
-      // #1: Remove dead, non-player units to make space for new units
-      if (deadNonPlayerUnits.length > removeDeadUnitsPerCleanup) {
-        for (let i = 0; i < removeDeadUnitsPerCleanup; i++) {
-          const u = deadNonPlayerUnits[i]
-          if (u) {
-            floatingText({
-              coords: Vec.clone(u), text: `corpse decayed`,
-              style: { fill: colors.healthRed },
-            });
-
-            Unit.cleanup(u);
-          }
-        }
-      } else {
-        // #2: Merge non-player units to make space for new units
-        type Cluster = [Vec2, Vec2];
-
-        function groupIntoClusters(points: Vec2[]): Cluster[] {
-          const clusters: Cluster[] = [];
-          const used = new Set<number>(); // To keep track of which points are already clustered
-
-          // Calculate all pairwise distances
-          const distances: { i: number; j: number; dist: number }[] = [];
-          for (let i = 0; i < points.length; i++) {
-            for (let j = i + 1; j < points.length; j++) {
-              const I = points[i];
-              const J = points[j];
-              if (I && J) {
-                const dist = Math.hypot(I.x - J.x, I.y - J.y);
-                distances.push({ i, j, dist });
-              }
-            }
-          }
-
-          // Sort pairs by distance (smallest distance first)
-          distances.sort((a, b) => a.dist - b.dist);
-
-          // Greedily add pairs to clusters, ensuring each point is only used once
-          for (const { i, j } of distances) {
-            if (!used.has(i) && !used.has(j)) {
-              const I = points[i];
-              const J = points[j];
-              if (I && J) {
-                clusters.push([I, J]);
-                used.add(i);
-                used.add(j);
-              }
-            }
-          }
-
-          return clusters;
-        }
-        const nonPlayerUnits = this.units.filter(u => !u.flaggedForRemoval && u.alive && u.unitType !== UnitType.PLAYER_CONTROLLED);
-        const clusteredUnits = groupIntoClusters(nonPlayerUnits);
-        for (let cluster of clusteredUnits) {
-          promises.push(animateMerge((cluster[1] as Unit.IUnit).image, cluster[0]).then(() => {
-            mergeUnits(cluster[0] as Unit.IUnit, [cluster[1]] as Unit.IUnit[], this, false);
-            floatingText({ coords: cluster[0], text: merge_id })
-          }));
-        }
-      }
-    }
-    await raceTimeout(5000, 'runServerStabilityPromises', Promise.all(promises));
-
-    // Clean up invalid units
-    const keepUnits: Unit.IUnit[] = [];
-    for (let u of this.units) {
-      if (!u.flaggedForRemoval) {
-        keepUnits.push(u);
-      }
-    }
-    this.units = keepUnits;
-
-    // Clean up invalid pickups
-    const keepPickups: Pickup.IPickup[] = [];
-    for (let p of this.pickups) {
-      if (!p.flaggedForRemoval) {
-        keepPickups.push(p);
-      }
-    }
-    this.pickups = keepPickups;
   }
 }
 

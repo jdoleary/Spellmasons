@@ -382,6 +382,4 @@ declare global {
   var currentChunk: number | undefined;
   var recordingShorts: boolean | undefined;
   var unitOutlineFilter: any;
-  var serverStabilityMaxUnits: number | undefined;
-  var serverStabilityMaxPickups: number | undefined;
 }
