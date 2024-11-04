@@ -58,7 +58,6 @@ const playerUnit: UnitSource = {
             initialTargetedUnitId: attackTarget?.id,
             prediction: false,
             outOfRange: false,
-            castForFree: true,
           });
         }
         // animationKey logic copied from networkHandler

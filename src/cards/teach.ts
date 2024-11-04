@@ -1,13 +1,29 @@
-import { Spell } from './index';
+import { getCardsFromIds, Spell } from './index';
 import * as Unit from '../entity/Unit';
 import Underworld from '../Underworld';
 import { CardCategory, UnitType } from '../types/commonTypes';
-import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
+import { calculateCost, playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
 import floatingText from '../graphics/FloatingText';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 import { spellmasonUnitId } from '../entity/units/playerUnit';
 
+// callOnChange and memoizedFunction allow the `cb` callback to be invoked with
+// the arg of `message` only when `message` changes.
+// This is useful for alerting the mana cost of the teach spell but only when it changes
+function callOnChange<T extends (cb: (m: string) => void, message: string) => any>(fn: T): T {
+  let lastArgs: string | null = null;
+
+  return function (cb, message: string) {
+    if (!lastArgs || message !== lastArgs) {
+      lastArgs = message;
+      fn(cb, message);
+    }
+  } as T;
+}
+const memoizedFunction = callOnChange((cb, message) => {
+  cb(message)
+});
 export const teachCardId = 'teach';
 const spell: Spell = {
   card: {
@@ -29,10 +45,25 @@ const spell: Spell = {
       const targets = state.targetedUnits.filter(u => u.alive);
       if (targets.length) {
         await Promise.all([playDefaultSpellAnimation(card, targets, prediction), playDefaultSpellSFX(card, prediction)]);
+
+        // calculate spell cost
+        const teachIndex = state.cardIds.indexOf(teachCardId);
+        const learnedSpell = state.cardIds.slice(teachIndex + 1);
+        // Show mana cost for taught spell:
+        const cards = getCardsFromIds(learnedSpell);
+        const cost = calculateCost(cards, {});
+        if (prediction) {
+          memoizedFunction((message: string) => {
+            floatingText({
+              coords: state.castLocation,
+              text: message,
+            });
+          }, `${i18n(teachCardId)} ${cost.manaCost} ${i18n('mana')} ${cost.healthCost > 0 ? `; ${cost.healthCost} ${i18n('health')}` : ''}`);
+
+        }
         for (let unit of targets) {
           if (unit.unitSourceId == spellmasonUnitId && unit.unitType == UnitType.AI) {
-            const teachIndex = state.cardIds.indexOf(teachCardId);
-            const learnedSpell = state.cardIds.slice(teachIndex + 1);
+
             Unit.addModifier(unit, teachCardId, underworld, prediction, quantity, { spell: learnedSpell });
             if (!prediction) {
               floatingText({ coords: unit, text: `${i18n('Learned')}: ${learnedSpell.map(i18n).join(',')}`, style: { fill: 'blue' } });
