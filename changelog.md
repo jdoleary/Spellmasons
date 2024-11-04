@@ -1,3 +1,6 @@
+## 1.49.0
+    - Thanks Hex Obsidian for "Displace" Champion Modifier idea
+    - Thanks Xulqulyat for "Curse Immunity"
 ## 1.48.1
     fix: summoner, goru and last will spawn locations
     fix: Cloning pickups multiple times
