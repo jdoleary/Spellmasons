@@ -31,7 +31,7 @@ const spell$t = {
     description: [`Deals ${damageDone$2} to summoned units and resurrected units only.`],
     effect: async (state, card, quantity, underworld, prediction) => {
       const targets = state.targetedUnits.filter((u) => u.alive && !u.originalLife);
-      let delayBetweenAnimations2 = delayBetweenAnimationsStart$1;
+      let delayBetweenAnimations = delayBetweenAnimationsStart$1;
       for (let q = 0; q < quantity; q++) {
         if (!prediction && !globalThis.headless) {
           playDefaultSpellSFX$h(card, prediction);
@@ -50,9 +50,9 @@ const spell$t = {
               fromVec2: state.casterUnit
             }, underworld, prediction);
           }
-          await new Promise((resolve) => setTimeout(resolve, delayBetweenAnimations2));
-          delayBetweenAnimations2 *= 0.8;
-          delayBetweenAnimations2 = Math.max(20, delayBetweenAnimations2);
+          await new Promise((resolve) => setTimeout(resolve, delayBetweenAnimations));
+          delayBetweenAnimations *= 0.8;
+          delayBetweenAnimations = Math.max(20, delayBetweenAnimations);
         } else {
           for (let unit of targets) {
             Unit$o.takeDamage({
@@ -2159,7 +2159,6 @@ const { CardCategory: CardCategory$3, probabilityMap: probabilityMap$3, CardRari
 const { refundLastSpell } = cards$3;
 const siphonCardId = "Siphon";
 const amount = 10;
-const delayBetweenAnimations = 400;
 const spell$3 = {
   card: {
     id: siphonCardId,
@@ -2180,23 +2179,20 @@ const spell$3 = {
       let healthStolen = 0;
       let amountStolen = amount * quantity;
       for (let unit of targets) {
-        for (let i = 0; i < quantity; i++) {
-          const manaStolenFromUnit = Math.min(unit.mana, amountStolen);
-          unit.mana -= manaStolenFromUnit;
-          manaStolen += manaStolenFromUnit;
-          const healthStolenFromUnit = Math.min(unit.health, amountStolen);
-          healthStolen += healthStolenFromUnit;
-          Unit$3.takeDamage({
-            unit,
-            amount: healthStolenFromUnit,
-            sourceUnit: state.casterUnit,
-            fromVec2: state.casterUnit
-          }, underworld, prediction);
-          if (!globalThis.headless && !prediction) {
-            promises.push(Particles.makeManaTrail(unit, state.casterUnit, underworld, "#fff9e4", "#ffcb3f", targets.length * quantity));
-            await new Promise((resolve) => setTimeout(resolve, delayBetweenAnimations));
-            promises.push(Particles.makeManaTrail(unit, state.casterUnit, underworld, "#e4f9ff", "#3fcbff", targets.length * quantity));
-          }
+        const manaStolenFromUnit = Math.min(unit.mana, amountStolen);
+        unit.mana -= manaStolenFromUnit;
+        manaStolen += manaStolenFromUnit;
+        const healthStolenFromUnit = Math.min(unit.health, amountStolen);
+        healthStolen += healthStolenFromUnit;
+        Unit$3.takeDamage({
+          unit,
+          amount: healthStolenFromUnit,
+          sourceUnit: state.casterUnit,
+          fromVec2: state.casterUnit
+        }, underworld, prediction);
+        if (!globalThis.headless && !prediction) {
+          promises.push(Particles.makeManaTrail(unit, state.casterUnit, underworld, "#fff9e4", "#ffcb3f", targets.length * quantity));
+          promises.push(Particles.makeManaTrail(unit, state.casterUnit, underworld, "#e4f9ff", "#3fcbff", targets.length * quantity));
         }
       }
       await Promise.all(promises);
@@ -2373,7 +2369,7 @@ const spell = {
 };
 async function tripleSlashEffect(state, card, quantity, underworld, prediction, damage, scale) {
   const targets = state.targetedUnits.filter((u) => u.alive);
-  let delayBetweenAnimations2 = delayBetweenAnimationsStart;
+  let delayBetweenAnimations = delayBetweenAnimationsStart;
   for (let tripleSlashCounter = 0; tripleSlashCounter < 3; tripleSlashCounter++) {
     for (let q = 0; q < quantity; q++) {
       if (!prediction && !globalThis.headless) {
@@ -2395,9 +2391,9 @@ async function tripleSlashEffect(state, card, quantity, underworld, prediction, 
             fromVec2: state.casterUnit
           }, underworld, prediction);
         }
-        await new Promise((resolve) => setTimeout(resolve, delayBetweenAnimations2));
-        delayBetweenAnimations2 *= 0.8;
-        delayBetweenAnimations2 = Math.max(20, delayBetweenAnimations2);
+        await new Promise((resolve) => setTimeout(resolve, delayBetweenAnimations));
+        delayBetweenAnimations *= 0.8;
+        delayBetweenAnimations = Math.max(20, delayBetweenAnimations);
       } else {
         for (let unit of targets) {
           Unit.takeDamage({
