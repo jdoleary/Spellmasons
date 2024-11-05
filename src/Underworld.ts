@@ -2054,7 +2054,8 @@ export default class Underworld {
     // Prevents units from spawning directly on top of eachother
     // Ensure spawnPoint doesn't share coordinates with any other entity
     const entities = this.getPotentialTargets(prediction);
-    if (entities.some(entity => Vec.equal(Vec.round(entity), Vec.round(spawnPoint)))) {
+    // Filter out dead units, dead units shouldn't block spawning
+    if (entities.filter(e => Unit.isUnit(e) ? e.alive : true).some(entity => Vec.equal(Vec.round(entity), Vec.round(spawnPoint)))) {
       return false;
     }
 
