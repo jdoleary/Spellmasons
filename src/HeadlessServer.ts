@@ -50,7 +50,22 @@ fetch(SERVER_HUB_URL, {
 }).then(x => x.json()).then(({ config }) => {
     if (config) {
         globalThis.useEventLogger = config.useEventLogger;
+        // Hack: Right now the serverRegion env is set on all digital ocean servers
+        // If this is running on a digital ocean server, set serverStability limits
+        // via spellmasons.com's feature flags so that community servers limit
+        // the max number of units and pickups so they don't crash.
+        // Non community servers may have any number of units or pickups since they
+        // are not shared
+        if (globalThis.headless && process.env.serverRegion) {
+            let _serverStabilityMaxUnits = config.serverStabilityMaxUnits;
+            let _serverStabilityMaxPickups = config.serverStabilityMaxPickups;
+            let serverStabilityMaxUnits = _serverStabilityMaxUnits !== undefined ? parseInt(_serverStabilityMaxUnits) : undefined;
+            let serverStabilityMaxPickups = _serverStabilityMaxPickups !== undefined ? parseInt(_serverStabilityMaxPickups) : undefined;
+            globalThis.serverStabilityMaxUnits = serverStabilityMaxUnits;
+            globalThis.serverStabilityMaxPickups = serverStabilityMaxPickups;
+        }
     }
+
     console.log('Use event logger:', globalThis.useEventLogger);
 }).catch(e => console.error('Could not fetch config from serverList', e))
 

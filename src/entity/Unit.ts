@@ -175,6 +175,7 @@ export function create(
   underworld: Underworld,
   prediction?: boolean,
 ): IUnit {
+
   const health = config.UNIT_BASE_HEALTH;
   const mana = config.UNIT_BASE_MANA;
   const staminaMax = config.UNIT_BASE_STAMINA;

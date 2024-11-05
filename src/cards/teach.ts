@@ -7,6 +7,7 @@ import floatingText from '../graphics/FloatingText';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 import { spellmasonUnitId } from '../entity/units/playerUnit';
+import { addWarningAtMouse } from '../graphics/PlanningView';
 
 // callOnChange and memoizedFunction allow the `cb` callback to be invoked with
 // the arg of `message` only when `message` changes.
@@ -63,6 +64,13 @@ const spell: Spell = {
         }
         for (let unit of targets) {
           if (unit.unitSourceId == spellmasonUnitId && unit.unitType == UnitType.AI) {
+            const teachIndex = state.cardIds.indexOf(teachCardId);
+            const learnedSpell = state.cardIds.slice(teachIndex + 1);
+            // Show mana cost for taught spell:
+            const cards = getCardsFromIds(learnedSpell);
+            const cost = calculateCost(cards, {})
+            addWarningAtMouse(`${i18n(teachCardId)} ${cost.manaCost} ${i18n('mana')}; ${cost.healthCost} ${i18n('health')}`);
+            // LEFT OFF: WHy don't they incur mana cost??
 
             Unit.addModifier(unit, teachCardId, underworld, prediction, quantity, { spell: learnedSpell });
             if (!prediction) {

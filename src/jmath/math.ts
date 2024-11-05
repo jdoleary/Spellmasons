@@ -138,3 +138,40 @@ export function rotateMatrix(array: any[], width: number): { contents: any[], wi
   }
   return { contents: rotated, width: height };
 }
+
+// For an array of Vec2s, group into pairs of 2 based on close proximity
+export function groupIntoClusters<T extends Vec2>(points: T[]): [T, T][] {
+  const clusters: [T, T][] = [];
+  const used = new Set<number>(); // To keep track of which points are already clustered
+
+  // Calculate all pairwise distances
+  const distances: { i: number; j: number; dist: number }[] = [];
+  for (let i = 0; i < points.length; i++) {
+    for (let j = i + 1; j < points.length; j++) {
+      const I = points[i];
+      const J = points[j];
+      if (I && J) {
+        const dist = Math.hypot(I.x - J.x, I.y - J.y);
+        distances.push({ i, j, dist });
+      }
+    }
+  }
+
+  // Sort pairs by distance (smallest distance first)
+  distances.sort((a, b) => a.dist - b.dist);
+
+  // Greedily add pairs to clusters, ensuring each point is only used once
+  for (const { i, j } of distances) {
+    if (!used.has(i) && !used.has(j)) {
+      const I = points[i];
+      const J = points[j];
+      if (I && J) {
+        clusters.push([I, J]);
+        used.add(i);
+        used.add(j);
+      }
+    }
+  }
+
+  return clusters;
+}

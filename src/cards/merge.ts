@@ -14,7 +14,7 @@ import { isRune } from './cardUtils';
 import { getOrInitModifier } from './util';
 import { addWarningAtMouse } from '../graphics/PlanningView';
 
-const merge_id = 'merge';
+export const merge_id = 'merge';
 const immuneForTurns = 2;
 const spell: Spell = {
   card: {

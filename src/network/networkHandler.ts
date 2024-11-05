@@ -924,6 +924,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         // Await forcemoves in case the result of any spells caused a forceMove to be added to the array
         // such as Bloat's onDeath
         await underworld.awaitForceMoves();
+
         // Only send SYNC_SOME_STATE from the headless server
         if (globalThis.headless) {
           // Send a new SPELL message with the sync state attached
@@ -1142,6 +1143,9 @@ async function handleLoadGameState(payload: {
   underworld.simulatingMovePredictions = false;
   // backwards compatible for save state that didn't have this:
   underworld.allyNPCAttemptWinKillSwitch = loadedGameState.allyNPCAttemptWinKillSwitch || 0;
+
+  underworld.serverStabilityMaxUnits = loadedGameState.serverStabilityMaxUnits;
+  underworld.serverStabilityMaxPickups = loadedGameState.serverStabilityMaxPickups;
 
   // sync difficulty.  This must occur before underworld.createLevel
   // because difficulty determines the health of mobs

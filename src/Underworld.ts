@@ -114,6 +114,8 @@ import { placeRandomBounty } from './modifierBounty';
 import { heavyImpactsId } from './modifierHeavyImpact';
 import { OutlineFilter } from '@pixi/filter-outline';
 import { LogLevel } from './RemoteLogging';
+import { primedCorpseId } from './modifierPrimedCorpse';
+import { animateMerge, merge_id, mergePickups, mergeUnits } from './cards/merge';
 
 const loopCountLimit = 10000;
 export enum turn_phase {
@@ -256,6 +258,8 @@ export default class Underworld {
   // significant happenings.  The battleLog is used for players to view
   // what has happened
   _battleLog: string[] = [];
+  serverStabilityMaxUnits: number | undefined;
+  serverStabilityMaxPickups: number | undefined;
 
   constructor(overworld: Overworld, pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     // Clean up previous underworld:
