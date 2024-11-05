@@ -461,6 +461,7 @@ interface OneOffOptions {
   // a numbered frame during which the promise will resolve early (before the end of the animation).
   // The animation will continue to the end, but it will no longer be blocking on await
   keyFrame?: number;
+  skipSpyPromise?: boolean;
 }
 // A one off animation is an animation that is attached to an entity but operates independently of the entity's primary animation and will
 // not be affected by changes to the entity's primary animation.  This useful for example for playing a healing animation over top of a entity,
@@ -512,5 +513,5 @@ export function addOneOffAnimation(imageHaver: any, spritePath: string, oneOffOp
     if (options?.loop) {
       resolve();
     }
-  }));
+  }), { skipSpyPromise: oneOffOptions?.skipSpyPromise });
 }

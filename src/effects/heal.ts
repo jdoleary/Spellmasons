@@ -68,8 +68,10 @@ export function oneOffHealAnimation(imageHaver: any, asMana: boolean = false): P
       animationSpeed: animationOptions.animationSpeed,
       colorReplace: { colors: manaReplaceColors, epsilon: 0.1 }
     };
-    return Image.addOneOffAnimation(imageHaver, 'potionPickup', {}, options);
+    // skipSpyPromise: Healing animation doesn't need to be awaited so don't spy on the promise
+    return Image.addOneOffAnimation(imageHaver, 'potionPickup', { skipSpyPromise: true }, options);
   } else {
-    return Image.addOneOffAnimation(imageHaver, 'potionPickup', {}, animationOptions)
+    // skipSpyPromise: Healing animation doesn't need to be awaited so don't spy on the promise
+    return Image.addOneOffAnimation(imageHaver, 'potionPickup', { skipSpyPromise: true }, animationOptions)
   }
 }
