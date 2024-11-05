@@ -34,10 +34,13 @@ const spell: Spell = {
       const potentialTargets = underworld.getPotentialTargets(prediction);
       // Note: This loop must NOT be a for..of and it must cache the length because it
       // mutates state.targetedUnits as it iterates.  Otherwise it will continue to loop as it grows
-      const targets = getCurrentTargets(state);
+      let targets = getCurrentTargets(state);
       const length = targets.length;
       const linkGroups: AnimateConnectLinks[][] = [];
       for (let i = 0; i < length; i++) {
+        // Refresh current targets so connect doesn't re-target already
+        // targeted units
+        targets = getCurrentTargets(state);
         const target = targets[i];
         if (target) {
           const filterFn = (x: any) => {
