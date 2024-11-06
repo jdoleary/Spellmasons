@@ -1,8 +1,10 @@
 import {
   similarTriangles,
   getCoordsAtDistanceTowardsTarget, honeycombGenerator, rotateMatrix,
-  lerpSegmented
+  lerpSegmented,
+  groupIntoClusters
 } from '../math';
+import { Vec2 } from '../Vec';
 
 describe('math', () => {
   describe('rotateMatrix', () => {
@@ -207,5 +209,99 @@ describe('math', () => {
 
     })
 
+  });
+  describe('groupIntoClusters', () => {
+    it('should return empty array if no points are provided', () => {
+      const points: Vec2[] = [];
+      const result = groupIntoClusters(points);
+      expect(result).toEqual([]);
+    });
+
+    it.only('should group pairs of points that are closest to each other', () => {
+      const points: Vec2[] = [
+        { x: 0, y: 0 },
+        { x: 1, y: 1 },
+        { x: 10, y: 10 },
+        { x: 11, y: 11 },
+      ];
+      const result = groupIntoClusters(points);
+      expect(result.length).toBe(2);
+      expect(result).toContainEqual([{ x: 0, y: 0 }, { x: 1, y: 1 }]);
+      expect(result).toContainEqual([{ x: 10, y: 10 }, { x: 11, y: 11 }]);
+    });
+
+    it('should not reuse points in multiple clusters', () => {
+      const points: Vec2[] = [
+        { x: 0, y: 0 },
+        { x: 1, y: 1 },
+        { x: 0.5, y: 0.5 },
+        { x: 10, y: 10 },
+        { x: 11, y: 11 },
+      ];
+      const result = groupIntoClusters(points);
+      expect(result.length).toBe(2);
+      // Expect no overlapping points across pairs
+      const allPoints = new Set(result.flat());
+      expect(allPoints.size).toBe(4);
+    });
+
+    it('should group pairs only when matching properties are equal', () => {
+      interface ColoredVec2 extends Vec2 {
+        color: string;
+      }
+
+      const points: ColoredVec2[] = [
+        { x: 0, y: 0, color: 'red' },
+        { x: 1, y: 1, color: 'blue' },
+        { x: 10, y: 10, color: 'blue' },
+        { x: 11, y: 11, color: 'red' },
+        { x: 2, y: 2, color: 'green' },
+      ];
+
+      const result = groupIntoClusters(points, ['color']);
+      expect(result.length).toBe(2);
+      expect(result).toContainEqual([{ x: 0, y: 0, color: 'red' }, { x: 1, y: 1, color: 'red' }]);
+      expect(result).toContainEqual([{ x: 10, y: 10, color: 'blue' }, { x: 11, y: 11, color: 'blue' }]);
+    });
+
+    it('should handle cases with no pairs matching specified properties', () => {
+      interface ColoredVec2 extends Vec2 {
+        color: string;
+      }
+
+      const points: ColoredVec2[] = [
+        { x: 0, y: 0, color: 'red' },
+        { x: 1, y: 1, color: 'blue' },
+        { x: 10, y: 10, color: 'green' },
+        { x: 11, y: 11, color: 'yellow' },
+      ];
+
+      const result = groupIntoClusters(points, ['color']);
+      expect(result).toEqual([]); // No pairs with matching colors
+    });
+
+    it('should group correctly without matching properties when not specified', () => {
+      const points: Vec2[] = [
+        { x: 0, y: 0 },
+        { x: 1, y: 1 },
+        { x: 3, y: 3 },
+        { x: 4, y: 4 },
+      ];
+      const result = groupIntoClusters(points);
+      expect(result.length).toBe(2);
+      expect(result).toContainEqual([{ x: 0, y: 0 }, { x: 1, y: 1 }]);
+      expect(result).toContainEqual([{ x: 3, y: 3 }, { x: 4, y: 4 }]);
+    });
+
+    it('should handle an odd number of points by leaving one point ungrouped', () => {
+      const points: Vec2[] = [
+        { x: 0, y: 0 },
+        { x: 1, y: 1 },
+        { x: 10, y: 10 },
+      ];
+      const result = groupIntoClusters(points);
+      expect(result.length).toBe(1);
+      expect(result).toContainEqual([{ x: 0, y: 0 }, { x: 1, y: 1 }]);
+    });
   });
 });

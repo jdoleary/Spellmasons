@@ -289,6 +289,9 @@ export default class Underworld {
 
     this.serverStabilityMaxPickups = globalThis.serverStabilityMaxPickups;
     this.serverStabilityMaxUnits = globalThis.serverStabilityMaxUnits;
+    if (this.serverStabilityMaxPickups || this.serverStabilityMaxUnits) {
+      console.log('Server Stability: ', this.serverStabilityMaxUnits, this.serverStabilityMaxPickups);
+    }
   }
   // Returns all potentially targetable entities
   // See cards/index.ts's getCurrentTargets() for the function that returns 

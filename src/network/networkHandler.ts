@@ -42,7 +42,7 @@ import { sendEventToServerHub } from '../RemoteLogging';
 import { raceTimeout } from '../Promise';
 import { teleport } from '../effects/teleport';
 import Events from '../Events';
-import { mergeExcessPickups } from '../stability';
+import { mergeExcessPickups, mergeExcessUnits } from '../stability';
 
 export const NO_LOG_LIST = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING, MESSAGE_TYPES.MOVE_PLAYER, MESSAGE_TYPES.SET_PLAYER_POSITION];
 export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING, MESSAGE_TYPES.MOVE_PLAYER, MESSAGE_TYPES.SET_PLAYER_POSITION];
@@ -1146,6 +1146,7 @@ async function handleLoadGameState(payload: {
 
   underworld.serverStabilityMaxUnits = loadedGameState.serverStabilityMaxUnits;
   underworld.serverStabilityMaxPickups = loadedGameState.serverStabilityMaxPickups;
+  console.log('Server Stability: ', underworld.serverStabilityMaxUnits, underworld.serverStabilityMaxPickups);
 
   // sync difficulty.  This must occur before underworld.createLevel
   // because difficulty determines the health of mobs
@@ -1375,6 +1376,7 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
     globalThis.animatingSpells = false;
 
     await mergeExcessPickups(underworld);
+    await mergeExcessUnits(underworld);
 
     // Now that the previous spell is over, rerun predictions because
     // the player may have queued up another spell while the previous spell was

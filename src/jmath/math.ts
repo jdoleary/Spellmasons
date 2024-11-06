@@ -139,8 +139,10 @@ export function rotateMatrix(array: any[], width: number): { contents: any[], wi
   return { contents: rotated, width: height };
 }
 
+// TODO: This needs to be rewritten to use spacial hashing
+// --
 // For an array of Vec2s, group into pairs of 2 based on close proximity
-export function groupIntoClusters<T extends Vec2>(points: T[]): [T, T][] {
+export function groupIntoClusters<T extends Vec2>(points: T[], matchingProperties?: (keyof T)[]): [T, T][] {
   const clusters: [T, T][] = [];
   const used = new Set<number>(); // To keep track of which points are already clustered
 
@@ -159,14 +161,16 @@ export function groupIntoClusters<T extends Vec2>(points: T[]): [T, T][] {
 
   // Sort pairs by distance (smallest distance first)
   distances.sort((a, b) => a.dist - b.dist);
+  console.log('jtest', distances)
 
   // Greedily add pairs to clusters, ensuring each point is only used once
   for (const { i, j } of distances) {
     if (!used.has(i) && !used.has(j)) {
       const I = points[i];
       const J = points[j];
-      if (I && J) {
+      if (I && J && matchingProperties?.every(prop => I[prop] === J[prop])) {
         clusters.push([I, J]);
+        console.log('jtest', [I, J])
         used.add(i);
         used.add(j);
       }
