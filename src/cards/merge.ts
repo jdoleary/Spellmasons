@@ -14,7 +14,7 @@ import { isRune } from './cardUtils';
 import { getOrInitModifier } from './util';
 import { addWarningAtMouse } from '../graphics/PlanningView';
 
-const merge_id = 'merge';
+export const merge_id = 'merge';
 const immuneForTurns = 2;
 const spell: Spell = {
   card: {
@@ -215,6 +215,9 @@ export function mergePickups(target: Pickup.IPickup, pickupsToMerge: Pickup.IPic
 }
 
 export async function animateMerge(image: IImageAnimated | undefined, target: Vec2) {
+  if (globalThis.headless) {
+    return;
+  }
   if (!image) {
     return;
   }
