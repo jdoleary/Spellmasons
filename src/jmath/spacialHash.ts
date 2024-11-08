@@ -25,7 +25,17 @@ export function generateHash<T extends Vec2>(elements: T[], cellSize: number): S
     }
     return hash;
 }
-function getRings(start: Vec2, ringsAway: number): string[] {
+// A square "ring" of coordinates around a start point
+// In the below example, the number is the "ringsAway"
+// while the coordinates of the upper left most will be
+// {x:-2,y:-2}
+//
+// 2,2,2,2,2
+// 2,1,1,1,2
+// 2,1,0,1,2
+// 2,1,1,1,2
+// 2,2,2,2,2
+function getRing(start: Vec2, ringsAway: number): string[] {
     const { x, y } = start;
     if (ringsAway === 0) return [`${x},${y}`];
 
@@ -65,7 +75,7 @@ function getRings(start: Vec2, ringsAway: number): string[] {
 function getElementsInHash<T extends Vec2>(hash: SpacialHash<T>, startCell: Vec2, ringsDistance: number): T[] {
     const cells = [];
     for (let i = 0; i < ringsDistance + 1; i++) {
-        cells.push(...getRings(startCell, i))
+        cells.push(...getRing(startCell, i))
     }
     const elements = [];
     for (let c of cells) {
@@ -81,14 +91,46 @@ export function getElementsSortedByDistance<T extends Vec2>(startPoint: Vec2, di
     const elements = getElementsInHash(hash, startCell, ringsDistance);
     return elements.sort((a, b) => distance(a, startPoint) - distance(b, startPoint));
 }
-export function findNearestInList<T extends Vec2>(startPoint: Vec2, hash: SpacialHash<T>, filterFn?: (el: T) => boolean) {
-    // TODO
 
+// Returns a nearby element in `hash`
+// ---
+// Returns the near~~est~~"ish" element in the hash that meets the filterFn criteria.
+// Super efficient thanks to the hash and non perfect accurracy (it doesn't return the
+// nearEST so that it can stop as soon as it finds a match within the square rings without
+// checking the next ring and sorting for closest.
+export function quickFindNearish<T extends Vec2>(self: T, hash: SpacialHash<T>, filterFn?: (el: T) => boolean): T | undefined {
+    // The number of elements in the hash that could potentially be checked
+    let checksLeft = Object.values(hash).flat().length;
+    let ringNumber = 0;
+    while (checksLeft > 0) {
+        const cells = getRing(self, ringNumber);
+        for (let c of cells) {
+            const elements = hash[c];
+            if (elements) {
+                for (let e of elements) {
+                    checksLeft--;
+                    // Do not match self as near neighbor
+                    if (e === self) {
+                        continue;
+                    }
+                    // if no filter function return the first element found
+                    if (!filterFn) {
+                        return e;
+                    } else if (filterFn(e)) {
+                        // if there is a filter function return the first element that satisfies it
+                        return e;
+                    }
+                }
+            }
+        }
+        ringNumber++;
+    }
+    return undefined;
 }
 
 
 export const testable = {
     getElementsInHash,
-    getRings,
+    getRings: getRing,
     getCell
 }

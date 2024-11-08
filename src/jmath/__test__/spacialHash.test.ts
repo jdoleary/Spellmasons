@@ -1,4 +1,4 @@
-import { generateHash, testable, getElementsSortedByDistance } from '../spacialHash';
+import { generateHash, testable, getElementsSortedByDistance, quickFindNearish } from '../spacialHash';
 import { vec2ToString } from '../Vec';
 const {
     getCell, getElementsInHash, getRings
@@ -50,7 +50,7 @@ describe('spacialHash', () => {
             expect(actual).toEqual(expected);
         });
     });
-    describe('getRings', () => {
+    describe('getRing', () => {
         [
             { start: { x: 0, y: 0 }, ringsAway: 0, expected: ['0,0'] },
             {
@@ -142,14 +142,15 @@ describe('spacialHash', () => {
         ]
         expect(actual).toEqual(expected);
     });
-    describe('find nearest in list', () => {
+    describe('quickFindNearish', () => {
         it('should not return self', () => {
             const source = { x: 0, y: 0 };
             const points = [
                 source,
             ];
+            const hash = generateHash(points, cellSize);
             const expected = undefined;
-            const actual = findNearestInList(source, points);
+            const actual = quickFindNearish(source, hash);
             expect(actual).toEqual(expected);
         });
         it('should return the nearest point', () => {
@@ -165,22 +166,34 @@ describe('spacialHash', () => {
                 { x: -30, y: 0 },
                 { x: -30, y: -30 },
             ];
+            const hash = generateHash(points, cellSize);
             const expected = nearest;
-            const actual = findNearestInList(source, points);
+            const actual = quickFindNearish(source, hash);
             expect(actual).toEqual(expected);
         });
-        it('should return the nearest point even if the nearest point is in a farther ring than a farther point in a closer ring', () => {
-            const source = { x: 0, y: 0 };
-            const nearest = { x: 10, y: 0 };
+        it('should return the first point that satisfies the filter', () => {
+            const source = { x: 0, y: 0, include: true };
+            const expected = { x: 200, y: 200, include: true };
             const points = [
                 source,
-                // 9,9 is farther away from source than 10,0
-                { x: 9, y: 9 },
-                nearest,
+                { x: 1, y: 1, include: false },
+                expected
             ];
-            const expected = nearest;
-            const actual = findNearestInList(source, points);
+            const hash = generateHash(points, cellSize);
+            const actual = quickFindNearish(source, hash, x => x.include);
             expect(actual).toEqual(expected);
+        });
+        it('should return undefined for no matches', () => {
+            const source = { x: 0, y: 0 };
+            const points = [
+                source,
+                { x: 100, y: 100 },
+                { x: 300, y: 300 },
+            ];
+            const hash = generateHash(points, cellSize);
+            // A filter function that purposely won't match any
+            const actual = quickFindNearish(source, hash, e => e.x === 2);
+            expect(actual).toEqual(undefined);
         });
 
     });
