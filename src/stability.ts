@@ -7,9 +7,7 @@
 // If there are too many pickups:
 // 1. Potions will be merged to make space
 
-import { allUnits } from "./entity/units";
 import * as Vec from "./jmath/Vec";
-import { groupIntoClusters } from "./jmath/math";
 import { getUniqueSeedString, seedrandom, shuffle } from "./jmath/rand";
 import { UnitType } from "./types/commonTypes";
 import * as Unit from './entity/Unit';
@@ -18,29 +16,29 @@ import Underworld from "./Underworld";
 import { animateMerge, merge_id, mergePickups, mergeUnits } from "./cards/merge";
 import floatingText from "./graphics/FloatingText";
 import { raceTimeout } from "./Promise";
+import { quickFindNearish, SpacialHash } from "./jmath/spacialHash";
 // once cleanup happens, it should clean up to a buffer beyond the limit so it doesn't have to clean up each time
 const buffer = 10;
-export async function mergeExcessPickups(underworld: Underworld) {
+export async function mergeExcessPickups(underworld: Underworld, hash: SpacialHash<Pickup.IPickup>) {
     const promises = [];
+    console.log('jtest hash', hash)
     if (underworld.serverStabilityMaxPickups && underworld.pickups.length > underworld.serverStabilityMaxPickups) {
         const numberOfItemsToCleanup = underworld.pickups.length - underworld.serverStabilityMaxPickups + buffer;
         console.log(`Server Stability: cleanup ${numberOfItemsToCleanup} pickups`);
         let mergeCount = 0;
-        for (let pickupName of Pickup.pickups.map(p => p.name)) {
-            const potionPickups = underworld.pickups.filter(p => p.name === pickupName && !p.flaggedForRemoval && p.name.includes('Potion'));
-            const clustered = groupIntoClusters(potionPickups);
-            for (let cluster of clustered) {
-                mergeCount++;
-                if (mergeCount > numberOfItemsToCleanup) {
-                    break;
-                }
-                const one = cluster[1];
-                const zero = cluster[0];
-                if (zero && one) {
-                    promises.push(animateMerge((one).image, zero).then(() => {
-                        mergePickups(zero, [one], underworld, false);
-                        floatingText({ coords: zero, text: merge_id })
+        const seed = seedrandom(getUniqueSeedString(underworld));
+        const potionPickups = shuffle([...underworld.pickups.filter(p => !p.flaggedForRemoval && p.name.includes('Potion'))], seed);
+        while (mergeCount < numberOfItemsToCleanup) {
+            for (let p of potionPickups) {
+                const s = performance.now();
+                const neighbor = quickFindNearish(p, hash, (el => el.name === p.name));
+                console.log('jtest perf', performance.now() - s);
+                if (neighbor) {
+                    promises.push(animateMerge((neighbor).image, p).then(() => {
+                        mergePickups(p, [neighbor], underworld, false);
+                        floatingText({ coords: p, text: merge_id })
                     }));
+                    mergeCount++;
                 }
             }
         }
@@ -57,7 +55,7 @@ export async function mergeExcessPickups(underworld: Underworld) {
         underworld.pickups = keepPickups;
     }
 }
-export async function mergeExcessUnits(underworld: Underworld) {
+export async function mergeExcessUnits(underworld: Underworld, hash: SpacialHash<Unit.IUnit>) {
     const promises = [];
     if (underworld.serverStabilityMaxUnits && underworld.units.length > underworld.serverStabilityMaxUnits) {
         let numberOfItemsToCleanup = underworld.units.length - underworld.serverStabilityMaxUnits + buffer;
@@ -83,28 +81,17 @@ export async function mergeExcessUnits(underworld: Underworld) {
         // Merge only units with matching sourceIds
         if (numberOfItemsToCleanup > 0) {
             let mergeCount = 0;
-            // TODO: ONLY MERGE LIKE FACTIONS
-            // TODO: ONLY MERGE LIKE FACTIONS
-            // TODO: ONLY MERGE LIKE FACTIONS
-            // TODO: ONLY MERGE LIKE FACTIONS
-            // TODO: ONLY MERGE LIKE FACTIONS
-            for (let sourceId of Object.keys(allUnits)) {
-                const nonPlayerUnits = underworld.units.filter(u => u.unitSourceId == sourceId && !u.flaggedForRemoval && u.alive && u.unitType !== UnitType.PLAYER_CONTROLLED);
-                const clusteredUnits = groupIntoClusters(nonPlayerUnits);
-                for (let cluster of clusteredUnits) {
-                    mergeCount++;
-                    if (mergeCount > numberOfItemsToCleanup) {
-                        break;
-                    }
-                    const one = cluster[1];
-                    const zero = cluster[0];
-                    if (zero && one) {
-                        promises.push(animateMerge((one).image, zero).then(() => {
-                            mergeUnits(zero, [one], underworld, false);
-                            floatingText({ coords: zero, text: merge_id })
+            const nonPlayerUnits = shuffle([...underworld.units.filter(u => !u.flaggedForRemoval && u.alive && u.unitType !== UnitType.PLAYER_CONTROLLED)], seed);
+            while (mergeCount < numberOfItemsToCleanup) {
+                for (let u of nonPlayerUnits) {
+                    const neighbor = quickFindNearish(u, hash, el => el.faction === u.faction && el.unitSourceId === u.unitSourceId);
+                    if (neighbor) {
+                        promises.push(animateMerge((neighbor).image, u).then(() => {
+                            mergeUnits(u, [neighbor], underworld, false);
+                            floatingText({ coords: u, text: merge_id })
                         }));
+                        mergeCount++;
                     }
-
                 }
             }
             await raceTimeout(5000, 'runServerStability_mergeUnits', Promise.all(promises));
@@ -119,68 +106,3 @@ export async function mergeExcessUnits(underworld: Underworld) {
         }
     }
 }
-// interface ServerStabilityInstructions {
-//     cleanupDead: number[],
-//     mergeUnits: [number, number][],
-//     mergePickups: [number, number][],
-// }
-
-// // 2. Worst Case Scenario, the pickup will not be created.
-// export function runServerStability(underworld: Underworld): ServerStabilityInstructions {
-//     const result: ServerStabilityInstructions = {
-//         cleanupDead: [],
-//         mergeUnits: [],
-//         mergePickups: []
-//     }
-//     if (underworld.serverStabilityMaxPickups && underworld.pickups.length > underworld.serverStabilityMaxPickups) {
-//         let mergeCount = 0;
-//         for (let pickupId of underworld.pickups.map(p => p.name)) {
-//             const potionPickups = underworld.pickups.filter(p => p.name === pickupId && !p.flaggedForRemoval && p.name.includes('Potion'));
-//             const clustered = groupIntoClusters(potionPickups);
-//             for (let cluster of clustered) {
-//                 mergeCount++;
-//                 if (mergeCount > removeNumberOfItemPerCleanup) {
-//                     break;
-//                 }
-//                 result.mergePickups.push([cluster[0].id, cluster[1].id]);
-//             }
-//         }
-
-//     }
-//     return result;
-// }
-// export async function runServerStabilityInstructions(underworld: Underworld, instructions: ServerStabilityInstructions) {
-//     const cleanUpUnits = underworld.units.filter(u => instructions.cleanupDead.includes(u.id));
-//     cleanUpUnits.forEach(u => {
-//         floatingText({
-//             coords: Vec.clone(u), text: `corpse decayed`,
-//         });
-//         Unit.cleanup(u);
-//     });
-//     const promises = [];
-//     for (let cluster of instructions.mergePickups.map((x) => {
-//         return [underworld.pickups.find(p => p.id == x[0]), underworld.pickups.find(p => p.id == x[1])];
-//     })) {
-//         const one = cluster[1];
-//         const zero = cluster[0];
-//         if (zero && one) {
-//             promises.push(animateMerge((one).image, zero).then(() => {
-//                 mergePickups(zero, [one], underworld, false);
-//                 floatingText({ coords: zero, text: merge_id })
-//             }));
-//         }
-//     }
-
-//     for (let cluster of instructions.mergeUnits.map((x) => {
-//         return [underworld.units.find(u => u.id == x[0]), underworld.units.find(u => u.id == x[1])];
-//     })) {
-
-//     // Clean up invalid pickups
-//     const keepPickups: Pickup.IPickup[] = [];
-//     for (let p of underworld.pickups) {
-//         if (!p.flaggedForRemoval) {
-//             keepPickups.push(p);
-//         }
-//     }
-//     underworld.pickups = keepPickups;
-// }

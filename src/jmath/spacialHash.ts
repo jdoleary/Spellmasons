@@ -104,9 +104,11 @@ export function quickFindNearish<T extends Vec2>(self: T, hash: SpacialHash<T>, 
     let ringNumber = 0;
     while (checksLeft > 0) {
         const cells = getRing(self, ringNumber);
+        const s2 = performance.now();
         for (let c of cells) {
             const elements = hash[c];
             if (elements) {
+                const s3 = performance.now();
                 for (let e of elements) {
                     checksLeft--;
                     // Do not match self as near neighbor
@@ -121,8 +123,10 @@ export function quickFindNearish<T extends Vec2>(self: T, hash: SpacialHash<T>, 
                         return e;
                     }
                 }
+                console.log('jtest checkElements', performance.now() - s3);
             }
         }
+        console.log('jtest checkCells', performance.now() - s2);
         ringNumber++;
     }
     return undefined;
