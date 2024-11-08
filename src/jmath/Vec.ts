@@ -119,6 +119,9 @@ export function round(v: Vec2): Vec2 {
 export function invert(v: Vec2): Vec2 {
   return { x: v.y, y: -v.x };
 }
+export function vec2ToString(v: Vec2): string {
+  return `${v.x},${v.y}`
+}
 // CAUTION: NOT YET TESTED
 export function average_mean(vs: Vec2[]) {
   return multiply(1 / vs.length, vs.reduce((acc, cur) => {

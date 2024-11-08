@@ -114,6 +114,7 @@ import { placeRandomBounty } from './modifierBounty';
 import { heavyImpactsId } from './modifierHeavyImpact';
 import { OutlineFilter } from '@pixi/filter-outline';
 import { LogLevel } from './RemoteLogging';
+import { SpacialHash } from './jmath/spacialHash';
 
 const loopCountLimit = 10000;
 export enum turn_phase {
@@ -258,6 +259,7 @@ export default class Underworld {
   _battleLog: string[] = [];
   serverStabilityMaxUnits: number | undefined;
   serverStabilityMaxPickups: number | undefined;
+  spacialHashUnits: SpacialHash<Unit.IUnit> = {};
 
   constructor(overworld: Overworld, pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     // Clean up previous underworld:
