@@ -1,6 +1,19 @@
 ## 1.49.0
-    - Thanks Hex Obsidian for "Displace" Champion Modifier idea
-    - Thanks Xulqulyat for "Curse Immunity"
+    - content: Add 3 new Champion modifiers
+        Curse Immunity, Unstable, and Double Damage
+        - Thanks Hex Obsidian for "Displace" Champion Modifier idea
+        - Thanks Xulqulyat for "Curse Immunity"
+    - optimize: Siphon Spell (Bogiac's Spells mod)
+    - improve: Prevent Connect from targeting already targeted units (this spell is now more effective)
+    - improve: Show mana cost for clones of taught spell
+        Thanks @Brian for this suggestion
+    - UI: Improve mana badge icon
+    - fix: Dead units no longer block spawning
+    - fix: Clones not using mana to cast
+    - fix: Audio for ancient
+    - **major fix**: Determine rune cost on client
+    Fixes "runes being undone" in multiplayer.
+    
 ## 1.48.1
     fix: summoner, goru and last will spawn locations
     fix: Cloning pickups multiple times
