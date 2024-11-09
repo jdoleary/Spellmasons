@@ -16,30 +16,34 @@ import Underworld from "./Underworld";
 import { animateMerge, merge_id, mergePickups, mergeUnits } from "./cards/merge";
 import floatingText from "./graphics/FloatingText";
 import { raceTimeout } from "./Promise";
-import { quickFindNearish, SpacialHash } from "./jmath/spacialHash";
+import { distance } from "./jmath/math";
 // once cleanup happens, it should clean up to a buffer beyond the limit so it doesn't have to clean up each time
 const buffer = 10;
-export async function mergeExcessPickups(underworld: Underworld, hash: SpacialHash<Pickup.IPickup>) {
+export async function mergeExcessPickups(underworld: Underworld) {
     const promises = [];
-    console.log('jtest hash', hash)
     if (underworld.serverStabilityMaxPickups && underworld.pickups.length > underworld.serverStabilityMaxPickups) {
         const numberOfItemsToCleanup = underworld.pickups.length - underworld.serverStabilityMaxPickups + buffer;
         console.log(`Server Stability: cleanup ${numberOfItemsToCleanup} pickups`);
         let mergeCount = 0;
         const seed = seedrandom(getUniqueSeedString(underworld));
         const potionPickups = shuffle([...underworld.pickups.filter(p => !p.flaggedForRemoval && p.name.includes('Potion'))], seed);
-        while (mergeCount < numberOfItemsToCleanup) {
-            for (let p of potionPickups) {
-                const s = performance.now();
-                const neighbor = quickFindNearish(p, hash, (el => el.name === p.name));
-                console.log('jtest perf', performance.now() - s);
-                if (neighbor) {
-                    promises.push(animateMerge((neighbor).image, p).then(() => {
-                        mergePickups(p, [neighbor], underworld, false);
-                        floatingText({ coords: p, text: merge_id })
-                    }));
-                    mergeCount++;
-                }
+        // Make sure a pickup isn't used twice for merging
+        const merging: Pickup.IPickup[] = [];
+        for (let p of potionPickups) {
+            if (merging.includes(p)) {
+                continue;
+            }
+            const neighbor = potionPickups.find(p2 => p2 !== p && p.name == p2.name && distance(p, p2) < 200 && !merging.includes(p2));
+            if (neighbor) {
+                merging.push(neighbor, p);
+                promises.push(animateMerge((neighbor).image, p).then(() => {
+                    mergePickups(p, [neighbor], underworld, false);
+                    floatingText({ coords: p, text: merge_id })
+                }));
+                mergeCount++;
+            }
+            if (mergeCount >= numberOfItemsToCleanup) {
+                break;
             }
         }
         await raceTimeout(5000, 'runServerStability_mergePickups', Promise.all(promises));
@@ -55,7 +59,7 @@ export async function mergeExcessPickups(underworld: Underworld, hash: SpacialHa
         underworld.pickups = keepPickups;
     }
 }
-export async function mergeExcessUnits(underworld: Underworld, hash: SpacialHash<Unit.IUnit>) {
+export async function mergeExcessUnits(underworld: Underworld) {
     const promises = [];
     if (underworld.serverStabilityMaxUnits && underworld.units.length > underworld.serverStabilityMaxUnits) {
         let numberOfItemsToCleanup = underworld.units.length - underworld.serverStabilityMaxUnits + buffer;
@@ -81,17 +85,24 @@ export async function mergeExcessUnits(underworld: Underworld, hash: SpacialHash
         // Merge only units with matching sourceIds
         if (numberOfItemsToCleanup > 0) {
             let mergeCount = 0;
+            // Make sure a Unit isn't used twice for merging
+            const merging: Unit.IUnit[] = [];
             const nonPlayerUnits = shuffle([...underworld.units.filter(u => !u.flaggedForRemoval && u.alive && u.unitType !== UnitType.PLAYER_CONTROLLED)], seed);
-            while (mergeCount < numberOfItemsToCleanup) {
-                for (let u of nonPlayerUnits) {
-                    const neighbor = quickFindNearish(u, hash, el => el.faction === u.faction && el.unitSourceId === u.unitSourceId);
-                    if (neighbor) {
-                        promises.push(animateMerge((neighbor).image, u).then(() => {
-                            mergeUnits(u, [neighbor], underworld, false);
-                            floatingText({ coords: u, text: merge_id })
-                        }));
-                        mergeCount++;
-                    }
+            for (let u of nonPlayerUnits) {
+                if (merging.includes(u)) {
+                    continue;
+                }
+                const neighbor = nonPlayerUnits.find(p2 => p2 !== u && u.unitSourceId === p2.unitSourceId && u.faction == p2.faction && distance(u, p2) < 200 && !merging.includes(p2));
+                if (neighbor) {
+                    merging.push(neighbor, u);
+                    promises.push(animateMerge((neighbor).image, u).then(() => {
+                        mergeUnits(u, [neighbor], underworld, false);
+                        floatingText({ coords: u, text: merge_id })
+                    }));
+                    mergeCount++;
+                }
+                if (mergeCount >= numberOfItemsToCleanup) {
+                    break;
                 }
             }
             await raceTimeout(5000, 'runServerStability_mergeUnits', Promise.all(promises));

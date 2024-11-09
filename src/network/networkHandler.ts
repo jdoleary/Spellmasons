@@ -43,7 +43,6 @@ import { raceTimeout } from '../Promise';
 import { teleport } from '../effects/teleport';
 import Events from '../Events';
 import { mergeExcessPickups, mergeExcessUnits } from '../stability';
-import { generateHash } from '../jmath/spacialHash';
 
 export const NO_LOG_LIST = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING, MESSAGE_TYPES.MOVE_PLAYER, MESSAGE_TYPES.SET_PLAYER_POSITION];
 export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING, MESSAGE_TYPES.MOVE_PLAYER, MESSAGE_TYPES.SET_PLAYER_POSITION];
@@ -1376,10 +1375,8 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
 
     globalThis.animatingSpells = false;
 
-    const pickupsHash = generateHash(underworld.pickups, config.SPACIAL_HASH_CELL_SIZE)
-    await mergeExcessPickups(underworld, pickupsHash);
-    const unitsHash = generateHash(underworld.units, config.SPACIAL_HASH_CELL_SIZE)
-    await mergeExcessUnits(underworld, unitsHash);
+    await mergeExcessPickups(underworld);
+    await mergeExcessUnits(underworld);
 
     // Now that the previous spell is over, rerun predictions because
     // the player may have queued up another spell while the previous spell was
