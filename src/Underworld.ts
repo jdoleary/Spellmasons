@@ -256,6 +256,8 @@ export default class Underworld {
   // significant happenings.  The battleLog is used for players to view
   // what has happened
   _battleLog: string[] = [];
+  serverStabilityMaxUnits: number | undefined;
+  serverStabilityMaxPickups: number | undefined;
 
   constructor(overworld: Overworld, pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     // Clean up previous underworld:
@@ -284,6 +286,12 @@ export default class Underworld {
 
     globalThis.spellCasting = false;
     this.setContainerUnitsFilter();
+
+    this.serverStabilityMaxPickups = globalThis.serverStabilityMaxPickups;
+    this.serverStabilityMaxUnits = globalThis.serverStabilityMaxUnits;
+    if (this.serverStabilityMaxPickups || this.serverStabilityMaxUnits) {
+      console.log('Server Stability: ', this.serverStabilityMaxUnits, this.serverStabilityMaxPickups);
+    }
   }
   // Returns all potentially targetable entities
   // See cards/index.ts's getCurrentTargets() for the function that returns 

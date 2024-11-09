@@ -1,8 +1,10 @@
 import {
   similarTriangles,
   getCoordsAtDistanceTowardsTarget, honeycombGenerator, rotateMatrix,
-  lerpSegmented
+  lerpSegmented,
+  groupIntoClusters
 } from '../math';
+import { Vec2 } from '../Vec';
 
 describe('math', () => {
   describe('rotateMatrix', () => {

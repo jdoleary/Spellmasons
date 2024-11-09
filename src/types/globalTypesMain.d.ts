@@ -317,4 +317,7 @@ declare global {
   var currentChunk: number;
   var recordingShorts: boolean;
   var unitOutlineFilter: any;
+  // Only for use in headless, will be undefined in client
+  var serverStabilityMaxUnits: number | undefined;
+  var serverStabilityMaxPickups: number | undefined;
 }
