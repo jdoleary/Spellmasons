@@ -265,24 +265,7 @@ export function calcluateModifierCostPerUpgrade(mod: Modifiers, underworld: Unde
     return mod._costPerUpgrade;
   }
 
-  const random = seedrandom(`${getUniqueSeedStringPerLevel(underworld, player)}-${mod.description || ''}`);
-  const { discount } = chooseObjectWithProbability([
-    {
-      discount: 1,
-      probability: 80,
-    },
-    {
-      // 10% off
-      discount: 0.90,
-      probability: 15,
-    },
-    {
-      // 20% off
-      discount: 0.8,
-      probability: 5,
-    },
-  ], random) || { discount: 1 };
-  return Math.round(mod._costPerUpgrade * discount);
+  return Math.round(mod._costPerUpgrade);
 }
 export interface Events {
   // events that are not attached to a spell need an explicit id set

@@ -534,7 +534,6 @@ export function renderRunesMenu(underworld: Underworld) {
     }
     const modifier = Cards.allModifiers[modifierKey];
     const modifierCost = modifier && Cards.calcluateModifierCostPerUpgrade(modifier, underworld, globalThis.player);
-    const discount = Math.floor((modifier && modifierCost && modifier._costPerUpgrade && (modifierCost / modifier._costPerUpgrade) || 0) * 100);
     const modifierInstance = globalThis.player.unit.modifiers[modifierKey];
     // Note: The &nbsp; is to align the rune-name with the top of the button
     return `<div class="stat-row flex" data-stat="${modifierKey}">
@@ -542,9 +541,8 @@ export function renderRunesMenu(underworld: Underworld) {
                 <div class="plus-btn-container" style="color:black"><div class="stat-value" style="color:black">${modifierCost !== undefined && `${modifierCost < 0 ? '+' : ''}${Math.abs(modifierCost)}sp` || '&nbsp;'}</div></div>
                 <div>
                   <div>&nbsp;</div>
-                  <div class="rune-name-holder discount-${100 - discount}">
+                  <div class="rune-name-holder">
                     <div class="rune-name" style="color:black"> </div>
-                    ${discount !== 100 ? `<div class="discount">${100 - discount}% sp ${i18n('on sale')}</div>` : ''}
                   </div>
                   <div class="description" style="color:black">
                   ${modifier?.description && i18n(modifier.description)}
