@@ -11,7 +11,7 @@ const spell: Spell = {
   card: {
     id: sellCardId,
     replaces: [],
-    category: CardCategory.Other,
+    category: CardCategory.Blessings,
     supportQuantity: false,
     manaCost: 0,
     healthCost: 0,
