@@ -301,7 +301,7 @@ export async function playNextSong() {
   // task: Make independent volume sliders for audio and music
   musicInstance.volume = (globalThis.volume === undefined ? 1 : globalThis.volume) * (globalThis.volumeMusic === undefined ? 1 : globalThis.volumeMusic);
   try {
-    musicInstance.play();
+    musicInstance.play().catch(e => console.error('music play err:', e));
   } catch (e) {
     console.log('Could not play music.  Caught: ', e);
   }
