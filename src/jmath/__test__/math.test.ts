@@ -2,7 +2,6 @@ import {
   similarTriangles,
   getCoordsAtDistanceTowardsTarget, honeycombGenerator, rotateMatrix,
   lerpSegmented,
-  groupIntoClusters
 } from '../math';
 import { Vec2 } from '../Vec';
 
