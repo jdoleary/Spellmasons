@@ -860,6 +860,7 @@
             <key type="filename">public/images/spell/spellIconResurrect3.png</key>
             <key type="filename">public/images/spell/spellIconRicochet.png</key>
             <key type="filename">public/images/spell/spellIconSacrifice.png</key>
+            <key type="filename">public/images/spell/spellIconSell.png</key>
             <key type="filename">public/images/spell/spellIconSendMana.png</key>
             <key type="filename">public/images/spell/spellIconShatter.png</key>
             <key type="filename">public/images/spell/spellIconShattered.png</key>
