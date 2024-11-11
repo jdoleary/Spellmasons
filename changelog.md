@@ -3,6 +3,8 @@
         Curse Immunity, Unstable, and Double Damage
         - Thanks Hex Obsidian for "Displace" Champion Modifier idea
         - Thanks Xulqulyat for "Curse Immunity"
+    - content: Add "Sell" spell which allows you to exchange spells for SP
+        Thanks to @Vintage the skulldog @Xulqelyat @Cake
     - optimize: Siphon Spell (Bogiac's Spells mod)
     - improve: Prevent Connect from targeting already targeted units (this spell is now more effective)
     - improve: Show mana cost for clones of taught spell
