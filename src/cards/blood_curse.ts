@@ -43,6 +43,9 @@ function remove(unit: IUnit, underworld: Underworld) {
   // Health should not go below 1
   unit.healthMax = Math.max(1, unit.healthMax / healthMultiplier);
   unit.health = Math.max(1, unit.health / healthMultiplier);
+  if (!unit.alive) {
+    unit.health = 0;
+  }
 }
 
 const imageName = 'spellIconBloodCurse.png';
