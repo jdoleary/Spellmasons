@@ -61,7 +61,9 @@ export default function registerdefiance() {
       }
       // Cannot be below 0 (must still be damage, not healing)
       const overriddenAmount = Math.max(0, amount - amount * reductionAmount);
-      floatingText({ coords: unit, text: `${i18n(defianceId)}: ${i18n(['damage_reduced', Math.floor(reductionAmount * 100).toString()])}`, prediction });
+      if (reductionAmount !== 0) {
+        floatingText({ coords: unit, text: `${i18n(defianceId)}: ${i18n(['damage_reduced', Math.floor(reductionAmount * 100).toString()])}`, prediction });
+      }
       return overriddenAmount;
     }
   });
