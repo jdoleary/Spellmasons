@@ -116,6 +116,7 @@ import phantom_arrow from './phantom_arrow';
 import bolt from './bolt';
 import cursify from './cursify';
 import teach from './teach';
+import sell from './sell';
 // Not used as a card, for making half of looped enemies immune
 // on first turn
 import registerSummoningSickness from '../modifierSummoningSickness';
@@ -415,6 +416,7 @@ export function registerCards(overworld: Overworld) {
     registerSpell(bolt, overworld);
   registerSpell(cursify, overworld);
   registerSpell(teach, overworld);
+  registerSpell(sell, overworld);
 
   // Blessings
   registerSpell(heal, overworld);
