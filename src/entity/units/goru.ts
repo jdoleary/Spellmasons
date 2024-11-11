@@ -107,12 +107,11 @@ const unit: UnitSource = {
             corpsesToConsume.push(target);
           } else {
             const enemyUnits = Unit.livingUnitsInDifferentFaction(unit, underworld.units)
-              // Exclude unacting units such as decoys
-              .filter(u => (u.damage > 0 || u.staminaMax > 0));
             if (enemyUnits.find(u => math.distance(target, u) < boneShrapnelRadius)) {
               corpsesToExplode.push(target);
             } else {
               corpsesToResurrect.push(target);
+
             }
           }
         }
@@ -243,7 +242,9 @@ const unit: UnitSource = {
         && !u.modifiers[primedCorpseId]
         // Only resurrect players if they are on the same faction as Goru
         && (u.unitType != UnitType.PLAYER_CONTROLLED || u.faction === unit.faction)
-        && math.distance(unit, u) <= unit.attackRange);
+        && math.distance(unit, u) <= unit.attackRange
+        // Exclude unacting units such as decoys
+        && (u.damage > 0 || u.staminaMax > 0));
       if (deadUnits.length >= 3) {
         // The corpse priming should feel like a "wind up" / channeled ability,
         // so we want the Goru to focus on it and not move after
