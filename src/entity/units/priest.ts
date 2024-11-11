@@ -119,6 +119,9 @@ export function resurrectableUnits(resurrector: Unit.IUnit, underworld: Underwor
     // < 0 for predictedNextTurnDamage is a special signal to mean that another priest
     // is already targeting it for resurrect
     && u.predictedNextTurnDamage >= 0
+    // Exclude units such as decoys which neither move nor attack
+    // this is confusing for players who think that the map is empty of enemies
+    && (u.damage > 0 || u.staminaMax > 0)
     // Do not allow priest to rez each other.
     // That would be super annoying for players
     && u.unitSourceId !== resurrector.unitSourceId);

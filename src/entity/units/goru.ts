@@ -106,7 +106,9 @@ const unit: UnitSource = {
           } else if (math.distance(unit, target) < boneShrapnelRadius) {
             corpsesToConsume.push(target);
           } else {
-            const enemyUnits = Unit.livingUnitsInDifferentFaction(unit, underworld.units);
+            const enemyUnits = Unit.livingUnitsInDifferentFaction(unit, underworld.units)
+              // Exclude unacting units such as decoys
+              .filter(u => (u.damage > 0 || u.staminaMax > 0));
             if (enemyUnits.find(u => math.distance(target, u) < boneShrapnelRadius)) {
               corpsesToExplode.push(target);
             } else {
