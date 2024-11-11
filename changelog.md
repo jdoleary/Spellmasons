@@ -6,6 +6,9 @@
     - content: Add "Sell" spell which allows you to exchange spells for SP
         Thanks to @Vintage the skulldog @Xulqelyat @Cake
     - optimize: Siphon Spell (Bogiac's Spells mod)
+    - optimize: Community Servers now have a unit and pickup limit (currently 1000 and 500 respectively which should be pleanty) to prevent crashes from affecting other player's games
+    Self hosted servers (LAN or other means) will not have any limit.
+    When limit is reached, rather than just preventing new one's spawning, first dead bodies will decay, secondly if there are no dead bodies, units will be merged.
     - improve: Prevent Connect from targeting already targeted units (this spell is now more effective)
     - improve: Show mana cost for clones of taught spell
         Thanks @Brian for this suggestion
@@ -13,8 +16,16 @@
     - fix: Dead units no longer block spawning
     - fix: Clones not using mana to cast
     - fix: Audio for ancient
+    - fix: Prevent Goru and Priest from resurrecting decoys which is confusing for players who assume the decoys are on their faction
+    Thanks @Yasu
     - **major fix**: Determine rune cost on client
     Fixes "runes being undone" in multiplayer.
+    - Balance: Remove random discount on Runes.
+        Per feedback from the community,
+        discounts incentivise un-fun min-maxxing where players wait for the perfect discount and feel back about buying runes when there is no discount.
+
+        So i'm removing discounts entirely and I will make more ways to get extra SP instead.
+
     
 ## 1.48.1
     fix: summoner, goru and last will spawn locations
