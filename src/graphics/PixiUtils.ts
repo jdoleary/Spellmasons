@@ -16,7 +16,7 @@ import { inPortal } from '../entity/Player';
 import { keyToHumanReadable } from './ui/keyMapping';
 import { tutorialCompleteTask } from './Explain';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
-import { OutlineFilter } from '@pixi/filter-outline';
+import { easeOutCubic } from '../jmath/Easing';
 
 // if PIXI is finished setting up
 let isReady = false;
@@ -385,6 +385,45 @@ export function setCameraToMapCenter(underworld: Underworld) {
   utilProps.camera = getMapCenter(underworld);
 }
 let lastZoom = globalThis.zoomTarget;
+const baseScreenshakeFalloffMs = 500;
+let screenshake = {
+  intensity: 0,
+  runtime: 0,
+  falloff: baseScreenshakeFalloffMs,
+  camOffset: { x: 0, y: 0 }
+}
+export function startScreenshake(intensity: number, falloff?: number) {
+  if (globalThis.noScreenshake) {
+    return;
+  }
+  screenshake.runtime = 0;
+  screenshake.intensity = intensity;
+  if (falloff) {
+    screenshake.falloff = falloff;
+  } else {
+    screenshake.falloff = baseScreenshakeFalloffMs;
+  }
+
+}
+function useScreenshake(stage: PIXI.Container, deltaTime: number) {
+  if (globalThis.noScreenshake) {
+    return;
+  }
+  screenshake.runtime += deltaTime;
+  screenshake.intensity
+  const lerpValue = math.lerp(1, 0, easeOutCubic(screenshake.runtime / screenshake.falloff));
+  if (lerpValue === 0) {
+    return;
+  }
+
+  screenshake.camOffset.x = (Math.random() * 2 - 1) * screenshake.intensity * lerpValue;
+  screenshake.camOffset.y = (Math.random() * 2 - 1) * screenshake.intensity * lerpValue;
+
+  // Shake the camera:
+  stage.x += screenshake.camOffset.x;
+  stage.y += screenshake.camOffset.y;
+
+}
 // Used for lerping the camera over multiple frames
 let cameraVelocity: Vec2 = { x: 0, y: 0 }
 export function updateCameraPosition(underworld: Underworld, deltaTime: number) {
@@ -507,6 +546,7 @@ export function updateCameraPosition(underworld: Underworld, deltaTime: number) 
         }
 
       }
+      useScreenshake(app.stage, deltaTime);
       break;
   }
 

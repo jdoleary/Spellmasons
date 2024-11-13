@@ -49,6 +49,7 @@ export function getSavedData() {
         if (options.fontOverride && globalThis.setFontOverride) {
           globalThis.setFontOverride(options.fontOverride);
         }
+        globalThis.noScreenshake = options.noScreenshake;
         if (options.cinematicCameraEnabled !== undefined) {
           globalThis.cinematicCameraEnabled = options.cinematicCameraEnabled;
         }

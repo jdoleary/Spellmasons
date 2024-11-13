@@ -384,4 +384,5 @@ declare global {
   var unitOutlineFilter: any;
   var serverStabilityMaxUnits: number | undefined;
   var serverStabilityMaxPickups: number | undefined;
+  var noScreenshake: boolean | undefined;
 }

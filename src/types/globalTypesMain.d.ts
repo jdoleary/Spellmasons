@@ -320,4 +320,5 @@ declare global {
   // Only for use in headless, will be undefined in client
   var serverStabilityMaxUnits: number | undefined;
   var serverStabilityMaxPickups: number | undefined;
+  var noScreenshake: boolean | undefined;
 }

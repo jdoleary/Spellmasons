@@ -25,7 +25,7 @@ import pingSprite from '../graphics/Ping';
 import { clearLastNonMenuView, setView } from '../views';
 import { View } from '../View';
 import { autoExplain, explain, EXPLAIN_END_TURN, tutorialCompleteTask } from '../graphics/Explain';
-import { cacheBlood, cameraAutoFollow, getCameraCenterInGameSpace, getZoom, setCamera } from '../graphics/PixiUtils';
+import { cacheBlood, cameraAutoFollow, getCameraCenterInGameSpace, getZoom, setCamera, startScreenshake } from '../graphics/PixiUtils';
 import { ensureAllClientsHaveAssociatedPlayers, Overworld, recalculateGameDifficulty } from '../Overworld';
 import { playerCastAnimationColor, playerCastAnimationColorLighter, playerCastAnimationGlow } from '../graphics/ui/colors';
 import { lightenColor } from '../graphics/ui/colorUtil';
@@ -43,6 +43,7 @@ import { raceTimeout } from '../Promise';
 import { teleport } from '../effects/teleport';
 import Events from '../Events';
 import { mergeExcessPickups, mergeExcessUnits } from '../stability';
+import { distance, lerp } from '../jmath/math';
 
 export const NO_LOG_LIST = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING, MESSAGE_TYPES.MOVE_PLAYER, MESSAGE_TYPES.SET_PLAYER_POSITION];
 export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING, MESSAGE_TYPES.MOVE_PLAYER, MESSAGE_TYPES.SET_PLAYER_POSITION];
@@ -752,6 +753,8 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         Unit.resetUnitStats(fromPlayer.unit, underworld);
         // If the spawned player is the current client's player
         if (fromPlayer == globalThis.player) {
+          // Screenshake when the current player spawns
+          startScreenshake(10, 500);
           tutorialCompleteTask('spawn');
           autoExplain();
           // When player spawns, send their config from storage
@@ -1286,12 +1289,16 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
   // Only allow casting during the PlayerTurns phase
   if (underworld.turn_phase === turn_phase.PlayerTurns) {
     globalThis.animatingSpells = true;
+    let screenShakeAmount = 100;
     let animationKey = 'playerAttackEpic';
     if (payload.cards.length < 3) {
+      screenShakeAmount = 0;
       animationKey = 'playerAttackSmall';
     } else if (payload.cards.length < 6) {
+      screenShakeAmount = 0;
       animationKey = 'playerAttackMedium0';
     } else if (payload.cards.length < 10) {
+      screenShakeAmount = 20;
       animationKey = 'playerAttackMedium1';
     }
     await Player.setSpellmasonsToChannellingAnimationClose(caster);
@@ -1310,6 +1317,13 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
       }
     }
     const keyMoment = () => {
+      // Screenshake when a player casts a spell
+      if (globalThis.player) {
+        // Intensity decreases based on distance
+        const distanceFromExplosion = distance(globalThis.player.unit, caster.unit);
+        const intensity = lerp(screenShakeAmount, 0, distanceFromExplosion / 500);
+        startScreenshake(intensity, 700);
+      }
       const castCardsPromise = underworld.castCards({
         casterCardUsage: caster.cardUsageCounts,
         casterUnit: caster.unit,

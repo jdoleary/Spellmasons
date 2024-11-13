@@ -5,6 +5,8 @@ import { makeParticleExplosion } from '../graphics/ParticleCollection';
 import * as colors from '../graphics/ui/colors';
 import { IUnit, takeDamage } from "../entity/Unit";
 import { forcePushAwayFrom } from "./force_move";
+import { distance, lerp } from "../jmath/math";
+import { startScreenshake } from "../graphics/PixiUtils";
 
 export const baseExplosionRadius = 140
 export function explode(location: Vec2, radius: number, damage: number, pushDistance: number, sourceUnit: IUnit | undefined, underworld: Underworld, prediction: boolean, colorstart?: number, colorEnd?: number, useDefaultSound: boolean = true): IUnit[] {
@@ -44,6 +46,13 @@ export function explode(location: Vec2, radius: number, damage: number, pushDist
         // Push pickups away
         forcePushAwayFrom(p, location, pushDistance, underworld, prediction, sourceUnit);
       })
+  }
+  if (globalThis.player) {
+    const distanceFromExplosion = distance(globalThis.player.unit, location);
+    const intensity = lerp(100, 0, distanceFromExplosion / 1000);
+    // Screenshake relative to how close explosion is to player
+    startScreenshake(intensity, 500);
+
   }
 
   return units;
