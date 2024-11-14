@@ -130,6 +130,7 @@ export function create(clientId: string, playerId: string, underworld: Underworl
     cardsInToolbar: Array(config.NUMBER_OF_TOOLBAR_SLOTS * 3).fill(''),
     inventory: [],
     freeSpells: [],
+    disabledCards: [],
     cardUsageCounts: {},
     upgrades: [],
     upgradesLeftToChoose: config.STARTING_CARD_COUNT,
