@@ -1598,7 +1598,7 @@ body.open-inventory #inventory-container.bookmark-runes .card-inspect {
 .disabled .card-title {
   text-decoration: line-through;
 }
-.disabled:after {
+.card.disabled:after {
   content: "Disabled";
   color: red;
   position: absolute;
