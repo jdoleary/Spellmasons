@@ -32,7 +32,8 @@ const spell: Spell = {
         return state;
       }
       if (!prediction && state.casterPlayer) {
-        const cardsToSell = state.cardIds.slice(sellIndex + 1);
+        // Use Array.from(new Set()) so that you can't sell the same card more than once
+        const cardsToSell = Array.from(new Set(state.cardIds.slice(sellIndex + 1)));
         const sellValues = cardsToSell.map(cardId => {
           const card = Cards.allCards[cardId];
           if (card && state.casterPlayer) {
