@@ -385,4 +385,7 @@ declare global {
   var serverStabilityMaxUnits: number | undefined;
   var serverStabilityMaxPickups: number | undefined;
   var noScreenshake: boolean | undefined;
+  var featureFlags: {
+    screenShakeMult: number
+  } | undefined;
 }

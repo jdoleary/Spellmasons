@@ -24,6 +24,27 @@ import './api';
 // DevelopmentMods must be imported AFTER api
 import "./DevelopmentMods";
 
+// Get feature flags from spellmasons.com:
+fetch("https://www.spellmasons.com/serverList.json", {
+  // The init object here has an headers object containing a
+  // header that indicates what type of response we accept.
+  // We're not specifying the method field since by default
+  // fetch makes a GET request.
+  headers: {
+    accept: "application/json",
+  },
+}).then(resp => resp.json()).then(json => {
+  const { config } = json;
+  globalThis.featureFlags = config;
+  console.log('Config: Feature Flags:', globalThis.featureFlags);
+}).catch((e) => {
+  console.error('Failed to get feature flags from global config');
+  // Default values
+  globalThis.featureFlags = {
+    screenShakeMult: 1,
+  };
+});
+
 // Globalize injected Audio functions
 globalThis.playNextSong = playNextSong;
 globalThis.playSFX = playSFX;

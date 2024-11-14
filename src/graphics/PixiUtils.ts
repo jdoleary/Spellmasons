@@ -410,14 +410,14 @@ function useScreenshake(stage: PIXI.Container, deltaTime: number) {
     return;
   }
   screenshake.runtime += deltaTime;
-  screenshake.intensity
   const lerpValue = math.lerp(1, 0, easeOutCubic(screenshake.runtime / screenshake.falloff));
   if (lerpValue === 0) {
     return;
   }
 
-  screenshake.camOffset.x = (Math.random() * 2 - 1) * screenshake.intensity * lerpValue;
-  screenshake.camOffset.y = (Math.random() * 2 - 1) * screenshake.intensity * lerpValue;
+  const featureFlagScreenShakeMult = globalThis.featureFlags?.screenShakeMult !== undefined ? globalThis.featureFlags.screenShakeMult : 1;
+  screenshake.camOffset.x = (Math.random() * 2 - 1) * screenshake.intensity * lerpValue * featureFlagScreenShakeMult;
+  screenshake.camOffset.y = (Math.random() * 2 - 1) * screenshake.intensity * lerpValue * featureFlagScreenShakeMult;
 
   // Shake the camera:
   stage.x += screenshake.camOffset.x;
