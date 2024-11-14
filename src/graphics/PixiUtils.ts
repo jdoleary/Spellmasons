@@ -392,9 +392,12 @@ let screenshake = {
   falloff: baseScreenshakeFalloffMs,
   camOffset: { x: 0, y: 0 }
 }
-export function startScreenshake(intensity: number, falloff?: number) {
+export function startScreenshake(intensity: number, prediction: boolean, falloff?: number) {
   if (globalThis.noScreenshake) {
     return;
+  }
+  if (prediction) {
+    return
   }
   screenshake.runtime = 0;
   screenshake.intensity = intensity;

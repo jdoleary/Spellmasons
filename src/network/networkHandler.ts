@@ -754,7 +754,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         // If the spawned player is the current client's player
         if (fromPlayer == globalThis.player) {
           // Screenshake when the current player spawns
-          startScreenshake(10, 500);
+          startScreenshake(10, false, 500);
           tutorialCompleteTask('spawn');
           autoExplain();
           // When player spawns, send their config from storage
@@ -1322,7 +1322,7 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
         // Intensity decreases based on distance
         const distanceFromExplosion = distance(globalThis.player.unit, caster.unit);
         const intensity = lerp(screenShakeAmount, 0, distanceFromExplosion / 500);
-        startScreenshake(intensity, 700);
+        startScreenshake(intensity, false, 700);
       }
       const castCardsPromise = underworld.castCards({
         casterCardUsage: caster.cardUsageCounts,
