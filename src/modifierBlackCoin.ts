@@ -29,6 +29,10 @@ export default function registerBlackCoin() {
         // Hide the result of black coin during prediction
         return amount
       }
+      // Never proc black coin on self, this just feels bad
+      if (damageReciever && damageDealer.id == damageReciever.id) {
+        return amount;
+      }
       const modifier = damageDealer.modifiers[blackCoinId];
       if (modifier && damageReciever && !Unit.isBoss(damageReciever.unitSourceId)) {
         const seed = seedrandom(getUniqueSeedString(underworld) + `-${damageReciever.id}-${damageReciever.health}`);
