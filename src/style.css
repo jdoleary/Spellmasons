@@ -430,7 +430,7 @@ invisibly blocked, change with caution! */
 #selected-cards .card:hover {
   filter:none;
 }
-.card:hover {
+.card:not(.disabled):hover {
   filter: drop-shadow(0 0 0.4rem rgb(255, 255, 255));
 }
 
@@ -1589,6 +1589,24 @@ body.open-inventory #inventory-container.bookmark-runes .card-inspect {
   width: 64px;
   height: 64px;
 }
+.disabled .card-badge-holder {
+  display: none;
+}
+.disabled .card-thumb{
+  filter: grayscale(100%);
+}
+.disabled .card-title {
+  text-decoration: line-through;
+}
+.disabled:after {
+  content: "Disabled";
+  color: red;
+  position: absolute;
+  top: 23px;
+  font-weight: bold;
+  font-size: 18px;
+  background-color: #2f0d0d;
+}
 
 #card-hand .slot:nth-of-type(1) {
   position: absolute;
@@ -2350,9 +2368,6 @@ body.dragging-card .floating-card-holder .empty-slot {
   z-index: 2;
 }
 
-.card.disabled {
-  filter: grayscale(1);
-}
 
 .card .disabled-label {
   position: absolute;

@@ -54,7 +54,10 @@ const spell: Spell = {
         });
 
         // Remove sold cards from inv
-        state.casterPlayer.inventory = state.casterPlayer.inventory.filter(cardId => !cardsToSell.includes(cardId))
+        if (!state.casterPlayer.disabledCards) {
+          state.casterPlayer.disabledCards = []
+        }
+        state.casterPlayer.disabledCards.push(...cardsToSell)
         // Remove sold cards from toolbar (replaces with empty '')
         state.casterPlayer.cardsInToolbar = state.casterPlayer.cardsInToolbar.map(cardId => cardsToSell.includes(cardId) ? '' : cardId);
 

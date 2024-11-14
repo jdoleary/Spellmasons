@@ -64,6 +64,8 @@ export interface IPlayer {
   cardsInToolbar: string[];
   // The spells that the player has in their inventory
   inventory: string[];
+  // Cards that can no longer be used
+  disabledCards: string[];
   // A list of spells that don't take up an upgrade count because they are obtained by other
   // means than by pickup up scrolls
   freeSpells: string[];

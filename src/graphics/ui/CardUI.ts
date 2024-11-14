@@ -322,11 +322,17 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined, under
         // Note: Some upgrades don't have corresponding cards (such as resurrect)
         if (card) {
           const element = createCardElement(card, underworld);
-          element.draggable = true;
           element.classList.add('slot');
-          // When the user clicks on a card
-          addListenersToCardElement(player, element, cardId, underworld);
-          addToolbarListener(element, slotIndex, underworld);
+          const isDisabled = (globalThis.player.disabledCards || []).includes(card.id);
+          if (isDisabled) {
+            element.classList.add('disabled');
+          }
+          if (!isDisabled) {
+            element.draggable = true;
+            // When the user clicks on a card
+            addListenersToCardElement(player, element, cardId, underworld);
+            addToolbarListener(element, slotIndex, underworld);
+          }
           container.appendChild(element);
 
         } else {
@@ -417,8 +423,16 @@ export function syncInventory(slotModifyingIndex: number | undefined, underworld
       if (card) {
         const inventoryCardId = card.id;
         const elCard = createCardElement(card, underworld);
-        elCard.draggable = true;
-        if (slotModifyingIndex !== undefined) {
+        const isDisabled = (globalThis.player.disabledCards || []).includes(card.id);
+        if (!isDisabled) {
+          elCard.draggable = true;
+          // When the user clicks on a card
+          addListenersToCardElement(globalThis.player, elCard, card.id, underworld);
+        }
+        if (isDisabled) {
+          elCard.classList.add('disabled');
+        }
+        if (!isDisabled && slotModifyingIndex !== undefined) {
           elCard.addEventListener('click', (e) => {
             if (globalThis.player) {
               globalThis.player.cardsInToolbar[slotModifyingIndex] = inventoryCardId;
@@ -429,10 +443,8 @@ export function syncInventory(slotModifyingIndex: number | undefined, underworld
               e.stopPropagation();
               e.stopImmediatePropagation();
             }
-          })
+          });
         }
-        // When the user clicks on a card
-        addListenersToCardElement(globalThis.player, elCard, card.id, underworld);
         // Show that card is already on toolbar
         if (globalThis.player.cardsInToolbar.includes(inventoryCardId)) {
           elCard.classList.add('inToolbar');
@@ -836,6 +848,14 @@ async function deselectCard(cardId: string, element: HTMLElement, underworld: Un
 // Moves a card element to selected-cards div
 async function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string, underworld: Underworld) {
   resetNotifiedImmune();
+  if ((player.disabledCards || []).includes(cardId)) {
+    floatingText({
+      coords: underworld.getMousePos(),
+      text: 'Spell Disabled',
+      style: { fill: colors.errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
+    })
+    return;
+  }
   const card = Cards.allCards[cardId];
   if (!card) {
     console.error('Card with', cardId, 'not found');
