@@ -1138,6 +1138,19 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       domQueryContainer: '#menu-self',
     },
     {
+      label: 'Orient all NPCs towards player',
+      action: () => {
+        if (player && overworld.underworld) {
+          for (let u of overworld.underworld?.units.filter(u => u.unitType === UnitType.AI)) {
+            Unit.orient(u, player.unit);
+          }
+        }
+      },
+      supportInMultiplayer: false,
+      domQueryContainer: '#menu-self'
+
+    },
+    {
       label: '🎥 Toggle game screen UI',
       isActiveClass: CLASS_HUD_HIDDEN,
       action: () => {
