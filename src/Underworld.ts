@@ -812,7 +812,10 @@ export default class Underworld {
       u.attackSpeedReadiness += deltaTime;
       // Restore mana over time
       if (u.manaMax > 0) {
-        u.mana += deltaTime * 0.01;
+        // Don't go beyond mana max
+        if (u.mana < u.manaMax) {
+          u.mana += deltaTime * 0.01;
+        }
       }
       while (u.path && u.path.points[0] && Vec.equal(Vec.round(u), Vec.round(u.path.points[0]))) {
         // Remove next points until the next point is NOT equal to the unit's current position
@@ -1178,6 +1181,10 @@ export default class Underworld {
       }
     }
     predictAIActions(this, false);
+
+    // Realtime:
+    // Must sync player prediction to accurately update health and mana ui
+    this.syncPlayerPredictionUnitOnly();
     Unit.syncPlayerHealthManaUI(this);
 
     this.queueGameLoop();

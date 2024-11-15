@@ -22,6 +22,8 @@ const playerUnit: UnitSource = {
   },
   unitProps: {
     moveSpeed: 0.1,
+    manaCostToCast: 30,
+    manaMax: 180,
     // Player clones must be able to deal damage
     damage: 20,
     attackRange: config.PLAYER_BASE_ATTACK_RANGE
