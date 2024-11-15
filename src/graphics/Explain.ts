@@ -5,6 +5,8 @@ import Jprompt, { PromptArgs } from './Jprompt';
 import { keyToHumanReadable } from './ui/keyMapping';
 const ALREADY_EXPLAINED = 'explained'
 export function explain(key: string, forceShow?: boolean) {
+  // realtime disable tutorial
+  return;
   if (globalThis.headless) {
     return;
   }
@@ -280,6 +282,8 @@ export const tutorialChecklist: TutorialChecklist = {
 }
 
 export function updateTutorialChecklist() {
+  // realtime disable tutorial
+  return;
   if (globalThis.usingTestRunner) {
     return;
   }
@@ -338,6 +342,8 @@ globalThis.skipTutorial = async () => {
   }
 }
 export function tutorialShowTask(key: keyof TutorialChecklist) {
+  // realtime disable tutorial
+  return;
   // This is called to reveal the next step of the tutorial
   // If there are any popups attached to that new step, show them
   if (globalThis.doUpdateTutorialChecklist) {
@@ -375,6 +381,8 @@ globalThis.resetTutorial = function resetTutorial() {
 }
 // Returns a value that remains the same as the first time this function was invoked for the duration of the play session
 export function isTutorialComplete() {
+  //realtime
+  return true;
   if (globalThis.headless) {
     // Never run the tutorial on a headless server because it is hosting games for clients
     return true;
