@@ -810,6 +810,10 @@ export default class Underworld {
   gameLoopUnit = (u: Unit.IUnit, aliveNPCs: Unit.IUnit[], deltaTime: number): boolean => {
     if (u) {
       u.attackSpeedReadiness += deltaTime;
+      // Restore mana over time
+      if (u.manaMax > 0) {
+        u.mana += deltaTime * 0.01;
+      }
       while (u.path && u.path.points[0] && Vec.equal(Vec.round(u), Vec.round(u.path.points[0]))) {
         // Remove next points until the next point is NOT equal to the unit's current position
         // This prevent's "jittery" "slow" movement where it's moving less than {x:1.0, y:1.0}
@@ -1143,9 +1147,6 @@ export default class Underworld {
     }
 
     updateCameraPosition(this, deltaTime);
-    this.drawEnemyAttentionMarkers();
-    this.drawResMarkers();
-    this.drawPlayerThoughts();
     updatePlanningView(this);
     useMousePosition(this);
     // Particles
