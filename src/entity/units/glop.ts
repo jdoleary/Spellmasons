@@ -52,26 +52,26 @@ const unit: UnitSource = {
     const attackTarget = attackTargets && attackTargets[0];
     // Attack
     if (attackTarget && canAttackTarget) {
-      unit.mana -= unit.manaCostToCast;
       Unit.orient(unit, attackTarget);
-      await Unit.playComboAnimation(unit, unit.animations.attack, () => {
-        return createVisualLobbingProjectile(
-          unit,
-          attackTarget,
-          'lobberProjectile',
-        ).then(() => {
-          if (attackTarget) {
-            Unit.takeDamage({
-              unit: attackTarget,
-              amount: unit.damage,
-              sourceUnit: unit,
-              fromVec2: unit,
-            }, underworld, false);
-            // Add projectile hit animation
-            Image.addOneOffAnimation(attackTarget, 'lobberProjectileHit');
-          }
+      Unit.tryAttack(unit, () => {
+        Unit.playComboAnimation(unit, unit.animations.attack, () => {
+          return createVisualLobbingProjectile(
+            unit,
+            attackTarget,
+            'lobberProjectile',
+          ).then(() => {
+            if (attackTarget) {
+              Unit.takeDamage({
+                unit: attackTarget,
+                amount: unit.damage,
+                sourceUnit: unit,
+                fromVec2: unit,
+              }, underworld, false);
+              // Add projectile hit animation
+              Image.addOneOffAnimation(attackTarget, 'lobberProjectileHit');
+            }
+          });
         });
-
       });
     } else {
       // Movement:

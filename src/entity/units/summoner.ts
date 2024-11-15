@@ -57,52 +57,53 @@ export async function summonerAction(unit: Unit.IUnit, ableToSummon: boolean, un
   const seed = seedrandom(`${underworld.seed}-${underworld.turn_number}-${unit.id}`);
   // Summon unit
   if (ableToSummon) {
-    unit.mana -= unit.manaCostToCast;
-    await Unit.playComboAnimation(unit, unit.animations.attack, async () => {
-      let numberOfSummons = baseNumberOfSummons * (unit.isMiniboss ? 2 : 1);
-      let lastPromise = Promise.resolve();
-      const validSpawnCoords = underworld.findValidSpawns({ spawnSource: unit, ringLimit: 10, prediction: false, radius: config.spawnSize }, { allowLiquid: false });
-      const chosenSpawnCoords = shuffle(validSpawnCoords, seed);
-      for (let i = 0; i < numberOfSummons; i++) {
-        const coords = chosenSpawnCoords[i];
-        if (coords) {
-          const enemyIsClose = underworld.units.filter(u => u.faction !== unit.faction).some(u => math.distance(coords, u) <= PLAYER_BASE_ATTACK_RANGE)
-          let sourceUnit = farUnit;
-          if (enemyIsClose) {
-            sourceUnit = closeUnit;
-          }
-
-          lastPromise = makeManaTrail(unit, coords, underworld, '#930e0e', '#ff0000').then(() => {
-            if (sourceUnit) {
-              const summonedUnit = Unit.create(
-                sourceUnit.id,
-                // Start the unit at the summoners location
-                coords.x,
-                coords.y,
-                // A unit always summons units in their own faction
-                unit.faction,
-                sourceUnit.info.image,
-                UnitType.AI,
-                sourceUnit.info.subtype,
-                sourceUnit.unitProps,
-                underworld
-              );
-              // Add summoning sickeness so they can't act after they are summoned
-              Unit.addModifier(summonedUnit, summoningSicknessId, underworld, false);
-              const summonPromise = new Promise<void>(resolve => oneOffImage(coords, 'summonerMagic', containerUnits, resolve)).then(() => {
-                Unit.moveTowards(summonedUnit, unit, underworld);
-              });
-              return summonPromise;
-            } else {
-              console.error('summoner could not find unit source to summon from. Has the unit\'s id changed?');
+    Unit.tryAttack(unit, () => {
+      Unit.playComboAnimation(unit, unit.animations.attack, async () => {
+        let numberOfSummons = baseNumberOfSummons * (unit.isMiniboss ? 2 : 1);
+        let lastPromise = Promise.resolve();
+        const validSpawnCoords = underworld.findValidSpawns({ spawnSource: unit, ringLimit: 10, prediction: false, radius: config.spawnSize }, { allowLiquid: false });
+        const chosenSpawnCoords = shuffle(validSpawnCoords, seed);
+        for (let i = 0; i < numberOfSummons; i++) {
+          const coords = chosenSpawnCoords[i];
+          if (coords) {
+            const enemyIsClose = underworld.units.filter(u => u.faction !== unit.faction).some(u => math.distance(coords, u) <= PLAYER_BASE_ATTACK_RANGE)
+            let sourceUnit = farUnit;
+            if (enemyIsClose) {
+              sourceUnit = closeUnit;
             }
-            return Promise.resolve();
-          });
-        } else {
-          console.log("Summoner could not find valid spawn");
+
+            lastPromise = makeManaTrail(unit, coords, underworld, '#930e0e', '#ff0000').then(() => {
+              if (sourceUnit) {
+                const summonedUnit = Unit.create(
+                  sourceUnit.id,
+                  // Start the unit at the summoners location
+                  coords.x,
+                  coords.y,
+                  // A unit always summons units in their own faction
+                  unit.faction,
+                  sourceUnit.info.image,
+                  UnitType.AI,
+                  sourceUnit.info.subtype,
+                  sourceUnit.unitProps,
+                  underworld
+                );
+                // Add summoning sickeness so they can't act after they are summoned
+                Unit.addModifier(summonedUnit, summoningSicknessId, underworld, false);
+                const summonPromise = new Promise<void>(resolve => oneOffImage(coords, 'summonerMagic', containerUnits, resolve)).then(() => {
+                  Unit.moveTowards(summonedUnit, unit, underworld);
+                });
+                return summonPromise;
+              } else {
+                console.error('summoner could not find unit source to summon from. Has the unit\'s id changed?');
+              }
+              return Promise.resolve();
+            });
+          } else {
+            console.log("Summoner could not find valid spawn");
+          }
         }
-      }
-      await lastPromise;
+        await lastPromise;
+      });
     });
   } else {
 

@@ -38,12 +38,13 @@ import { allCards, allModifiers, hasTargetAtPosition } from '../../cards';
 import { explain, EXPLAIN_END_TURN, tutorialCompleteTask } from '../Explain';
 import { Overworld } from '../../Overworld';
 import { summoningSicknessId } from '../../modifierSummoningSickness';
-import { errorRed } from './colors';
+import { bloatExplodeEnd, bloatExplodeStart, errorRed } from './colors';
 import { isSinglePlayer } from '../../network/wsPieSetup';
 import { elAdminPowerBar, elAdminPowerBarInput, elAdminPowerBarOptions } from '../../HTMLElements';
 import { targetCursedId } from '../../cards/target_curse';
 import { distance } from '../../jmath/math';
 import { glow } from '../../jmath/YTShorts';
+import { explode } from '../../effects/explode';
 
 export const keyDown = {
   showWalkRope: false,
@@ -741,6 +742,9 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
     return;
   }
   const mousePos = underworld.getMousePos();
+  if (globalThis.player) {
+    explode(mousePos, 100, 15, 100, globalThis.player.unit, underworld, false, bloatExplodeStart, bloatExplodeEnd);
+  }
   //hide chat if its active
   document.body.classList.toggle('showChat', false);
 

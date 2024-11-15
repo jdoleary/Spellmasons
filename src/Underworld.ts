@@ -809,6 +809,7 @@ export default class Underworld {
   // returns true if there is more processing yet to be done on the next game loop
   gameLoopUnit = (u: Unit.IUnit, aliveNPCs: Unit.IUnit[], deltaTime: number): boolean => {
     if (u) {
+      u.attackSpeedReadiness += deltaTime;
       while (u.path && u.path.points[0] && Vec.equal(Vec.round(u), Vec.round(u.path.points[0]))) {
         // Remove next points until the next point is NOT equal to the unit's current position
         // This prevent's "jittery" "slow" movement where it's moving less than {x:1.0, y:1.0}
@@ -820,10 +821,7 @@ export default class Underworld {
         }
       }
 
-      const takeAction = Unit.canAct(u) && Unit.isUnitsTurnPhase(u, this)
-        && (u.unitType == UnitType.PLAYER_CONTROLLED || this.subTypesCurrentTurn?.includes(u.unitSubType));
-
-      if (u.path && u.path.points[0] && u.stamina > 0 && takeAction) {
+      if (u.path && u.path.points[0]) {
         // Move towards target
         const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path.points[0], u.moveSpeed * deltaTime)
         let moveDist = 0;
@@ -842,19 +840,8 @@ export default class Underworld {
           // Only move other NPCs out of the way, never move player units
           moveWithCollisions(u, stepTowardsTarget, [...aliveNPCs], this);
           moveDist = math.distance(originalPosition, u);
-          // Prevent moving into negative stamina.  This occurs rarely when
-          // the stamina is a fraction but above 0 and the moveDist is greater than the stamina.
-          // This check prevents the false-negative melee attack predictions
-          if (u.stamina - moveDist < 0) {
-            u.x = originalPosition.x;
-            u.y = originalPosition.y;
-            u.stamina = 0;
-          }
         }
 
-        if (!isNaN(moveDist)) {
-          u.stamina -= moveDist;
-        }
         // Only do this check if they are already in the liquid because units will never enter liquid
         // just by moving themselves, they can only be forceMoved into liquid and that check happens 
         // elsewhere
@@ -1032,6 +1019,9 @@ export default class Underworld {
       this.timeSinceLastSimulationStep -= EXPECTED_MILLIS_PER_GAMELOOP;
     }
 
+    // Realtime edit
+    this.executeNPCTurn();
+
     const aliveNPCs = this.units.filter(u => u.alive && u.unitType == UnitType.AI);
     for (let i = 0; i < this.units.length; i++) {
       const u = this.units[i];
@@ -1187,6 +1177,7 @@ export default class Underworld {
       }
     }
     predictAIActions(this, false);
+    Unit.syncPlayerHealthManaUI(this);
 
     this.queueGameLoop();
   }
@@ -2892,7 +2883,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
     }
 
-    await Unit.endTurnForUnits(this.players.map(p => p.unit), this, false);
     this.endPlayerTurnCleanup();
     return true;
   }
@@ -2916,7 +2906,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   }
   async executePlayerTurn() {
     this.battleLog(`Begin Player Turn Phase`);
-    await Unit.startTurnForUnits(this.players.map(p => p.unit), this, false);
 
     for (let player of this.players) {
       player.endedTurn = false;
@@ -2959,58 +2948,39 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
 
   }
-  async executeNPCTurn(faction: Faction) {
-    cleanUpEmitters(true);
+  executeNPCTurn() {
 
-    console.log('[GAME] Turn Phase\nExecuteNPCTurn', Faction[faction]);
-    this.redPortalBehavior(faction);
-    const units = this.units.filter(u => u.unitType == UnitType.AI && u.faction == faction);
-    if (units.length) {
-      this.battleLog(`Begin ${faction === 0 ? 'Ally' : 'Enemy'} NPC Turn Phase`);
-    }
-    await Unit.startTurnForUnits(units, this, false);
+    console.log('[GAME] Turn Phase\nExecuteNPCTurn');
+    const units = this.units.filter(u => u.unitType == UnitType.AI);
 
     // TODO - Define/Control actions and smart targeting
     // in Unit rather than gameLoopUnit, for more versatility?
     const cachedTargets = this.getSmartTargets(units, true, true);
 
-    // Ranged units should go before melee units
-    for (let subTypes of this.subTypesTurnOrder) {
-      this.subTypesCurrentTurn = subTypes;
-      const actionPromises: Promise<void>[] = [];
-      const readyToTakeTurnUnits = units.filter(u => Unit.canAct(u) && subTypes.includes(u.unitSubType));
-
-      for (let u of readyToTakeTurnUnits) {
-        u.path = undefined;
-        const unitSource = allUnits[u.unitSourceId];
-        if (unitSource) {
-          const { targets, canAttack } = cachedTargets[u.id] || { targets: [], canAttack: false };
-          // Add unit action to the array of promises to wait for
-          let promise = raceTimeout(10000, `Unit.action; unitSourceId: ${u.unitSourceId}; subType: ${u.unitSubType}`, unitSource.action(u, targets, this, canAttack).then(async (actionResult) => {
-            // Ensure ranged units get out of liquid so they don't take DOT
-            // This doesn't apply to melee units since they will automatically move towards you to attack,
-            // whereas without this ranged units would be content to just sit in liquid and die from the DOT
-            if (u.unitSubType !== UnitSubType.MELEE && u.inLiquid) {
-              // Using attackRange instead of maxStamina ensures they'll eventually walk out of liquid
-              const coords = this.DEPRECIATED_findValidSpawnInRadius(u, false, { radiusOverride: config.COLLISION_MESH_RADIUS });
-              if (coords) {
-                await Unit.moveTowards(u, coords, this);
-              }
+    for (let u of units) {
+      u.path = undefined;
+      const unitSource = allUnits[u.unitSourceId];
+      if (unitSource) {
+        const { targets, canAttack } = cachedTargets[u.id] || { targets: [], canAttack: false };
+        // Add unit action to the array of promises to wait for
+        unitSource.action(u, targets, this, canAttack).then(async (actionResult) => {
+          // Ensure ranged units get out of liquid so they don't take DOT
+          // This doesn't apply to melee units since they will automatically move towards you to attack,
+          // whereas without this ranged units would be content to just sit in liquid and die from the DOT
+          if (u.unitSubType !== UnitSubType.MELEE && u.inLiquid) {
+            // Using attackRange instead of maxStamina ensures they'll eventually walk out of liquid
+            const coords = this.DEPRECIATED_findValidSpawnInRadius(u, false, { radiusOverride: config.COLLISION_MESH_RADIUS });
+            if (coords) {
+              Unit.moveTowards(u, coords, this);
             }
-            return actionResult;
-          }));
-          actionPromises.push(promise);
-        } else {
-          console.error('Could not find unit source data for', u.unitSourceId);
-        }
+          }
+          return actionResult;
+        });
+      } else {
+        console.error('Could not find unit source data for', u.unitSourceId);
       }
-      this.triggerGameLoopHeadless();
-      await Promise.all(actionPromises);
     }
 
-    // End turn events, liquid damage, mana regen, etc.
-    // Use new units list in case it has changed (I.E. summons)
-    await Unit.endTurnForUnits(this.units.filter(u => u.unitType == UnitType.AI && u.faction == faction), this, false);
   }
   // This function is invoked when all factions have finished their turns
   async endFullTurnCycle() {
@@ -3215,88 +3185,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // know what turn phase it is
     this.setTurnPhase(p);
 
-    // Clean up invalid units
-    const keepUnits: Unit.IUnit[] = [];
-    for (let u of this.units) {
-      if (!u.flaggedForRemoval) {
-        keepUnits.push(u);
-      }
-    }
-    this.units = keepUnits;
-
-    // Clean up invalid pickups
-    const keepPickups: Pickup.IPickup[] = [];
-    for (let p of this.pickups) {
-      if (!p.flaggedForRemoval) {
-        keepPickups.push(p);
-      }
-    }
-    this.pickups = keepPickups;
-
-    const phase = turn_phase[this.turn_phase];
-    if (!phase) {
-      console.error('[GAME] Turn Phase\nInvalid turn phase: ', turn_phase[p]);
-      return;
-    }
-
-    // Trigger full turn cycle events now that it's restarting at the playerTurn
-    if (phase == turn_phase[turn_phase.PlayerTurns]) {
-      for (let unit of this.units) {
-        const events = [...unit.events];
-        await Promise.all(events.map(
-          async (eventName) => {
-            const fn = Events.onFullTurnCycleSource[eventName];
-            if (fn) {
-              await fn(unit, this, false);
-            }
-          },
-        ));
-      }
-    }
-
-    switch (phase) {
-      case turn_phase[turn_phase.PlayerTurns]: {
-        if (this.players.every(p => !p.clientConnected)) {
-          // This is the only place where the turn_phase can become Stalled, when it is supposed
-          // to be player turns but there are no players connected.
-          // Note: the Stalled turn_phase should be set immediately, not broadcast
-          // This is an exception because if the game is stalled, by definition, there
-          // are no players to broadcast to.
-          // Setting it immediately ensures that any following messages in the queue won't reengage
-          // the turn_phase loop, causing an infinite loop
-          this.turn_phase = turn_phase.Stalled;
-          console.log('[GAME] Turn Phase\nSkipping initializingPlayerTurns, no players connected. Setting turn_phase to "Stalled"');
-        } else {
-          // Initialize the player turns.
-          // Note, it is possible that calling this will immediately end
-          // the player phase (if there are no players to take turns)
-          await this.executePlayerTurn();
-        }
-        // Note: The player turn occurs asyncronously because it depends on player input so the call to
-        // `broadcastTurnPhase(turn_phase.NPC_ALLY)` happens inside tryEndPlayerTurnPhase(); whereas the other blocks in
-        // this switch statement always move to the next faction turn on their last line before the break, but this one does
-        // not.
-        break;
-      }
-      case turn_phase[turn_phase.NPC_ALLY]: {
-        await this.executeNPCTurn(Faction.ALLY);
-        this.broadcastTurnPhase(turn_phase.NPC_ENEMY);
-        break;
-      }
-      case turn_phase[turn_phase.NPC_ENEMY]: {
-        await this.executeNPCTurn(Faction.ENEMY);
-        await this.endFullTurnCycle();
-        this.broadcastTurnPhase(turn_phase.PlayerTurns);
-        break;
-      }
-      default: {
-        break;
-      }
-    }
-    // Sync player health, mana, stamina bars to ensure that it's up to date
-    // at the start of any turn_phase so there's no suprises
-    this.syncPlayerPredictionUnitOnly();
-    Unit.syncPlayerHealthManaUI(this);
   }
   // sets underworld.turn_phase variable and syncs related html classes
   // Do not confuse with initializeTurnPhase which runs initialization

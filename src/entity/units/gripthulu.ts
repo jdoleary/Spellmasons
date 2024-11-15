@@ -70,7 +70,7 @@ const unit: UnitSource = {
     // Attack
     if (attackTarget && unit.mana >= unit.manaCostToCast) {
       Unit.orient(unit, attackTarget);
-      unit.mana -= unit.manaCostToCast;
+
       // await Unit.playAnimation(unit, unit.animations.attack);
       await Unit.playComboAnimation(unit, unit.animations.attack, () => {
         return animateDrag(unit, attackTarget);

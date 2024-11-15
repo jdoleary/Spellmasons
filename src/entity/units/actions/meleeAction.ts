@@ -3,10 +3,7 @@ import { distance } from '../../../jmath/math';
 import * as Unit from '../../Unit';
 import Underworld from '../../../Underworld';
 
-export async function meleeAction(unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean, attackCB: (attackTarget: Unit.IUnit) => Promise<void>) {
-  if (!Unit.canMove(unit)) {
-    return;
-  }
+export function meleeAction(unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean, attackCB: (attackTarget: Unit.IUnit) => Promise<void>) {
   // Attack only one target
   const attackTarget = attackTargets && attackTargets[0];
   if (!attackTarget) {
@@ -14,9 +11,11 @@ export async function meleeAction(unit: Unit.IUnit, attackTargets: Unit.IUnit[] 
     return;
   }
   // Movement
-  await Unit.moveTowards(unit, attackTarget, underworld);
+  Unit.moveTowards(unit, attackTarget, underworld);
   // Attack
-  await meleeTryAttackClosestEnemy(unit, attackTarget, canAttackTarget, () => attackCB(attackTarget));
+  Unit.tryAttack(unit, () => {
+    meleeTryAttackClosestEnemy(unit, attackTarget, canAttackTarget, () => attackCB(attackTarget));
+  });
 }
 // precalculatedCanAttack will prevent and report an attack that isn't expected.
 // Attacks must be expected so that the user is warned via an attentionMarker that they
@@ -25,7 +24,7 @@ export async function meleeAction(unit: Unit.IUnit, attackTargets: Unit.IUnit[] 
 // goAheadAttackCB is invoked when the checks have been done that
 // - the attack is alive and in range to attack
 // - the attack was correctly warned via attentionMarkers
-export async function meleeTryAttackClosestEnemy(unit: Unit.IUnit, attackTarget: Unit.IUnit, precalculatedCanAttack: boolean, goAheadAttackCB: () => Promise<void>) {
+export function meleeTryAttackClosestEnemy(unit: Unit.IUnit, attackTarget: Unit.IUnit, precalculatedCanAttack: boolean, goAheadAttackCB: () => Promise<void>) {
   // Attack closest enemy
   // Note: Special case: Use withinMeleeRange instead of
   // using canAttackEnemy for melee units again
@@ -51,7 +50,7 @@ export async function meleeTryAttackClosestEnemy(unit: Unit.IUnit, attackTarget:
       console.log('Melee prediction incorrect data:', unit.stamina, `${unit.x}, ${unit.y}`, `${attackTarget.x},${attackTarget.y}`, unit.attackRange);
       console.error('Melee prediction was incorrect! This is usually due to a stamina issue:')
     } else {
-      await goAheadAttackCB();
+      goAheadAttackCB();
     }
   }
 

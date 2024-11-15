@@ -102,6 +102,10 @@ export function isUnit(maybeUnit: any): maybeUnit is IUnit {
 // or else if they are missing from the real and present in the copy
 // they will not update.
 export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
+  // Realtime edits
+  attackSpeed: number;
+  attackSpeedReadiness: number;
+  // End Realtime edits
   type: 'unit';
   // A unique id so that units can be identified
   // across the network
@@ -187,6 +191,8 @@ export function create(
       console.error('Spawned unit in invalid location, make sure unit spawn logic checks for invalid locations like summon_decoy does before spawning');
     }
     const unit: IUnit = Object.assign({
+      attackSpeed: 2000,
+      attackSpeedReadiness: 0,
       type: 'unit',
       id: prediction ? ++lastPredictionUnitId : ++underworld.lastUnitId,
       unitSourceId,
@@ -1401,10 +1407,6 @@ export function orient(unit: IUnit, faceTarget: Vec2) {
 // specifically for moving the current player character which does not await 
 // movement since they hold RMB to move, the target may be constantly changing
 export function _moveTowards(unit: IUnit, target: Vec2, underworld: Underworld) {
-  if (!canMove(unit)) {
-    log.client('cannot move');
-    return
-  }
   if (unit.image) {
     Image.changeSprite(
       unit.image,
@@ -1420,14 +1422,10 @@ export function _moveTowards(unit: IUnit, target: Vec2, underworld: Underworld) 
 }
 // moveTo moves a unit, considering all the in-game blockers
 // Multi: many points to move towards in sequence.
-export function moveTowardsMulti(unit: IUnit, points: Vec2[], underworld: Underworld): Promise<void> {
+export function moveTowardsMulti(unit: IUnit, points: Vec2[], underworld: Underworld) {
   // Do not calculate for a path with 0 points
   if (points[0] === undefined) {
-    return Promise.resolve();
-  }
-  if (!canMove(unit)) {
-    log.client('cannot move');
-    return Promise.resolve();
+    return;
   }
   const [firstPoint, ...followingPoints] = points;
   let lastPoint = firstPoint;
@@ -1445,26 +1443,10 @@ export function moveTowardsMulti(unit: IUnit, points: Vec2[], underworld: Underw
   } else {
     console.error('Unexpected, unit does not have path object and so cannot add secondary point');
   }
-  // 300 + is an arbitrary time buffer to ensure that the raceTimeout
-  // doesn't report a false positive if the duration it takes the moveTowards promise
-  // to resolve is within a reasonable range
-  const timeoutMs = 300 + unit.stamina / unit.moveSpeed;
-
-  return raceTimeout(timeoutMs, `moveTowards; ${unit.unitSourceId}`, new Promise<boolean>((resolve) => {
-    // Trigger previous resolveDoneMoving since we're overwriting it:
-    unit.resolveDoneMoving(false);
-    // Set new resolve done moving, so that this moveTowards can be awaited
-    unit.resolveDoneMoving = resolve;
-  })).then((doReturnToDefaultSprite) => {
-    if (unit.image && doReturnToDefaultSprite) {
-      // When done moving return to default
-      returnToDefaultSprite(unit);
-    }
-  });
 }
 // moveTo moves a unit, considering all the in-game blockers
-export function moveTowards(unit: IUnit, point: Vec2, underworld: Underworld): Promise<void> {
-  return moveTowardsMulti(unit, [point], underworld);
+export function moveTowards(unit: IUnit, point: Vec2, underworld: Underworld) {
+  moveTowardsMulti(unit, [point], underworld);
 }
 
 // setLocation, unlike moveTo, simply sets a unit to a coordinate without
@@ -1505,52 +1487,6 @@ export function getExplainPathForUnitId(id: string): string {
 }
 export function inRange(unit: IUnit, target: Vec2): boolean {
   return math.distance(unit, target) <= unit.attackRange;
-}
-
-export async function startTurnForUnits(units: IUnit[], underworld: Underworld, prediction: boolean) {
-  // Add mana to Player units
-  for (let unit of units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED && u.alive)) {
-    // Restore player to max mana at start of turn
-    // Let mana remain above max if it already is
-    // (due to other influences like mana potions, spells, perks, etc);
-    unit.mana = Math.max(unit.manaMax, unit.mana);
-  }
-
-  // Regenerate stamina to max
-  for (let unit of units.filter(u => u.alive)) {
-    if (unit.stamina < unit.staminaMax) {
-      unit.stamina = unit.staminaMax;
-    }
-  }
-
-  // Trigger start turn events
-  const turnStartPromises = [];
-  for (let unit of units) {
-    turnStartPromises.push(runTurnStartEvents(unit, underworld, prediction))
-  }
-  await raceTimeout(5000, 'Turn Start Events did not resolve', Promise.all(turnStartPromises));
-}
-
-export async function endTurnForUnits(units: IUnit[], underworld: Underworld, prediction: boolean) {
-  // Add mana to AI units
-  for (let unit of units.filter(u => u.unitType == UnitType.AI && u.alive)) {
-    unit.mana += unit.manaPerTurn;
-    // Cap manaPerTurn at manaMax
-    unit.mana = Math.min(unit.mana, unit.manaMax);
-  }
-
-  // At the end of their turn, deal damage if still in liquid
-  for (let unit of units.filter(u => u.inLiquid && u.alive)) {
-    doLiquidEffect(underworld, unit, false);
-    floatingText({ coords: unit, text: 'Liquid damage', style: { fill: 'red' } });
-  }
-
-  // Trigger end turn events
-  const turnEndPromises = [];
-  for (let unit of units) {
-    turnEndPromises.push(runTurnEndEvents(unit, underworld, prediction))
-  }
-  await raceTimeout(5000, 'Turn End Events did not resolve', Promise.all(turnEndPromises));
 }
 
 export async function runTurnStartEvents(unit: IUnit, underworld: Underworld, prediction: boolean) {
@@ -1961,5 +1897,15 @@ export function addEvent(unit: IUnit, eventId: string) {
   if (!unit.events.includes(eventId)) {
     unit.events.push(eventId);
     unit.events.sort(eventsSorter(allModifiers));
+  }
+}
+
+export function tryAttack(unit: IUnit, attack: () => void) {
+  if (unit.attackSpeedReadiness >= unit.attackSpeed) {
+    if (unit.mana >= unit.manaCostToCast) {
+      unit.mana -= unit.manaCostToCast;
+      unit.attackSpeedReadiness = 0;
+      attack();
+    }
   }
 }

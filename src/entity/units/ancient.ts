@@ -50,25 +50,25 @@ const unit: UnitSource = {
   action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
     // Attack
     if (attackTargets && attackTargets.length && canAttackTarget && unit.mana >= unit.manaCostToCast) {
-      let promises = [];
-      unit.mana -= unit.manaCostToCast;
+
       const numberOfAllyAncients = underworld.units.reduce((sum, cur) => cur.faction == unit.faction && cur.unitSourceId == unit.unitSourceId ? sum + 1 : sum, 0);
       for (let i = 0; i < numberOfTargets; i++) {
         const attackTarget = attackTargets[i];
         if (attackTarget) {
-          Unit.orient(unit, attackTarget);
-          makeAncientParticles(unit, false);
-          promises.push(makeManaTrail(unit, attackTarget, underworld, '#5a7879', '#304748', numberOfAllyAncients).then(() => {
-            Unit.takeDamage({
-              unit: attackTarget,
-              amount: unit.damage,
-              sourceUnit: unit,
-              fromVec2: unit,
-            }, underworld, false);
-          }));
+          Unit.tryAttack(unit, () => {
+            Unit.orient(unit, attackTarget);
+            makeAncientParticles(unit, false);
+            makeManaTrail(unit, attackTarget, underworld, '#5a7879', '#304748', numberOfAllyAncients).then(() => {
+              Unit.takeDamage({
+                unit: attackTarget,
+                amount: unit.damage,
+                sourceUnit: unit,
+                fromVec2: unit,
+              }, underworld, false);
+            });
+          });
         }
       }
-      await Promise.all(promises);
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {

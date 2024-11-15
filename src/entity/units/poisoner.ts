@@ -47,30 +47,32 @@ const unit: UnitSource = {
   action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
     const chosenUnit = attackTargets && attackTargets[0];
     if (chosenUnit && canAttackTarget) {
-      unit.mana -= unit.manaCostToCast;
-      await Unit.playComboAnimation(unit, unit.animations.attack, async () => {
-        await createVisualLobbingProjectile(
-          unit,
-          chosenUnit,
-          'poisonerProjectile',
-        ).then(async () => {
-          // Add projectile hit animation
-          Image.addOneOffAnimation(chosenUnit, 'poisonerProjectileHit');
-          const cardsIds = [];
-          // Casts one stack of poison per damage
-          for (let i = 0; i < unit.damage; i++) {
-            cardsIds.push(poison.poisonCardId);
-          }
-          await underworld.castCards({
-            casterCardUsage: {},
-            casterUnit: unit,
-            casterPositionAtTimeOfCast: Vec.clone(unit),
-            cardIds: cardsIds,
-            castLocation: chosenUnit,
-            initialTargetedUnitId: chosenUnit.id,
-            prediction: false,
-            outOfRange: false,
-            castForFree: true,
+
+      Unit.tryAttack(unit, () => {
+        Unit.playComboAnimation(unit, unit.animations.attack, async () => {
+          await createVisualLobbingProjectile(
+            unit,
+            chosenUnit,
+            'poisonerProjectile',
+          ).then(async () => {
+            // Add projectile hit animation
+            Image.addOneOffAnimation(chosenUnit, 'poisonerProjectileHit');
+            const cardsIds = [];
+            // Casts one stack of poison per damage
+            for (let i = 0; i < unit.damage; i++) {
+              cardsIds.push(poison.poisonCardId);
+            }
+            await underworld.castCards({
+              casterCardUsage: {},
+              casterUnit: unit,
+              casterPositionAtTimeOfCast: Vec.clone(unit),
+              cardIds: cardsIds,
+              castLocation: chosenUnit,
+              initialTargetedUnitId: chosenUnit.id,
+              prediction: false,
+              outOfRange: false,
+              castForFree: true,
+            });
           });
         });
       });

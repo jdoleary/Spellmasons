@@ -82,20 +82,19 @@ const unit: UnitSource = {
     death: 'priestDeath',
   },
   action: async (unit: Unit.IUnit, attackTargets, underworld: Underworld) => {
-    let didAction = false;
     if (attackTargets.length) {
       // Resurrect dead ally
-      didAction = await resurrectUnits(unit, attackTargets, underworld);
+      Unit.tryAttack(unit, () => {
+        resurrectUnits(unit, attackTargets, underworld);
+      });
     }
-    if (!didAction) {
-      const closestDeadResurrectable = Unit.closestInListOfUnits(unit,
-        resurrectableUnits(unit, underworld)
-      );
-      // Move to closest dead ally
-      if (closestDeadResurrectable) {
-        const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestDeadResurrectable, unit.stamina);
-        await Unit.moveTowards(unit, moveTo, underworld);
-      }
+    const closestDeadResurrectable = Unit.closestInListOfUnits(unit,
+      resurrectableUnits(unit, underworld)
+    );
+    // Move to closest dead ally
+    if (closestDeadResurrectable) {
+      const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestDeadResurrectable, unit.stamina);
+      await Unit.moveTowards(unit, moveTo, underworld);
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {

@@ -21,6 +21,7 @@ const unit: UnitSource = {
     attackRange: 500,
     healthMax: 40,
     manaMax: 0,
+    attackSpeed: 2000,
   },
   spawnParams: {
     probability: 50,
@@ -44,23 +45,24 @@ const unit: UnitSource = {
     const attackTarget = attackTargets && attackTargets[0];
     // Attack
     if (attackTarget) {
-      Unit.orient(unit, attackTarget);
-      await Unit.playComboAnimation(unit, unit.animations.attack, () => {
-        return createVisualFlyingProjectile(
-          unit,
-          attackTarget,
-          'arrow',
-        ).then(() => {
-          Unit.takeDamage({
-            unit: attackTarget,
-            amount: unit.damage,
-            sourceUnit: unit,
-            fromVec2: unit,
-            thinBloodLine: true
-          }, underworld, false);
-        })
-
-      });
+      Unit.tryAttack(unit, () => {
+        Unit.orient(unit, attackTarget);
+        Unit.playComboAnimation(unit, unit.animations.attack, () => {
+          return createVisualFlyingProjectile(
+            unit,
+            attackTarget,
+            'arrow',
+          ).then(() => {
+            Unit.takeDamage({
+              unit: attackTarget,
+              amount: unit.damage,
+              sourceUnit: unit,
+              fromVec2: unit,
+              thinBloodLine: true
+            }, underworld, false);
+          })
+        });
+      })
     } else {
       // If it gets to this block it means it is either out of range or cannot see enemy
       await rangedLOSMovement(unit, underworld);

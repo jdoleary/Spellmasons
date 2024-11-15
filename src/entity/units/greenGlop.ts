@@ -53,48 +53,49 @@ const unit: UnitSource = {
   action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
     // Attack
     if (attackTargets && canAttackTarget && unit.mana >= unit.manaCostToCast) {
-      unit.mana -= unit.manaCostToCast;
-      await Unit.playComboAnimation(unit, unit.animations.attack, () => {
-        let lastPromise = Promise.resolve();
-        for (let i = 0; i < numberOfTargets; i++) {
-          const attackTarget = attackTargets[i];
-          if (attackTarget) {
-            lastPromise = new Promise((resolve) => {
-              // Offset the projectiles for effect
-              setTimeout(() => {
-                createVisualLobbingProjectile(
-                  unit,
-                  attackTarget,
-                  'lobberProjectile',
-                  {
-                    loop: true,
-                    colorReplace: {
-                      colors: greenGlopColorReplaceColors, epsilon: 0.2
-                    }
-                  }
-                ).then(() => {
-                  if (attackTarget) {
-                    Unit.takeDamage({
-                      unit: attackTarget,
-                      amount: unit.damage,
-                      sourceUnit: unit,
-                      fromVec2: unit,
-                    }, underworld, false);
-                    // Add projectile hit animation
-                    Image.addOneOffAnimation(attackTarget, 'lobberProjectileHit', undefined, {
-                      loop: false,
+      Unit.tryAttack(unit, () => {
+        Unit.playComboAnimation(unit, unit.animations.attack, () => {
+          let lastPromise = Promise.resolve();
+          for (let i = 0; i < numberOfTargets; i++) {
+            const attackTarget = attackTargets[i];
+            if (attackTarget) {
+              lastPromise = new Promise((resolve) => {
+                // Offset the projectiles for effect
+                setTimeout(() => {
+                  createVisualLobbingProjectile(
+                    unit,
+                    attackTarget,
+                    'lobberProjectile',
+                    {
+                      loop: true,
                       colorReplace: {
                         colors: greenGlopColorReplaceColors, epsilon: 0.2
                       }
-                    });
-                  }
-                  resolve()
-                });
-              }, 100 * i);
-            });
+                    }
+                  ).then(() => {
+                    if (attackTarget) {
+                      Unit.takeDamage({
+                        unit: attackTarget,
+                        amount: unit.damage,
+                        sourceUnit: unit,
+                        fromVec2: unit,
+                      }, underworld, false);
+                      // Add projectile hit animation
+                      Image.addOneOffAnimation(attackTarget, 'lobberProjectileHit', undefined, {
+                        loop: false,
+                        colorReplace: {
+                          colors: greenGlopColorReplaceColors, epsilon: 0.2
+                        }
+                      });
+                    }
+                    resolve()
+                  });
+                }, 100 * i);
+              });
+            }
           }
-        }
-        return lastPromise;
+          return lastPromise;
+        });
       });
     } else {
       // Movement:

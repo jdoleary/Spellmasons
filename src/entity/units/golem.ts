@@ -18,6 +18,8 @@ const unit: UnitSource = {
     staminaMax: config.UNIT_BASE_STAMINA,
     healthMax: 20,
     manaMax: 0,
+    attackSpeed: 2000,
+    moveSpeed: 0.1,
   },
   spawnParams: {
     probability: 100,
@@ -37,8 +39,8 @@ const unit: UnitSource = {
     death: 'golemDeath'
   },
   action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
-    await meleeAction(unit, attackTargets, underworld, canAttackTarget, async (attackTarget: Unit.IUnit) => {
-      await Unit.playComboAnimation(unit, unit.animations.attack, async () =>
+    meleeAction(unit, attackTargets, underworld, canAttackTarget, async (attackTarget: Unit.IUnit) => {
+      Unit.playComboAnimation(unit, unit.animations.attack, async () =>
         Unit.takeDamage({
           unit: attackTarget,
           amount: unit.damage,
