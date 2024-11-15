@@ -1159,26 +1159,9 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
 
     if (elCautionBox) {
       if (elCautionBoxText) {
-        const cursingSelf = Object.values(predictionPlayerUnit.modifiers).filter(m => m.isCurse).length > Object.values(unit.modifiers).filter(m => m.isCurse).length;
         elCautionBoxText.innerText = '';
-        const warnings = [];
-        if (losingHealth || shieldLost) {
-          if (willDie) {
-            warnings.push('kill');
-          } else {
-            warnings.push('damage');
-          }
-        }
 
-        if (cursingSelf) {
-          warnings.push('curse');
-        }
-        if (warnings.length) {
-          elCautionBoxText.innerText += i18n('This spell will ' + warnings.join(' & ') + ' you');
-        }
 
-        // Make visible if it has a message to share
-        elCautionBox.classList.toggle('visible', underworld.isMyTurn() && warnings.length > 0);
       }
     }
 
