@@ -45,6 +45,7 @@ import { targetCursedId } from '../../cards/target_curse';
 import { distance } from '../../jmath/math';
 import { glow } from '../../jmath/YTShorts';
 import { explode } from '../../effects/explode';
+import { createVisualLobbingProjectile } from '../../entity/Projectile';
 
 export const keyDown = {
   showWalkRope: false,
@@ -745,8 +746,20 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
 
 
   // Realtime: Basic spell
-  if (globalThis.player) {
-    explode(mousePos, 100, 15, 100, globalThis.player.unit, underworld, false, bloatExplodeStart, bloatExplodeEnd);
+  if (globalThis.player && globalThis.player.isSpawned) {
+    const playerUnit = globalThis.player.unit;
+    if (playerUnit.mana >= playerUnit.manaCostToCast) {
+      playerUnit.mana -= playerUnit.manaCostToCast;
+      createVisualLobbingProjectile(
+        playerUnit,
+        mousePos,
+        'lobberProjectile',
+      ).then(() => {
+        explode(mousePos, 100, 30, 100, playerUnit, underworld, false, bloatExplodeStart, bloatExplodeEnd);
+      });
+    } else {
+      floatingText({ coords: mousePos, text: i18n('insufficient mana'), style: { fill: 'red' } });
+    }
   }
   //end realtime
 
