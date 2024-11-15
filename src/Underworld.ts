@@ -1401,7 +1401,8 @@ export default class Underworld {
   }
   // Returns true if it is the current players turn
   isMyTurn() {
-    return this.turn_phase == turn_phase.PlayerTurns;
+    // realtime
+    return true;
   }
 
   // destroy is currently unused and may be uncommented if there is a need for it in the future
