@@ -19,7 +19,7 @@ const unit: UnitSource = {
     healthMax: 20,
     manaMax: 0,
     attackSpeed: 2000,
-    moveSpeed: 0.1,
+    moveSpeed: 0.05,
   },
   spawnParams: {
     probability: 100,
