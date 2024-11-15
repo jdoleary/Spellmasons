@@ -49,7 +49,7 @@ export function explode(location: Vec2, radius: number, damage: number, pushDist
   }
   if (globalThis.player) {
     const distanceFromExplosion = distance(globalThis.player.unit, location);
-    const intensity = lerp(100, 0, distanceFromExplosion / 1000);
+    const intensity = lerp(20, 0, distanceFromExplosion / 1000);
     // Screenshake relative to how close explosion is to player
     startScreenshake(intensity, prediction, 500);
 
