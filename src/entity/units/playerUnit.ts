@@ -21,6 +21,7 @@ const playerUnit: UnitSource = {
     subtype: UnitSubType.RANGED_RADIUS,
   },
   unitProps: {
+    moveSpeed: 0.1,
     // Player clones must be able to deal damage
     damage: 20,
     attackRange: config.PLAYER_BASE_ATTACK_RANGE

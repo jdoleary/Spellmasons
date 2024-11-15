@@ -742,9 +742,14 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
     return;
   }
   const mousePos = underworld.getMousePos();
+
+
+  // Realtime: Basic spell
   if (globalThis.player) {
     explode(mousePos, 100, 15, 100, globalThis.player.unit, underworld, false, bloatExplodeStart, bloatExplodeEnd);
   }
+  //end realtime
+
   //hide chat if its active
   document.body.classList.toggle('showChat', false);
 
