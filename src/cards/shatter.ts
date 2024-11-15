@@ -43,7 +43,7 @@ const spell: Spell = {
       let explosions: { location: Vec2, radius: number }[] = [];
       for (let unit of targetedUnits) {
         const freezeMod = unit.modifiers[freezeCardId];
-        if (freezeMod) {
+        if (freezeMod && freezeMod.quantity > 0) {
           // Every additional stack of freeze counts towards radius boost
           // +50% radius per radius boost
           const adjustedRadiusBoost = freezeMod.quantity - 1 + state.aggregator.radiusBoost;
