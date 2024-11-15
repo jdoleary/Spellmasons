@@ -47,7 +47,7 @@ const unit: UnitSource = {
     if (attackTarget) {
       Unit.tryAttack(unit, () => {
         Unit.orient(unit, attackTarget);
-        Unit.playComboAnimation(unit, unit.animations.attack, () => {
+        return Unit.playComboAnimation(unit, unit.animations.attack, () => {
           return createVisualFlyingProjectile(
             unit,
             attackTarget,

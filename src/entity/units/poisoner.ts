@@ -49,7 +49,7 @@ const unit: UnitSource = {
     if (chosenUnit && canAttackTarget) {
 
       Unit.tryAttack(unit, () => {
-        Unit.playComboAnimation(unit, unit.animations.attack, async () => {
+        return Unit.playComboAnimation(unit, unit.animations.attack, async () => {
           await createVisualLobbingProjectile(
             unit,
             chosenUnit,

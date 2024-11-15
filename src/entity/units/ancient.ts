@@ -58,7 +58,7 @@ const unit: UnitSource = {
           Unit.tryAttack(unit, () => {
             Unit.orient(unit, attackTarget);
             makeAncientParticles(unit, false);
-            makeManaTrail(unit, attackTarget, underworld, '#5a7879', '#304748', numberOfAllyAncients).then(() => {
+            return makeManaTrail(unit, attackTarget, underworld, '#5a7879', '#304748', numberOfAllyAncients).then(() => {
               Unit.takeDamage({
                 unit: attackTarget,
                 amount: unit.damage,

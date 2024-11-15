@@ -54,7 +54,7 @@ const unit: UnitSource = {
     if (attackTarget && canAttackTarget) {
       Unit.orient(unit, attackTarget);
       Unit.tryAttack(unit, () => {
-        Unit.playComboAnimation(unit, unit.animations.attack, () => {
+        return Unit.playComboAnimation(unit, unit.animations.attack, () => {
           return createVisualLobbingProjectile(
             unit,
             attackTarget,

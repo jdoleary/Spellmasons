@@ -105,6 +105,7 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   // Realtime edits
   attackSpeed: number;
   attackSpeedReadiness: number;
+  state: 'attacking' | 'idling' | 'walking';
   // End Realtime edits
   type: 'unit';
   // A unique id so that units can be identified
@@ -193,6 +194,7 @@ export function create(
     const unit: IUnit = Object.assign({
       attackSpeed: 2000,
       attackSpeedReadiness: 0,
+      state: 'idling',
       type: 'unit',
       id: prediction ? ++lastPredictionUnitId : ++underworld.lastUnitId,
       unitSourceId,
@@ -671,12 +673,28 @@ export function returnToDefaultSprite(unit: IUnit) {
   // Only return to default if it is not currently playing an animation, this prevents
   if (unit.image) {
     if (unit.alive) {
-      Image.changeSprite(
-        unit.image,
-        unit.animations.idle,
-        containerUnits,
-        undefined
-      );
+      switch (unit.state) {
+        case 'walking':
+          Image.changeSprite(
+            unit.image,
+            unit.animations.walk,
+            unit.image.sprite.parent,
+            undefined
+          );
+          break;
+        case 'attacking':
+          // do nothing, attack animation should've already started
+          break;
+        case 'idling':
+          Image.changeSprite(
+            unit.image,
+            unit.animations.idle,
+            containerUnits,
+            undefined
+          );
+          break;
+
+      }
     } else {
       changeToDieSprite(unit);
     }
@@ -1408,12 +1426,11 @@ export function orient(unit: IUnit, faceTarget: Vec2) {
 // movement since they hold RMB to move, the target may be constantly changing
 export function _moveTowards(unit: IUnit, target: Vec2, underworld: Underworld) {
   if (unit.image) {
-    Image.changeSprite(
-      unit.image,
-      unit.animations.walk,
-      unit.image.sprite.parent,
-      undefined
-    );
+    // Only change to walking if not currently attacking
+    if (unit.state !== 'attacking') {
+      unit.state = 'walking';
+    }
+    returnToDefaultSprite(unit);
   }
   orient(unit, target);
 
@@ -1900,12 +1917,15 @@ export function addEvent(unit: IUnit, eventId: string) {
   }
 }
 
-export function tryAttack(unit: IUnit, attack: () => void) {
+export function tryAttack(unit: IUnit, attack: () => Promise<void>) {
   if (unit.attackSpeedReadiness >= unit.attackSpeed) {
     if (unit.mana >= unit.manaCostToCast) {
+      unit.state = 'attacking';
       unit.mana -= unit.manaCostToCast;
       unit.attackSpeedReadiness = 0;
-      attack();
+      attack().then(() => {
+        unit.state = 'idling';
+      });
     }
   }
 }

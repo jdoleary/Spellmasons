@@ -54,7 +54,7 @@ const unit: UnitSource = {
     // Attack
     if (attackTargets && canAttackTarget && unit.mana >= unit.manaCostToCast) {
       Unit.tryAttack(unit, () => {
-        Unit.playComboAnimation(unit, unit.animations.attack, () => {
+        return Unit.playComboAnimation(unit, unit.animations.attack, () => {
           let lastPromise = Promise.resolve();
           for (let i = 0; i < numberOfTargets; i++) {
             const attackTarget = attackTargets[i];

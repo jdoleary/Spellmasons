@@ -7,7 +7,7 @@
 export const RIGHT_CLICK_DOUBLE_MS_THRESHOLD = 500;
 export const RIGHT_CLICK_DOUBLE_DISTANCE_THRESHOLD = 30;
 
-export const PLAYER_BASE_HEALTH = 60; //previously 40
+export const PLAYER_BASE_HEALTH = 300; //previously 40
 export const UNIT_MOVE_SPEED = 0.15;
 export const COLLISION_MESH_RADIUS = 32;
 // Though the size of the images for units are generally 64x64, the unit doesn't take up the full height

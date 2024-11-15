@@ -40,7 +40,7 @@ const unit: UnitSource = {
   },
   action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
     meleeAction(unit, attackTargets, underworld, canAttackTarget, async (attackTarget: Unit.IUnit) => {
-      Unit.playComboAnimation(unit, unit.animations.attack, async () =>
+      return Unit.playComboAnimation(unit, unit.animations.attack, async () =>
         Unit.takeDamage({
           unit: attackTarget,
           amount: unit.damage,

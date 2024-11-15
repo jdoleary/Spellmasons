@@ -11,10 +11,16 @@ export function meleeAction(unit: Unit.IUnit, attackTargets: Unit.IUnit[] | unde
     return;
   }
   // Movement
-  Unit.moveTowards(unit, attackTarget, underworld);
+  if (distance(unit, attackTarget) > unit.attackRange) {
+    Unit.moveTowards(unit, attackTarget, underworld);
+  } else {
+    unit.path = undefined;
+    unit.state = 'idling';
+    Unit.returnToDefaultSprite(unit);
+  }
   // Attack
   Unit.tryAttack(unit, () => {
-    meleeTryAttackClosestEnemy(unit, attackTarget, canAttackTarget, () => attackCB(attackTarget));
+    return meleeTryAttackClosestEnemy(unit, attackTarget, canAttackTarget, () => attackCB(attackTarget));
   });
 }
 // precalculatedCanAttack will prevent and report an attack that isn't expected.
@@ -24,7 +30,7 @@ export function meleeAction(unit: Unit.IUnit, attackTargets: Unit.IUnit[] | unde
 // goAheadAttackCB is invoked when the checks have been done that
 // - the attack is alive and in range to attack
 // - the attack was correctly warned via attentionMarkers
-export function meleeTryAttackClosestEnemy(unit: Unit.IUnit, attackTarget: Unit.IUnit, precalculatedCanAttack: boolean, goAheadAttackCB: () => Promise<void>) {
+export function meleeTryAttackClosestEnemy(unit: Unit.IUnit, attackTarget: Unit.IUnit, precalculatedCanAttack: boolean, goAheadAttackCB: () => Promise<void>): Promise<void> {
   // Attack closest enemy
   // Note: Special case: Use withinMeleeRange instead of
   // using canAttackEnemy for melee units again
@@ -50,9 +56,10 @@ export function meleeTryAttackClosestEnemy(unit: Unit.IUnit, attackTarget: Unit.
       console.log('Melee prediction incorrect data:', unit.stamina, `${unit.x}, ${unit.y}`, `${attackTarget.x},${attackTarget.y}`, unit.attackRange);
       console.error('Melee prediction was incorrect! This is usually due to a stamina issue:')
     } else {
-      goAheadAttackCB();
+      return goAheadAttackCB();
     }
   }
+  return Promise.resolve();
 
 }
 export function withinMeleeRange(unit: Unit.IUnit, target: Vec2): boolean {

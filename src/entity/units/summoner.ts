@@ -58,7 +58,7 @@ export async function summonerAction(unit: Unit.IUnit, ableToSummon: boolean, un
   // Summon unit
   if (ableToSummon) {
     Unit.tryAttack(unit, () => {
-      Unit.playComboAnimation(unit, unit.animations.attack, async () => {
+      return Unit.playComboAnimation(unit, unit.animations.attack, async () => {
         let numberOfSummons = baseNumberOfSummons * (unit.isMiniboss ? 2 : 1);
         let lastPromise = Promise.resolve();
         const validSpawnCoords = underworld.findValidSpawns({ spawnSource: unit, ringLimit: 10, prediction: false, radius: config.spawnSize }, { allowLiquid: false });

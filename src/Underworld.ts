@@ -2964,10 +2964,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         const { targets, canAttack } = cachedTargets[u.id] || { targets: [], canAttack: false };
         // Add unit action to the array of promises to wait for
         unitSource.action(u, targets, this, canAttack).then(async (actionResult) => {
+          // Move out of Liquid
           // Ensure ranged units get out of liquid so they don't take DOT
           // This doesn't apply to melee units since they will automatically move towards you to attack,
           // whereas without this ranged units would be content to just sit in liquid and die from the DOT
-          if (u.unitSubType !== UnitSubType.MELEE && u.inLiquid) {
+          if (u.alive && u.unitSubType !== UnitSubType.MELEE && u.inLiquid) {
             // Using attackRange instead of maxStamina ensures they'll eventually walk out of liquid
             const coords = this.DEPRECIATED_findValidSpawnInRadius(u, false, { radiusOverride: config.COLLISION_MESH_RADIUS });
             if (coords) {

@@ -85,7 +85,8 @@ const unit: UnitSource = {
     if (attackTargets.length) {
       // Resurrect dead ally
       Unit.tryAttack(unit, () => {
-        resurrectUnits(unit, attackTargets, underworld);
+        // .then coerces to non boolean return value
+        return resurrectUnits(unit, attackTargets, underworld).then();
       });
     }
     const closestDeadResurrectable = Unit.closestInListOfUnits(unit,
