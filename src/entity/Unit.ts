@@ -877,12 +877,7 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean, so
   unit.path = undefined;
 
   const events = [...unit.events];
-  let overriddenSourceUnit = sourceUnit?.summonedBy || sourceUnit;
-  // Ensure that if this is invoked in a prediction context, the overriddenSourceUnit
-  // is a predictionUnit and not a real unit
-  if (prediction && overriddenSourceUnit?.predictionCopy) {
-    overriddenSourceUnit = overriddenSourceUnit.predictionCopy;
-  }
+  const overriddenSourceUnit = sourceUnit?.summonedBy || sourceUnit;
 
   for (let eventName of events) {
     if (eventName) {
@@ -1687,6 +1682,8 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
   const predictionUnit = Object.assign(u.predictionCopy || {}, {
     ...rest,
     real: u,
+    // If there is a summonedBy reference, make sure it's the predictionCopy
+    summonedBy: u.summonedBy?.predictionCopy,
     isPrediction: true,
     // A copy of the units current scale for the prediction copy
     // prediction copies do not have an image property, so this property is saved here
