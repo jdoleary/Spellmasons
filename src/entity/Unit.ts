@@ -877,7 +877,13 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean, so
   unit.path = undefined;
 
   const events = [...unit.events];
-  const overriddenSourceUnit = sourceUnit?.summonedBy || sourceUnit
+  let overriddenSourceUnit = sourceUnit?.summonedBy || sourceUnit;
+  // Ensure that if this is invoked in a prediction context, the overriddenSourceUnit
+  // is a predictionUnit and not a real unit
+  if (prediction && overriddenSourceUnit?.predictionCopy) {
+    overriddenSourceUnit = overriddenSourceUnit.predictionCopy;
+  }
+
   for (let eventName of events) {
     if (eventName) {
       const fn = Events.onDeathSource[eventName];
