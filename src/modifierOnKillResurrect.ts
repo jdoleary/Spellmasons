@@ -24,6 +24,10 @@ export default function registerOnKillResurrect() {
   });
   registerEvents(onKillRessurectId, {
     onKill: async (unit: Unit.IUnit, killedUnit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
+      if (prediction) {
+        // Hide the result of on kill resurrect during prediction
+        return
+      }
       const modifier = unit.modifiers[onKillRessurectId];
       let animationPromise = Promise.resolve();
       if (modifier) {
