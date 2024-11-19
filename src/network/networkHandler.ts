@@ -1428,6 +1428,29 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
 
   globalThis.getAllSaveFiles = () => Object.keys(localStorage).filter(x => x.startsWith(globalThis.savePrefix)).map(x => x.substring(globalThis.savePrefix.length));
 
+  // Also used in Spellmasons menu repo
+  function parseSaveFile(saveFileName: string) {
+    const [dateString, saveName] = saveFileName.split("-");
+    const parsedDate = dateString ? parseInt(dateString) : 0;
+    // New parsing
+    const [_wholeMatch, isQuicksave, date, gameName, extraInfo] =
+      /(quicksave-)?(\d+)?-?(\w+)-?([\w\s]+)?/.exec(saveFileName)!;
+
+    return {
+      saveFileName,
+      date:
+        // New date parsing
+        (date && parseInt(date)) ||
+        // old date parsing
+        (isNaN(parsedDate) ? 0 : parsedDate),
+      isQuicksave: !!isQuicksave,
+      displayName: isNaN(parsedDate)
+        ? `${gameName}${extraInfo ? `-${extraInfo}` : ""}`
+        : saveName !== ""
+          ? saveName
+          : new Date(parsedDate).toString(),
+    };
+  }
   // Returns '' if save is successful,
   // otherwise returns error message
   globalThis.save = async (title: string, forceOverwrite?: boolean): Promise<string> => {
@@ -1445,18 +1468,15 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
     }
 
     // Prompt overwrite, don't allow for saving multiple saves with the same name
-    if (getAllSaveFiles && !forceOverwrite) {
-
+    if (getAllSaveFiles) {
       const allSaveFiles = getAllSaveFiles();
-      // A safe file key consists of a prefix, a timestamp and a wordTitle, find and compare the word titles
-      // the timestamp exists to sort them by recency.
-      const isolateWordsInTitle = (title: string) => title.split('-').slice(-1)?.[0] || '';
+      const parsedNewSaveTitle = parseSaveFile(title);
       const conflictingSaveTitles = allSaveFiles.filter(otherSaveFileKey => {
-        const titleWords = isolateWordsInTitle(otherSaveFileKey);
-        return titleWords == isolateWordsInTitle(title);
+        const parsedOtherSaveTitle = parseSaveFile(otherSaveFileKey);
+        return parsedNewSaveTitle.displayName == parsedOtherSaveTitle.displayName;
       });
       if (conflictingSaveTitles.length) {
-        const doOverwrite = await Jprompt({ text: 'There is a previous save file with this name, are you sure you want to overwrite it?', yesText: 'Yes, Overwrite it', noBtnText: 'Cancel', noBtnKey: 'Escape', forceShow: true })
+        const doOverwrite = forceOverwrite ? true : await Jprompt({ text: 'There is a previous save file with this name, are you sure you want to overwrite it?', yesText: 'Yes, Overwrite it', noBtnText: 'Cancel', noBtnKey: 'Escape', forceShow: true })
         if (doOverwrite) {
           conflictingSaveTitles.forEach(otherTitle => {
             storage.remove(globalThis.savePrefix + otherTitle);
