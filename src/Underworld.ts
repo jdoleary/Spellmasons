@@ -2952,7 +2952,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (!globalThis.headless && globalThis.save && globalThis.player && globalThis.player.isSpawned && globalThis.player.unit.alive) {
       // For now, only save if in a singleplayer game
       // because save support hasn't been added to multiplayer yet
-      const quicksaveName = `${globalThis.quicksaveKey}${!this.pie.soloMode && this.pie.currentRoomInfo && `-${this.pie.currentRoomInfo.name}` || ''}${extraInfo ? `-${extraInfo}` : ''}`;
+      const quicksaveName = `${globalThis.quicksaveKey}-${Date.now()}-${!this.pie.soloMode && this.pie.currentRoomInfo && `-${this.pie.currentRoomInfo.name}` || 'Singleplayer'}${extraInfo ? `-${extraInfo}` : ''}`;
       console.info(`Dev: quick saving game as "${quicksaveName}"`);
       // Force overwrite for quicksave, never prompt "are you sure?" when auto saving a quicksave
       globalThis.save(quicksaveName, true);
