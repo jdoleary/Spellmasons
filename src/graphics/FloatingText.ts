@@ -54,7 +54,9 @@ export default function floatingText({
   // aggregate
   let optim = optimizer[localizedText];
   const now = Date.now();
-  if (optim && optim.canon && optim.canon.alpha <= 0) {
+  // Delete record if the canon has disappeared OR if it's been 3 seconds since the optimizer
+  // record was created
+  if (optim && ((optim.canon && optim.canon.alpha <= 0) || (now - optim.startTime > 3000))) {
     delete optimizer[localizedText];
     optim = undefined;
   }
