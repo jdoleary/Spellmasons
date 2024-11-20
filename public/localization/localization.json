@@ -684,7 +684,11 @@
         "spell_sell": "Sells the following spells in the spell combination in exchange for SP.  Rarer spells are worth more. Sold spells will be REMOVED from your spell book.",
         "screenshake": "Screenshake",
         "blood and gore": "Blood and Gore",
-        "quicksave-delete-note": "Quicksaves are kept for up to 2 days"
+        "quicksave-delete-note": "Quicksaves are kept for up to 2 days",
+        "clearwholespell": "Clear all cards from a spell by pressing the \"Esc\" key",
+        "removelastcardfromspell": "Remove the last card from the spell by pressing the \"Backspace\" key",
+        "combinespells": "Use multiple cards in the same spell to combine their effects!",
+        "combine spells": "Combine Spells"
     },
     {
         "language": "Français",
@@ -1371,7 +1375,11 @@
         "spell_sell": "Vends les sorts suivants dans la combinaison de sorts en échange de SP. Les sorts plus rares valent plus. Les sorts vendus seront RETIRÉS de votre grimoire.",
         "screenshake": "Vibration de l'écran",
         "blood and gore": "Sang et Gore",
-        "quicksave-delete-note": "Sauvegardes rapides conservées pendant jusqu'à 2 jours"
+        "quicksave-delete-note": "Sauvegardes rapides conservées pendant jusqu'à 2 jours",
+        "clearwholespell": "Efface toutes les cartes d'un sort en appuyant sur la touche \"Échap\".",
+        "removelastcardfromspell": "Retirez la dernière carte du sort en appuyant sur la touche \"Retour arrière\".",
+        "combinespells": "Utilisez plusieurs cartes dans le même sort pour combiner leurs effets !",
+        "combine spells": "Combiner des sorts"
     },
     {
         "language": "italiano",
@@ -2058,7 +2066,11 @@
         "spell_sell": "Vende i seguenti incantesimi nella combinazione di incantesimi in cambio di SP. Gli incantesimi rari valgono di più. Gli incantesimi venduti saranno RIMOSSI dal tuo libro degli incantesimi.",
         "screenshake": "Scossa dello schermo",
         "blood and gore": "Sangue e Gore",
-        "quicksave-delete-note": "Salvataggi rapidi conservati per un massimo di 2 giorni."
+        "quicksave-delete-note": "Salvataggi rapidi conservati per un massimo di 2 giorni.",
+        "clearwholespell": "Cancella tutte le carte di un incantesimo premendo il tasto \"Esc\"",
+        "removelastcardfromspell": "Rimuovi l'ultima carta dall'incantesimo premendo il tasto \"Backspace\".",
+        "combinespells": "Usa più carte nello stesso incantesimo per combinare i loro effetti!",
+        "combine spells": "Combina Incantesimi"
     },
     {
         "language": "Deutsche",
@@ -2745,7 +2757,11 @@
         "spell_sell": "Verkauft die folgenden Zauber in Kombination gegen SP. Seltenere Zauber sind mehr wert. Verkauft Zauber werden aus deinem Zauberbuch ENTFERNT.",
         "screenshake": "Bildschirmzittern",
         "blood and gore": "Blut und Gore",
-        "quicksave-delete-note": "Schnellspeicherstände werden bis zu 2 Tage aufbewahrt."
+        "quicksave-delete-note": "Schnellspeicherstände werden bis zu 2 Tage aufbewahrt.",
+        "clearwholespell": "Alle Karten eines Zaubers durch Drücken der \"Esc\"-Taste löschen.",
+        "removelastcardfromspell": "Entferne die letzte Karte aus dem Zauber, indem du die \"Rücktaste\" drückst.",
+        "combinespells": "Verwende mehrere Karten im selben Zauber, um ihre Effekte zu kombinieren!",
+        "combine spells": "Zauber kombinieren"
     },
     {
         "language": "español",
@@ -3432,7 +3448,11 @@
         "spell_sell": "Vende los siguientes hechizos en la combinación de hechizos a cambio de SP. Los hechizos más raros valen más. Los hechizos vendidos serán ELIMINADOS de tu libro de hechizos.",
         "screenshake": "Temblor de pantalla",
         "blood and gore": "Sangre y vísceras",
-        "quicksave-delete-note": "Las guardas rápidas se mantienen durante hasta 2 días."
+        "quicksave-delete-note": "Las guardas rápidas se mantienen durante hasta 2 días.",
+        "clearwholespell": "Elimina todas las cartas de un hechizo presionando la tecla \"Esc\".",
+        "removelastcardfromspell": "Elimina la última carta del hechizo pulsando la tecla \"Retroceder\".",
+        "combinespells": "¡Utiliza múltiples cartas en el mismo hechizo para combinar sus efectos!",
+        "combine spells": "Combinar Hechizos"
     },
     {
         "language": "日本",
@@ -4119,7 +4139,11 @@
         "spell_sell": "次の呪文を呪文の組み合わせで販売し、SPと交換します。珍しい呪文ほど価値が高くなります。販売された呪文は呪文書から削除されます。",
         "screenshake": "画面の揺れ",
         "blood and gore": "血と内臓",
-        "quicksave-delete-note": "クイックセーブは最大2日間保持されます。"
+        "quicksave-delete-note": "クイックセーブは最大2日間保持されます。",
+        "clearwholespell": "「Esc」キーを押して、魔法のカードをすべてクリアします。",
+        "removelastcardfromspell": "「バックスペース」キーを押して、呪文の最後のカードを削除します。",
+        "combinespells": "複数のカードを同じ呪文で使用して、その効果を組み合わせよう！",
+        "combine spells": "魔法を組み合わせる"
     },
     {
         "language": "Português",
@@ -4806,7 +4830,11 @@
         "spell_sell": "Vende os seguintes feitiços na combinação de feitiços em troca de SP. Feitiços mais raros valem mais. Os feitiços vendidos serão REMOVIDOS do seu livro de feitiços.",
         "screenshake": "Tremor na tela",
         "blood and gore": "Sangue e Gore",
-        "quicksave-delete-note": "Salvamentos rápidos mantidos por até 2 dias"
+        "quicksave-delete-note": "Salvamentos rápidos mantidos por até 2 dias",
+        "clearwholespell": "Remova todas as cartas de um feitiço pressionando a tecla \"Esc\"",
+        "removelastcardfromspell": "Remova a última carta do feitiço pressionando a tecla \"Backspace\".",
+        "combinespells": "Use várias cartas no mesmo feitiço para combinar seus efeitos!",
+        "combine spells": "Combinar Feitiços"
     },
     {
         "language": "عربى",
@@ -5493,7 +5521,11 @@
         "spell_sell": "يبيع التعويذات التالية في مزيج التعويذات مقابل نقاط السحر (SP). التعويذات النادرة لها قيمة أكبر. سيتم إزالة التعويذات المباعة من كتاب تعويذاتك.",
         "screenshake": "اهتزاز الشاشة",
         "blood and gore": "دم و دماء",
-        "quicksave-delete-note": "تُحتفظ النسخ السريعة لمدة تصل إلى يومين"
+        "quicksave-delete-note": "تُحتفظ النسخ السريعة لمدة تصل إلى يومين",
+        "clearwholespell": "امسح جميع البطاقات من تعويذة عن طريق الضغط على مفتاح \"Esc\"",
+        "removelastcardfromspell": "قم بإزالة آخر بطاقة من التعويذة عن طريق الضغط على مفتاح \"باك سبيس\"",
+        "combinespells": "استخدم بطاقات متعددة في نفس التعويذة لدمج تأثيراتها!",
+        "combine spells": "دمج التعويذات"
     },
     {
         "language": "한국어",
@@ -6180,7 +6212,11 @@
         "spell_sell": "다음 주문 조합을 SP와 교환하여 판매합니다. 희귀한 주문일수록 더 가치가 있습니다. 판매된 주문은 주문 책에서 제거됩니다.",
         "screenshake": "화면 진동",
         "blood and gore": "피와 유혈",
-        "quicksave-delete-note": "퀵세이브는 최대 2일 동안 유지됩니다."
+        "quicksave-delete-note": "퀵세이브는 최대 2일 동안 유지됩니다.",
+        "clearwholespell": "Esc 키를 눌러 주문의 모든 카드를 제거하세요.",
+        "removelastcardfromspell": "백스페이스 키를 눌러서 주문의 마지막 카드를 삭제하세요.",
+        "combinespells": "같은 주문에서 여러 카드를 사용하여 그 효과를 조합하세요!",
+        "combine spells": "주문 결합"
     },
     {
         "language": "Русский",
@@ -6867,7 +6903,11 @@
         "spell_sell": "Продает следующие заклинания в комбинации заклинаний в обмен на СП. Более редкие заклинания стоят дороже. Проданные заклинания будут УДАЛЕНЫ из вашей книги заклинаний.",
         "screenshake": "Тряска экрана",
         "blood and gore": "Кровь и Ужас",
-        "quicksave-delete-note": "Быстрые сохранения хранятся до 2 дней."
+        "quicksave-delete-note": "Быстрые сохранения хранятся до 2 дней.",
+        "clearwholespell": "Очистите все карты заклинания, нажав клавишу \"Esc\"",
+        "removelastcardfromspell": "Удалите последнюю карту заклинания, нажав клавишу \"Backspace\".",
+        "combinespells": "Используйте несколько карт в одном заклинании, чтобы объединить их эффекты!",
+        "combine spells": "Сливайте заклинания"
     },
     {
         "language": "中文(简)",
@@ -7554,7 +7594,11 @@
         "spell_sell": "以SP交换以下法术组合。稀有法术价值更高。出售的法术将从你的法术书中移除。",
         "screenshake": "屏幕震动",
         "blood and gore": "血腥与 gore",
-        "quicksave-delete-note": "快速保存保留最长可达2天"
+        "quicksave-delete-note": "快速保存保留最长可达2天",
+        "clearwholespell": "按“Esc”键清除所有法术卡牌。",
+        "removelastcardfromspell": "按“退格”键移除法术中的最后一张卡牌",
+        "combinespells": "在同一个法术中使用多个卡牌以结合它们的效果！",
+        "combine spells": "合并法术"
     },
     {
         "language": "中文(繁)",
@@ -8241,7 +8285,11 @@
         "spell_sell": "以 SP 交換以下法術的法術組合。稀有法術的價值更高。已出售的法術將從你的法術書中移除。",
         "screenshake": "畫面震動",
         "blood and gore": "血腥與屠殺",
-        "quicksave-delete-note": "快速保存可保留最多 2 天"
+        "quicksave-delete-note": "快速保存可保留最多 2 天",
+        "clearwholespell": "按下 \"Esc\" 鍵清除所有法術卡片",
+        "removelastcardfromspell": "按下“退格”鍵可以刪除法術的最後一張卡牌。",
+        "combinespells": "使用多張卡片於同一法術中來結合它們的效果！",
+        "combine spells": "合併魔法"
     },
     {
         "language": "Polski",
@@ -8928,7 +8976,11 @@
         "spell_sell": "Sprzedaje następujące zaklęcia w kombinacji zaklęć w zamian za SP. Rzadsze zaklęcia są więcej warte. Sprzedane zaklęcia zostaną USUNIĘTE z twojej księgi zaklęć.",
         "screenshake": "Drżenie ekranu",
         "blood and gore": "Krew i flaki",
-        "quicksave-delete-note": "Szybkie zapisy przechowywane przez maksymalnie 2 dni."
+        "quicksave-delete-note": "Szybkie zapisy przechowywane przez maksymalnie 2 dni.",
+        "clearwholespell": "Wyczyść wszystkie karty zaklęcia, naciskając klawisz \"Esc\"",
+        "removelastcardfromspell": "Usuń ostatnią kartę zaklęcia, naciskając klawisz \"Backspace\".",
+        "combinespells": "Użyj wielu kart w tym samym zaklęciu, aby połączyć ich efekty!",
+        "combine spells": "Łączenie Zaklęć"
     },
     {
         "language": "Dutch",
@@ -9615,6 +9667,10 @@
         "spell_sell": "Verkoopt de volgende spreuken in de spreukencombinatie in ruil voor SP. Zeldzamere spreuken zijn meer waard. Verkochte spreuken worden UIT JE SPREADBOEK VERWIJDERD.",
         "screenshake": "Schermtrilling",
         "blood and gore": "Bloed",
-        "quicksave-delete-note": "Snelle opslagen worden tot 2 dagen bewaard."
+        "quicksave-delete-note": "Snelle opslagen worden tot 2 dagen bewaard.",
+        "clearwholespell": "Verwijder alle kaarten van een spreuk door op de \"Esc\" toets te drukken.",
+        "removelastcardfromspell": "Verwijder de laatste kaart van de spreuk door op de \"Backspace\" toets te drukken.",
+        "combinespells": "Gebruik meerdere kaarten in dezelfde spreuk om hun effecten te combineren!",
+        "combine spells": "Combineer Spreuken"
     }
 ]

@@ -11,7 +11,7 @@ import { NUMBER_OF_TOOLBAR_SLOTS } from '../../config';
 import Underworld from '../../Underworld';
 import { CardCategory, CardRarity, probabilityMap } from '../../types/commonTypes';
 import { MESSAGE_TYPES } from '../../types/MessageTypes';
-import { explain, EXPLAIN_END_TURN } from '../Explain';
+import { explain, EXPLAIN_END_TURN, tutorialCompleteTask } from '../Explain';
 import { Overworld } from '../../Overworld';
 import { resetNotifiedImmune } from '../../cards/immune';
 import { keyDown } from './eventListeners';
@@ -958,6 +958,7 @@ export function clearSelectedCards(underworld: Underworld) {
   clearSpellEffectProjection(underworld);
   // Now that selected cards are cleared, update mana badges
   updateCardBadges(underworld);
+  tutorialCompleteTask('clearWholeSpell');
 
 }
 function manageSelectedCardsParentVisibility() {

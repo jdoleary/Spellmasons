@@ -53,6 +53,7 @@ function isAlreadyExplained(key: string): boolean {
 export const EXPLAIN_WALK = 'How to Move';
 export const EXPLAIN_OVERFILL = 'Mana Overfill';
 export const EXPLAIN_CAST = 'Forging Spells';
+export const EXPLAIN_COMBINE = 'Combine Spells';
 export const EXPLAIN_STACK = 'Stacking Spells';
 export const EXPLAIN_WALK_ROPE = 'Stamina';
 export const EXPLAIN_END_TURN = 'End Turn';
@@ -82,6 +83,9 @@ const explainMap: { [key: string]: ExplainData } = {
   },
   [EXPLAIN_CAST]: {
     prompt: () => ({ gore: true, imageSrc: 'images/explain/cast.gif', text: ['explain cast', keyToHumanReadable(['Escape'])], yesText: 'Nice!' })
+  },
+  [EXPLAIN_COMBINE]: {
+    prompt: () => ({ gore: true, imageSrc: 'images/explain/combine-spells.gif', text: ['combineSpells', keyToHumanReadable(['Escape'])], yesText: 'Cool!' })
   },
   [EXPLAIN_STACK]: {
     prompt: () => ({ imageSrc: 'images/explain/stack-spells.gif', text: 'explain stack', yesText: 'Intriguing...' })
@@ -181,7 +185,6 @@ export const autoExplains = [
   EXPLAIN_STACK,
   EXPLAIN_ATTENTION_MARKER_RANGED,
   EXPLAIN_CAMERA,
-  EXPLAIN_REMOVE_SPELLS,
   EXPLAIN_FORGE_ORDER,
   EXPLAIN_BOOKMARKS,
 ]
@@ -219,6 +222,9 @@ export interface TutorialChecklist {
   camera: TutorialChecklistItem;
   recenterCamera: TutorialChecklistItem;
   spendUpgradePoints: TutorialChecklistItem;
+  clearWholeSpell: TutorialChecklistItem;
+  removeLastCardFromSpell: TutorialChecklistItem;
+  combineSpells: TutorialChecklistItem;
 }
 export const tutorialChecklist: TutorialChecklist = {
   spawn: {
@@ -242,25 +248,25 @@ export const tutorialChecklist: TutorialChecklist = {
     nextVisibleTasks: ['camera', 'cast'],
     showExplainPopup: [],
   },
-  spendUpgradePoints: {
-    visible: false,
-    complete: false,
-    text: "Click on the spellbook in the toolbar to see the upgrade menu",
-    nextVisibleTasks: [],
-    showExplainPopup: [EXPLAIN_UPGRADE_BOOKMARK],
-  },
   cast: {
     visible: false,
     complete: false,
     text: "Click on a spell from your toolbar to queue it up and then click on a target to cast it",
-    nextVisibleTasks: ['castMultipleInOneTurn'],
+    nextVisibleTasks: ['combineSpells'],
     showExplainPopup: [EXPLAIN_CAST],
+  },
+  combineSpells: {
+    visible: false,
+    complete: false,
+    text: "combineSpells",
+    nextVisibleTasks: ['castMultipleInOneTurn'],
+    showExplainPopup: [EXPLAIN_COMBINE],
   },
   castMultipleInOneTurn: {
     visible: false,
     complete: false,
     text: "Cast more than once in a single turn",
-    nextVisibleTasks: [],
+    nextVisibleTasks: ['removeLastCardFromSpell'],
     showExplainPopup: [],
   },
   camera: {
@@ -276,6 +282,27 @@ export const tutorialChecklist: TutorialChecklist = {
     text: "Recenter the camera with the Z key",
     nextVisibleTasks: [],
     showExplainPopup: [],
+  },
+  removeLastCardFromSpell: {
+    visible: false,
+    complete: false,
+    text: "removeLastCardFromSpell",
+    nextVisibleTasks: ['clearWholeSpell'],
+    showExplainPopup: [EXPLAIN_REMOVE_SPELLS],
+  },
+  clearWholeSpell: {
+    visible: false,
+    complete: false,
+    text: "clearWholeSpell",
+    nextVisibleTasks: [],
+    showExplainPopup: [],
+  },
+  spendUpgradePoints: {
+    visible: false,
+    complete: false,
+    text: "Click on the spellbook in the toolbar to see the upgrade menu",
+    nextVisibleTasks: [],
+    showExplainPopup: [EXPLAIN_UPGRADE_BOOKMARK],
   },
 }
 

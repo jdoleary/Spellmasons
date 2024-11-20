@@ -251,6 +251,7 @@ function handleInputDown(keyCodeMapping: string | undefined, overworld: Overworl
       break;
     case 'dequeueSpell':
       CardUI.deselectLastCard(underworld);
+      tutorialCompleteTask('removeLastCardFromSpell');
       break;
     case 'showWalkRope':
       keyDown.showWalkRope = true;
