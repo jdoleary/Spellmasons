@@ -593,9 +593,11 @@ export function getFactionsOf(players: { clientConnected: boolean, unit: { facti
 }
 export function incrementPresentedRunesForPlayer(player: Pick<IPlayer, 'lockedRunes' | 'runePresentedIndex'>, underworld: Underworld) {
   // Increment runePresentedIndex for each player so they get new runes presented on the next level:
-  // Remove old unlocked level indexes
-  player.lockedRunes = player.lockedRunes.filter(lr => lr.runePresentedIndexWhenLocked === undefined);
   const shuffledRunes = underworld.getShuffledRunesForPlayer(globalThis.player);
   player.runePresentedIndex = incrementPresentedRunesIndex(player.runePresentedIndex, config.RUNES_PER_LEVEL, shuffledRunes, player.lockedRunes);
+  // Remove old unlocked level indexes
+  // Note: This must occur AFTER incrementPresentedRunesIndex so that 
+  // it doesn't skip over runes that were omitted due to previously locked runes
+  player.lockedRunes = player.lockedRunes.filter(lr => lr.runePresentedIndexWhenLocked === undefined);
 
 }
