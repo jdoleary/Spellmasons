@@ -40,7 +40,7 @@ describe('presentRunes', () => {
         it('should return locked runes in the index they were locked in; when looping and with multiple runes locked', () => {
             const allRunes = [{ key: '0' }, { key: '1' }, { key: '2' }, { key: '3' }, { key: '4' }, { key: '5' }];
             const numOfRunesNeeded = 5;
-            const actual = presentRunes(allRunes, numOfRunesNeeded, 4, [{ key: '1', index: 1 }, { key: '3', index: 3 }]);
+            const actual = presentRunes(allRunes, numOfRunesNeeded, 4, [{ key: '3', index: 3 }, { key: '1', index: 1 }]);
             expect(actual).toEqual(['4', '1', '5', '3', '0']);
         });
     });
@@ -89,3 +89,28 @@ describe('showNextSetOfRunes', () => {
     });
 
 });
+describe('integration', () => {
+    it('locked runes should not cause runes in allRunes to be skipped', () => {
+        const allRunes = [
+            { key: '0' }, { key: '1' }, { key: '2' }, { key: '3' }, { key: '4' }, { key: '5' },
+            { key: '6' }, { key: '7' }, { key: '8' }, { key: '9' }, { key: '10' }, { key: '11' }
+        ];
+        let lockedRunes: { index: number, key: string, runePresentedIndexWhenLocked?: number }[] = [];
+        const showRuneCount = 6;
+        let startIndex = 0;
+        const step1 = presentRunes(allRunes, showRuneCount, startIndex, lockedRunes);
+        expect(step1).toEqual(allRunes.slice(0, 6).map(x => x.key));
+        lockedRunes = [
+            { index: 1, key: '1' },
+        ];
+        startIndex = incrementPresentedRunesIndex(startIndex, showRuneCount, allRunes, lockedRunes);
+        expect(startIndex).toEqual(6);
+        const step2 = presentRunes(allRunes, showRuneCount, startIndex, lockedRunes);
+        expect(step2).toEqual([
+            "6", "1", "7", "8", "9", "10"
+        ]);
+
+    })
+
+});
+

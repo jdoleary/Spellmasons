@@ -591,11 +591,11 @@ export function getFactionsOf(players: { clientConnected: boolean, unit: { facti
   // This removes all duplicate entries from the list
   return [...new Set(factions)];
 }
-export function incrementPresentedRunesForPlayer(player: IPlayer, underworld: Underworld) {
+export function incrementPresentedRunesForPlayer(player: Pick<IPlayer, 'lockedRunes' | 'runePresentedIndex'>, underworld: Underworld) {
   // Increment runePresentedIndex for each player so they get new runes presented on the next level:
   // Remove old unlocked level indexes
+  player.lockedRunes = player.lockedRunes.filter(lr => lr.runePresentedIndexWhenLocked === undefined);
   const shuffledRunes = underworld.getShuffledRunesForPlayer(globalThis.player);
   player.runePresentedIndex = incrementPresentedRunesIndex(player.runePresentedIndex, config.RUNES_PER_LEVEL, shuffledRunes, player.lockedRunes);
-  player.lockedRunes = player.lockedRunes.filter(lr => lr.runePresentedIndexWhenLocked === undefined || underworld.levelIndex == lr.runePresentedIndexWhenLocked);
 
 }

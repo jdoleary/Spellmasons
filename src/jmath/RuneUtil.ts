@@ -19,7 +19,9 @@ export function presentRunes(allRunes: WithKey[], numOfRunesNeeded: number, star
         }
     }
     // Add locked runes in the indices that they belong in:
-    for (let lr of lockedRunes) {
+    // .sort ensures they are added in the proper order so they
+    // land at the correct indices
+    for (let lr of lockedRunes.sort((a, b) => a.index - b.index)) {
         chosenRunes.splice(lr.index, 0, lr.key);
     }
     return chosenRunes;
@@ -28,7 +30,7 @@ export function presentRunes(allRunes: WithKey[], numOfRunesNeeded: number, star
 export function incrementPresentedRunesIndex(startIndex: number, incrementBy: number, allRunes: WithKey[], lockedRunes: { key: string, index: number }[]): number {
     const unnaturallyPresentingLockedRunes = lockedRunes.filter(lr => {
         const naturalIndex = allRunes.findIndex(ar => ar.key == lr.key);
-        for (let i = startIndex; i < incrementBy; i++) {
+        for (let i = startIndex; i < startIndex + incrementBy; i++) {
             const indexThatWillPresentNaturally = getLoopableIndex(i, allRunes);
             if (indexThatWillPresentNaturally == naturalIndex) {
                 return false;
