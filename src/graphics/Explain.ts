@@ -292,7 +292,7 @@ export function updateTutorialChecklist() {
       completedItemsHtml += `<div class="complete">&#x2611; <span class="text complete">${i18n(item.text)}</span></div>`
     }
     html += `<details>
-            <summary>${i18n('Completed Tasks')} ${completeTutorialItems.length}/${tutorialItems.length}</summary>
+            <summary>${i18n('Completed Tasks')}</summary>
             ${completedItemsHtml}
             </details>`
   }

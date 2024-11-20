@@ -2316,7 +2316,7 @@ export default class Underworld {
         const points = config.STAT_POINTS_PER_LEVEL;
         player.statPointsUnspent += points;
         Player.incrementPresentedRunesForPlayer(player, this);
-        if (!tutorialChecklist.spendUpgradePoints.complete && this.levelIndex > 3) {
+        if (!tutorialChecklist.spendUpgradePoints.complete && this.levelIndex >= 3) {
           tutorialShowTask('spendUpgradePoints');
         }
         CardUI.tryShowStatPointsSpendable();
