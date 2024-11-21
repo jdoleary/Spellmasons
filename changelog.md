@@ -1,3 +1,21 @@
+## 1.51.0
+    - fix: Runes getting skipped when locked runes
+    were unlocked
+    - fix: Runes shuffling when you lock them without a reroll
+    - tutorial: Rerecord tutorial gifs
+    and add 2 new tutorial tasks for editing spells
+    - fix: Overly aggressive floatingText optimizer
+    - fix: Hide onKillResurrect for prediction
+    This has been confusing to me every time I've seen it in a prediction.
+    Chance based runes like Black Coin and onKillResurrect shouldn't show in prediction
+    - menu: Improve quicksave menu
+    to sort by date
+    - fixed: Infinite mana bug with "mana on kill" rune
+        Thanks @Remlek!
+    - fix: Shatter working on "Feeze Immune"
+    units.
+    Thanks @Varion!
+
 ## 1.49.0
     - content: Add 3 new Champion modifiers
         Curse Immunity, Unstable, and Double Damage
