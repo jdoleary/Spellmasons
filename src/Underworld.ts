@@ -2251,6 +2251,7 @@ export default class Underworld {
 
     const { levelIndex, biome, limits, liquid, imageOnlyTiles, pickups, enemies, obstacles } = levelData;
     this.levelIndex = levelIndex;
+    globalThis.castThisTurn = false;
     // Update level tracker
     const elLevelTracker = document.getElementById('level-tracker');
     if (elLevelTracker) {
@@ -3017,7 +3018,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // Increment the turn number now that it's starting over at the first phase
     this.turn_number++;
     this.allyNPCAttemptWinKillSwitch++;
-
     // Clear cast this turn
     globalThis.castThisTurn = false;
 
@@ -3882,7 +3882,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     } = args;
     if (!prediction && casterUnit == (globalThis.player && globalThis.player.unit)) {
       tutorialCompleteTask('cast');
-      tutorialCompleteTask('castMultipleInOneTurn', () => !!globalThis.castThisTurn);
+      tutorialCompleteTask('castMultipleInOneTurn', () => casterUnit.mana < casterUnit.manaMax);
+      tutorialCompleteTask('combineSpells', () => Array.from(new Set(cardIds)).length > 1);
       globalThis.castThisTurn = true;
     }
 
