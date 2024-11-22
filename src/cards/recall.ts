@@ -43,8 +43,10 @@ const spell: Spell = {
         if (targets.length == 0) targets.push(state.casterUnit);
 
         // Teleport all targets to the mark
+        const validSpawnCoords = underworld.findValidSpawns({ spawnSource: mark, ringLimit: 8, prediction, radius: config.spawnSize / 2 }, { allowLiquid: true });
         for (let target of targets) {
-          teleport(target, mark, underworld, prediction, true, state.casterUnit);
+          const nextLocation = validSpawnCoords.shift() || mark;
+          teleport(target, nextLocation, underworld, prediction, true, state.casterUnit);
         }
 
         // Remove mark
