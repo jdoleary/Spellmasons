@@ -460,6 +460,11 @@ export function updateCameraPosition(underworld: Underworld, deltaTime: number) 
             if (!inPortal(globalThis.player)) {
               // Follow current client player
               utilProps.camera = clone(globalThis.player.unit);
+              // If recording shorts, follow in the upper 1/4 of 
+              // the screen
+              if (globalThis.recordingShorts) {
+                utilProps.camera.y += (globalThis.innerHeight / 4 / zoom);
+              }
             }
           }
         }
