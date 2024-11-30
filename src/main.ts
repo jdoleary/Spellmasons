@@ -180,13 +180,3 @@ globalThis.fullyExitGame = () => {
   });
 
 }
-
-globalThis.testPerks = () => {
-  //@ts-ignore
-  if (globalThis.player && window.devUnderworld) {
-    //@ts-ignore
-    window.devUnderworld.levelIndex += 5;
-    //@ts-ignore
-    window.devUnderworld.showUpgrades();
-  }
-}

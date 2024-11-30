@@ -33,7 +33,6 @@ import { spellmasonUnitId } from './units/playerUnit';
 import { SUMMONER_ID } from './units/summoner';
 import { DARK_SUMMONER_ID } from './units/darkSummoner';
 import { bossmasonUnitId } from './units/deathmason';
-import { StatCalamity } from '../Perk';
 import { summoningSicknessId } from '../modifierSummoningSickness';
 import * as log from '../log';
 import { suffocateCardId, updateSuffocate } from '../cards/suffocate';
@@ -262,11 +261,6 @@ export function create(
     // and thus has not been adjusted by previous difficulty changes
     adjustUnitDifficulty(unit, 1, underworld.difficulty);
 
-    // Apply underworld statCalamities to units
-    for (let statCalamity of underworld.statCalamities) {
-      adjustUnitStatsByUnderworldCalamity(unit, statCalamity);
-    }
-
     // Note, making miniboss must come AFTER setting the scale and difficulty
     // Note, this is the idempotent way to create a miniboss, pass isMiniboss:true to to the sourceUnitProps override
     // argument so that the unit is made a miniboss BEFORE tryFallInOutOfLiquid is called
@@ -325,26 +319,6 @@ export function updateAccessibilityOutline(unit: IUnit, targeted: boolean, outOf
     if (outlineSettings.thickness) {
       outlineFilter = new OutlineFilter(outlineSettings.thickness, outlineSettings.color, 0.1);
       unit.image.sprite.filters.push(outlineFilter);
-    }
-  }
-}
-export function adjustUnitStatsByUnderworldCalamity(unit: IUnit, statCalamity: StatCalamity) {
-  if (statCalamity.unitId == unit.unitSourceId) {
-    if (statCalamity.stat in unit) {
-      const stat: keyof IUnit = statCalamity.stat as keyof IUnit;
-      if (typeof unit[stat] === 'number') {
-        (unit[stat] as number) = (unit[stat] as number) * (1 + statCalamity.percent / 100);
-        if (stat.includes('Max')) {
-          const currentStat = stat.replace('Max', '') as keyof IUnit;
-          if (currentStat in unit && unit[currentStat] && unit[stat] && typeof unit[stat] === 'number') {
-            // Ensure if healthMax or staminaMax increases that it also increases the current value
-            // @ts-ignore
-            unit[currentStat] = unit[stat];
-          }
-
-        }
-      }
-
     }
   }
 }
@@ -1513,7 +1487,7 @@ export async function startTurnForUnits(units: IUnit[], underworld: Underworld, 
   for (let unit of units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED && u.alive)) {
     // Restore player to max mana at start of turn
     // Let mana remain above max if it already is
-    // (due to other influences like mana potions, spells, perks, etc);
+    // (due to other influences like mana potions, spells, etc);
     unit.mana = Math.max(unit.manaMax, unit.mana);
   }
 

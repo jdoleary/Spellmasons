@@ -237,7 +237,6 @@ declare global {
   var syncConnectedWithPieState: () => void;
   var currentPredictionId: number | undefined;
   var isDemo: boolean;
-  var testPerks: () => void | undefined;
   // emitters in a list to allow for clean up
   // if cleanAfterTurn is false it will clean after level
   var emitters: undefined | JEmitter[];

@@ -10,7 +10,7 @@ export enum MESSAGE_TYPES {
   PLAYER_CONFIG,
   ENTER_PORTAL,
   CHOOSE_UPGRADE,
-  CHOOSE_PERK,
+  CHOOSE_PERK, // This message is obselete but don't delete MESSAGE_TYPES because it's an enum and the stored index matters
   END_TURN,
   // INIT_GAME_STATE is very similar to LOAD_GAME_STATE, in fact, they run identical code
   // paths. 

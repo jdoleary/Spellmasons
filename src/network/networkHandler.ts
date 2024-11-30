@@ -29,7 +29,6 @@ import { cacheBlood, cameraAutoFollow, getCameraCenterInGameSpace, getZoom, setC
 import { ensureAllClientsHaveAssociatedPlayers, Overworld, recalculateGameDifficulty } from '../Overworld';
 import { playerCastAnimationColor, playerCastAnimationColorLighter, playerCastAnimationGlow } from '../graphics/ui/colors';
 import { lightenColor } from '../graphics/ui/colorUtil';
-import { choosePerk, tryTriggerPerk } from '../Perk';
 import { runPredictions } from '../graphics/PlanningView';
 import seedrandom from 'seedrandom';
 import { getUniqueSeedString, SeedrandomState } from '../jmath/rand';
@@ -311,55 +310,6 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         processNextInQueueIfReady(overworld);
       } else {
         console.log('Ignoring INIT_GAME_STATE because underworld has already been initialized.');
-      }
-      break;
-    case MESSAGE_TYPES.CHOOSE_PERK:
-      {
-        console.log('onData: CHOOSE_PERK', `${fromClient}: ${JSON.stringify(payload?.perk || {})}`);
-        if (payload.curse) {
-          const player = fromPlayer;
-          if (player) {
-            player.spellState[payload.curse] = { disabledUntilLevel: underworld.levelIndex + (payload.disableFor || 2) };
-            player.cursesChosen++;
-            // Reset last level card counts
-            for (let spellStateInst of Object.values(player.spellState || {})) {
-              spellStateInst.count = 0;
-            }
-            // If current player
-            if (player == globalThis.player) {
-              // Update disabled label
-              recalcPositionForCards(player, underworld);
-            }
-          } else {
-            console.error('Could not find player to give curse perk.')
-          }
-          // Clear upgrades
-          document.body?.classList.toggle(showUpgradesClassName, false);
-          // There may be upgrades left to choose
-          underworld.showUpgrades();
-        } else if (payload.statCalamity) {
-          const player = fromPlayer;
-          if (player) {
-            player.cursesChosen++;
-            underworld.statCalamities.push(payload.statCalamity);
-            // Apply the newly chosen calamity to current units
-            for (let unit of underworld.units) {
-              Unit.adjustUnitStatsByUnderworldCalamity(unit, payload.statCalamity);
-            }
-          } else {
-            console.error('Could not find player to give curse perk.')
-          }
-          // Clear upgrades
-          document.body?.classList.toggle(showUpgradesClassName, false);
-          // There may be upgrades left to choose
-          underworld.showUpgrades();
-        } else {
-          if (fromPlayer) {
-            choosePerk(payload.perk, fromPlayer, underworld);
-          } else {
-            console.error('Cannot CHOOSE_PERK, fromPlayer is undefined', fromClient, fromPlayer)
-          }
-        }
       }
       break;
     case MESSAGE_TYPES.CHOOSE_UPGRADE:
@@ -790,15 +740,6 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
               }
             }
           }
-          // Trigger 'everyLevel' attributePerks
-          // now that the player has spawned in at the new level
-          const perkRandomGenerator = seedrandom(getUniqueSeedString(underworld, fromPlayer));
-          for (let i = 0; i < fromPlayer.attributePerks.length; i++) {
-            const perk = fromPlayer.attributePerks[i];
-            if (perk) {
-              tryTriggerPerk(perk, fromPlayer, 'everyLevel', perkRandomGenerator, underworld, 700 * i);
-            }
-          }
           // Detect if player spawns in liquid
           tryFallInOutOfLiquid(fromPlayer.unit, underworld, false);
           // Animate effect of unit spawning from the sky
@@ -814,7 +755,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         }
         // This check protects against potential bugs where the upgrade screen still hasn't come up
         // by the time the player spawns
-        if (fromPlayer == globalThis.player && (underworld.upgradesLeftToChoose(globalThis.player) > 0 || underworld.perksLeftToChoose(globalThis.player) > 0)) {
+        if (fromPlayer == globalThis.player && (underworld.upgradesLeftToChoose(globalThis.player) > 0 || globalThis.player.statPointsUnspent > 0)) {
           // This can happen if they die and then the ally npc finished the level for them and the unit killed by the ally npc triggers a level up
           // or the first time that they spawn
           underworld.showUpgrades();

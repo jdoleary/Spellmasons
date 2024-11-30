@@ -17,9 +17,7 @@ import Underworld, { turn_phase } from '../Underworld';
 import * as lastWill from '../cards/lastwill';
 import { explain, EXPLAIN_BLESSINGS, isTutorialComplete } from '../graphics/Explain';
 import { lightenColor } from '../graphics/ui/colorUtil';
-import { AttributePerk } from '../Perk';
 import { setPlayerNameUI } from '../PlayerUtils';
-import { contaminate_id } from '../cards/contaminate';
 import { cameraAutoFollow } from '../graphics/PixiUtils';
 import { allUnits } from './units';
 import { incrementPresentedRunesIndex } from '../jmath/RuneUtil';
@@ -69,10 +67,9 @@ export interface IPlayer {
   // A list of spells that don't take up an upgrade count because they are obtained by other
   // means than by pickup up scrolls
   freeSpells: string[];
-  // The titles of the spells and perks upgrades that a player has chosen
+  // The titles of the spell upgrades that a player has chosen
   upgrades: string[];
   upgradesLeftToChoose: number;
-  perksLeftToChoose: number;
   // Note: call updateCardManaBadges() any time you modify cardUsageCounts so it will
   // be reflected in the UI
   cardUsageCounts: CardUsage;
@@ -83,7 +80,6 @@ export interface IPlayer {
   // their upgrade choice so that they get to pick from fewer each time they
   // reroll.
   reroll: number;
-  attributePerks: AttributePerk[];
   // Stores state that modifies spells
   spellState: { [spellId: string]: any };
   stats: Stats;
@@ -134,10 +130,8 @@ export function create(clientId: string, playerId: string, underworld: Underworl
     cardUsageCounts: {},
     upgrades: [],
     upgradesLeftToChoose: config.STARTING_CARD_COUNT,
-    perksLeftToChoose: 0,
     lobbyReady: false,
     reroll: 0,
-    attributePerks: [],
     spellState: {},
     cursesChosen: 0,
     stats: {
@@ -303,9 +297,7 @@ export function load(player: IPlayerSerialized, index: number, underworld: Under
       playerLoaded.freeSpells = globalThis.player.freeSpells;
       playerLoaded.upgrades = globalThis.player.upgrades;
       playerLoaded.upgradesLeftToChoose = globalThis.player.upgradesLeftToChoose;
-      playerLoaded.perksLeftToChoose = globalThis.player.perksLeftToChoose;
       playerLoaded.reroll = globalThis.player.reroll;
-      playerLoaded.attributePerks = globalThis.player.attributePerks;
       playerLoaded.statPointsUnspent = globalThis.player.statPointsUnspent;
     }
   }

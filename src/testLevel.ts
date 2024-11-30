@@ -5167,10 +5167,8 @@ export const testLevelSave = {
                     "Summon Trap"
                 ],
                 "upgradesLeftToChoose": 3,
-                "perksLeftToChoose": 0,
                 "lobbyReady": false,
                 "reroll": 0,
-                "attributePerks": [],
                 "spellState": {},
                 "cursesChosen": 0,
                 "stats": {
@@ -5369,10 +5367,8 @@ export const testLevelSave = {
                 "Summon Trap"
             ],
             "upgradesLeftToChoose": 3,
-            "perksLeftToChoose": 0,
             "lobbyReady": false,
             "reroll": 0,
-            "attributePerks": [],
             "spellState": {},
             "cursesChosen": 0,
             "stats": {

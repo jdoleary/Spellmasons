@@ -132,12 +132,6 @@ body.view-Game.showUpgrades #upgrade-picker {
   display: flex;
 }
 
-#upgrade-picker-content.perks {
-  /* Adjust the height so that perk list isn't occluded
-  when ui zoom is set high */
-  max-height: unset;
-}
-
 #upgrade-picker-content {
   justify-content: center;
   align-items: stretch;
@@ -195,21 +189,6 @@ body.recording-shorts #upgrade-picker-content {
   height: 100%;
   box-sizing: border-box;
   overflow: hidden;
-}
-
-#upgrade-picker .perk .card-inner {
-  padding: 4px;
-}
-
-#upgrade-picker .perk .card-title {
-  background-color: #262324;
-  border: 2px solid white;
-  padding: 4px;
-  color: white;
-}
-
-#upgrade-picker .perk .card-description {
-  font-size: 1.5em;
 }
 
 #upgrade-picker .FORBIDDEN .card-title,
@@ -667,14 +646,6 @@ kbd {
   flex-grow: 1;
 }
 
-.perk .card-thumb {
-  background-color: unset;
-}
-
-#upgrade-picker .card.perk {
-  background-image: none;
-}
-
 .card-thumb {
   width: 64px;
   display: flex;
@@ -792,12 +763,6 @@ kbd {
 .card-inspect .card-title {
   font-size: 30px;
   font-weight: bold;
-}
-
-.perk .card-description {
-  color: white;
-  /* Give perks more space so they don't word wrap */
-  padding: 0;
 }
 
 .card-description {
@@ -2128,26 +2093,6 @@ body:not(.view-Game) #chatbox {
 
 }
 
-#perkList {
-  position: absolute;
-  right: 8px;
-  pointer-events: none;
-  justify-content: center;
-  display: none;
-  flex-direction: column;
-  z-index: 2;
-  padding: 16px;
-  color: white;
-}
-
-#perkList h1 {
-  margin-top: 0;
-}
-
-body.view-Game.showUpgrades #perkList.visible {
-  display: flex;
-}
-
 #battle-log,
 #runes {
   width: 100%;
@@ -2428,10 +2373,6 @@ body.dragging-card .floating-card-holder .empty-slot {
   padding: 4px;
   white-space: nowrap;
 
-}
-
-.card.perk.pick-stats {
-  min-height: 660px;
 }
 
 #admin-power-bar {

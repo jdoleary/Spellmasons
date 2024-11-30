@@ -296,11 +296,10 @@ declare global {
   var syncConnectedWithPieState: () => void;
   var currentPredictionId: number | undefined;
   var isDemo: boolean;
-  var testPerks: () => void | undefined;
   // emitters in a list to allow for clean up
   // if cleanAfterTurn is false it will clean after level
   var emitters: undefined | JEmitter[];
-  // Help prevents accidental spawn choice when choosing upgrade or perk.
+  // Help prevents accidental spawn choice when choosing upgrade.
   // Everything relating to timeLastChoseUpgrade should happen on the client side
   // NOT after the network message but before the network message is sent
   var timeLastChoseUpgrade: number | undefined;

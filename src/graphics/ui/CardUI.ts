@@ -539,7 +539,7 @@ export function renderRunesMenu(underworld: Underworld) {
       return cheapest;
     }
   }, Infinity);
-  const statPoints = underworld.perksLeftToChoose(globalThis.player);
+  const statPoints = globalThis.player.statPointsUnspent;
   const elStatUpgradeRow = (modifierKey: string, index: number, constant?: boolean) => {
     if (!globalThis.player) {
       return '';
@@ -725,7 +725,7 @@ export function toggleInventory(toolbarIndex: number | undefined, forceState: bo
     // Create inventory
     playSFXKey('inventory_open');
     syncInventory(toolbarIndex, underworld);
-    if (globalThis.player && underworld.perksLeftToChoose(globalThis.player)) {
+    if (globalThis.player && globalThis.player.statPointsUnspent) {
       chooseBookmark('bookmark-runes', true, underworld);
     }
     // Update spellcosts in the inventory
