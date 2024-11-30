@@ -213,8 +213,9 @@ import registerHeavyToxins from '../modifierHeavyToxins';
 import registerOnKillResurrect from '../modifierOnKillResurrect';
 import registerMeleeSpecialist from '../modifierMeleeSpecialist';
 import registerBlackCoin from '../modifierBlackCoin';
-import seedrandom from 'seedrandom';
-import { chooseObjectWithProbability, getUniqueSeedStringPerLevel } from '../jmath/rand';
+import registerLastStand from '../modifierLastStand';
+import registerContaminateOnKill from '../modifierContaminateOnKill';
+import registerHatOfDespair from '../modifierHatOfDespair';
 
 
 export interface Modifiers {
@@ -583,6 +584,9 @@ export function registerCards(overworld: Overworld) {
   registerOnKillResurrect();
   registerMeleeSpecialist();
   registerBlackCoin();
+  registerLastStand();
+  registerContaminateOnKill();
+  registerHatOfDespair();
 
   registerBounty();
   registerMoreBounties();

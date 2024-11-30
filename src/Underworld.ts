@@ -292,6 +292,9 @@ export default class Underworld {
       console.log('Server Stability: ', this.serverStabilityMaxUnits, this.serverStabilityMaxPickups);
     }
   }
+  getAllUnits(prediction: boolean): Unit.IUnit[] {
+    return prediction ? this.unitsPrediction : this.units;
+  }
   // Returns all potentially targetable entities
   // See cards/index.ts's getCurrentTargets() for the function that returns 
   // the current targets of a spell.

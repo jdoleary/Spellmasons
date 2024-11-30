@@ -33,7 +33,7 @@ export type onLiquid = {
 const onLiquidSource: { [name: string]: onLiquid } = {};
 
 export type onKill = {
-  (unit: IUnit, killedUnit: IUnit, underworld: Underworld, prediction: boolean): Promise<void>;
+  (killer: IUnit, killedUnit: IUnit, underworld: Underworld, prediction: boolean): Promise<void>;
 };
 const onKillSource: { [name: string]: onKill } = {};
 
