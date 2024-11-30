@@ -18,7 +18,7 @@ const spell: Spell = {
     sfx: 'swap',
     manaCost: 15,
     healthCost: 0,
-    probability: probabilityMap[CardRarity.RARE],
+    probability: probabilityMap[CardRarity.UNCOMMON],
     expenseScaling: 1,
     thumbnail: 'spellIconSwap.png',
     description: 'spell_swap',
