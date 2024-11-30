@@ -760,11 +760,15 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
   }
   // Get current client's player
   const selfPlayer = globalThis.player;
+  if (selfPlayer === undefined) {
+    console.error("Attempting to invoke clickHandler while globalThis.player is undefined");
+    return;
+  }
   if (selfPlayer && !selfPlayer.isSpawned &&
     !document.body?.classList.contains(showUpgradesClassName)) {
     const spawnPoint = { ...mousePos, radius: config.COLLISION_MESH_RADIUS }
     collideWithLineSegments(spawnPoint, underworld.walls, underworld);
-    if (underworld.isCoordOnWallTile(spawnPoint)) {
+    if (underworld.isCoordOnWallTile(spawnPoint) || isOutOfBounds(mousePos, underworld)) {
       floatingText({
         coords: mousePos,
         text: 'Invalid Spawn Location'
@@ -802,169 +806,163 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
   }
 
   // If a spell exists (based on the combination of cards selected)...
-  if (CardUI.areAnyCardsSelected()) {
+  // and if player is spawned (disallow casting when not spawned for obvious reasons)
+  if (CardUI.areAnyCardsSelected() && selfPlayer.isSpawned) {
     // Only allow casting in the proper phase and on player's turn only
     if (underworld.isMyTurn()) {
-      // If the player casting is the current client player
-      if (selfPlayer) {
-        // cast the spell
-        let target = mousePos;
-        // Improved targeting:
-        // Ensure that click sent in cast is not slightly different from last 
-        // runPrediction target which can result in different outcomes than the
-        // user is expecting
-        if (globalThis.lastPredictionMousePos && !Vec.equal(target, globalThis.lastPredictionMousePos)) {
-          const distFromLastPredictionMouse = distance(target, globalThis.lastPredictionMousePos);
-          const isSmallDistFromLastPrediction = distFromLastPredictionMouse < config.COLLISION_MESH_RADIUS;
-          if (isSmallDistFromLastPrediction) {
-            target = globalThis.lastPredictionMousePos;
-            console.log("Quality of Life: Overriding mouse position with last successful runPrediction mouse position.")
-          }
+      // cast the spell
+      let target = mousePos;
+      // Improved targeting:
+      // Ensure that click sent in cast is not slightly different from last 
+      // runPrediction target which can result in different outcomes than the
+      // user is expecting
+      if (globalThis.lastPredictionMousePos && !Vec.equal(target, globalThis.lastPredictionMousePos)) {
+        const distFromLastPredictionMouse = distance(target, globalThis.lastPredictionMousePos);
+        const isSmallDistFromLastPrediction = distFromLastPredictionMouse < config.COLLISION_MESH_RADIUS;
+        if (isSmallDistFromLastPrediction) {
+          target = globalThis.lastPredictionMousePos;
+          console.log("Quality of Life: Overriding mouse position with last successful runPrediction mouse position.")
         }
+      }
 
-        // End Improved targeting
-        const cardIds = CardUI.getSelectedCardIds();
-        const cards = CardUI.getSelectedCards();
+      // End Improved targeting
+      const cardIds = CardUI.getSelectedCardIds();
+      const cards = CardUI.getSelectedCards();
 
 
-        // Ensure that last card doesn't require a following card
-        // If it does, warn the player that their card order won't do what
-        // they are expecting it to do
-        const nonFrontloadCards = cards.filter(c => !c.frontload)
-        const lastCard = nonFrontloadCards[nonFrontloadCards.length - 1];
-        if (lastCard && lastCard.requiresFollowingCard) {
-          floatingText({
-            coords: target,
-            text: ['🍞 only modifies spells on its right', lastCard.id],
-            style: { fill: 'red', ...config.PIXI_TEXT_DROP_SHADOW }
-          });
-          const elHints = document.querySelectorAll('.requires-following-card');
-          const elHint = elHints.length ? elHints[elHints.length - 1] : undefined;
-          // Remove then add 'blink' class to the "hint" outline so that
-          // it will restart the animation to grab the user's attention.
-          if (elHint) {
-            elHint.classList.remove('blink');
-            setTimeout(() => {
-              elHint.classList.add('blink');
-            }, 10);
+      // Ensure that last card doesn't require a following card
+      // If it does, warn the player that their card order won't do what
+      // they are expecting it to do
+      const nonFrontloadCards = cards.filter(c => !c.frontload)
+      const lastCard = nonFrontloadCards[nonFrontloadCards.length - 1];
+      if (lastCard && lastCard.requiresFollowingCard) {
+        floatingText({
+          coords: target,
+          text: ['🍞 only modifies spells on its right', lastCard.id],
+          style: { fill: 'red', ...config.PIXI_TEXT_DROP_SHADOW }
+        });
+        const elHints = document.querySelectorAll('.requires-following-card');
+        const elHint = elHints.length ? elHints[elHints.length - 1] : undefined;
+        // Remove then add 'blink' class to the "hint" outline so that
+        // it will restart the animation to grab the user's attention.
+        if (elHint) {
+          elHint.classList.remove('blink');
+          setTimeout(() => {
+            elHint.classList.add('blink');
+          }, 10);
 
-          }
-          // Then cancel casting:
-          return
         }
-        if (isOutOfRange(selfPlayer, mousePos, underworld, cardIds)) {
-          // If there is no target at end range, just show that they are trying to cast out of range
-          floatingText({
-            coords: target,
-            text: 'Out of Range'
-          });
-          playSFXKey('deny_range');
-          // Cancel Casting
-          return;
-        }
-        // Abort casting if there is no unitAtCastLocation
-        // unless the first card (like AOE) specifically allows casting
-        // on non unit targets
-        const hasTarget = hasTargetAtPosition(target, underworld);
+        // Then cancel casting:
+        return
+      }
+      if (isOutOfRange(selfPlayer, mousePos, underworld, cardIds)) {
+        // If there is no target at end range, just show that they are trying to cast out of range
+        floatingText({
+          coords: target,
+          text: 'Out of Range'
+        });
+        playSFXKey('deny_range');
+        // Cancel Casting
+        return;
+      }
+      // Abort casting if there is no unitAtCastLocation
+      // unless the first card (like AOE) specifically allows casting
+      // on non unit targets
+      const hasTarget = hasTargetAtPosition(target, underworld);
 
 
-        // https://github.com/jdoleary/Spellmasons/pull/521
-        // Hard-coded "Target Curse" -> Allows players to cast spells
-        // without a target under cursor, if there are target cursed units
-        const hasTargetCursedUnit = underworld.units.find(u => u.modifiers[targetCursedId]);
-        if ((!hasTarget && !hasTargetCursedUnit) && cards.length && cards[0] && !cards[0].allowNonUnitTarget) {
-          floatingText({
-            coords: target,
-            text: 'No Target!'
-          });
-          playSFXKey('deny_target');
-          // Cancel Casting
-          return;
-        }
+      // https://github.com/jdoleary/Spellmasons/pull/521
+      // Hard-coded "Target Curse" -> Allows players to cast spells
+      // without a target under cursor, if there are target cursed units
+      const hasTargetCursedUnit = underworld.units.find(u => u.modifiers[targetCursedId]);
+      if ((!hasTarget && !hasTargetCursedUnit) && cards.length && cards[0] && !cards[0].allowNonUnitTarget) {
+        floatingText({
+          coords: target,
+          text: 'No Target!'
+        });
+        playSFXKey('deny_target');
+        // Cancel Casting
+        return;
+      }
 
-        // Check for quantity here because the freeze modifier persists after 0 quantity to grant freeze immunity
-        if (selfPlayer.unit.modifiers[Freeze.freezeCardId] && selfPlayer.unit.modifiers[Freeze.freezeCardId].quantity > 0) {
-          floatingText({ coords: selfPlayer.unit, text: 'Cannot Cast. Frozen.' })
-          playSFXKey('deny');
-          // Cancel Casting
-          return
-        }
-        if (!selfPlayer.unit.alive) {
-          floatingText({ coords: selfPlayer.unit, text: 'Cannot Cast. Dead.' })
-          playSFXKey('deny');
-          // Cancel Casting
-          return
-        }
-        // Clear resMarkers so they don't hang around once the spell is cast
-        globalThis.resMarkers = [];
+      // Check for quantity here because the freeze modifier persists after 0 quantity to grant freeze immunity
+      if (selfPlayer.unit.modifiers[Freeze.freezeCardId] && selfPlayer.unit.modifiers[Freeze.freezeCardId].quantity > 0) {
+        floatingText({ coords: selfPlayer.unit, text: 'Cannot Cast. Frozen.' })
+        playSFXKey('deny');
+        // Cancel Casting
+        return
+      }
+      if (!selfPlayer.unit.alive) {
+        floatingText({ coords: selfPlayer.unit, text: 'Cannot Cast. Dead.' })
+        playSFXKey('deny');
+        // Cancel Casting
+        return
+      }
+      // Clear resMarkers so they don't hang around once the spell is cast
+      globalThis.resMarkers = [];
 
-        // If multiplayer, play channelling animation until you are able to cast
-        if (globalThis.spellCasting) {
-          Player.setSpellmasonsToChannellingAnimation(selfPlayer);
-        }
-        // syncPredictionEntities to update the mana and health of predictionPlayer if the spell were to be cast
-        // so that we can check in the next block if there is insufficient health or mana to cast it.
-        underworld.syncPredictionEntities();
-        const casterPositionAtTimeOfCast = Vec.clone(selfPlayer.unit);
-        const casterUnit = underworld.unitsPrediction.find(u => u.id == globalThis.player?.unit.id);
-        if (!casterUnit) {
-          console.error('Unexpected: Player caster unit not found when attempting to cache targeted units before sending off SPELL');
-          console.log('Requesting game state from host');
-          underworld.pie.sendData({
-            type: MESSAGE_TYPES.REQUEST_SYNC_GAME_STATE
-          });
-        } else {
-          // Run a castCards PREDICTION to make sure the player has enough mana to cast this
-          underworld.castCards({
-            casterCardUsage: JSON.parse(JSON.stringify(selfPlayer.cardUsageCounts)), // Make a copy of cardUsageCounts for prediction so it can accurately calculate mana for multiple copies of one spell in one cast
-            casterUnit,
-            casterPositionAtTimeOfCast: Vec.clone(casterUnit),
-            cardIds,
-            castLocation: target,
-            prediction: true,
-            outOfRange: false,
-            magicColor: undefined,
-            casterPlayer: selfPlayer,
-
-          }).then((effectState) => {
-            // Ensure that the mana left after casting the prediction spell is not negative.
-            // If it is negative, don't allow the cast because the caster has insufficient mana
-            if ((effectState.casterUnit.mana >= 0)) {
-              clearSpellEffectProjection(underworld, true);
-              overworld.pie.sendData({
-                type: MESSAGE_TYPES.SPELL,
-                casterPositionAtTimeOfCast,
-                x: target.x,
-                y: target.y,
-                cards: cardIds,
-                initialTargetedUnitId: effectState.initialTargetedUnitId,
-                initialTargetedPickupId: effectState.initialTargetedPickupId,
-              });
-              CardUI.clearSelectedCards(underworld);
-              // Now that the cast has begun, clear the prediction tint so it doesn't color the targeted units anymore
-              clearTints(underworld);
-            } else {
-              floatingText({
-                coords: casterUnit,
-                text: 'Insufficient Mana',
-                style: { fill: errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
-              })
-              console.log('Spell could not be cast, insufficient mana');
-
-            }
-
-          })
-        }
+      // If multiplayer, play channelling animation until you are able to cast
+      if (globalThis.spellCasting) {
+        Player.setSpellmasonsToChannellingAnimation(selfPlayer);
+      }
+      // syncPredictionEntities to update the mana and health of predictionPlayer if the spell were to be cast
+      // so that we can check in the next block if there is insufficient health or mana to cast it.
+      underworld.syncPredictionEntities();
+      const casterPositionAtTimeOfCast = Vec.clone(selfPlayer.unit);
+      const casterUnit = underworld.unitsPrediction.find(u => u.id == globalThis.player?.unit.id);
+      if (!casterUnit) {
+        console.error('Unexpected: Player caster unit not found when attempting to cache targeted units before sending off SPELL');
+        console.log('Requesting game state from host');
+        underworld.pie.sendData({
+          type: MESSAGE_TYPES.REQUEST_SYNC_GAME_STATE
+        });
       } else {
-        console.error("Attempting to cast while globalThis.player is undefined");
+        // Run a castCards PREDICTION to make sure the player has enough mana to cast this
+        underworld.castCards({
+          casterCardUsage: JSON.parse(JSON.stringify(selfPlayer.cardUsageCounts)), // Make a copy of cardUsageCounts for prediction so it can accurately calculate mana for multiple copies of one spell in one cast
+          casterUnit,
+          casterPositionAtTimeOfCast: Vec.clone(casterUnit),
+          cardIds,
+          castLocation: target,
+          prediction: true,
+          outOfRange: false,
+          magicColor: undefined,
+          casterPlayer: selfPlayer,
+
+        }).then((effectState) => {
+          // Ensure that the mana left after casting the prediction spell is not negative.
+          // If it is negative, don't allow the cast because the caster has insufficient mana
+          if ((effectState.casterUnit.mana >= 0)) {
+            clearSpellEffectProjection(underworld, true);
+            overworld.pie.sendData({
+              type: MESSAGE_TYPES.SPELL,
+              casterPositionAtTimeOfCast,
+              x: target.x,
+              y: target.y,
+              cards: cardIds,
+              initialTargetedUnitId: effectState.initialTargetedUnitId,
+              initialTargetedPickupId: effectState.initialTargetedPickupId,
+            });
+            CardUI.clearSelectedCards(underworld);
+            // Now that the cast has begun, clear the prediction tint so it doesn't color the targeted units anymore
+            clearTints(underworld);
+          } else {
+            floatingText({
+              coords: casterUnit,
+              text: 'Insufficient Mana',
+              style: { fill: errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
+            })
+            console.log('Spell could not be cast, insufficient mana');
+
+          }
+
+        })
       }
     } else {
-      if (selfPlayer?.isSpawned) {
-        floatingText({
-          coords: mousePos,
-          text: 'You must wait for your turn to cast',
-        });
-      }
+      floatingText({
+        coords: mousePos,
+        text: 'You must wait for your turn to cast',
+      });
       playSFXKey('deny');
     }
   } else {
