@@ -2239,6 +2239,7 @@ export default class Underworld {
     if (this.players.length > 1 && this.levelIndex > 2) {
       explain(EXPLAIN_PING);
     }
+    this.quicksave('Level Start');
   }
   // creates a level from levelData
   createLevelSyncronous(levelData: LevelData) {

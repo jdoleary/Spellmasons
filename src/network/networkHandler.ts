@@ -749,8 +749,6 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
     }
     case MESSAGE_TYPES.SPAWN_PLAYER: {
       if (fromPlayer) {
-        // Ensure a newly spawned player unit has fresh stats
-        Unit.resetUnitStats(fromPlayer.unit, underworld);
         // If the spawned player is the current client's player
         if (fromPlayer == globalThis.player) {
           // Screenshake when the current player spawns
@@ -771,9 +769,6 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         }
         if (!(isNaN(payload.x) && isNaN(payload.y))) {
           fromPlayer.isSpawned = true;
-          if (fromPlayer == globalThis.player) {
-            underworld.quicksave('Level Start');
-          }
           if (fromPlayer.clientId == globalThis.clientId) {
             globalThis.awaitingSpawn = false;
           }
