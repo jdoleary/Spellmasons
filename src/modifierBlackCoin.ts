@@ -6,8 +6,6 @@ import { chooseObjectWithProbability, getUniqueSeedString } from "./jmath/rand";
 import Underworld from './Underworld';
 import { addOneOffAnimation } from "./graphics/Image";
 import floatingText from "./graphics/FloatingText";
-import { GORU_UNIT_ID } from "./entity/units/goru";
-import { bossmasonUnitId } from "./entity/units/deathmason";
 
 export const blackCoinId = 'Black Coin';
 export default function registerBlackCoin() {

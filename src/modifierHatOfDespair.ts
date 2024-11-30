@@ -34,8 +34,8 @@ export default function registerContaminateSelfOnTeleport() {
       }
       for (let u of nearbyUnits) {
         Unit.addModifier(u, enfeebleId, underworld, prediction, modifier?.quantity || 1);
+        floatingText({ coords: u, text: hatOfDespair, prediction });
       }
-      floatingText({ coords: killedUnit, text: hatOfDespair, prediction })
     }
   });
 }
