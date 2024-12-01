@@ -11,7 +11,7 @@ export const contaminateOnKill = 'Contaminate On Kill';
 export default function registerContaminateSelfOnTeleport() {
   registerModifiers(contaminateOnKill, {
     description: ('rune_contaminate_on_kill'),
-    _costPerUpgrade: 120,
+    _costPerUpgrade: 400,
     maxUpgradeCount: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, contaminateOnKill, { isCurse: false, quantity, keepOnDeath: true }, () => {
