@@ -229,6 +229,7 @@ import registerThornyDecoys from '../modifierThornyDecoys';
 import registerSharpTeeth from '../modifierSharpTeeth';
 import registerHardenedMinions from '../modifierHardenedMinions';
 import registerReflex from '../modifierReflex';
+import registerPlagueDoctor from '../modifierPlagueDoctor';
 
 
 
@@ -562,6 +563,7 @@ export function registerCards(overworld: Overworld) {
   registerNecromancerRune();
   registerWitchRune();
   registerWitchBane();
+  registerPlagueDoctor();
   registerReflex();
   registerHardenedMinions();
   registerSharpTeeth();
