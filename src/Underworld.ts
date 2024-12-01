@@ -238,7 +238,6 @@ export default class Underworld {
   }[] = [];
   activeMods: string[] = [];
   generatingLevel: boolean = false;
-  statCalamities: StatCalamity[] = [];
   simulatingMovePredictions: boolean = false;
   // This counter is a kill switch to ensure that the game doesn't get into a state
   // where it's ally npcs fighting enemy npcs and neither is able to progress

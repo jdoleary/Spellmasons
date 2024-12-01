@@ -1077,7 +1077,6 @@ async function handleLoadGameState(payload: {
   underworld.cardDropsDropped = loadedGameState.cardDropsDropped;
   underworld.enemiesKilled = loadedGameState.enemiesKilled;
   underworld.activeMods = loadedGameState.activeMods;
-  underworld.statCalamities = loadedGameState.statCalamities || [];
   // simulatingMovePredictions should never be serialized, it is only for a running instance to keep track of if the simulateRunForceMovePredictions is running
   underworld.simulatingMovePredictions = false;
   // backwards compatible for save state that didn't have this:

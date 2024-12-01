@@ -5106,7 +5106,6 @@ export const testLevelSave = {
             "Renes gimmicks"
         ],
         "generatingLevel": false,
-        "statCalamities": [],
         "simulatingMovePredictions": false,
         "allyNPCAttemptWinKillSwitch": 0,
         "aquirePickupQueue": [],
