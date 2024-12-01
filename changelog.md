@@ -1,3 +1,64 @@
+## 1.52.0 In Progress
+Rune: Plague Doctor Mask
+    Thanks @Arivia!
+
+Rune: Reflex
+
+Rune: Hardened Minions, Sharp Teeth
+
+Rune: Thorny Decoys
+
+Rune: Witch Bane
+    Thanks @Monarch
+
+Rune: Blood Warlock
+
+Rune: Icy Veins
+    Thanks @VinnickTalberot!
+
+Rune: Winter's Chill
+    Thanks @VinnickTalberot!
+
+fix: Attempt to fix changeling cast delay
+Dynamic race timeout depending on how long their spell is.
+    Related: #1269
+
+content: Add 2 new decoys
+    
+balance: Make reroll runes cheaper
+
+content: Rune Investment
+    Thanks @Akira!
+
+content: Blood Letting
+    Thanks @Monarch!
+
+content: Town Portal
+    Thanks Arivia!
+
+content: Last Stand, Contaminate of Kill, Hat of Despair
+    
+    Thanks Arivia for Hat of Despair!
+
+balance: swap Rare -> Uncommon
+Recall Uncommon -> Rare
+    Thanks @Scobjo!
+
+
+fix: Prevent spawning out of bounds
+    when a spell that "ignores range" is queued up
+    Thanks @Rampantegecko!
+    
+
+fix: Purple Portal clearing shield and mana overflow
+fix: Purple Portal resetting quicksave onLevelStart
+    Thanks @Lost and @eps
+    
+
+src: Improve recall so
+    it doesn't pack everyone together on the same exact spot
+k
+    
 ## 1.51.0
     - fix: Runes getting skipped when locked runes
     were unlocked
