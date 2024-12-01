@@ -69,7 +69,7 @@ const playerUnit: UnitSource = {
           animationKey = 'playerAttackMedium1';
         }
         // end copied block
-        await raceTimeout(8_000, 'NPC Spellmason', Unit.playComboAnimation(unit, animationKey, keyMoment, { animationSpeed: 0.2, loop: false }));
+        await raceTimeout(Math.min(10_000, cardIds.length * 1_000), 'NPC Spellmason', Unit.playComboAnimation(unit, animationKey, keyMoment, { animationSpeed: 0.2, loop: false }));
       } else {
         if (!sufficientMana) {
           floatingText({ coords: unit, text: i18n('insufficient mana'), style: { fill: 'red' } });
