@@ -217,6 +217,7 @@ import registerLastStand from '../modifierLastStand';
 import registerContaminateOnKill from '../modifierContaminateOnKill';
 import registerHatOfDespair from '../modifierHatOfDespair';
 import registerTownPortal from '../modifierTownPortal';
+import registerBloodLetting from '../modifierBloodLetting';
 
 
 export interface Modifiers {
@@ -589,6 +590,7 @@ export function registerCards(overworld: Overworld) {
   registerContaminateOnKill();
   registerHatOfDespair();
   registerTownPortal();
+  registerBloodLetting();
 
   registerBounty();
   registerMoreBounties();
