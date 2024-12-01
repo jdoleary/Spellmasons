@@ -22,6 +22,7 @@ import { affinitySoulId } from "../modifierAffinitySoul";
 import { contaminate_id } from "./contaminate";
 import { runeWitchId } from "../modifierWitch";
 import { inexhaustibleId } from "../modifierInexhaustible";
+import { runeBloodWarlockId } from "../modifierBloodWarlock";
 export interface CardCost {
     manaCost: number;
     healthCost: number;
@@ -195,6 +196,12 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
         // Witch grants a cheaper/empowered contaminate
         if (card.id == contaminate_id && caster.unit.modifiers[runeWitchId]) {
             cardCost.manaCost = Math.floor(cardCost.manaCost * 0.5);
+        }
+
+        // Blood Warlock: Soul magic costs health instead of mana
+        if (caster.unit.modifiers[runeBloodWarlockId] && card.category === CardCategory.Soul) {
+            cardCost.healthCost = Math.round(cardCost.manaCost * 0.5);
+            cardCost.manaCost = 0;
         }
 
         // Affinity Modifiers - Reduce cost of spell by 1% per quantity

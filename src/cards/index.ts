@@ -223,6 +223,7 @@ import registerBloodLetting from '../modifierBloodLetting';
 import registerInvestment from '../modifierInvestment';
 import registerWintersChill from '../modifierWintersChill';
 import registerIcyVeins from '../modifierIcyVeins';
+import registerBloodWarlock from '../modifierBloodWarlock';
 
 
 
@@ -555,6 +556,7 @@ export function registerCards(overworld: Overworld) {
   registerGolemancer();
   registerNecromancerRune();
   registerWitchRune();
+  registerBloodWarlock();
   registerEndlessQuiver();
   registerInexhaustible();
   registerTimemasonRune();
