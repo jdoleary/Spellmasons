@@ -221,6 +221,8 @@ import registerHatOfDespair from '../modifierHatOfDespair';
 import registerTownPortal from '../modifierTownPortal';
 import registerBloodLetting from '../modifierBloodLetting';
 import registerInvestment from '../modifierInvestment';
+import registerWintersChill from '../modifierWintersChill';
+
 
 
 export interface Modifiers {
@@ -597,6 +599,7 @@ export function registerCards(overworld: Overworld) {
   registerTownPortal();
   registerBloodLetting();
   registerInvestment();
+  registerWintersChill();
 
   registerBounty();
   registerMoreBounties();
