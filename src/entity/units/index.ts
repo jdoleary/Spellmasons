@@ -52,6 +52,8 @@ import manaVampire from './manaVampire';
 import bossmason from './deathmason';
 import goru from './goru';
 import decoy from './decoy';
+import decoy2 from './decoy2';
+import decoy3 from './decoy3';
 import ancient from './ancient';
 import gripthulu from './gripthulu';
 import blood_archer from './blood_archer';
@@ -86,6 +88,8 @@ export function registerUnits() {
   registerUnit(bossmason);
   registerUnit(goru);
   registerUnit(decoy);
+  registerUnit(decoy2);
+  registerUnit(decoy3);
   registerUnit(urn_ice);
   registerUnit(urn_poison);
   registerUnit(urn_explosive);

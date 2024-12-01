@@ -70,6 +70,8 @@ import vortex from './vortex';
 import dash from './dash';
 import fling from './fling';
 import decoy from './summon_decoy';
+import decoy2 from './summon_decoy2';
+import decoy3 from './summon_decoy3';
 import summon_generic from './summon_generic';
 import bloat from './bloat';
 import bone_shrapnel from './bone_shrapnel';
@@ -469,6 +471,8 @@ export function registerCards(overworld: Overworld) {
   registerSpell(sacrifice, overworld);
   registerSpell(capture_soul, overworld);
   registerSpell(decoy, overworld);
+  registerSpell(decoy2, overworld);
+  registerSpell(decoy3, overworld);
 
   // Nullify / "protection" is too powerful, remove for now
   // - **bug** nullify bug: it doesn't leave after it cancels a spell so if you cast it on an enemy you cant kill it

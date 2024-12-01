@@ -31,6 +31,14 @@ const overrides: { [unitId: string]: { exclude: boolean, properties: { manaCost?
     exclude: true,
     properties: {}
   },
+  'decoy 2': {
+    exclude: true,
+    properties: {}
+  },
+  'decoy 3': {
+    exclude: true,
+    properties: {}
+  },
   [golem_unit_id]: {
     exclude: false,
     properties: { manaCost: 60 }
