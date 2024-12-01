@@ -222,6 +222,7 @@ import registerTownPortal from '../modifierTownPortal';
 import registerBloodLetting from '../modifierBloodLetting';
 import registerInvestment from '../modifierInvestment';
 import registerWintersChill from '../modifierWintersChill';
+import registerIcyVeins from '../modifierIcyVeins';
 
 
 
@@ -600,6 +601,7 @@ export function registerCards(overworld: Overworld) {
   registerBloodLetting();
   registerInvestment();
   registerWintersChill();
+  registerIcyVeins();
 
   registerBounty();
   registerMoreBounties();
