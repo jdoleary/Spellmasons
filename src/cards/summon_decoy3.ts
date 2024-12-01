@@ -4,11 +4,11 @@ import { CardCategory, Faction, UnitType } from '../types/commonTypes';
 import { allUnits } from '../entity/units';
 import { skyBeam } from '../VisualEffects';
 import { playDefaultSpellSFX } from './cardUtils';
-import floatingText from '../graphics/FloatingText';
 import { addWarningAtMouse } from '../graphics/PlanningView';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { thornsId } from '../modifierThorns';
 import { runeThornyDecoysId } from '../modifierThornyDecoys';
+import { runeHardenedMinionsId } from '../modifierHardenedMinions';
 
 const id = 'decoy3';
 const spell: Spell = {
@@ -61,7 +61,14 @@ const spell: Spell = {
         unit.healthMax *= quantity;
         unit.health *= quantity;
         unit.damage *= quantity;
+        unit.summonedBy = state.casterUnit;
         addUnitTarget(unit, state, prediction);
+
+        const runeHardenedMinions = unit.summonedBy.modifiers[runeHardenedMinionsId];
+        if (runeHardenedMinions) {
+          unit.healthMax += runeHardenedMinions.quantity;
+          unit.health = unit.healthMax;
+        }
 
         const summonerThornyDecoys = state.casterUnit.modifiers[runeThornyDecoysId];
         if (summonerThornyDecoys) {

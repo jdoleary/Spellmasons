@@ -9,6 +9,7 @@ import { addWarningAtMouse } from '../graphics/PlanningView';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { thornsId } from '../modifierThorns';
 import { runeThornyDecoysId } from '../modifierThornyDecoys';
+import { runeHardenedMinionsId } from '../modifierHardenedMinions';
 
 const id = 'decoy';
 export { id as decoyId };
@@ -61,12 +62,22 @@ const spell: Spell = {
         unit.healthMax *= quantity;
         unit.health *= quantity;
         unit.damage *= quantity;
+        unit.summonedBy = state.casterUnit;
         addUnitTarget(unit, state, prediction);
+
+        const runeHardenedMinions = unit.summonedBy.modifiers[runeHardenedMinionsId];
+        if (runeHardenedMinions) {
+          unit.healthMax += runeHardenedMinions.quantity;
+          unit.health = unit.healthMax;
+        }
 
         const summonerThornyDecoys = state.casterUnit.modifiers[runeThornyDecoysId];
         if (summonerThornyDecoys) {
           Unit.addModifier(unit, thornsId, underworld, prediction, summonerThornyDecoys.quantity);
         }
+
+
+
 
         if (!prediction) {
           // Animate effect of unit spawning from the sky

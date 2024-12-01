@@ -24,6 +24,8 @@ import { GHOST_ARCHER_ID } from '../entity/units/ghost_archer';
 import { MANA_VAMPIRE_ID } from '../entity/units/manaVampire';
 import { DARK_SUMMONER_ID } from '../entity/units/darkSummoner';
 import { DARK_PRIEST_ID } from '../entity/units/darkPriest';
+import { runeHardenedMinionsId } from '../modifierHardenedMinions';
+import { runeSharpTeethId } from '../modifierSharpTeeth';
 
 
 const overrides: { [unitId: string]: { exclude: boolean, properties: { manaCost?: number } } } = {
@@ -217,6 +219,17 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean, 
           unit.damage *= quantity;
           unit.summonedBy = state.casterUnit;
           addUnitTarget(unit, state, prediction);
+
+          const runeHardenedMinions = unit.summonedBy.modifiers[runeHardenedMinionsId];
+          if (runeHardenedMinions) {
+            unit.healthMax += runeHardenedMinions.quantity;
+            unit.health = unit.healthMax;
+          }
+
+          const runeSharpTeeth = unit.summonedBy.modifiers[runeSharpTeethId];
+          if (runeSharpTeeth) {
+            unit.damage += runeSharpTeeth.quantity;
+          }
 
           if (!prediction) {
             // Animate effect of unit spawning from the sky
