@@ -225,6 +225,7 @@ import registerWintersChill from '../modifierWintersChill';
 import registerIcyVeins from '../modifierIcyVeins';
 import registerBloodWarlock from '../modifierBloodWarlock';
 import registerWitchBane from '../modifierWitchBane';
+import registerThornyDecoys from '../modifierThornyDecoys';
 
 
 
@@ -559,6 +560,7 @@ export function registerCards(overworld: Overworld) {
   registerWitchRune();
   registerWitchBane();
   registerBloodWarlock();
+  registerThornyDecoys();
   registerEndlessQuiver();
   registerInexhaustible();
   registerTimemasonRune();

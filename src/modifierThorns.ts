@@ -3,6 +3,7 @@ import { getOrInitModifier } from "./cards/util";
 import * as Unit from './entity/Unit';
 import Underworld from './Underworld';
 import * as Cards from './cards';
+import floatingText from "./graphics/FloatingText";
 
 // Deals [quantity] damage to an attacker when hit
 export const thornsId = 'Thorns';
@@ -29,11 +30,13 @@ export default function registerThorns() {
           damageDealer.events = damageDealer.events.filter(x => x !== thornsId);
 
           // Deal flat damage to the attacker
+          const thornsDamage = modifier.quantity;
           Unit.takeDamage({
             unit: damageDealer,
-            amount: modifier.quantity,
+            amount: thornsDamage,
             sourceUnit: unit,
           }, underworld, prediction);
+          floatingText({ coords: damageDealer, text: `${thornsId}: ${thornsDamage} ${i18n('Damage')}`, prediction });
 
           // Restore the Thorns event if the damageDealer still has the Thorns modifier
           if (damageDealer.modifiers[thornsId]) {

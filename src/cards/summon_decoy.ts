@@ -7,6 +7,8 @@ import { playDefaultSpellSFX } from './cardUtils';
 import floatingText from '../graphics/FloatingText';
 import { addWarningAtMouse } from '../graphics/PlanningView';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
+import { thornsId } from '../modifierThorns';
+import { runeThornyDecoysId } from '../modifierThornyDecoys';
 
 const id = 'decoy';
 export { id as decoyId };
@@ -60,6 +62,11 @@ const spell: Spell = {
         unit.health *= quantity;
         unit.damage *= quantity;
         addUnitTarget(unit, state, prediction);
+
+        const summonerThornyDecoys = state.casterUnit.modifiers[runeThornyDecoysId];
+        if (summonerThornyDecoys) {
+          Unit.addModifier(unit, thornsId, underworld, prediction, summonerThornyDecoys.quantity);
+        }
 
         if (!prediction) {
           // Animate effect of unit spawning from the sky
