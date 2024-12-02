@@ -50,6 +50,8 @@ import displace from './displace';
 import purify from './purify';
 import enfeeble from './enfeeble';
 import poison from './poison';
+import poison2 from './poison2';
+import poison3 from './poison3';
 import suffocate from './suffocate';
 import debilitate from './debilitate';
 import soul_bind from './soul_bind';
@@ -452,6 +454,8 @@ export function registerCards(overworld: Overworld) {
   config.IS_ANNIVERSARY_UPDATE_OUT &&
     registerSpell(enfeeble, overworld);
   registerSpell(poison, overworld);
+  registerSpell(poison2, overworld);
+  registerSpell(poison3, overworld);
   registerSpell(suffocate, overworld);
   registerSpell(freeze, overworld);
   registerSpell(purify, overworld);

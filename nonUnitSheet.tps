@@ -846,6 +846,7 @@
             <key type="filename">public/images/spell/spellIconPlusRadius.png</key>
             <key type="filename">public/images/spell/spellIconPoison.png</key>
             <key type="filename">public/images/spell/spellIconPoison2.png</key>
+            <key type="filename">public/images/spell/spellIconPoison3.png</key>
             <key type="filename">public/images/spell/spellIconPolymorph.png</key>
             <key type="filename">public/images/spell/spellIconPotionBreak.png</key>
             <key type="filename">public/images/spell/spellIconProtection.png</key>
@@ -882,6 +883,8 @@
             <key type="filename">public/images/spell/spellIconSummon_darksummoner.png</key>
             <key type="filename">public/images/spell/spellIconSummon_deathmason.png</key>
             <key type="filename">public/images/spell/spellIconSummon_decoy.png</key>
+            <key type="filename">public/images/spell/spellIconSummon_decoy2.png</key>
+            <key type="filename">public/images/spell/spellIconSummon_decoy3.png</key>
             <key type="filename">public/images/spell/spellIconSummon_dragger.png</key>
             <key type="filename">public/images/spell/spellIconSummon_explosiveurn.png</key>
             <key type="filename">public/images/spell/spellIconSummon_ghostarcher.png</key>
