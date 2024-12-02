@@ -230,6 +230,7 @@ import registerSharpTeeth from '../modifierSharpTeeth';
 import registerHardenedMinions from '../modifierHardenedMinions';
 import registerReflex from '../modifierReflex';
 import registerPlagueDoctor from '../modifierPlagueDoctor';
+import registerWhirlpool from '../modifierWhirlpool';
 
 
 
@@ -576,6 +577,7 @@ export function registerCards(overworld: Overworld) {
   registerGamblerRune();
   registerLiquidmancer();
   registerHeavyImpacts();
+  registerWhirlpool();
 
   registerAffinityBlessing();
   registerAffinityCurse();
