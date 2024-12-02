@@ -896,6 +896,14 @@
             <key type="filename">images/units/dark_summoner/summonerWalk_6.png</key>
             <key type="filename">images/units/dark_summoner/summonerWalk_7.png</key>
             <key type="filename">images/units/dark_summoner/summonerWalk_8.png</key>
+            <key type="filename">images/units/decoy2_0.png</key>
+            <key type="filename">images/units/decoy2_1.png</key>
+            <key type="filename">images/units/decoy2_Death_0.png</key>
+            <key type="filename">images/units/decoy2_Death_1.png</key>
+            <key type="filename">images/units/decoy3_0.png</key>
+            <key type="filename">images/units/decoy3_1.png</key>
+            <key type="filename">images/units/decoy3_Death_0.png</key>
+            <key type="filename">images/units/decoy3_Death_1.png</key>
             <key type="filename">images/units/decoy_0.png</key>
             <key type="filename">images/units/decoy_1.png</key>
             <key type="filename">images/units/decoy_Death_0.png</key>
