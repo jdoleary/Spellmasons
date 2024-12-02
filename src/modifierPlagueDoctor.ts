@@ -13,7 +13,7 @@ export const plagueDoctorMaskId = 'Plague Doctor Mask';
 export default function registerPlagueDoctor() {
   registerModifiers(plagueDoctorMaskId, {
     description: ('rune_plaguedoctormask'),
-    _costPerUpgrade: 200,
+    _costPerUpgrade: 100,
     quantityPerUpgrade: 1,
     maxUpgradeCount: 3,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
