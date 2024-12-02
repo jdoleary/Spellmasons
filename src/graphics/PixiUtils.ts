@@ -996,6 +996,8 @@ export function tickParticle(particle: BloodParticle) {
 }
 
 export const CLASS_HUD_HIDDEN = 'HUD-hidden';
+export const CLASS_VISIBILITY_ATTENTION_MARKERS = 'attention-markers-hidden';
+export const CLASS_VISIBILITY_HEALTH_BARS = 'health-bars-hidden';
 // Used for disabling the HUD for recording
 export function toggleHUD() {
   globalThis.isHUDHidden = !globalThis.isHUDHidden;

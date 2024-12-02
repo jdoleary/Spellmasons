@@ -359,6 +359,9 @@ async function showCastCardsPrediction(underworld: Underworld, target: Vec2, cas
   return false;
 }
 export function drawHealthBarAboveHead(unitIndex: number, underworld: Underworld, zoom: number) {
+  if (globalThis.isHealthbarsHidden) {
+    return;
+  }
   const u = underworld.units[unitIndex];
   if (u) {
     if (u.unitSubType === UnitSubType.DOODAD) {
@@ -531,6 +534,9 @@ export function getFillRect(unit: Unit.IUnit, min: number, max: number, value1: 
 }
 
 export function drawUnitMarker(imagePath: string, pos: Vec2, unitYScale: number = 1, extraMarkerScale: number = 1) {
+  if (globalThis.isAttentionMarkersHidden) {
+    return;
+  }
   const zoom = getCamera().zoom;
   // 1/zoom keeps the attention marker the same size regardless of the level of zoom
   // Math.sin makes the attention marker swell and shink so it grabs the player's attention

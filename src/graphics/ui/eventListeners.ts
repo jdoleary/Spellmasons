@@ -20,7 +20,7 @@ import {
 import { toggleMenu } from '../../views';
 import { View } from '../../View';
 import * as config from '../../config';
-import { cleanBlood, cameraAutoFollow, getCamera, moveCamera, toggleHUD, setCameraToMapCenter, CLASS_HUD_HIDDEN } from '../PixiUtils';
+import { cleanBlood, cameraAutoFollow, getCamera, moveCamera, toggleHUD, setCameraToMapCenter, CLASS_HUD_HIDDEN, CLASS_VISIBILITY_ATTENTION_MARKERS, CLASS_VISIBILITY_HEALTH_BARS } from '../PixiUtils';
 import { isOutOfRange } from '../../PlayerUtils';
 import { vec2ToOneDimentionIndexPreventWrap } from '../../jmath/ArrayUtil';
 import * as Vec from '../../jmath/Vec';
@@ -1148,6 +1148,32 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       supportInMultiplayer: false,
       domQueryContainer: '#menu-self'
 
+    },
+    {
+      label: '🎥 Hide: Health Bars',
+      isActiveClass: CLASS_VISIBILITY_HEALTH_BARS,
+      action: () => {
+        globalThis.isHealthbarsHidden = !globalThis.isHealthbarsHidden;
+        const visible = !globalThis.isHealthbarsHidden;
+        if (document) {
+          document.body?.classList.toggle(CLASS_VISIBILITY_HEALTH_BARS, !visible);
+        }
+      },
+      supportInMultiplayer: false,
+      domQueryContainer: '#menu-self',
+    },
+    {
+      label: '🎥 Hide: Attention Markers',
+      isActiveClass: CLASS_VISIBILITY_ATTENTION_MARKERS,
+      action: () => {
+        globalThis.isAttentionMarkersHidden = !globalThis.isAttentionMarkersHidden;
+        const visible = !globalThis.isAttentionMarkersHidden;
+        if (document) {
+          document.body?.classList.toggle(CLASS_VISIBILITY_ATTENTION_MARKERS, !visible);
+        }
+      },
+      supportInMultiplayer: false,
+      domQueryContainer: '#menu-self',
     },
     {
       label: '🎥 Toggle game screen UI',
