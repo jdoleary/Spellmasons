@@ -23,6 +23,9 @@ import { contaminate_id } from "./contaminate";
 import { runeWitchId } from "../modifierWitch";
 import { inexhaustibleId } from "../modifierInexhaustible";
 import { runeBloodWarlockId } from "../modifierBloodWarlock";
+import { precisionId } from "../modifierPrecision";
+import * as Cards from "../cards";
+
 export interface CardCost {
     manaCost: number;
     healthCost: number;
@@ -163,6 +166,9 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
         }
         if (card.category == CardCategory.Movement && caster.unit.modifiers[inexhaustibleId]) {
             // Freeze mana cost for movement spells
+            cardCost.manaCost = card.manaCost;
+        }
+        if (caster?.unit.modifiers[precisionId] && caster.inventory.every(id => Cards.allCards[id]?.category !== CardCategory.Targeting)) {
             cardCost.manaCost = card.manaCost;
         }
 

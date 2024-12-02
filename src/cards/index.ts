@@ -231,6 +231,7 @@ import registerHardenedMinions from '../modifierHardenedMinions';
 import registerReflex from '../modifierReflex';
 import registerPlagueDoctor from '../modifierPlagueDoctor';
 import registerWhirlpool from '../modifierWhirlpool';
+import registerPrecision from '../modifierPrecision';
 
 
 
@@ -572,6 +573,7 @@ export function registerCards(overworld: Overworld) {
   registerThornyDecoys();
   registerEndlessQuiver();
   registerInexhaustible();
+  registerPrecision();
   registerTimemasonRune();
   registerFarGazerRune();
   registerGamblerRune();
