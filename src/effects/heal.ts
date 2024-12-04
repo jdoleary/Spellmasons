@@ -44,6 +44,7 @@ export async function healManaUnits(units: Unit.IUnit[], amount: number, sourceU
       explain(EXPLAIN_OVERFILL);
       unit.mana += amount;
     }
+    playSFXKey('potionPickupMana');
     return state;
   } else {
     for (let unit of units) {
