@@ -4,10 +4,10 @@ import { CardCategory } from '../types/commonTypes';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { clone_id, cloneEffect } from './clone';
 
-const id = 'ultra clone';
+export const ultra_clone_id = 'ultra clone';
 const spell: Spell = {
   card: {
-    id,
+    id: ultra_clone_id,
     category: CardCategory.Soul,
     replaces: [clone_id],
     manaCost: 120,

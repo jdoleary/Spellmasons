@@ -11,6 +11,8 @@ import { teachCardId } from '../../cards/teach';
 import { getCardsFromIds } from '../../cards';
 import floatingText from '../../graphics/FloatingText';
 import { slashCardId } from '../../cards/slash';
+import { clone_id } from '../../cards/clone';
+import { ultra_clone_id } from '../../cards/clone2';
 
 export const spellmasonUnitId = 'Spellmason';
 const playerUnit: UnitSource = {
@@ -128,7 +130,7 @@ function getTargetingInfo(unit: Unit.IUnit): TargetingInstructions {
     return memoizedRecord;
   }
   const cards = getCardsFromIds(cardIds);
-  const numberOfBlessings = cards.reduce((acc, cur) => cur.category === CardCategory.Blessings ? 1 + acc : acc, 0);
+  const numberOfBlessings = cards.reduce((acc, cur) => (cur.category === CardCategory.Blessings || cur.id === clone_id || cur.id === ultra_clone_id) ? 1 + acc : acc, 0);
   const numberOfAttacks = cards.reduce((acc, cur) => [CardCategory.Damage, CardCategory.Curses, CardCategory.Movement].includes(cur.category) ? 1 + acc : acc, 0);
 
   const nonUnitTarget = cards.reduce((acc, cur) => [CardCategory.Soul, CardCategory.Movement].includes(cur.category) && cur.allowNonUnitTarget ? 1 + acc : acc, 0) > 0;
