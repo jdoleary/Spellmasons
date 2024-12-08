@@ -48,15 +48,7 @@ export default function registerUndying() {
           }
         }
 
-        const undyingModifier = unit.modifiers[undyingModifierId];
-        if (undyingModifier) {
-          undyingModifier.quantity -= 1;
-          if (undyingModifier.quantity <= 0) {
-            Unit.removeModifier(unit, undyingModifierId, underworld);
-          }
-        } else {
-          console.error("No undying modifier present for undying event. This shouldn't be possible ", unit);
-        }
+        Unit.removeModifier(unit, undyingModifierId, underworld);
       }
     }
   });
