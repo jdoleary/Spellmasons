@@ -82,7 +82,14 @@ const spell: Spell = {
     },
   },
 };
+function unallowedToFreeze(unit: Unit.IUnit) {
+  return unit.events.includes(freezeCardId);
+}
+
 function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld) {
+  if (unallowedToFreeze(unit)) {
+    return;
+  }
   // Only add freeze subsprite if unit is frozen and not "freeze immune"
   // (which is when quantity is <= 0)
   const modifier = unit.modifiers[freezeCardId];
@@ -95,6 +102,9 @@ function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld) {
 }
 
 function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
+  if (unallowedToFreeze(unit)) {
+    return;
+  }
   getOrInitModifier(unit, freezeCardId, { isCurse: true, quantity: 1 }, () => {
     unit.radius = config.COLLISION_MESH_RADIUS;
     Unit.addEvent(unit, freezeCardId);
