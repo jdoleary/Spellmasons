@@ -907,10 +907,10 @@ export type MODIFIER_STAGE = 'Soul Shard' | 'Soul Bind' | 'Amount Multiplier' | 
 export const MODIFIER_ORDER: MODIFIER_STAGE[] = [
   'Soul Shard',
   'Soul Bind',
+  'Blood Curse',
   'Amount Multiplier',
   'Amount Flat',
   'Amount Override',
-  'Blood Curse',
   'Reactive Effects',
   'Unstaged Events'
 ]
