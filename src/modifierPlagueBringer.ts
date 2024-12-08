@@ -25,6 +25,9 @@ export default function registerPlagueBringer() {
   });
   registerEvents(plagueBringerId, {
     onTurnStart: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
+      if (!unit.alive) {
+        return;
+      }
       const modifier = unit.modifiers[plagueBringerId];
       if (modifier) {
         poisonRandomEnemyUnits(unit, modifier.quantity, underworld, prediction);
