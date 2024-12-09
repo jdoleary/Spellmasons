@@ -1093,6 +1093,29 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       domQueryContainer: '#menu-self'
 
     },
+    {
+      label: 'Dev: Show all unit ids',
+      action: () => {
+        for (let unit of (overworld.underworld?.units || [])) {
+          if (globalThis.pixi && unit.image) {
+            // @ts-ignore jid is a custom identifier to id the text element used for the player name
+            const nameText = player.unit.image.sprite.children.find(child => child.jid == config.NAME_TEXT_ID) as PIXI.Text || new globalThis.pixi.Text();
+            // @ts-ignore jid is a custom identifier to id the text element used for the player name
+            nameText.jid = config.NAME_TEXT_ID;
+            unit.image.sprite.addChild(nameText);
+            nameText.text = unit.id.toString();
+            nameText.y = -config.COLLISION_MESH_RADIUS - config.NAME_TEXT_Y_OFFSET;
+            nameText.style = { fill: 'white', fontSize: config.NAME_TEXT_DEFAULT_SIZE, fontFamily: 'Forum', ...config.PIXI_TEXT_DROP_SHADOW };
+            nameText.anchor.x = 0.5;
+            nameText.anchor.y = 0.5;
+          }
+
+        }
+      },
+      supportInMultiplayer: true,
+      domQueryContainer: '#menu-self'
+
+    },
     ...globalThis.mods.map(mod => ({
       label: `Mod: Give cards: ${mod.modName}`,
       action: ({ playerId }: { playerId?: string }) => {
