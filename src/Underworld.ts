@@ -840,9 +840,9 @@ export default class Underworld {
         } else {
           // AI collide with each other and walls
           const originalPosition = Vec.clone(u);
+          moveDist = math.distance(u, stepTowardsTarget);
           // Only move other NPCs out of the way, never move player units
           moveWithCollisions(u, stepTowardsTarget, [...aliveNPCs], this);
-          moveDist = math.distance(originalPosition, u);
           // Prevent moving into negative stamina.  This occurs rarely when
           // the stamina is a fraction but above 0 and the moveDist is greater than the stamina.
           // This check prevents the false-negative melee attack predictions

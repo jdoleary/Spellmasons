@@ -81,12 +81,11 @@ const playerUnit: UnitSource = {
       }
     } else {
       // Movement:
-      const closestEnemy = Unit.findClosestUnitInDifferentFactionSmartTarget(unit, underworld.units);
-      if (closestEnemy) {
-        const distanceToEnemy = math.distance(unit, closestEnemy);
+      if (attackTarget) {
+        const distanceToEnemy = math.distance(unit, attackTarget);
         // Trick to make the unit only move as far as will put them in range but no closer
         unit.stamina = Math.min(unit.stamina, distanceToEnemy + config.COLLISION_MESH_RADIUS - unit.attackRange);
-        await Unit.moveTowards(unit, closestEnemy, underworld);
+        await Unit.moveTowards(unit, attackTarget, underworld);
       }
     }
   },
