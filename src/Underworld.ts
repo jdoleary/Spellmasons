@@ -3379,7 +3379,12 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     upgrade.effect(player, this);
     player.upgrades.push(upgrade.title);
     // Recalc cards so the card changes show up
-    CardUI.recalcPositionForCards(player, this);
+    if (player === globalThis.player) {
+      setTimeout(() => {
+        CardUI.recalcPositionForCards(player, this);
+        CardUI.syncInventory(undefined, this);
+      }, 0);
+    }
   }
   chooseUpgrade(player: Player.IPlayer, upgrade: Upgrade.IUpgrade) {
     const upgradesLeftToChoose = this.upgradesLeftToChoose(player);
