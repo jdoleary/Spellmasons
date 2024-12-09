@@ -2951,10 +2951,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // Quicksave at the beginning of player's turn
     // Check globalThis.player.isSpawned to prevent quicksaving an invalid underworld file
     // .alive: Do not quicksave if player is dead
-    if (!globalThis.headless && globalThis.save && globalThis.player && globalThis.player.isSpawned && globalThis.player.unit.alive) {
+    if (!globalThis.headless && globalThis.save && globalThis.player && globalThis.player.unit.alive) {
       // For now, only save if in a singleplayer game
       // because save support hasn't been added to multiplayer yet
-      const quicksaveName = `${globalThis.quicksaveKey}-${Date.now()}-${!this.pie.soloMode && this.pie.currentRoomInfo && `-${this.pie.currentRoomInfo.name}` || 'Singleplayer'}${extraInfo ? `-${extraInfo}` : ''}`;
+      const quicksaveName = `${globalThis.quicksaveKey}-${Date.now()}-${!this.pie.soloMode && this.pie.currentRoomInfo && `${this.pie.currentRoomInfo.name}` || 'Singleplayer'}${extraInfo ? `-${extraInfo}` : ''}`;
       console.info(`Dev: quick saving game as "${quicksaveName}"`);
       // Force overwrite for quicksave, never prompt "are you sure?" when auto saving a quicksave
       globalThis.save(quicksaveName, true);
