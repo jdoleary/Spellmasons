@@ -2869,6 +2869,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // Turn on auto follow if they are spawned, and off if they are not
     cameraAutoFollow(!!globalThis.player?.isSpawned);
   }
+
+  // IMPORTANT NOTE: when in a multiplayer context,
+  // this function will ONLY be invoked by the host (headless)
+  // so do not run any "player turn end" logic here
   async tryEndPlayerTurnPhase(): Promise<Boolean> {
     // We care about the state of all connected players
     // We do not care about players without a connected client
@@ -2894,8 +2898,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
     }
 
-    await Unit.endTurnForUnits(this.players.map(p => p.unit), this, false);
-    this.endPlayerTurnCleanup();
     return true;
   }
   endPlayerTurnCleanup() {
@@ -3280,6 +3282,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         break;
       }
       case turn_phase[turn_phase.NPC_ALLY]: {
+        // End player turn now that it is about to start NPC_ALLY turn
+        await Unit.endTurnForUnits(this.players.map(p => p.unit), this, false);
+        this.endPlayerTurnCleanup();
+
         await this.executeNPCTurn(Faction.ALLY);
         this.broadcastTurnPhase(turn_phase.NPC_ENEMY);
         break;
