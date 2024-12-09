@@ -1,63 +1,106 @@
 ## 1.52.0 In Progress
-Rune: Plague Doctor Mask
+New Content
+
+- Rune: Precision
+    Thanks @PiElRoja
+
+- Rune: Whirlpool
+
+- Rune: Plague Doctor Mask
     Thanks @Arivia!
 
-Rune: Reflex
+- Rune: Reflex
 
-Rune: Hardened Minions, Sharp Teeth
+- Rune: Hardened Minions, Sharp Teeth
 
-Rune: Thorny Decoys
+- Rune: Thorny Decoys
 
-Rune: Witch Bane
+- Rune: Witch Bane
     Thanks @Monarch
 
-Rune: Blood Warlock
+- Rune: Blood Warlock
 
-Rune: Icy Veins
+- Rune: Icy Veins
     Thanks @VinnickTalberot!
 
-Rune: Winter's Chill
+- Rune: Winter's Chill
     Thanks @VinnickTalberot!
 
-fix: Attempt to fix changeling cast delay
-Dynamic race timeout depending on how long their spell is.
-    Related: #1269
-
-content: Add 2 new decoys
-    
-balance: Make reroll runes cheaper
-
-content: Rune Investment
+- Rune: Investment
     Thanks @Akira!
 
-content: Blood Letting
+- Rune: Blood Letting
     Thanks @Monarch!
 
-content: Town Portal
+- Rune: Town Portal
     Thanks Arivia!
 
-content: Last Stand, Contaminate of Kill, Hat of Despair
+- Rune: Last Stand, Contaminate of Kill, Hat of Despair
     
     Thanks Arivia for Hat of Despair!
 
-balance: swap Rare -> Uncommon
-Recall Uncommon -> Rare
+- content: Add 2 new decoy upgrades
+
+- Content: Upgrades to Poison
+    Thanks @scobjo!
+
+- balance: Plague Doctor Mask cost
+
+- balance: Make Contaminate on Kill more expensive
+    since it transfers the stacks of the curse too it's SUPER powerful
+    
+- balance: Make reroll runes cheaper
+
+- balance: swap Rare -> Uncommon
+
+- balance: Recall Uncommon -> Rare
     Thanks @Scobjo!
 
+Bug Fixes
+- fix: Desync re unit movement
+    On headless, units that had a left over path were moving as soon as they received stamina.
+    This change ensures that, at the start  of the units' turn, the path
+    is cleared BEFORE they recieve stamina
 
-fix: Prevent spawning out of bounds
+- fix: Spellmason clone movement raceTimeout
+    I solved the race timeout by making stamina change based on stepTowardsTarget instead of original position vs current position because due to unit collisions they could be trying to step and not stepping wwhich never changed their stamina which means they timed out. This is for AI units only so it won't be frustrating for players (wont spend stamina without moving)
+
+- fix: Blood Curse + debilitate stage order
+    Blood Curse must invert healing to damage before the Amount modifiers or else the amount modifiers will not take effect
+    Thanks @Varion
+
+- fix: Goru resurrected more than once
+    Ensure undying always removes itself.
+    Thanks @Weedybird
+
+- fix: Freeze immune
+    not working when freeze modifier is added by means other
+    than spell.
+    Thanks @Varion!
+
+- fix: PlagueBringer still works even when dead
+    Thanks @AlchemyExists
+
+- fix: Missing mana sfx for `send mana` and `steal mana`
+
+- fix: taught clones casting `clone` on enemies
+    Thanks @RAHHHHHH :3
+
+- fix: menu: privacy policy shows over floating logo
+
+- fix: Attempt to fix changeling cast delay
+
+- fix: Prevent spawning out of bounds
     when a spell that "ignores range" is queued up
     Thanks @Rampantegecko!
-    
 
-fix: Purple Portal clearing shield and mana overflow
-fix: Purple Portal resetting quicksave onLevelStart
+- fix: Purple Portal clearing shield and mana overflow
+
+- fix: Purple Portal resetting quicksave onLevelStart
     Thanks @Lost and @eps
     
-
-src: Improve recall so
+- optim: Improve recall so
     it doesn't pack everyone together on the same exact spot
-k
     
 ## 1.51.0
     - fix: Runes getting skipped when locked runes

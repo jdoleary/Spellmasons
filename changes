@@ -1,0 +1,187 @@
+
+
+
+    Rune: Plague Doctor Mask
+    
+    Thanks @Arivia!
+
+commit 83a950aa1c4102144f6bd82110e10155d6567bdc
+Author: Jordan O'Leary <jdoleary@gmail.com>
+Date:   Sun Dec 1 11:46:32 2024 -0500
+
+    Rune: Reflex
+
+commit f9c7974dd40e3342681b0c0c31f6330379581cd0
+Author: Jordan O'Leary <jdoleary@gmail.com>
+Date:   Sun Dec 1 11:41:41 2024 -0500
+
+    Rune: Hardened Minions, Sharp Teeth
+
+commit 7087db060454f66102a737445c2721a15c343c7b
+Author: Jordan O'Leary <jdoleary@gmail.com>
+Date:   Sun Dec 1 11:33:31 2024 -0500
+
+    Rune: Thorny Decoys
+
+commit b76377ca5d79d11cd005d4531c7c3c6c2b5432e1
+Author: Jordan O'Leary <jdoleary@gmail.com>
+Date:   Sun Dec 1 11:24:23 2024 -0500
+
+    Rune: Witch Bane
+    
+    Thanks @Monarch
+
+commit f5d40ccaeceeffd72cf667a3c6dedcc963060587
+Author: Jordan O'Leary <jdoleary@gmail.com>
+Date:   Sun Dec 1 11:12:57 2024 -0500
+
+    Rune: Blood Warlock
+
+commit 7359f2d8fd51e930e31b8ea0f63d8988eec0fd30
+Author: Jordan O'Leary <jdoleary@gmail.com>
+Date:   Sun Dec 1 11:05:03 2024 -0500
+
+    Rune: Icy Veins
+    
+    Thanks @VinnickTalberot!
+
+commit 1b0915e26f819d2485c514c0fae5003712d7335e
+Author: Jordan O'Leary <jdoleary@gmail.com>
+Date:   Sun Dec 1 11:00:23 2024 -0500
+
+    Rune: Winter's Chill
+    
+    Thanks @VinnickTalberot!
+
+commit f00219b5f029370a426d66d98d6e586b9c80e60c
+Author: Jordan O'Leary <jdoleary@gmail.com>
+Date:   Sun Dec 1 10:46:45 2024 -0500
+
+    fix: Attempt to fix changeling cast delay
+    
+    Dynamic race timeout depending on how long their spell is.
+    
+    Related: #1269
+
+commit bf45168a43f8cddb007b83a86f3edfc60e0badef
+Author: Jordan O'Leary <jdoleary@gmail.com>
+Date:   Sun Dec 1 10:44:56 2024 -0500
+
+    content: Add 2 new decoys
+    
+    Closes #1273
+
+commit b4c07e57341952fec3be34850fe80644c3c45032
+Author: Jordan O'Leary <jdoleary@gmail.com>
+Date:   Sun Dec 1 10:01:33 2024 -0500
+
+    fix: Force Move on invalid vec2
+    
+    causing player to disappear
+    Closes #1272
+
+commit 7240084165f46d2e91b07dbccdb7cd8c413f0f65
+Author: Jordan O'Leary <jdoleary@gmail.com>
+Date:   Sat Nov 30 22:00:23 2024 -0500
+
+    balance: Make reroll runes cheaper
+
+commit 037dbb8d4af556eae25ccc44981d51a307083057
+Author: Jordan O'Leary <jdoleary@gmail.com>
+Date:   Sat Nov 30 19:48:50 2024 -0500
+
+    content: Rune Investment
+    
+    Thanks @Akira!
+
+commit 80d7efa69e1008f859dc427fff6ec26f26b8659a
+Author: Jordan O'Leary <jdoleary@gmail.com>
+Date:   Sat Nov 30 19:33:54 2024 -0500
+
+    content: Blood Letting
+    
+    Thanks @Monarch!
+
+commit b58c6ec325d485398df05b579f8747cb2b0c2e55
+Author: Jordan O'Leary <jdoleary@gmail.com>
+Date:   Sat Nov 30 10:19:50 2024 -0500
+
+    UX: Hat of despair shows floating text
+    
+    around units that are cursed
+
+commit f1404fe2700859d252f9567cfab5f992753e263d
+Author: Jordan O'Leary <jdoleary@gmail.com>
+Date:   Sat Nov 30 10:19:37 2024 -0500
+
+    content: Town Portal
+    
+    Thanks Arivia!
+
+commit e7d1ececbe2b4c6d8004dd2af0efc1d207b37e5b
+Author: Jordan O'Leary <jdoleary@gmail.com>
+Date:   Sat Nov 30 10:13:48 2024 -0500
+
+    content: Last Stand, Contaminate of Kill, Hat of Despair
+    
+    Thanks Arivia for Hat of Despair!
+    Relabel `unit` to `killer` in onKill callback to prevent confusion with `killedUnit`
+    Add new util underworld.getAllUnits(prediction) for querying all units
+    and being sure to grab the prediction array if in a prediction context.
+
+commit c835938bfddea525e8795f959107d26f216d6f4b
+Author: Jordan O'Leary <jdoleary@gmail.com>
+Date:   Sat Nov 30 08:38:44 2024 -0500
+
+    balance: swap Rare -> Uncommon
+    
+    Recall Uncommon -> Rare
+    
+    Thanks @Scobjo!
+
+commit 537c9d3c67b99c1c8b99e3943ef250bffa23323d
+Author: Jordan O'Leary <jdoleary@gmail.com>
+Date:   Sat Nov 30 08:11:17 2024 -0500
+
+    fix: Prevent spawning out of bounds
+    
+    when a spell that "ignores range" is queued up
+    Thanks @Rampantegecko!
+    
+    Closes #1268
+
+commit 96c63f7c397b32c53ae366bda53d6716ce2f72ed
+Author: Jordan O'Leary <jdoleary@gmail.com>
+Date:   Sat Nov 30 07:56:55 2024 -0500
+
+    ref: Clean up PERKS from game logic
+    
+    Test: Verify you can still pick upgrades in plus levels
+
+commit 83b5f1b2a9a8ed6a7260e9b66c5b8e455d899f6f
+Author: Jordan O'Leary <jdoleary@gmail.com>
+Date:   Sat Nov 30 07:46:53 2024 -0500
+
+    fix: Purple Portal clearing shield and mana overflow
+    
+    fix: Purple Portal resetting quicksave onLevelStart
+    
+    Thanks @Lost and @eps
+    
+    Closes: #1249
+
+commit 5d50efffd9134f0e59338992eb83ff6f901c4f30
+Author: Jordan O'Leary <jdoleary@gmail.com>
+Date:   Fri Nov 22 21:15:52 2024 -0500
+
+    admin: When "Recording Shorts"
+    
+    camera is "centered" on the upper half to make room for Voice Over footage
+
+commit a524e5f63f515278df0e697df9be98e58db162bd
+Author: Jordan O'Leary <jdoleary@gmail.com>
+Date:   Fri Nov 22 06:53:09 2024 -0500
+
+    src: Improve recall so
+    
+    it doesn't pack everyone together on the same exact spot
