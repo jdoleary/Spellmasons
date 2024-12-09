@@ -1493,6 +1493,9 @@ export async function startTurnForUnits(units: IUnit[], underworld: Underworld, 
 
   // Regenerate stamina to max
   for (let unit of units.filter(u => u.alive)) {
+    // Clear path so they don't start moving from a previous path as soon as they get stamina
+    // Units should only move if their path is set anew during their action()
+    unit.path = undefined;
     if (unit.stamina < unit.staminaMax) {
       unit.stamina = unit.staminaMax;
     }
