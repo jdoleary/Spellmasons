@@ -281,11 +281,6 @@ export function calcluateModifierCostPerUpgrade(mod: Modifiers, underworld: Unde
   if (mod._costPerUpgrade === undefined) {
     return 0;
   }
-  if (mod._costPerUpgrade < 0) {
-    // Don't discount negative costs which grant extra SP
-    return mod._costPerUpgrade;
-  }
-
   return Math.round(mod._costPerUpgrade);
 }
 export interface Events {
