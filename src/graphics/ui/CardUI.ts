@@ -5,7 +5,7 @@ import * as config from '../../config';
 import {
   clearSpellEffectProjection, modifiersToText, runPredictions,
 } from '../PlanningView';
-import { calculateCostForSingleCard, levelsUntilCardIsEnabled } from '../../cards/cardUtils';
+import { calculateCost, calculateCostForSingleCard, levelsUntilCardIsEnabled } from '../../cards/cardUtils';
 import floatingText from '../FloatingText';
 import { NUMBER_OF_TOOLBAR_SLOTS } from '../../config';
 import Underworld from '../../Underworld';
@@ -873,8 +873,8 @@ async function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: 
     clone.querySelector('.card-title')?.remove();
     addListenersToCardElement(player, clone, cardId, underworld);
     clone.classList.add('slot', 'selected');
+    const selectedCards = getSelectedCards();
     if (card.requiresFollowingCard) {
-      const selectedCards = getSelectedCards();
       // Show that you need a non frontload card for the spell to work
       // only if there isn't any frontload card selected
       if (selectedCards.filter(c => !c.frontload).length == 0) {
@@ -884,13 +884,14 @@ async function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: 
     elSelectedCards.appendChild(clone);
     manageSelectedCardsParentVisibility();
     updateCardBadges(underworld);
+    const predictionPlayerUnit = underworld.unitsPrediction.find(u => u.id == globalThis.player?.unit.id);
+    const alreadyDead = predictionPlayerUnit && !predictionPlayerUnit.alive;
     if (underworld) {
       // runPredictions to update the mana and health of predictionPlayer if the spell were to be cast
       // so that we can check in the next block if there is insufficient health or mana to cast it.
       await runPredictions(underworld, true);
     }
 
-    const predictionPlayerUnit = underworld.unitsPrediction.find(u => u.id == globalThis.player?.unit.id);
     if (predictionPlayerUnit) {
       if (predictionPlayerUnit.mana < 0) {
         floatingText({
@@ -903,14 +904,15 @@ async function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: 
 
       }
 
-      if (predictionPlayerUnit.health < 0) {
+      const cost = calculateCost(selectedCards, player.cardUsageCounts, player);
+      const lastCardCost = card && calculateCostForSingleCard(card, 0, player);
+      if (alreadyDead && (lastCardCost?.healthCost || 0) > 0) {
         floatingText({
           coords: underworld.getMousePos(),
           text: 'Insufficient Health',
           style: { fill: colors.errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
         })
         deselectLastCard(underworld);
-
       }
     } else {
       console.warn('Unexpected: predictionPlayerUnit is undefined');
