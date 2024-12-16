@@ -87,9 +87,6 @@ function unallowedToFreeze(unit: Unit.IUnit) {
 }
 
 function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld) {
-  if (unallowedToFreeze(unit)) {
-    return;
-  }
   // Only add freeze subsprite if unit is frozen and not "freeze immune"
   // (which is when quantity is <= 0)
   const modifier = unit.modifiers[freezeCardId];
