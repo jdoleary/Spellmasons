@@ -15,6 +15,7 @@ import { isModActive } from './registerMod';
 import { allCards } from './cards';
 import { boneShrapnelCardId } from './cards/bone_shrapnel';
 import { executeCardId } from './cards/execute';
+import { precisionId } from './modifierPrecision';
 export interface IUpgrade {
   title: string;
   // Replaces previous upgrades.  They are required for this upgrade to present itself
@@ -93,6 +94,11 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, unde
       // Poison is acceptable here, even though it is a curse
       || [poisonCardId].includes(c.title)
     );
+  }
+
+  // Exclude targeting spells so as to not break precision
+  if (player.unit.modifiers[precisionId]) {
+    upgradeList = upgradeList.filter(c => c.cardCategory !== CardCategory.Targeting);
   }
 
   // Upgrade random generate should be unique for the:
