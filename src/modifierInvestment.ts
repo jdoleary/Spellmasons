@@ -11,8 +11,8 @@ export default function registerInvestment() {
     description: ['rune_investment'],
     unitOfMeasure: '%',
     _costPerUpgrade: 50,
-    quantityPerUpgrade: 10,
-    maxUpgradeCount: 10,
+    quantityPerUpgrade: 5,
+    maxUpgradeCount: 5,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, investmentId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         // NOTE: Logic is hard coded in Player.ts resetPlayerForNextLevel so that it only runs once per level
