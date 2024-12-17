@@ -11,7 +11,7 @@ import { runeThornyDecoysId } from '../modifierThornyDecoys';
 import { thornsId } from '../modifierThorns';
 import { runeHardenedMinionsId } from '../modifierHardenedMinions';
 
-const id = 'decoy2';
+const id = 'decoy 2';
 const spell: Spell = {
   card: {
     id,
