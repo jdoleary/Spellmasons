@@ -30,6 +30,7 @@ const unit: UnitSource = {
     staminaMax: 0,
     healthMax: 120,
     manaMax: 20,
+    manaPerTurn: 20,
     strength: 2,
     // This is critical to a decoy, it prevents it from being pushed due to unit crowding
     immovable: true,
