@@ -1533,26 +1533,34 @@ export async function endTurnForUnits(units: IUnit[], underworld: Underworld, pr
 
 export async function runTurnStartEvents(unit: IUnit, underworld: Underworld, prediction: boolean) {
   const events = [...unit.events];
-  await Promise.all(events.map(
+  const promises = events.map(
     async (eventName) => {
       const fn = Events.onTurnStartSource[eventName];
       if (fn) {
         await fn(unit, underworld, prediction);
       }
     },
-  ));
+  );
+  // Run force moves (onTurnStart events may have created force moves that 
+  // the headless underworld needs to run)
+  underworld.triggerGameLoopHeadless();
+  await Promise.all(promises);
 }
 
 export async function runTurnEndEvents(unit: IUnit, underworld: Underworld, prediction: boolean) {
   const events = [...unit.events];
-  await Promise.all(events.map(
+  const promises = events.map(
     async (eventName) => {
       const fn = Events.onTurnEndSource[eventName];
       if (fn) {
         await fn(unit, underworld, prediction);
       }
     },
-  ));
+  )
+  // Run force moves (onTurnStart events may have created force moves that 
+  // the headless underworld needs to run)
+  underworld.triggerGameLoopHeadless();
+  await Promise.all(promises);
 }
 
 export async function runPickupEvents(unit: IUnit, pickup: IPickup, underworld: Underworld, prediction: boolean) {
