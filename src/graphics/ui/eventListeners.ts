@@ -44,6 +44,7 @@ import { elAdminPowerBar, elAdminPowerBarInput, elAdminPowerBarOptions } from '.
 import { targetCursedId } from '../../cards/target_curse';
 import { distance } from '../../jmath/math';
 import { glow } from '../../jmath/YTShorts';
+import { sellCardId } from '../../cards/sell';
 
 export const keyDown = {
   showWalkRope: false,
@@ -835,7 +836,8 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
       // they are expecting it to do
       const nonFrontloadCards = cards.filter(c => !c.frontload)
       const lastCard = nonFrontloadCards[nonFrontloadCards.length - 1];
-      if (lastCard && lastCard.requiresFollowingCard) {
+      const exceptionSkipRequiresFollowingCard = cards[0]?.id === sellCardId;
+      if (lastCard && lastCard.requiresFollowingCard && !exceptionSkipRequiresFollowingCard) {
         floatingText({
           coords: target,
           text: ['🍞 only modifies spells on its right', lastCard.id],

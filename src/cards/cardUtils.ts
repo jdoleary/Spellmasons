@@ -168,7 +168,9 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
             // Freeze mana cost for movement spells
             cardCost.manaCost = card.manaCost;
         }
-        if (caster?.unit.modifiers[precisionId] && caster.inventory.every(id => Cards.allCards[id]?.category !== CardCategory.Targeting)) {
+        // Precision prevents cards from scaling in mana cost if the player has no targeting spells
+        // .filter Filters out disabled cards, so you can sell targeting spells and still have precision work
+        if (caster?.unit.modifiers[precisionId] && caster.inventory.filter(c => !caster.disabledCards.includes(c)).every(id => Cards.allCards[id]?.category !== CardCategory.Targeting)) {
             cardCost.manaCost = card.manaCost;
         }
 

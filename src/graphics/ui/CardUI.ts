@@ -14,10 +14,10 @@ import { MESSAGE_TYPES } from '../../types/MessageTypes';
 import { explain, EXPLAIN_END_TURN, tutorialCompleteTask } from '../Explain';
 import { Overworld } from '../../Overworld';
 import { resetNotifiedImmune } from '../../cards/immune';
-import { keyDown } from './eventListeners';
 import { chooseBookmark } from '../../views';
 import { quantityWithUnit } from '../../cards/util';
 import { presentRunes } from '../../jmath/RuneUtil';
+import { sellCardId } from '../../cards/sell';
 
 const elCardHolders = document.getElementById('card-holders') as HTMLElement;
 const elInvContent = document.getElementById('inventory-content') as HTMLElement;
@@ -874,7 +874,8 @@ async function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: 
     addListenersToCardElement(player, clone, cardId, underworld);
     clone.classList.add('slot', 'selected');
     const selectedCards = getSelectedCards();
-    if (card.requiresFollowingCard) {
+    const exceptionSkipRequiresFollowingCard = selectedCards[0]?.id === sellCardId;
+    if (card.requiresFollowingCard && !exceptionSkipRequiresFollowingCard) {
       // Show that you need a non frontload card for the spell to work
       // only if there isn't any frontload card selected
       if (selectedCards.filter(c => !c.frontload).length == 0) {
