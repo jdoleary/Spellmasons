@@ -35,8 +35,13 @@ const spell: Spell = {
         const next = getNextPotion(potion, quantity);
         if (next) {
           const index = Pickup.pickups.findIndex(p => p.name == next);
-          underworld.spawnPickup(index, { x: potion.x, y: potion.y }, prediction);
-          removePickup(potion, underworld, prediction);
+          const newPickup = underworld.spawnPickup(index, { x: potion.x, y: potion.y }, prediction);
+          if (newPickup) {
+            // Keep power when alchemizing
+            Pickup.setPower(newPickup, potion.power);
+            // Remove old pickup which has now been "transformed"
+            removePickup(potion, underworld, prediction);
+          }
         }
       }
 
