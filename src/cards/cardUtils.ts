@@ -205,7 +205,7 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
         }
 
         // Blood Warlock: Soul magic costs health instead of mana
-        if (caster.unit.modifiers[runeBloodWarlockId] && card.category === CardCategory.Soul) {
+        if (caster.unit.modifiers[runeBloodWarlockId] && card.category === CardCategory.Soul && cardCost.manaCost > 0) {
             cardCost.healthCost = Math.round(cardCost.manaCost * 0.5);
             cardCost.manaCost = 0;
         }
