@@ -1,4 +1,48 @@
-## 1.52.0 In Progress
+## 1.53.0
+- fix: Whirlpool desync
+    Thanks @eps and @RAHHHHHH :3
+
+- fix: Allow selling Targeting spells by themselves
+    
+- fix: Allow Precision to still work if you _had_ targeting spells
+    but sold them.
+    Thanks @DrHelixPHD, @SquishyFishy, and @Sophia
+
+- fix: Precision should prevent targeting spells
+    from being offered in the future
+
+- fix: Rename summon decoy 2 and 3
+    
+    So that they match the unit id (which means they'll be correctly
+    affected by Necromancer Rune)
+    Thanks @Ace_Diamond and @Sophia
+    
+- fix: Alchemize maintains power level of potion
+    Thanks @Hex Obsidian!
+
+- Fix: necromancer + blood warlock
+    from making capture soul free
+    Thanks @Lost
+
+- balance: "Investment"
+    max is now 25%.
+    upgrades by 5% at a time
+
+- src: Decoy mana battery
+    Thanks @Entchenklein
+    
+    Closes: #1301
+
+- fix: Disallow overspending on health
+        - You must be able to make use of mana gained during the casting of a spell (e.g. manasteal)
+        - A spell that kills you shouldn't prevent you from adding more mana cost spells to the end if you still have the mana for it
+        - You should be able to add health cost spells that kill you but not go farther
+    
+- fix: Freeze missing visual
+    Closes #1287
+
+
+## 1.52.0 
 New Content
 
 - Rune: Precision
