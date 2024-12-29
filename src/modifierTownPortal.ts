@@ -17,6 +17,7 @@ export const townPortalId = 'Town Portal';
 export default function registerContaminateSelfOnTeleport() {
   registerModifiers(townPortalId, {
     description: ('rune_town_portal'),
+    unitOfMeasure: '%',
     _costPerUpgrade: 70,
     quantityPerUpgrade: 10,
     maxUpgradeCount: 5,
