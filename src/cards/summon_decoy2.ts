@@ -1,4 +1,5 @@
 import { addUnitTarget, refundLastSpell, Spell } from './index';
+import * as config from '../config';
 import * as Unit from '../entity/Unit';
 import { CardCategory, Faction, UnitType } from '../types/commonTypes';
 import { allUnits } from '../entity/units';
@@ -54,27 +55,16 @@ const spell: Spell = {
           sourceUnit.info.subtype,
           {
             ...sourceUnit.unitProps,
+            healthMax: (sourceUnit.unitProps.healthMax || config.UNIT_BASE_HEALTH) * quantity,
+            health: (sourceUnit.unitProps.health || config.UNIT_BASE_HEALTH) * quantity,
+            damage: (sourceUnit.unitProps.damage || 0) * quantity,
             strength: (sourceUnit.unitProps.strength || 1) * quantity
           },
           underworld,
-          prediction
+          prediction,
+          state.casterUnit
         );
-        unit.healthMax *= quantity;
-        unit.health *= quantity;
-        unit.damage *= quantity;
-        unit.summonedBy = state.casterUnit;
         addUnitTarget(unit, state, prediction);
-
-        const runeHardenedMinions = unit.summonedBy.modifiers[runeHardenedMinionsId];
-        if (runeHardenedMinions) {
-          unit.healthMax += runeHardenedMinions.quantity;
-          unit.health = unit.healthMax;
-        }
-
-        const summonerThornyDecoys = state.casterUnit.modifiers[runeThornyDecoysId];
-        if (summonerThornyDecoys) {
-          Unit.addModifier(unit, thornsId, underworld, prediction, summonerThornyDecoys.quantity);
-        }
 
         if (!prediction) {
           // Animate effect of unit spawning from the sky

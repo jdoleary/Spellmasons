@@ -75,9 +75,12 @@ function spawnGolems(unit: Unit.IUnit, quantity: number, underworld: Underworld,
             sourceUnit.unitProps,
             underworld,
             prediction,
+            unit
           );
-          summonedUnit.summonedBy = unit;
 
+          if (!prediction) {
+            playSFXKey('resurrect');
+          }
           makeRisingParticles(summonedUnit, prediction);
           // Resurrect animation is the die animation played backwards
           Unit.playAnimation(summonedUnit, summonedUnit.animations.die, { loop: false, animationSpeed: -0.2 });

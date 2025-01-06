@@ -208,28 +208,17 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean, 
             sourceUnit.info.subtype,
             {
               ...sourceUnit.unitProps,
+              healthMax: (sourceUnit.unitProps.healthMax || config.UNIT_BASE_HEALTH) * quantity,
+              health: (sourceUnit.unitProps.health || config.UNIT_BASE_HEALTH) * quantity,
+              damage: (sourceUnit.unitProps.damage || 0) * quantity,
               isMiniboss: asMiniboss,
               strength: quantity,
             },
             underworld,
-            prediction
+            prediction,
+            state.casterUnit
           );
-          unit.healthMax *= quantity;
-          unit.health *= quantity;
-          unit.damage *= quantity;
-          unit.summonedBy = state.casterUnit;
           addUnitTarget(unit, state, prediction);
-
-          const runeHardenedMinions = unit.summonedBy.modifiers[runeHardenedMinionsId];
-          if (runeHardenedMinions) {
-            unit.healthMax += runeHardenedMinions.quantity;
-            unit.health = unit.healthMax;
-          }
-
-          const runeSharpTeeth = unit.summonedBy.modifiers[runeSharpTeethId];
-          if (runeSharpTeeth) {
-            unit.damage += runeSharpTeeth.quantity;
-          }
 
           if (!prediction) {
             // Animate effect of unit spawning from the sky

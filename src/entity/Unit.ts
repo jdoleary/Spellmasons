@@ -55,6 +55,8 @@ import { VAMPIRE_ID } from './units/vampire';
 import { growthId } from '../modifierGrowth';
 import { resurrect_id } from '../cards/resurrect';
 import { doubledamageId } from '../modifierDoubleDamage';
+import { runeHardenedMinionsId } from '../modifierHardenedMinions';
+import { runeSharpTeethId } from '../modifierSharpTeeth';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -173,6 +175,7 @@ export function create(
   sourceUnitProps: Partial<IUnit> = {},
   underworld: Underworld,
   prediction?: boolean,
+  creator?: IUnit,
 ): IUnit {
   const health = config.UNIT_BASE_HEALTH;
   const mana = config.UNIT_BASE_MANA;
@@ -227,6 +230,24 @@ export function create(
       beingPushed: false,
       predictedNextTurnDamage: 0
     }, sourceUnitProps);
+
+
+
+    if (creator) {
+      unit.summonedBy = creator;
+
+      const runeHardenedMinions = unit.summonedBy.modifiers[runeHardenedMinionsId];
+      if (runeHardenedMinions) {
+        unit.healthMax += runeHardenedMinions.quantity;
+        unit.health = unit.healthMax;
+      }
+
+      const runeSharpTeeth = unit.summonedBy.modifiers[runeSharpTeethId];
+      if (runeSharpTeeth) {
+        unit.damage += runeSharpTeeth.quantity;
+      }
+    }
+
     // Randomize frame so all created units aren't "idle animating" in perfect unison
     // it looks more organic
     if (unit.image) {

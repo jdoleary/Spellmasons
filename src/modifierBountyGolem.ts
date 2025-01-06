@@ -51,8 +51,8 @@ export default function registerBountyGolem() {
                   sourceUnit.unitProps,
                   underworld,
                   prediction,
+                  unit
                 );
-                summonedUnit.summonedBy = unit;
 
                 makeRisingParticles(summonedUnit, prediction);
                 // Resurrect animation is the die animation played backwards
