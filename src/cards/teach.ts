@@ -90,7 +90,7 @@ const spell: Spell = {
       const modifier = unit.modifiers[teachCardId];
       if (modifier) {
         // Set tooltip:
-        modifier.tooltip = `${i18n('Learned')}: ${modifier.spell.map(i18n).join(',')}`;
+        modifier.tooltip = `${i18n('Learned')}: ${(modifier.spell || []).map(i18n).join(',')}`;
       }
     },
   },
