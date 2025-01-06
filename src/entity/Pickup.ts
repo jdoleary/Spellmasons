@@ -474,7 +474,7 @@ export const pickups: IPickupSource[] = [
     name: PICKUP_SPIKES_NAME,
     probability: 40,
     scale: 1,
-    description: (pickup) => ['Deals 🍞 to any unit that touches it', (spike_damage * pickup.power).toString()],
+    description: (pickup) => ['Deals 🍞 damage to any unit that touches it', (spike_damage * pickup.power).toString()],
     willTrigger: ({ unit, player, pickup, underworld }) => {
       return !!unit;
     },
