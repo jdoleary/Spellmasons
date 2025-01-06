@@ -873,16 +873,15 @@ async function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: 
     clone.querySelector('.card-title')?.remove();
     addListenersToCardElement(player, clone, cardId, underworld);
     clone.classList.add('slot', 'selected');
+    elSelectedCards.appendChild(clone);
+    // Note: this getselectedCards invokation must come AFTER 
+    // elSelectedCards.appendChild or else it will not include the
+    // latest selected card
     const selectedCards = getSelectedCards();
     const exceptionSkipRequiresFollowingCard = selectedCards[0]?.id === sellCardId;
     if (card.requiresFollowingCard && !exceptionSkipRequiresFollowingCard) {
-      // Show that you need a non frontload card for the spell to work
-      // only if there isn't any frontload card selected
-      if (selectedCards.filter(c => !c.frontload).length == 0) {
-        clone.classList.add('requires-following-card')
-      }
+      clone.classList.add('requires-following-card')
     }
-    elSelectedCards.appendChild(clone);
     manageSelectedCardsParentVisibility();
     updateCardBadges(underworld);
     const predictionPlayerUnit = underworld.unitsPrediction.find(u => u.id == globalThis.player?.unit.id);
