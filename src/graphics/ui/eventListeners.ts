@@ -45,6 +45,7 @@ import { targetCursedId } from '../../cards/target_curse';
 import { distance } from '../../jmath/math';
 import { glow } from '../../jmath/YTShorts';
 import { sellCardId } from '../../cards/sell';
+import { isRune } from '../../cards/cardUtils';
 
 export const keyDown = {
   showWalkRope: false,
@@ -1557,6 +1558,28 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       supportInMultiplayer: true,
       domQueryContainer: '#menu-selected-unit'
     },
+    {
+      label: `Give all runes`,
+      action: ({ selectedUnitid }) => {
+        Object.entries(allModifiers).forEach(([key, value]) => {
+          if (!overworld.underworld) {
+            console.error('add modifier, underworld does not exist');
+            return;
+          }
+          const unit = overworld.underworld.units.find(u => u.id == selectedUnitid);
+          if (isRune(value)) {
+            if (unit) {
+              Unit.addModifier(unit, key, overworld.underworld, false, value.quantityPerUpgrade || 1);
+            } else {
+              centeredFloatingText('You must select a unit first', 'red');
+            }
+          }
+
+        });
+      },
+      supportInMultiplayer: true,
+      domQueryContainer: '',
+    },
     // Support adding any modifier from Shift+Space menu
     ...Object.entries(allModifiers).map<AdminContextMenuOption>(([key, value]) => ({
       label: `Add modifier: ${key}`,
@@ -1797,7 +1820,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
           centeredFloatingText('You must select a unit first', 'red');
         }
       },
-      supportInMultiplayer: false,
+      supportInMultiplayer: true,
       domQueryContainer: '#menu-selected-unit'
     },
     {
