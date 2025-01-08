@@ -1006,6 +1006,10 @@ export function takeDamage(damageArgs: damageArgs, underworld: Underworld, predi
     // Do not deal damage to dead units
     return;
   }
+  if (unit.id == globalThis.player?.unit.id && !globalThis.player.isSpawned) {
+    // Do not take damage while player is in the "Spawning ghost" state
+    return;
+  }
   // Immune units cannot be damaged
   if (unit.modifiers[immune.id]) {
     immune.notifyImmune(unit, false);
