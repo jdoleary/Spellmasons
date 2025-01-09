@@ -73,7 +73,7 @@ import { DisplayObject, TilingSprite } from 'pixi.js';
 import { HasSpace } from './entity/Type';
 import { explain, EXPLAIN_PING, isTutorialFirstStepsComplete, isTutorialComplete, tutorialCompleteTask, tutorialChecklist, tutorialShowTask } from './graphics/Explain';
 import { makeRisingParticles, makeScrollDissapearParticles, stopAndDestroyForeverEmitter } from './graphics/ParticleCollection';
-import { ensureAllClientsHaveAssociatedPlayers, Overworld } from './Overworld';
+import { ensureAllClientsHaveAssociatedPlayers, Overworld, recalculateGameDifficulty } from './Overworld';
 import { Emitter } from 'jdoleary-fork-pixi-particle-emitter';
 import { golem_unit_id } from './entity/units/golem';
 import deathmason, { ORIGINAL_DEATHMASON_DEATH, bossmasonUnitId, summonUnitAtPickup } from './entity/units/deathmason';
@@ -2252,6 +2252,7 @@ export default class Underworld {
 
     const { levelIndex, biome, limits, liquid, imageOnlyTiles, pickups, enemies, obstacles } = levelData;
     this.levelIndex = levelIndex;
+    recalculateGameDifficulty(this);
     globalThis.castThisTurn = false;
     // Update level tracker
     const elLevelTracker = document.getElementById('level-tracker');
@@ -2538,7 +2539,7 @@ export default class Underworld {
       await introduceBoss(deathmason, this, true);
     }
     // Spawn both goru and deathmason
-    if (this.levelIndex == config.LAST_LEVEL_INDEX + 3) {
+    if (this.levelIndex >= config.LAST_LEVEL_INDEX + 3) {
       await introduceBoss(goru, this, true);
       // Reset hasSpawnedBoss so it will spawn both
       this.hasSpawnedBoss = false;
