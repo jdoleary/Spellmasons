@@ -1,3 +1,23 @@
+## 1.54.0
+balance: Adjust loop difficulty to scale
+balance: Ensure bosses keep spawning on loop levels after +3
+fix: Quicksave "Last Turn" From saving at the beginning of a level before any enemies are placed
+fix: Prevent unspawned players from taking damage
+    Thanks Piratesaur from Steam forums and others who reported this
+i18n: Fix copy
+    - Trap copy missing "Damage" text
+    - Blood Archer copy: "Miniboss" -> "Champion"
+fix: Targeting spells sometimes missing "Requires Following" Text when no non-targeting spell came after it
+admin: Add "Give all runes" Admin command for testing
+fix: Minion runes not working on automated summons
+    Also fixes quantity power scaling so that sharp teeth and harden minions applies AFTER quantity power from stacking summons.
+    Thanks @SquishyFishy
+fix: Update player manaPerTurn when upgrading manaMax
+    This didn't affect players since their stat refresh logic doesn't consider manaPerTurn but it DOES affect player clones.
+    Thanks @Tingora!
+copy: Add unitOfMeasure to town portal
+    Thanks @IVI and @Tingora
+
 ## 1.53.0
 - fix: Whirlpool desync
     Thanks @eps and @RAHHHHHH :3
