@@ -2938,7 +2938,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // Update unit health / mana bars, etc
     await runPredictions(this);
 
-    this.quicksave(`Last Turn`);
+    // Prevent saving "last turn" before any enemies are placed when the level
+    // first starts
+    if (player?.isSpawned) {
+      this.quicksave(`Last Turn`);
+    }
 
     // If there was an attempted save during the enemy turn, save now
     // that the player's turn has started
