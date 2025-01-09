@@ -3,7 +3,7 @@ import { getOrInitModifier } from "./cards/util";
 import * as Unit from './entity/Unit';
 import Underworld from './Underworld';
 
-export const runeSharpTeethId = 'Sharp Theeth';
+export const runeSharpTeethId = 'Sharp Teeth';
 export default function registerSharpTeeth() {
   registerModifiers(runeSharpTeethId, {
     description: 'rune_sharpteeth',
