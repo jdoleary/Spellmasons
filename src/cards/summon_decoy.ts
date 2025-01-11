@@ -66,6 +66,11 @@ const spell: Spell = {
         );
         addUnitTarget(unit, state, prediction);
 
+        const summonerThornyDecoys = state.casterUnit.modifiers[runeThornyDecoysId];
+        if (summonerThornyDecoys) {
+          Unit.addModifier(unit, thornsId, underworld, prediction, summonerThornyDecoys.quantity);
+        }
+
         if (!prediction) {
           // Animate effect of unit spawning from the sky
           skyBeam(unit);
