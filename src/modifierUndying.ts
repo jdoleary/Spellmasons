@@ -30,6 +30,7 @@ export default function registerUndying() {
             style: { fill: 'white', ...config.PIXI_TEXT_DROP_SHADOW }
           });
         }
+        Unit.removeModifier(unit, undyingModifierId, underworld);
         const { targetedUnits } = await underworld.castCards({
           casterCardUsage: {},
           casterUnit: unit,
@@ -48,7 +49,6 @@ export default function registerUndying() {
           }
         }
 
-        Unit.removeModifier(unit, undyingModifierId, underworld);
       }
     }
   });
