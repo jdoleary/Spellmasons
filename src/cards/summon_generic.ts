@@ -179,7 +179,7 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean, 
       // These cards are not available as upgrades and must be accessed through capture_soul
       probability: 0,
       thumbnail: `spellIconSummon_${unitId.split(' ').join('').toLowerCase()}.png`,
-      description: i18n([`spell_summon_generic`, unitId, expenseScaling.toString()]) + '\n' + unitStats,
+      description: i18n([`spell_summon_generic`, i18n(unitId), expenseScaling.toString()]) + '\n' + unitStats,
       allowNonUnitTarget: true,
       effect: async (state, card, quantity, underworld, prediction) => {
         const sourceUnit = allUnits[unitId];
