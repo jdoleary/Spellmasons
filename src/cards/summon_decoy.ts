@@ -12,11 +12,10 @@ import { thornsId } from '../modifierThorns';
 import { runeThornyDecoysId } from '../modifierThornyDecoys';
 import { runeHardenedMinionsId } from '../modifierHardenedMinions';
 
-const id = 'decoy';
-export { id as decoyId };
+export const decoyId = 'decoy';
 const spell: Spell = {
   card: {
-    id,
+    id: decoyId,
     category: CardCategory.Soul,
     sfx: 'summonDecoy',
     supportQuantity: true,
