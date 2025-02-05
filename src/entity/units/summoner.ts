@@ -8,7 +8,7 @@ import Underworld from '../../Underworld';
 import { oneOffImage } from '../../cards/cardUtils';
 import { containerUnits } from '../../graphics/PixiUtils';
 import { PLAYER_BASE_ATTACK_RANGE } from '../../config';
-import { summoningSicknessId } from '../../modifierSummoningSickness';
+import { summoningSicknessId } from '../../modifiers/summoningSickness';
 import seedrandom from 'seedrandom';
 import { makeManaTrail } from '../../graphics/Particles';
 import { clone, jitter, Vec2 } from '../../jmath/Vec';

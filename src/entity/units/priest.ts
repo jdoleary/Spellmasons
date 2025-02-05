@@ -6,7 +6,7 @@ import * as Vec from '../../jmath/Vec';
 import { createVisualFlyingProjectile } from '../Projectile';
 import * as resurrect from '../../cards/resurrect';
 import Underworld from '../../Underworld';
-import { summoningSicknessId } from '../../modifierSummoningSickness';
+import { summoningSicknessId } from '../../modifiers/summoningSickness';
 
 async function animatePriestProjectileAndHit(self: Unit.IUnit, target: Unit.IUnit) {
   // TODO does this cause an issue on headless?

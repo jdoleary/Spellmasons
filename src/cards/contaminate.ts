@@ -12,10 +12,10 @@ import { drawUICirclePrediction } from '../graphics/PlanningView';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { IPlayer } from '../entity/Player';
 import { Modifier } from './util';
-import { summoningSicknessId } from '../modifierSummoningSickness';
-import { corpseDecayId } from '../modifierCorpseDecay';
+import { summoningSicknessId } from '../modifiers/summoningSickness';
+import { corpseDecayId } from '../modifiers/corpseDecay';
 import { baseExplosionRadius } from '../effects/explode';
-import { runeWitchId } from '../modifierWitch';
+import { runeWitchId } from '../modifiers/witch';
 
 export const contaminate_id = 'contaminate';
 const baseRange = baseExplosionRadius;

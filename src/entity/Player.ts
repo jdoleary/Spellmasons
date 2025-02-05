@@ -21,7 +21,7 @@ import { setPlayerNameUI } from '../PlayerUtils';
 import { cameraAutoFollow } from '../graphics/PixiUtils';
 import { allUnits } from './units';
 import { incrementPresentedRunesIndex } from '../jmath/RuneUtil';
-import { investmentId } from '../modifierInvestment';
+import { investmentId } from '../modifiers/investment';
 import { centeredFloatingText, queueCenteredFloatingText } from '../graphics/FloatingText';
 
 const elInGameLobby = document.getElementById('in-game-lobby') as (HTMLElement | undefined);

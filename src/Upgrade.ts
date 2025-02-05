@@ -15,7 +15,7 @@ import { isModActive } from './registerMod';
 import { allCards } from './cards';
 import { boneShrapnelCardId } from './cards/bone_shrapnel';
 import { executeCardId } from './cards/execute';
-import { precisionId } from './modifierPrecision';
+import { precisionId } from './modifiers/precision';
 export interface IUpgrade {
   title: string;
   // Replaces previous upgrades.  They are required for this upgrade to present itself

@@ -15,7 +15,7 @@ import { skyBeam } from '../../VisualEffects';
 import * as Pickup from '../Pickup';
 import * as math from '../../jmath/math';
 import * as Vec from '../../jmath/Vec';
-import { summoningSicknessId } from '../../modifierSummoningSickness';
+import { summoningSicknessId } from '../../modifiers/summoningSickness';
 import { BLOOD_GOLEM_ID } from './bloodGolem';
 import { BLOOD_ARCHER_ID } from './blood_archer';
 import { registerEvents } from '../../cards';

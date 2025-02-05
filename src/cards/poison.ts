@@ -9,7 +9,7 @@ import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
 import floatingText from '../graphics/FloatingText';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
-import { heavyToxinsId } from '../modifierHeavyToxins';
+import { heavyToxinsId } from '../modifiers/heavyToxins';
 import { slowCardId } from './slow';
 
 export const poisonCardId = 'poison';
