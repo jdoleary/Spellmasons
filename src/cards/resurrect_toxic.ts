@@ -5,7 +5,7 @@ import { CardCategory, UnitType } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { makeRisingParticles } from '../graphics/ParticleCollection';
-import { impendingDoomId } from '../modifierImpendingDoom';
+import { impendingDoomId } from '../modifiers/impendingDoom';
 import { resurrectWithAnimation } from './resurrect';
 
 export const resurrect_toxic_id = 'Toxic Resurrect';

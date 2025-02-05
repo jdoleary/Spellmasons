@@ -3,7 +3,7 @@ import { isUnit, IUnit, takeDamage } from "./entity/Unit";
 import Events from "./Events";
 import { explain, EXPLAIN_LIQUID_DAMAGE } from "./graphics/Explain";
 import { addMask, removeMask } from "./graphics/Image";
-import { liquidmancerId } from "./modifierLiquidmancer";
+import { liquidmancerId } from "./modifiers/liquidmancer";
 import type Underworld from "./Underworld";
 
 // sourceUnit is the unit that caused 'entity' to fall in liquid

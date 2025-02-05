@@ -37,7 +37,7 @@ import { inPortal } from '../../entity/Player';
 import { allCards, allModifiers, hasTargetAtPosition } from '../../cards';
 import { explain, EXPLAIN_END_TURN, tutorialCompleteTask } from '../Explain';
 import { Overworld } from '../../Overworld';
-import { summoningSicknessId } from '../../modifierSummoningSickness';
+import { summoningSicknessId } from '../../modifiers/summoningSickness';
 import { errorRed } from './colors';
 import { isSinglePlayer } from '../../network/wsPieSetup';
 import { elAdminPowerBar, elAdminPowerBarInput, elAdminPowerBarOptions } from '../../HTMLElements';

@@ -41,7 +41,7 @@ import * as VisualEffects from './VisualEffects';
 
 import * as inLiquid from './inLiquid';
 import * as LiquidPools from './LiquidPools';
-import * as modifierSummonerSickness from './modifierSummoningSickness';
+import * as modifierSummonerSickness from './modifiers/summoningSickness';
 import * as Overworld from './Overworld';
 import * as PlayerUtils from './PlayerUtils';
 import * as JPromise from './Promise';

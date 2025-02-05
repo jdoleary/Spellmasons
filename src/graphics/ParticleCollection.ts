@@ -13,7 +13,7 @@ import { IUnit } from '../entity/Unit';
 import Underworld from '../Underworld';
 import { COLLISION_MESH_RADIUS } from '../config';
 import { HEALTH_POTION, IPickup, MANA_POTION, STAMINA_POTION } from '../entity/Pickup';
-import { primedCorpseId } from '../modifierPrimedCorpse';
+import { primedCorpseId } from '../modifiers/primedCorpse';
 export function makeAncientParticles(position: Vec2, prediction: boolean) {
   if (prediction || globalThis.headless) {
     // Don't show if just a prediction

@@ -12,7 +12,7 @@ import Underworld from '../Underworld';
 import seedrandom from 'seedrandom';
 import { getUniqueSeedString } from '../jmath/rand';
 import * as config from '../config';
-import { soulShardOwnerModifierId } from '../modifierSoulShardOwner';
+import { soulShardOwnerModifierId } from '../modifiers/soulShardOwner';
 
 export const clone_id = 'clone';
 const spell: Spell = {

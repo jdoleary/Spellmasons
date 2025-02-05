@@ -3,7 +3,7 @@ import { CardCategory } from '../types/commonTypes';
 import { Vec2 } from '../jmath/Vec';
 import { addModifier, isUnit } from '../entity/Unit';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
-import { bountyId } from '../modifierBounty';
+import { bountyId } from '../modifiers/bounty';
 
 const id = 'Give Bounty';
 const spell: Spell = {

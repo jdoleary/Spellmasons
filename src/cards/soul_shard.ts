@@ -10,7 +10,7 @@ import { getOrInitModifier } from './util';
 import { distance } from '../jmath/math';
 import { makeManaTrail } from '../graphics/Particles';
 import { Vec2, jitter, lerpVec2 } from '../jmath/Vec';
-import { soulShardOwnerModifierId } from '../modifierSoulShardOwner';
+import { soulShardOwnerModifierId } from '../modifiers/soulShardOwner';
 import { HasSpace } from '../entity/Type';
 
 export const soulShardId = 'Soul Shard';
