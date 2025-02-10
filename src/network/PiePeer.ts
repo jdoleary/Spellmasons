@@ -1,6 +1,9 @@
 // @ts-ignore: Import is fine
 import SimplePeer from "simple-peer/simplepeer.min.js";
 import { v4 as uuidv4 } from 'uuid';
+import { host } from "./p2p/host";
+import { SERVER_HUB_URL } from "../config";
+import { join } from "./p2p/client";
 
 export const MessageType = {
     // Both client and server:
@@ -20,6 +23,8 @@ export const MessageType = {
     // Unique to PieClient
     ConnectInfo: 'ConnectInfo',
 };
+
+const hubURL = SERVER_HUB_URL + '/p2p'
 
 // This will be different for every client
 const defaultIdForSolomode = uuidv4();
@@ -79,6 +84,7 @@ function error(...args: any) {
     console.error('PiePeer', ...args);
 }
 const maxLatencyDataPoints = 14;
+
 export default class PiePeer {
     // onData: a callback that is invoked when data is recieved from PieServer
     onData?: (x: OnDataArgs) => void;
@@ -109,11 +115,11 @@ export default class PiePeer {
     promiseCBs: {
         joinRoom?: { resolve: (x: any) => void, reject: (x: any) => void };
     };
+    // This is a main difference between piePeer and wsPieClient.  PiePeer has SimplePeer connections
+    // whereas wsPieClient has a WebSocket connection
+    peers: SimplePeer[] = [];
     // Stores information of the current room to support automatic re-joining
     currentRoomInfo?: Room;
-    // This is a main difference between piePeer and wsPieClient.  PiePeer has a SimplePeer connection
-    // whereas wsPieClient has a WebSocket connection
-    peer?: SimplePeer;
     stats: {
         latency: Latency;
     };
@@ -157,10 +163,9 @@ export default class PiePeer {
         });
 
     }
-    // See https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/readyState
     isConnected(): boolean {
         return this.soloMode
-            || window.navigator.onLine && !!this.peer && this.peer.isConnected();
+            || window.navigator.onLine && this.peers.some(p => p.isConnected());
     }
     // heartbeat is used to determine on the client-side if the client is unaware that 
     // it is disconnected from the server.
@@ -186,7 +191,7 @@ export default class PiePeer {
         // Disconnect if currently connected so we can fake a singleplayer connection
         await this.disconnect();
         this.soloMode = true;
-        this.peer = undefined;
+        this.peers = [];
         if (this.onConnectInfo) {
             this.onConnectInfo({
                 type: MessageType.ConnectInfo,
@@ -234,14 +239,14 @@ export default class PiePeer {
                 log('"Disconnected" from soloMode');
                 return
             }
-            if (!this.peer || !this.peer.isConnected()) {
+            if (this.peers.every(p => !p.isConnected())) {
                 // Resolve immediately, client is already not connected 
                 log('Attempted to disconnect but there was no preexisting connection to disconnect from.');
                 resolve();
                 return
             } else {
-                this.peer.destroy();
-                this.peer = undefined;
+                this.peers.forEach(p => p.destroy());
+                this.peers = [];
                 // Updates debug info to show that it is closing
                 this._updateDebugInfo();
                 log('Disconnected.');
@@ -327,53 +332,47 @@ export default class PiePeer {
     }
     // Remember to catch the rejected promise if used outside of this library
     makeRoom(roomInfo: Room) {
-        // TODO(p2p): host
+        host({
+            fromName: roomInfo.name,
+            websocketHubUrl: hubURL,
+            onError: console.error,
+            onPeerConnected: (p) => {
+                p.on('data', (message: string) => console.log('Got message:', message.toString()));
+                this.peers.push(p);
+            },
+            onPeerDisconnected: (p) => {
+                // TODO test that this removes the correct peer
+                this.peers.splice(this.peers.indexOf(p), 1);
+            }
+        });
     }
     // Remember to catch the rejected promise if used outside of this library
     joinRoom(roomInfo: Room, makeRoomIfNonExistant: boolean = false) {
-        // TODO(p2p): join
-        if (this.isConnected()) {
-            // Cancel previous makeRoom promise if it exists
-            // @ts-ignore
-            if (this.promiseCBs[MessageType.JoinRoom]) {
-                // @ts-ignore
-                this.promiseCBs[MessageType.JoinRoom].reject({ message: `Cancelled due to newer ${MessageType.JoinRoom} request` });
-            }
-            return new Promise((resolve, reject) => {
-                // Assign callbacks so that the response from the server can
-                // fulfill this promise
-                // @ts-ignore
-                this.promiseCBs[MessageType.JoinRoom] = { resolve, reject };
-                if (this.soloMode) {
-                    // Now that client has joined a room in soloMode, send a 
-                    // manufactured clientPresenceChanged as if it came from the server
-                    // because pieClient fakes all server messages when in soloMode
-                    this.handleMessage({
-                        clients: [this.clientId],
-                        time: Date.now(),
-                        type: MessageType.ClientPresenceChanged,
-                        present: true,
-                    }, false);
-                    resolve(roomInfo)
-                }
-
-            }).then((currentRoomInfo: any) => {
-                if (typeof currentRoomInfo.app === 'string' && typeof currentRoomInfo.name === 'string' && typeof currentRoomInfo.version === 'string') {
-                    log(`${MessageType.JoinRoom} successful with`, currentRoomInfo);
-                    // Save roomInfo to allow auto rejoining should the server restart
-                    this.currentRoomInfo = currentRoomInfo;
-                    // Readd password since it isn't serialized in @websocketpie/server@1.0.2
-                    // This if statement can be safely removed after @websocketpie/server is updated
-                    if (this.currentRoomInfo && !this.currentRoomInfo.password && roomInfo.password) {
-                        this.currentRoomInfo.password = roomInfo.password
-                    }
-                } else {
-                    error("joinRoom succeeded but currentRoomInfo is maleformed:", currentRoomInfo);
-                }
-            });
+        if (this.soloMode) {
+            // Now that client has joined a room in soloMode, send a 
+            // manufactured clientPresenceChanged as if it came from the server
+            // because pieClient fakes all server messages when in soloMode
+            this.handleMessage({
+                clients: [this.clientId],
+                time: Date.now(),
+                type: MessageType.ClientPresenceChanged,
+                present: true,
+            }, false);
         } else {
-            return Promise.reject({ message: `${MessageType.JoinRoom} failed, not currently connected to web socket server` });
+            if (!globalThis.player?.name) {
+                alert('You must choose a name in settings before joining a game');
+                return;
+            }
+
+            join({
+                toName: roomInfo.name,
+                fromName: globalThis.player.name,
+                websocketHubUrl: hubURL,
+                onError: console.error
+            }).then(peer => this.peers.push(peer));
+
         }
+
     }
     leaveRoom() {
         this.disconnect();
@@ -396,9 +395,7 @@ export default class PiePeer {
                 payload,
                 ...extras,
             };
-            if (this.peer !== undefined) {
-                this.peer.send(JSON.stringify(message));
-            } else if (this.soloMode) {
+            if (this.soloMode) {
                 // In soloMode there is no this.ws so just handle the message immediately as 
                 // if it bounced back from PieServer
                 this.handleMessage({
@@ -406,6 +403,10 @@ export default class PiePeer {
                     time: Date.now(),
                     ...message
                 }, false);
+            } else if (this.peers.length) {
+                this.peers.forEach((peer: SimplePeer) => {
+                    peer.send(message);
+                });
             } else {
                 error('Unexpected: Attempted to send data but this.ws is undefined and not in soloMode');
             }
