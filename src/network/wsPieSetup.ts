@@ -241,6 +241,7 @@ export function setupPieAndUnderworld() {
     return;
   } else {
     console.log('Client: Initialize PieClient');
+    // TODO: This is where it decides if we do p2p or websocketPie
     const pie = new PieClient();
     // Every time PieClient is instantiated it will create a clientId, overwrite this
     // with the stored clientId if there is one
