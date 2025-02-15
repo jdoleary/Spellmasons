@@ -7,7 +7,7 @@ import type PieClient from '@websocketpie/client';
 import type { Vec2 } from '../jmath/Vec';
 import type { LevelData } from '../Underworld';
 import type { View } from '../View';
-import type { Faction, JEmitter, Mod } from './commonTypes';
+import type { Faction, JEmitter, Mod, Pie } from './commonTypes';
 import type { IPickup } from '../entity/Pickup';
 import type { IHostApp } from '../network/networkUtil';
 import type { LanguageMapping, Localizable } from '../localization';
@@ -17,6 +17,7 @@ import type { PromptArgs } from '../graphics/Jprompt';
 import keyMapping from '../graphics/ui/keyMapping';
 import api from '../api';
 import type { LogLevel } from '../RemoteLogging';
+import type PiePeer from '../network/PiePeer';
 
 declare global {
   var pixi: typeof PIXI | undefined;
@@ -156,7 +157,7 @@ declare global {
   var testAllSFXKey: ((key: string) => void | undefined);
   var sfx: { [key: string]: string[] } | undefined;
   // Returns true if client is playing singleplayer OR if hostapp
-  var isHost: (pie: PieClient | IHostApp) => boolean;
+  var isHost: (pie: Pie) => boolean;
   // Returns pie.isConnected()
   var isConnected: () => boolean;
   // Disconnects pie from server
@@ -283,7 +284,7 @@ declare global {
   // Used for the menu and inventory
   var allCards: { [cardId: string]: ICard } | undefined;
   // For menu
-  var pie: PieClient | undefined;
+  var pie: PieClient | PiePeer | undefined;
   var adminPowerBarIndex: number;
   var adminPowerBarSelection: string;
   var accessibilityOutline: {

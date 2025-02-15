@@ -19,7 +19,7 @@ import type PieClient from '@websocketpie/client';
 import { setupPieAndUnderworld } from './network/wsPieSetup';
 import { returnToDefaultSprite } from './entity/Unit';
 import Jprompt from './graphics/Jprompt';
-import { Faction } from './types/commonTypes';
+import { Faction, Pie } from './types/commonTypes';
 import './api';
 // DevelopmentMods must be imported AFTER api
 import "./DevelopmentMods";
@@ -97,7 +97,7 @@ globalThis.setOption = (key: string, value: any) => {
 // If the code in main runs this is NOT a headless instance, main.ts is the entrypoint for
 // the regular game with graphics and audio
 globalThis.headless = false;
-globalThis.isHost = (pie: PieClient | IHostApp) => {
+globalThis.isHost = (pie: Pie) => {
   // isHost only if playing singleplayer, otherwise the headless hostApp is the host
   // and this file is the entry point to the non-headless client so it will never be the
   // hostApp

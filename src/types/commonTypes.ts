@@ -2,6 +2,9 @@ import type * as particles from 'jdoleary-fork-pixi-particle-emitter'
 import { Events, Modifiers, Spell } from '../cards';
 import { IPickupSource } from '../entity/Pickup';
 import { UnitSource } from '../entity/units';
+import type PieClient from '@websocketpie/client';
+import type PiePeer from '../network/PiePeer';
+import type { IHostApp } from '../network/networkUtil';
 export type GameMode = 'tutorial' | 'hard' | 'impossible'
 export enum UnitType {
   PLAYER_CONTROLLED,
@@ -63,3 +66,5 @@ export interface Mod {
   modifiers?: Modifiers[];
   events?: Events[];
 }
+
+export type Pie = PieClient | PiePeer | IHostApp;

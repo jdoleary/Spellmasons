@@ -22,6 +22,7 @@ import { GameMode } from '../types/commonTypes';
 import { elEndTurnBtn } from '../HTMLElements';
 import { sendEventToServerHub } from '../RemoteLogging';
 import { test_spyPromises } from '../promiseSpy';
+import PiePeer from './PiePeer';
 // Locally hosted, locally accessed
 // const wsUri = 'ws://localhost:8080';
 // Locally hosted, available to LAN (use your own IP)
@@ -179,7 +180,7 @@ export function joinRoom(overworld: Overworld, _room_info = {}, isHosting = fals
   });
 }
 
-function addHandlers(pie: PieClient, overworld: Overworld) {
+function addHandlers(pie: PieClient | PiePeer, overworld: Overworld) {
   pie.onServerAssignedData = (o) => {
     console.log('Pie: set globalThis.clientId:', o.clientId, o);
     // The headless server's version
@@ -235,14 +236,19 @@ globalThis.addEventListener('keydown', event => {
   }
 })
 
+// TODO
+function isP2P() {
+  return true;
+}
+
 export function setupPieAndUnderworld() {
   if (globalThis.headless) {
     console.error('wsPieSetup is only for browser clients and should not be invoked from headless server.')
     return;
   } else {
-    console.log('Client: Initialize PieClient');
+    console.log(`Client: Initialize ${isP2P() ? 'PiePeer' : 'PieClient'}`);
     // TODO: This is where it decides if we do p2p or websocketPie
-    const pie = new PieClient();
+    const pie = isP2P() ? new PiePeer() : new PieClient();
     // Every time PieClient is instantiated it will create a clientId, overwrite this
     // with the stored clientId if there is one
     const previouslyStoredClientId = storage.get(storage.STORAGE_PIE_CLIENTID_KEY);
@@ -253,7 +259,7 @@ export function setupPieAndUnderworld() {
     }
     globalThis.pie = pie;
     setInterval(() => {
-      if (pie.isConnected() && pie.currentRoomInfo) {
+      if (pie.isConnected() && pie.currentRoomInfo && pie instanceof PieClient) {
         // Keep connection alive.  Bun's websocket server has a 2 minute timeout
         // https://github.com/jdoleary/Spellmasons/issues/22
         console.debug('Send empty message to keep connection from idle timeouting');

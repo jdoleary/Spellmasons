@@ -10,7 +10,7 @@ import * as Units from './entity/units';
 import * as CardUI from './graphics/ui/CardUI';
 import * as Player from './entity/Player';
 import * as Unit from './entity/Unit';
-import { UnitType } from './types/commonTypes';
+import { Pie, UnitType } from './types/commonTypes';
 import { MESSAGE_TYPES } from './types/MessageTypes';
 import { addOverworldEventListeners } from "./views";
 import { calculateGameDifficulty } from "./Difficulty";
@@ -19,7 +19,7 @@ import registerAllMods from "./registerMod";
 import { upgradeCardsSource, upgradeSourceWhenDead } from "./Upgrade";
 
 export interface Overworld {
-  pie: PieClient | IHostApp;
+  pie: Pie;
   // a list of clientIds
   clients: string[];
   underworld?: Underworld;
@@ -28,7 +28,7 @@ export interface Overworld {
 // can hold on to a persistant reference which CONTAINS the lastest underworld reference.
 // This allows Underworlds to be created and destroyed without invalidating functions
 // (like event listeners) that need to keep a reference to the current underworld
-export default function makeOverworld(pie: PieClient | IHostApp): Overworld {
+export default function makeOverworld(pie: Pie): Overworld {
   const overworld: Overworld = {
     pie,
     clients: [],

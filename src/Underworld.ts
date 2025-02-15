@@ -45,7 +45,7 @@ import {
   containerWalls,
 } from './graphics/PixiUtils';
 import floatingText, { queueCenteredFloatingText, warnNoMoreSpellsToChoose } from './graphics/FloatingText';
-import { UnitType, Faction, UnitSubType, GameMode } from './types/commonTypes';
+import { UnitType, Faction, UnitSubType, GameMode, Pie } from './types/commonTypes';
 import type { Vec2 } from "./jmath/Vec";
 import * as Vec from "./jmath/Vec";
 import Events from './Events';
@@ -113,6 +113,7 @@ import { placeRandomBounty } from './modifierBounty';
 import { heavyImpactsId } from './modifierHeavyImpact';
 import { OutlineFilter } from '@pixi/filter-outline';
 import { LogLevel } from './RemoteLogging';
+import PiePeer from './network/PiePeer';
 
 const loopCountLimit = 10000;
 export enum turn_phase {
@@ -157,7 +158,7 @@ export default class Underworld {
   // A backreference to it's parent container
   overworld: Overworld;
   random: prng;
-  pie: PieClient | IHostApp;
+  pie: Pie;
   // The index of the level the players are on
   levelIndex: number = -1;
   isTutorialRun: boolean = false;
@@ -257,7 +258,7 @@ export default class Underworld {
   serverStabilityMaxUnits: number | undefined;
   serverStabilityMaxPickups: number | undefined;
 
-  constructor(overworld: Overworld, pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
+  constructor(overworld: Overworld, pie: Pie, seed: string, RNGState: SeedrandomState | boolean = true) {
     // Clean up previous underworld:
     overworld.underworld?.cleanup();
     console.log('Setup: Creating new underworld');

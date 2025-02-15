@@ -9,10 +9,11 @@ import type { View } from '../View';
 import type { IHostApp } from '../network/networkUtil';
 import type { Localizable } from '../localization';
 import type { PromptArgs } from '../graphics/Jprompt';
-import type { Faction, JEmitter, Mod } from './commonTypes';
+import type { Faction, JEmitter, Mod, Pie } from './commonTypes';
 import type { ICard } from '../cards';
 import type keyMapping from '../graphics/ui/keyMapping';
 import type { LogLevel } from '../RemoteLogging';
+import type PiePeer from '../network/PiePeer';
 
 declare global {
   var SPELLMASONS_PACKAGE_VERSION: string;
@@ -22,7 +23,7 @@ declare global {
   // true if this instance is the headless server with no visuals or audio, just the game logic
   var headless: boolean;
   // Returns true if client is playing singleplayer OR if hostapp
-  var isHost: (pie: PieClient | IHostApp) => boolean;
+  var isHost: (pie: Pie) => boolean;
 
 
   // The following are undefined in the headless server
@@ -346,7 +347,7 @@ declare global {
   // Used for the menu and inventory
   var allCards: { [cardId: string]: ICard } | undefined;
   // For menu
-  var pie: PieClient | undefined;
+  var pie: PieClient | PiePeer | undefined;
   var adminPowerBarIndex: number;
   var adminPowerBarSelection: string;
   var accessibilityOutline: {

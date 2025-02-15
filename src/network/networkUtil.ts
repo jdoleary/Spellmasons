@@ -8,6 +8,8 @@ import type PieClient from '@websocketpie/client';
 import { ensureAllClientsHaveAssociatedPlayers, Overworld } from '../Overworld';
 import { sendEventToServerHub } from '../RemoteLogging';
 import type { Room } from '@websocketpie/client';
+import PiePeer from './PiePeer';
+import { Pie } from '../types/commonTypes';
 
 // Copied from PieClient.d.ts so as to not have to import PieClient
 export interface ClientPresenceChangedArgs {
@@ -61,7 +63,7 @@ export interface IHostApp {
   soloMode: boolean;
   currentRoomInfo?: Room;
 }
-export function typeGuardHostApp(x: PieClient | IHostApp): x is IHostApp {
+export function typeGuardHostApp(x: Pie): x is IHostApp {
   // @ts-ignore: PieClient does not have isHostApp property but this typeguard will
   // still work
   return x.isHostApp;

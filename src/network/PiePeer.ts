@@ -346,7 +346,6 @@ export default class PiePeer {
             }
         });
     }
-    // Remember to catch the rejected promise if used outside of this library
     joinRoom(roomInfo: Room, makeRoomIfNonExistant: boolean = false) {
         if (this.soloMode) {
             // Now that client has joined a room in soloMode, send a 
@@ -358,21 +357,23 @@ export default class PiePeer {
                 type: MessageType.ClientPresenceChanged,
                 present: true,
             }, false);
+            return Promise.resolve(roomInfo);
         } else {
             if (!globalThis.player?.name) {
                 alert('You must choose a name in settings before joining a game');
-                return;
+                return Promise.reject();
             }
 
-            join({
+            return join({
                 toName: roomInfo.name,
                 fromName: globalThis.player.name,
                 websocketHubUrl: hubURL,
                 onError: console.error
-            }).then(peer => this.peers.push(peer));
-
+            }).then(peer => {
+                this.peers.push(peer);
+                return roomInfo;
+            });
         }
-
     }
     leaveRoom() {
         this.disconnect();
