@@ -1,5 +1,6 @@
 // @ts-ignore: Import is fine
 import SimplePeer from "simple-peer/simplepeer.min.js";
+import * as storage from '../storage';
 import { v4 as uuidv4 } from 'uuid';
 import { host } from "./p2p/host";
 import { SERVER_HUB_URL } from "../config";
@@ -25,7 +26,6 @@ export const MessageType = {
 };
 
 const hubURL = SERVER_HUB_URL + '/p2p'
-
 // This will be different for every client
 const defaultIdForSolomode = uuidv4();
 
@@ -165,7 +165,7 @@ export default class PiePeer {
     }
     isConnected(): boolean {
         return this.soloMode
-            || window.navigator.onLine && this.peers.some(p => p.isConnected());
+            || window.navigator.onLine && this.peers.some(p => p.connected);
     }
     // heartbeat is used to determine on the client-side if the client is unaware that 
     // it is disconnected from the server.
@@ -205,7 +205,7 @@ export default class PiePeer {
             type: MessageType.ServerAssignedData,
             clientId: this.clientId,
             serverVersion: `no server - client is in solomode`,
-        }, false);
+        });
     }
     onClose = () => {
         log(`Connection closed.`);
@@ -257,29 +257,31 @@ export default class PiePeer {
         });
 
     }
-    handleMessage(message: any, useStats: boolean) {
-        if (useStats && message.time) {
-            const currentMessageLatency = Date.now() - message.time;
-            if (currentMessageLatency > this.stats.latency.max) {
-                this.stats.latency.max = currentMessageLatency;
-            }
-            if (currentMessageLatency < this.stats.latency.min) {
-                this.stats.latency.min = currentMessageLatency;
-            }
-            this.stats.latency.averageDataPoints.push(currentMessageLatency);
+    handleMessage(message: any) {
+        console.log('got message', message);
+        // Stats
+        // if (message.time) {
+        //     const currentMessageLatency = Date.now() - message.time;
+        //     if (currentMessageLatency > this.stats.latency.max) {
+        //         this.stats.latency.max = currentMessageLatency;
+        //     }
+        //     if (currentMessageLatency < this.stats.latency.min) {
+        //         this.stats.latency.min = currentMessageLatency;
+        //     }
+        //     this.stats.latency.averageDataPoints.push(currentMessageLatency);
 
-            if (this.stats.latency.averageDataPoints.length > maxLatencyDataPoints) {
-                // Remove the oldest so the averageDataPoints array stays a fixed size
-                this.stats.latency.averageDataPoints.shift();
-                this.stats.latency.average =
-                    this.stats.latency.averageDataPoints.reduce((acc, cur) => acc + cur, 0) /
-                    this.stats.latency.averageDataPoints.length;
-                // Broadcast latency information
-                if (this.onLatency) {
-                    this.onLatency(this.stats.latency);
-                }
-            }
-        }
+        //     if (this.stats.latency.averageDataPoints.length > maxLatencyDataPoints) {
+        //         // Remove the oldest so the averageDataPoints array stays a fixed size
+        //         this.stats.latency.averageDataPoints.shift();
+        //         this.stats.latency.average =
+        //             this.stats.latency.averageDataPoints.reduce((acc, cur) => acc + cur, 0) /
+        //             this.stats.latency.averageDataPoints.length;
+        //         // Broadcast latency information
+        //         if (this.onLatency) {
+        //             this.onLatency(this.stats.latency);
+        //         }
+        //     }
+        // }
         switch (message.type) {
             case MessageType.Data:
                 if (this.onData) {
@@ -336,8 +338,9 @@ export default class PiePeer {
             fromName: roomInfo.name,
             websocketHubUrl: hubURL,
             onError: console.error,
+            onData: this.handleMessage.bind(this),
             onPeerConnected: (p) => {
-                p.on('data', (message: string) => console.log('Got message:', message.toString()));
+                p.on('data', (message: string) => console.log('Got onPeerConnected message:', message));
                 this.peers.push(p);
             },
             onPeerDisconnected: (p) => {
@@ -346,7 +349,7 @@ export default class PiePeer {
             }
         });
     }
-    joinRoom(roomInfo: Room, makeRoomIfNonExistant: boolean = false) {
+    joinRoom(roomInfo: Room, isHosting: boolean = false) {
         if (this.soloMode) {
             // Now that client has joined a room in soloMode, send a 
             // manufactured clientPresenceChanged as if it came from the server
@@ -356,19 +359,26 @@ export default class PiePeer {
                 time: Date.now(),
                 type: MessageType.ClientPresenceChanged,
                 present: true,
-            }, false);
+            });
             return Promise.resolve(roomInfo);
         } else {
-            if (!globalThis.player?.name) {
+            // TODO(p2p): Handle player name better, in wspie, it's already stored in an underworld
+            const playerName = storage.get(storage.STORAGE_ID_PLAYER_NAME);
+            if (!playerName) {
                 alert('You must choose a name in settings before joining a game');
                 return Promise.reject();
+            }
+            if (isHosting) {
+                this.makeRoom(roomInfo);
+                return Promise.resolve(roomInfo);
             }
 
             return join({
                 toName: roomInfo.name,
-                fromName: globalThis.player.name,
+                fromName: playerName,
                 websocketHubUrl: hubURL,
-                onError: console.error
+                onError: console.error,
+                onData: this.handleMessage.bind(this),
             }).then(peer => {
                 this.peers.push(peer);
                 return roomInfo;
@@ -390,31 +400,33 @@ export default class PiePeer {
         debug('getRooms not supported.');
     }
     sendData(payload: any, extras?: any) {
-        if (this.isConnected()) {
-            const message = {
-                type: MessageType.Data,
-                payload,
-                ...extras,
-            };
-            if (this.soloMode) {
-                // In soloMode there is no this.ws so just handle the message immediately as 
-                // if it bounced back from PieServer
-                this.handleMessage({
-                    fromClient: this.clientId,
-                    time: Date.now(),
-                    ...message
-                }, false);
-            } else if (this.peers.length) {
+        console.log('P2P sendData:', payload);
+        const message = {
+            type: MessageType.Data,
+            payload,
+            ...extras,
+        };
+        // If not connected, send all messages to self
+        if (this.soloMode || !this.isConnected()) {
+            // In soloMode there is no this.ws so just handle the message immediately as 
+            // if it bounced back from PieServer
+            this.handleMessage({
+                fromClient: this.clientId,
+                time: Date.now(),
+                ...message
+            });
+        } else if (this.peers.length) {
+            try {
+                const stringifiedMessage = JSON.stringify(message);
                 this.peers.forEach((peer: SimplePeer) => {
-                    peer.send(message);
+                    peer.send(stringifiedMessage);
                 });
-            } else {
-                error('Unexpected: Attempted to send data but this.ws is undefined and not in soloMode');
+            } catch (e) {
+                error('Err: Unable to stringify', message);
+                error(e);
             }
         } else {
-            if (this.onError) {
-                this.onError({ message: `Cannot send data to room, not currently connected to web socket server` });
-            }
+            error('Unexpected: Attempted to send data but this.ws is undefined and not in soloMode');
         }
     }
     _updateDebugInfo(message?: { clients: object[] }) {

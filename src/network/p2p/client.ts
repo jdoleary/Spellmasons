@@ -13,7 +13,8 @@ import { ACCEPT_REQUEST_SIGNAL, ERROR, JOIN_REQUEST, REQUEST_REJECTED } from "./
 
 // This function is exposed for the consumer of this library 
 // to initiate a join request to a host for a p2p connection
-export async function join({toName, fromName, websocketHubUrl, onError}:{toName: string, fromName: string, websocketHubUrl: string, onError: (error:any) => void}): Promise<SimplePeer> {
+export async function join({ toName, fromName, websocketHubUrl, onError, onData }: { toName: string, fromName: string, websocketHubUrl: string, onError: (error: any) => void, onData: (data: any) => void }): Promise<SimplePeer> {
+    console.log('P2P join:', ...arguments)
     // Note: it is up to the caller to
     // subscribe to peer.on('data', message => {});
     return new Promise(async (resolvePeerConnection) => {
@@ -31,18 +32,21 @@ export async function join({toName, fromName, websocketHubUrl, onError}:{toName:
                 console.log('Step: Connected!');
                 resolvePeerConnection(peer);
             });
+            peer.on('data', (data: any) => {
+                onData(JSON.parse(data));
+            });
         });
         function onData(data: any) {
             const { type, signal } = data;
             if (type === ACCEPT_REQUEST_SIGNAL) {
-                console.log('Step: Request accepted, processing return signal...');
+                console.log('Step: Request accepted, processing return signal...', data);
                 // Step 4: When the host accepts the request, it will generate
                 // it's own signal to send back, this client processes the signal
                 // and forms the final connection.
                 peer.signal(signal);
-            }else if (type === REQUEST_REJECTED){
+            } else if (type === REQUEST_REJECTED) {
                 alert('Join request rejected from ' + toName);
-            }else if (type === ERROR){
+            } else if (type === ERROR) {
                 onError(data.error);
             }
         }
