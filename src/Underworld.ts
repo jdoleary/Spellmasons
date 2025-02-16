@@ -286,6 +286,10 @@ export default class Underworld {
     globalThis.spellCasting = false;
     this.setContainerUnitsFilter();
 
+    // Create the host player
+    if (pie instanceof PiePeer) {
+      ensureAllClientsHaveAssociatedPlayers(overworld, [pie.clientId], [storage.get(storage.STORAGE_ID_PLAYER_NAME) || ''])
+    }
     this.serverStabilityMaxPickups = globalThis.serverStabilityMaxPickups;
     this.serverStabilityMaxUnits = globalThis.serverStabilityMaxUnits;
     if (this.serverStabilityMaxPickups || this.serverStabilityMaxUnits) {

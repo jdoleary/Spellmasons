@@ -440,7 +440,6 @@ export default class PiePeer {
     sendMessage(message: { type: string } & any) {
         Object.assign(message, {
             fromClient: this.clientId,
-            fromPlayerName: getMyPlayerName(),
             time: Date.now(),
         });
         const stringifiedMessage = JSON.stringify(message);
