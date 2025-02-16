@@ -6,10 +6,10 @@ import { ACCEPT_REQUEST_SIGNAL, ERROR, JOIN_REQUEST, REGISTER_CLIENT, REQUEST_RE
 
 // This function is exposed to the consumer of this library to communicate to
 // the hub that this host is available to receive join requests.
-export async function host({ fromName, websocketHubUrl, onPeerConnected, onPeerDisconnected, onError, onData }: { fromName: string, websocketHubUrl: string, onPeerConnected: (p: SimplePeer, name: string) => void, onPeerDisconnected: (p: SimplePeer) => void, onError: (error: any) => void, onData: (data: any) => void }) {
+export async function host({ fromName, websocketHubUrl, onPeerConnected, onPeerDisconnected, onError, onData }: { fromName: string, websocketHubUrl: string, onPeerConnected: (p: SimplePeer, name: string, clientId: string) => void, onPeerDisconnected: (p: SimplePeer) => void, onError: (error: any) => void, onData: (data: any) => void }) {
     console.log('P2P host:', ...arguments)
     function onHubData(data: any, socket: WebSocket) {
-        const { type, fromName: sender, signal } = data;
+        const { type, fromName: sender, fromClientId: senderClientId, signal } = data;
         if (type === JOIN_REQUEST) {
             const accept = confirm('Request to connect from ' + sender)
             if (accept) {
@@ -21,7 +21,7 @@ export async function host({ fromName, websocketHubUrl, onPeerConnected, onPeerD
                 peer.on('connect', () => {
                     console.log('Connected!');
                     // Step 4: Connection has been made!
-                    onPeerConnected(peer, sender);
+                    onPeerConnected(peer, sender, senderClientId);
                 });
                 peer.on('signal', (data: any) => {
                     console.log('Step: Signal created, sending signals back to requester...');

@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { host } from "./p2p/host";
 import { SERVER_HUB_URL } from "../config";
 import { join } from "./p2p/client";
+import { MESSAGE_TYPES } from "../types/MessageTypes";
 
 export const MessageType = {
     // Both client and server:
@@ -118,7 +119,7 @@ export default class PiePeer {
     };
     // This is a main difference between piePeer and wsPieClient.  PiePeer has SimplePeer connections
     // whereas wsPieClient has a WebSocket connection
-    peers: { peer: SimplePeer, name: string }[] = [];
+    peers: { peer: SimplePeer, name: string, clientId: string }[] = [];
     // Stores information of the current room to support automatic re-joining
     currentRoomInfo?: Room;
     stats: {
@@ -335,9 +336,13 @@ export default class PiePeer {
     }
     hostBroadcastConnectedPeers() {
         if (this.isP2PHost) {
+            if (!this.clientId) {
+                this.clientId = defaultIdForSolomode;
+            }
             this.sendMessage({
                 type: MessageType.ClientPresenceChanged,
-                clients: [globalThis.player?.name || "Host", ...this.peers.map(({ name }) => name)]
+                clients: [this.clientId, ...this.peers.map(({ clientId }) => clientId)],
+                names: [getMyPlayerName(), ...this.peers.map(({ name }) => name)]
             })
         }
 
@@ -350,8 +355,8 @@ export default class PiePeer {
             websocketHubUrl: hubURL,
             onError: console.error,
             onData: this.handleMessage.bind(this),
-            onPeerConnected: (peer, name) => {
-                this.peers.push({ peer, name });
+            onPeerConnected: (peer, name, clientId) => {
+                this.peers.push({ peer, name, clientId });
                 this.hostBroadcastConnectedPeers();
             },
             onPeerDisconnected: (p) => {
@@ -386,14 +391,19 @@ export default class PiePeer {
                 return Promise.resolve(roomInfo);
             }
 
+            if (!this.clientId) {
+                this.clientId = defaultIdForSolomode;
+            }
             return join({
                 toName: roomInfo.name,
                 fromName: playerName,
+                fromClientId: this.clientId,
                 websocketHubUrl: hubURL,
                 onError: console.error,
                 onData: this.handleMessage.bind(this),
             }).then(({ peer, name }) => {
-                this.peers.push({ peer, name });
+                // ClientId is only needed for host peers list
+                this.peers.push({ peer, name, clientId: 'unknown' });
                 return roomInfo;
             });
         }
@@ -430,6 +440,7 @@ export default class PiePeer {
     sendMessage(message: { type: string } & any) {
         Object.assign(message, {
             fromClient: this.clientId,
+            fromPlayerName: getMyPlayerName(),
             time: Date.now(),
         });
         const stringifiedMessage = JSON.stringify(message);
@@ -460,4 +471,7 @@ export default class PiePeer {
     _updateDebugInfo(message?: { clients: object[] }) {
         debug('TODO: update debug info');
     }
+}
+function getMyPlayerName() {
+    return globalThis.player?.name || storage.get(storage.STORAGE_ID_PLAYER_NAME);
 }

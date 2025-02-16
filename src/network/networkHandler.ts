@@ -1173,7 +1173,7 @@ async function handleLoadGameState(payload: {
 
   underworld.syncTurnMessage();
   if (globalThis.headless) {
-    ensureAllClientsHaveAssociatedPlayers(overworld, overworld.clients);
+    ensureAllClientsHaveAssociatedPlayers(overworld, overworld.clients, []);
   }
 
   underworld.assertDemoExit();

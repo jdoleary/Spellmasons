@@ -80,7 +80,7 @@ export default function makeOverworld(pie: Pie): Overworld {
   return overworld;
 }
 // Returns an array of newly created players
-export function ensureAllClientsHaveAssociatedPlayers(overworld: Overworld, clients: string[], defaultLobbyReady?: boolean) {
+export function ensureAllClientsHaveAssociatedPlayers(overworld: Overworld, clients: string[], names: string[], defaultLobbyReady?: boolean) {
   if (!overworld) {
     console.error('Cannot sync clients, no overworld');
     return;
@@ -92,7 +92,11 @@ export function ensureAllClientsHaveAssociatedPlayers(overworld: Overworld, clie
   }
   overworld.clients = clients;
   // Ensure all clients have players
-  for (let clientId of overworld.clients) {
+  for (let k = 0; k < overworld.clients.length; k++) {
+    const clientId = overworld.clients[k];
+    if (!clientId) {
+      continue;
+    }
     for (let i = 0; i < globalThis.numberOfHotseatPlayers; i++) {
       // playerId helps distinguish multiple players on one client
       let playerId = clientId + "_" + i;
@@ -107,6 +111,10 @@ export function ensureAllClientsHaveAssociatedPlayers(overworld: Overworld, clie
         // Assign created player to globalThis.player if they are the primary client player
         if (i == 0) Player.updateGlobalRefToPlayerIfCurrentClient(player);
         player.lobbyReady = !!defaultLobbyReady;
+        const nameFromServer = names.length && names[k];
+        if (nameFromServer) {
+          player.name = nameFromServer;
+        }
         if (config) {
           player.name = config.name;
           player.color = config.color;

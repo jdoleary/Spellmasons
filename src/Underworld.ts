@@ -2749,7 +2749,7 @@ export default class Underworld {
           const newUnderworld = new Underworld(overworld, pie, Math.random().toString());
           // Add players back to underworld
           // defaultLobbyReady: Since they are still in the game, set them to lobbyReady
-          ensureAllClientsHaveAssociatedPlayers(overworld, overworld.clients, true);
+          ensureAllClientsHaveAssociatedPlayers(overworld, overworld.clients, [], true);
           // Generate the level data
           newUnderworld.lastLevelCreated = newUnderworld.generateLevelDataSyncronous(0, this.gameMode);
           // Actually create the level 

@@ -13,7 +13,7 @@ import { ACCEPT_REQUEST_SIGNAL, ERROR, JOIN_REQUEST, REQUEST_REJECTED } from "./
 
 // This function is exposed for the consumer of this library 
 // to initiate a join request to a host for a p2p connection
-export async function join({ toName, fromName, websocketHubUrl, onError, onData }: { toName: string, fromName: string, websocketHubUrl: string, onError: (error: any) => void, onData: (data: any) => void }): Promise<{ peer: SimplePeer, name: string }> {
+export async function join({ toName, fromName, fromClientId, websocketHubUrl, onError, onData }: { toName: string, fromName: string, fromClientId: string, websocketHubUrl: string, onError: (error: any) => void, onData: (data: any) => void }): Promise<{ peer: SimplePeer, name: string }> {
     console.log('P2P join:', ...arguments)
     // Note: it is up to the caller to
     // subscribe to peer.on('data', message => {});
@@ -57,7 +57,7 @@ export async function join({ toName, fromName, websocketHubUrl, onError, onData 
         // Step 3: Now that we're connected to hub and have a signal,
         // send a join request with the signal to the host through
         // the hub.  The toName identifies which host to send the signal to
-        sendToHub(socket, { type: JOIN_REQUEST, signal, fromName, toName });
+        sendToHub(socket, { type: JOIN_REQUEST, signal, fromName, fromClientId, toName });
 
     });
 }

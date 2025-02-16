@@ -15,6 +15,7 @@ import { Pie } from '../types/commonTypes';
 export interface ClientPresenceChangedArgs {
   type: string;
   clients: string[];
+  names: string[] | undefined;
   time: number;
 }
 export function onClientPresenceChanged(o: ClientPresenceChangedArgs, overworld: Overworld) {
@@ -23,7 +24,7 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs, overworld:
   // The client will also receive one when they first join a room.
   globalThis.setMenuIsInRoom?.(true);
   // Ensure each client corresponds with a Player instance
-  ensureAllClientsHaveAssociatedPlayers(overworld, o.clients);
+  ensureAllClientsHaveAssociatedPlayers(overworld, o.clients, o.names || []);
   if (overworld.underworld) {
     overworld.underworld.progressGameState();
   }
