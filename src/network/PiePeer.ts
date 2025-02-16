@@ -448,7 +448,7 @@ export default class PiePeer {
         if (this.soloMode || !this.isConnected()) {
             // In soloMode there is no this.ws so just handle the message immediately as 
             // if it bounced back from PieServer
-            this.handleMessage(stringifiedMessage);
+            this.handleMessage(message);
         } else if (this.peers.length) {
             try {
                 // Send to all connections
