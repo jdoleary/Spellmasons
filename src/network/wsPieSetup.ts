@@ -272,6 +272,7 @@ export function setupPieAndUnderworld() {
     pie.useStats = true;
     console.log('Client: Initialize Underworld');
     const overworld = makeOverworld(pie);
+    addHandlers(pie, overworld);
     globalThis.connect_to_wsPie_server = wsUri => connect_to_wsPie_server(wsUri, overworld);
     globalThis.isConnected = pie.isConnected.bind(pie);
     globalThis.pieDisconnect = pie.disconnect.bind(pie);

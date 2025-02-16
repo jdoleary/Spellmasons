@@ -338,7 +338,7 @@ export default class PiePeer {
     }
     hostBroadcastConnectedPeers() {
         if (this.isP2PHost) {
-            this.sendData({
+            this.sendMessage({
                 type: MessageType.ClientPresenceChanged,
                 clients: this.peers.map(({ name }) => name)
             })
@@ -415,15 +415,26 @@ export default class PiePeer {
     getRooms(roomInfo: any) {
         debug('getRooms not supported.');
     }
+    // Sends a data message.  This is the most common type of message
+    // that is sent to clients
     sendData(payload: any, extras?: any) {
         console.log('P2P sendData:', payload);
         const message = {
             type: MessageType.Data,
-            fromClient: this.clientId,
-            time: Date.now(),
             payload,
             ...extras,
         };
+        this.sendMessage(message);
+    }
+    // Send a message with a type.
+    // This can be used to send any Pie-style message such as a
+    // type: Data message or pie-internal messages such as
+    // type: ClientPresenceChanged
+    sendMessage(message: { type: string } & any) {
+        Object.assign(message, {
+            fromClient: this.clientId,
+            time: Date.now(),
+        });
         const stringifiedMessage = JSON.stringify(message);
         // If not connected, send all messages to self
         if (this.soloMode || !this.isConnected()) {
