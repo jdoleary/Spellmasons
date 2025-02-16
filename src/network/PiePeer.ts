@@ -6,6 +6,7 @@ import { host } from "./p2p/host";
 import { SERVER_HUB_URL } from "../config";
 import { join } from "./p2p/client";
 import { MESSAGE_TYPES } from "../types/MessageTypes";
+import { Pie } from "../types/commonTypes";
 
 export const MessageType = {
     // Both client and server:
@@ -126,7 +127,16 @@ export default class PiePeer {
         latency: Latency;
     };
     // the server-assigned id of the current client
-    clientId: string;
+    #clientId: string = '';
+    get clientId() {
+        return this.#clientId
+    }
+    set clientId(newId) {
+        this.#clientId = newId;
+        // For PiePeer, update the globalThis.clientId because
+        // there is no ServerAssignedData message
+        globalThis.clientId = newId;
+    }
     // a setTimeout id used to try to reconnect after accidental disconnection
     // with a built in falloff
     reconnectTimeoutId?: ReturnType<typeof setTimeout>;
@@ -456,7 +466,6 @@ export default class PiePeer {
                 });
                 // If the host, also "send" to self (handle immediately)
                 if (this.isP2PHost) {
-                    console.log('jtest handle own message immediately')
                     this.handleMessage(message);
                 }
             } catch (e) {

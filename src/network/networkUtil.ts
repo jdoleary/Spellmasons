@@ -15,7 +15,7 @@ import { Pie } from '../types/commonTypes';
 export interface ClientPresenceChangedArgs {
   type: string;
   clients: string[];
-  names: string[] | undefined;
+  names?: string[];
   time: number;
 }
 export function onClientPresenceChanged(o: ClientPresenceChangedArgs, overworld: Overworld) {

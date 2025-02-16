@@ -22,7 +22,7 @@ import { GameMode } from '../types/commonTypes';
 import { elEndTurnBtn } from '../HTMLElements';
 import { sendEventToServerHub } from '../RemoteLogging';
 import { test_spyPromises } from '../promiseSpy';
-import PiePeer from './PiePeer';
+import PiePeer, { setPiePeerClientId } from './PiePeer';
 // Locally hosted, locally accessed
 // const wsUri = 'ws://localhost:8080';
 // Locally hosted, available to LAN (use your own IP)
