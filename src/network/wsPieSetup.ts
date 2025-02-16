@@ -145,6 +145,14 @@ export function joinRoom(overworld: Overworld, _room_info = {}, isHosting = fals
   room_info.name = room_info.name.toLowerCase();
   // Create a new underworld to sync with the payload so that no old state carries over
   const underworld = new Underworld(overworld, overworld.pie, Math.random().toString());
+  if (isHosting && pie instanceof PiePeer) {
+    console.log('Setup: PiePeer host creating level');
+    // Generate the level data
+    underworld.lastLevelCreated = underworld.generateLevelDataSyncronous(0);
+    // Actually create the level 
+    underworld.createLevelSyncronous(underworld.lastLevelCreated);
+
+  }
   if (isSinglePlayer()) {
     // set mods:
     underworld.activeMods = globalThis.activeMods || [];
