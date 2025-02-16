@@ -390,4 +390,5 @@ declare global {
   var featureFlags: {
     screenShakeMult: number
   } | undefined;
+  var setPieToP2PMode: (active: boolean) => void | undefined;
 }

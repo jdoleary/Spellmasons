@@ -244,19 +244,32 @@ globalThis.addEventListener('keydown', event => {
   }
 })
 
-// TODO
-function isP2P() {
-  return true;
+let useP2P = false;
+globalThis.setPieToP2PMode = (active: boolean) => {
+  useP2P = active;
+  console.log('Setup: Switch network backend to', active ? 'P2P' : 'wsPie');
+  setupPieAndUnderworld();
 }
+function preventIdleTimeout() {
+  if (globalThis.pie && globalThis.pie.isConnected() && globalThis.pie.currentRoomInfo && pie instanceof PieClient) {
+    // Keep connection alive.  Bun's websocket server has a 2 minute timeout
+    // https://github.com/jdoleary/Spellmasons/issues/22
+    console.debug('Send empty message to keep connection from idle timeouting');
+    globalThis.pie.sendData({
+      type: MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT,
+    });
+  }
+}
+setInterval(preventIdleTimeout, 60_000);
 
 export function setupPieAndUnderworld() {
   if (globalThis.headless) {
     console.error('wsPieSetup is only for browser clients and should not be invoked from headless server.')
     return;
   } else {
-    console.log(`Client: Initialize ${isP2P() ? 'PiePeer' : 'PieClient'}`);
+    console.log(`Client: Initialize ${useP2P ? 'PiePeer' : 'PieClient'}`);
     // TODO: This is where it decides if we do p2p or websocketPie
-    const pie = isP2P() ? new PiePeer() : new PieClient();
+    const pie = useP2P ? new PiePeer() : new PieClient();
     // Every time PieClient is instantiated it will create a clientId, overwrite this
     // with the stored clientId if there is one
     const previouslyStoredClientId = storage.get(storage.STORAGE_PIE_CLIENTID_KEY);
@@ -266,16 +279,6 @@ export function setupPieAndUnderworld() {
       storage.set(storage.STORAGE_PIE_CLIENTID_KEY, pie.clientId);
     }
     globalThis.pie = pie;
-    setInterval(() => {
-      if (pie.isConnected() && pie.currentRoomInfo && pie instanceof PieClient) {
-        // Keep connection alive.  Bun's websocket server has a 2 minute timeout
-        // https://github.com/jdoleary/Spellmasons/issues/22
-        console.debug('Send empty message to keep connection from idle timeouting');
-        pie.sendData({
-          type: MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT,
-        });
-      }
-    }, 60_000);
     // useStats must be true for latency information to come through
     pie.useStats = true;
     console.log('Client: Initialize Underworld');
