@@ -106,6 +106,7 @@ export default class PiePeer {
     // soloMode fakes a connection so that the pieClient API can be used
     // with a single user that echos messages back to itself.
     soloMode: boolean;
+    isP2PHost?: boolean;
     // promiseCBs is useful for storing promise callbacks (resolve, reject)
     // that need to be invoked in a different place than where they were created.
     // Since PieClient does a lot of asyncronous work through websockets, a 
@@ -117,7 +118,7 @@ export default class PiePeer {
     };
     // This is a main difference between piePeer and wsPieClient.  PiePeer has SimplePeer connections
     // whereas wsPieClient has a WebSocket connection
-    peers: SimplePeer[] = [];
+    peers: { peer: SimplePeer, name: string }[] = [];
     // Stores information of the current room to support automatic re-joining
     currentRoomInfo?: Room;
     stats: {
@@ -165,7 +166,7 @@ export default class PiePeer {
     }
     isConnected(): boolean {
         return this.soloMode
-            || window.navigator.onLine && this.peers.some(p => p.connected);
+            || window.navigator.onLine && this.peers.some(({ peer }) => peer.connected);
     }
     // heartbeat is used to determine on the client-side if the client is unaware that 
     // it is disconnected from the server.
@@ -239,13 +240,13 @@ export default class PiePeer {
                 log('"Disconnected" from soloMode');
                 return
             }
-            if (this.peers.every(p => !p.isConnected())) {
+            if (this.peers.every(({ peer }) => !peer.isConnected())) {
                 // Resolve immediately, client is already not connected 
                 log('Attempted to disconnect but there was no preexisting connection to disconnect from.');
                 resolve();
                 return
             } else {
-                this.peers.forEach(p => p.destroy());
+                this.peers.forEach(({ peer }) => peer.destroy());
                 this.peers = [];
                 // Updates debug info to show that it is closing
                 this._updateDebugInfo();
@@ -258,7 +259,10 @@ export default class PiePeer {
 
     }
     handleMessage(message: any) {
-        console.log('got message', message);
+        console.log('PiePeer handleMessage:', message);
+        if (this.isP2PHost) {
+            console.log("TODO: Reflect all messages back to all peers as host")
+        }
         // Stats
         // if (message.time) {
         //     const currentMessageLatency = Date.now() - message.time;
@@ -332,24 +336,36 @@ export default class PiePeer {
                 error(`Above message of type ${message.type} not recognized!`);
         }
     }
+    hostBroadcastConnectedPeers() {
+        if (this.isP2PHost) {
+            this.sendData({
+                type: MessageType.ClientPresenceChanged,
+                clients: this.peers.map(({ name }) => name)
+            })
+        }
+
+    }
     // Remember to catch the rejected promise if used outside of this library
     makeRoom(roomInfo: Room) {
+        this.isP2PHost = true;
         host({
             fromName: roomInfo.name,
             websocketHubUrl: hubURL,
             onError: console.error,
             onData: this.handleMessage.bind(this),
-            onPeerConnected: (p) => {
-                p.on('data', (message: string) => console.log('Got onPeerConnected message:', message));
-                this.peers.push(p);
+            onPeerConnected: (peer, name) => {
+                this.peers.push({ peer, name });
+                this.hostBroadcastConnectedPeers();
             },
             onPeerDisconnected: (p) => {
                 // TODO test that this removes the correct peer
-                this.peers.splice(this.peers.indexOf(p), 1);
+                this.peers.splice(this.peers.findIndex(x => x.peer == p), 1);
+                this.hostBroadcastConnectedPeers();
             }
         });
     }
     joinRoom(roomInfo: Room, isHosting: boolean = false) {
+        this.isP2PHost = false;
         if (this.soloMode) {
             // Now that client has joined a room in soloMode, send a 
             // manufactured clientPresenceChanged as if it came from the server
@@ -379,8 +395,8 @@ export default class PiePeer {
                 websocketHubUrl: hubURL,
                 onError: console.error,
                 onData: this.handleMessage.bind(this),
-            }).then(peer => {
-                this.peers.push(peer);
+            }).then(({ peer, name }) => {
+                this.peers.push({ peer, name });
                 return roomInfo;
             });
         }
@@ -403,22 +419,20 @@ export default class PiePeer {
         console.log('P2P sendData:', payload);
         const message = {
             type: MessageType.Data,
+            fromClient: this.clientId,
+            time: Date.now(),
             payload,
             ...extras,
         };
+        const stringifiedMessage = JSON.stringify(message);
         // If not connected, send all messages to self
         if (this.soloMode || !this.isConnected()) {
             // In soloMode there is no this.ws so just handle the message immediately as 
             // if it bounced back from PieServer
-            this.handleMessage({
-                fromClient: this.clientId,
-                time: Date.now(),
-                ...message
-            });
+            this.handleMessage(stringifiedMessage);
         } else if (this.peers.length) {
             try {
-                const stringifiedMessage = JSON.stringify(message);
-                this.peers.forEach((peer: SimplePeer) => {
+                this.peers.forEach(({ peer }: SimplePeer) => {
                     peer.send(stringifiedMessage);
                 });
             } catch (e) {

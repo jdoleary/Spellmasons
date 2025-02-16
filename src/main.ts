@@ -23,6 +23,7 @@ import { Faction, Pie } from './types/commonTypes';
 import './api';
 // DevelopmentMods must be imported AFTER api
 import "./DevelopmentMods";
+import PiePeer from './network/PiePeer';
 
 // Get feature flags from spellmasons.com:
 fetch("https://www.spellmasons.com/serverList.json", {
@@ -98,6 +99,10 @@ globalThis.setOption = (key: string, value: any) => {
 // the regular game with graphics and audio
 globalThis.headless = false;
 globalThis.isHost = (pie: Pie) => {
+  // PiePeer has unique handling of isHost
+  if (pie instanceof PiePeer) {
+    return !!pie.isP2PHost;
+  }
   // isHost only if playing singleplayer, otherwise the headless hostApp is the host
   // and this file is the entry point to the non-headless client so it will never be the
   // hostApp
