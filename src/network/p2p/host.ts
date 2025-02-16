@@ -28,9 +28,7 @@ export async function host({ fromName, websocketHubUrl, onPeerConnected, onPeerD
                     // Step 3: When own signal is generated, send back to client and await final connection
                     sendToHub(socket, { type: ACCEPT_REQUEST_SIGNAL, fromName, signal: data, toName: sender })
                 });
-                peer.on('data', (data: any) => {
-                    onData(JSON.parse(data));
-                });
+                peer.on('data', onData);
                 // Step 2: When JOIN_REQUEST is accepted, generate own signal...
                 peer.signal(signal);
             } else {

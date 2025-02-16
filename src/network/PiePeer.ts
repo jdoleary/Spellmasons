@@ -364,7 +364,20 @@ export default class PiePeer {
             fromName: roomInfo.name,
             websocketHubUrl: hubURL,
             onError: console.error,
-            onData: this.handleMessage.bind(this),
+            onData: (msg) => {
+                try {
+                    const data = JSON.parse(msg);
+                    this.handleMessage(data);
+                    // host should echo any recieved data to all connections
+                    // Send to all connections
+                    this.peers.forEach(({ peer }: SimplePeer) => {
+                        peer.send(msg);
+                    });
+                } catch (e) {
+                    log('Err: Unable to parse data from msg', msg);
+                    error(e);
+                }
+            },
             onPeerConnected: (peer, name, clientId) => {
                 this.peers.push({ peer, name, clientId });
                 this.hostBroadcastConnectedPeers();
@@ -410,7 +423,14 @@ export default class PiePeer {
                 fromClientId: this.clientId,
                 websocketHubUrl: hubURL,
                 onError: console.error,
-                onData: this.handleMessage.bind(this),
+                onData: (msg) => {
+                    try {
+                        this.handleMessage(JSON.parse(msg));
+                    } catch (e) {
+                        log('Err: Unable to parse msg', msg);
+                        error(e);
+                    }
+                },
             }).then(({ peer, name }) => {
                 // ClientId is only needed for host peers list
                 this.peers.push({ peer, name, clientId: 'unknown' });
@@ -452,7 +472,6 @@ export default class PiePeer {
             fromClient: this.clientId,
             time: Date.now(),
         });
-        const stringifiedMessage = JSON.stringify(message);
         // If not connected, send all messages to self
         if (this.soloMode || !this.isConnected()) {
             // In soloMode there is no this.ws so just handle the message immediately as 
@@ -460,6 +479,7 @@ export default class PiePeer {
             this.handleMessage(message);
         } else if (this.peers.length) {
             try {
+                const stringifiedMessage = JSON.stringify(message);
                 // Send to all connections
                 this.peers.forEach(({ peer }: SimplePeer) => {
                     peer.send(stringifiedMessage);

@@ -32,9 +32,7 @@ export async function join({ toName, fromName, fromClientId, websocketHubUrl, on
                 console.log('Step: Connected!');
                 resolvePeerConnection({ peer, name: toName });
             });
-            peer.on('data', (data: any) => {
-                onData(JSON.parse(data));
-            });
+            peer.on('data', onData);
         });
         function onHubData(data: any) {
             const { type, signal } = data;
