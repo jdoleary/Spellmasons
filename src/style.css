@@ -1693,7 +1693,7 @@ body.open-inventory #inventory-icon {
   box-shadow: 0px 0px 11px 4px rgba(242, 234, 0, 1);
 }
 
-#in-game-lobby {
+#in-game-lobby-holder {
   position: absolute;
   left: 0;
   top: 0;

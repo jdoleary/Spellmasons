@@ -7,7 +7,7 @@ import type PieClient from '@websocketpie/client';
 import type { Vec2 } from '../jmath/Vec';
 import type { LevelData } from '../Underworld';
 import type { View } from '../View';
-import type { Faction, JEmitter, Mod, Pie } from './commonTypes';
+import type { RequestToJoin, Faction, JEmitter, Mod, Pie } from './commonTypes';
 import type { IPickup } from '../entity/Pickup';
 import type { IHostApp } from '../network/networkUtil';
 import type { LanguageMapping, Localizable } from '../localization';
@@ -327,4 +327,6 @@ declare global {
     screenShakeMult: number
   } | undefined;
   var setPieToP2PMode: (active: boolean) => void | undefined;
+  // Returns true if request is accepted
+  var responseRequestToJoinP2P: (request: RequestToJoin, approved: boolean) => void | undefined;
 }

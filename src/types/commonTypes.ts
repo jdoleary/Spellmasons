@@ -68,3 +68,8 @@ export interface Mod {
 }
 
 export type Pie = PieClient | PiePeer | IHostApp;
+export interface RequestToJoin {
+  sender: string;
+  senderClientId: string;
+  signal: string;
+}
