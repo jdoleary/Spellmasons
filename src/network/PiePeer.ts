@@ -260,9 +260,6 @@ export default class PiePeer {
     }
     handleMessage(message: any) {
         console.log('PiePeer handleMessage:', message);
-        if (this.isP2PHost) {
-            console.log("TODO: Reflect all messages back to all peers as host")
-        }
         // Stats
         // if (message.time) {
         //     const currentMessageLatency = Date.now() - message.time;
@@ -340,7 +337,7 @@ export default class PiePeer {
         if (this.isP2PHost) {
             this.sendMessage({
                 type: MessageType.ClientPresenceChanged,
-                clients: this.peers.map(({ name }) => name)
+                clients: [globalThis.player?.name || "Host", ...this.peers.map(({ name }) => name)]
             })
         }
 
@@ -443,9 +440,15 @@ export default class PiePeer {
             this.handleMessage(stringifiedMessage);
         } else if (this.peers.length) {
             try {
+                // Send to all connections
                 this.peers.forEach(({ peer }: SimplePeer) => {
                     peer.send(stringifiedMessage);
                 });
+                // If the host, also "send" to self (handle immediately)
+                if (this.isP2PHost) {
+                    console.log('jtest handle own message immediately')
+                    this.handleMessage(message);
+                }
             } catch (e) {
                 error('Err: Unable to stringify', message);
                 error(e);
