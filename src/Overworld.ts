@@ -28,8 +28,14 @@ export interface Overworld {
 // can hold on to a persistant reference which CONTAINS the lastest underworld reference.
 // This allows Underworlds to be created and destroyed without invalidating functions
 // (like event listeners) that need to keep a reference to the current underworld
+let overworld: Overworld;
 export default function makeOverworld(pie: Pie): Overworld {
-  const overworld: Overworld = {
+  // Overworld is a singleton.  It is only made once
+  if (overworld) {
+    overworld.pie = pie;
+    return overworld;
+  }
+  overworld = {
     pie,
     clients: [],
     underworld: undefined

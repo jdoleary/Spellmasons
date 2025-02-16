@@ -1699,6 +1699,10 @@ body.open-inventory #inventory-icon {
   top: 0;
   display: none;
   width: 380px;
+  pointer-events: none;
+}
+.request-to-join-p2p {
+  pointer-events:all;
 }
 
 #in-game-lobby .player-name {
@@ -1720,7 +1724,7 @@ body.open-inventory #inventory-icon {
   background-color: var(--ui-border-background-color);
 }
 
-body.view-Game #in-game-lobby {
+body.view-Game #in-game-lobby-holder {
   display: block;
 }
 
@@ -1970,7 +1974,7 @@ body.auto-camera #camera-recenter-tip {
   background-color: #321111;
 }
 
-.ui-border {
+.ui-border, #in-game-lobby .invite {
   border: 30px solid;
   border-image-outset: 0;
   border-image-repeat: repeat stretch;

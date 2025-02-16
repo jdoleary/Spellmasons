@@ -24,6 +24,9 @@ import './api';
 // DevelopmentMods must be imported AFTER api
 import "./DevelopmentMods";
 import PiePeer from './network/PiePeer';
+import { setView } from './views';
+import { View } from './View';
+import { test_spyPromises } from './promiseSpy';
 
 // Get feature flags from spellmasons.com:
 fetch("https://www.spellmasons.com/serverList.json", {
@@ -127,6 +130,9 @@ function setupAll() {
     console.log("Setup: Done loading Pixi assets.")
     initPlanningView();
     setupPieAndUnderworld();
+    globalThis.setMenu?.('PLAY');
+    setView(View.Menu);
+    test_spyPromises();
   }).catch(e => {
     console.error('Setup: Failed to setup pixi', e);
   });

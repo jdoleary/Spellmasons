@@ -351,9 +351,6 @@ export function setupPieAndUnderworld() {
         setView(View.Game);
       });
     }
-    globalThis.setMenu?.('PLAY');
-    setView(View.Menu);
-    test_spyPromises();
   }
 }
 export function isSinglePlayer(): boolean {

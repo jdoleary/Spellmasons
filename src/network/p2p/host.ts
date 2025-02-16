@@ -14,7 +14,7 @@ document.body.addEventListener('click', (e) => {
             case "approve-p2p": {
                 const requestData = JSON.parse(decodeURIComponent(el.dataset['request'] || ''));
                 globalThis.responseRequestToJoinP2P(requestData, true);
-                document.querySelectorAll(`div[data-join-request-name="${requestData.senderClientId}"]`).forEach(invite => {
+                document.querySelectorAll(`.invite[data-join-request-name="${requestData.senderClientId}"]`).forEach(invite => {
                     if (invite) {
                         invite.remove();
                     } else {
@@ -26,7 +26,7 @@ document.body.addEventListener('click', (e) => {
             case "deny-p2p": {
                 const requestData = JSON.parse(decodeURIComponent(el.dataset['request'] || ''));
                 globalThis.responseRequestToJoinP2P(requestData, false);
-                document.querySelectorAll(`div[data-join-request-name="${requestData.senderClientId}"]`).forEach(invite => {
+                document.querySelectorAll(`.invite[data-join-request-name="${requestData.senderClientId}"]`).forEach(invite => {
                     if (invite) {
                         invite.remove();
                     } else {
@@ -47,8 +47,8 @@ function requestToJoin(data: RequestToJoin) {
     const requestData = ` data-request="${encodeURIComponent(JSON.stringify(data))}" `;
     document.querySelectorAll('.request-to-join-p2p').forEach(el => {
         const d = document.createElement('div');
-        d.innerHTML = `<div data-join-request-name="${data.senderClientId}">
-            ${data.sender} ${Math.random()}
+        d.innerHTML = `<div class="invite" data-join-request-name="${data.senderClientId}">
+            ${data.sender}
             <button ${requestData} data-fn="approve-p2p">
                 Approve
             </button>
