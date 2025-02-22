@@ -13,7 +13,7 @@ import { ACCEPT_REQUEST_SIGNAL, ERROR, JOIN_REQUEST, REQUEST_REJECTED } from "./
 
 // This function is exposed for the consumer of this library 
 // to initiate a join request to a host for a p2p connection
-export async function join({ toName, fromName, fromClientId, websocketHubUrl, onError, onData }: { toName: string, fromName: string, fromClientId: string, websocketHubUrl: string, onError: (error: any) => void, onData: (data: any) => void }): Promise<{ peer: SimplePeer, name: string }> {
+export async function join({ toName, fromName, fromClientId, websocketHubUrl, onError, onData, onPeerDisconnected }: { toName: string, fromName: string, fromClientId: string, websocketHubUrl: string, onError: (error: any) => void, onData: (data: any) => void, onPeerDisconnected: (p: SimplePeer) => void }): Promise<{ peer: SimplePeer, name: string }> {
     console.log('P2P join:', ...arguments);
     // Note: it is up to the caller to
     // subscribe to peer.on('data', message => {});
@@ -23,6 +23,7 @@ export async function join({ toName, fromName, fromClientId, websocketHubUrl, on
             const peer = new SimplePeer({ initiator: true, tickle: false });
             peer.on('close', () => {
                 console.error('Lost peer connection.');
+                onPeerDisconnected(peer);
                 const backupSaveName = `backup ${toName || ''}`;
                 // Backups are unique to the current date and the save name
                 // so multiple backups in the same day and same game name will overwrite each other
@@ -61,7 +62,13 @@ export async function join({ toName, fromName, fromClientId, websocketHubUrl, on
                 // Step 4: When the host accepts the request, it will generate
                 // it's own signal to send back, this client processes the signal
                 // and forms the final connection.
-                peer.signal(signal);
+                try {
+                    peer.signal(signal);
+                } catch (e) {
+                    onError(e);
+                    // TODO: this doesn't stop the loading spinners for some reason
+                    rejectPeerConnection(e);
+                }
             } else if (type === REQUEST_REJECTED) {
                 Jprompt({ text: `Join request rejected from ${toName}`, yesText: 'Okay', forceShow: true });
             } else if (type === ERROR) {

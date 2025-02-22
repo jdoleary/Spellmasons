@@ -284,9 +284,10 @@ export default class PiePeer {
                 log('"Disconnected" from soloMode');
                 return
             }
-            if (this.peers.every(({ peer }) => !peer.isConnected())) {
+            if (this.peers.every(({ peer }) => !peer.connected)) {
                 // Resolve immediately, client is already not connected 
                 log('Attempted to disconnect but there was no preexisting connection to disconnect from.');
+                this.peers = [];
                 resolve();
                 return
             } else {
@@ -472,6 +473,9 @@ export default class PiePeer {
                         log('Err: Unable to parse msg', msg);
                         error(e);
                     }
+                },
+                onPeerDisconnected: (p) => {
+                    this.peers.splice(this.peers.findIndex(x => x.peer == p), 1);
                 },
             }).then(({ peer, name }) => {
                 // ClientId is only needed for host peers list
