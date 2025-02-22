@@ -17,13 +17,29 @@ export async function join({ toName, fromName, fromClientId, websocketHubUrl, on
     console.log('P2P join:', ...arguments);
     // Note: it is up to the caller to
     // subscribe to peer.on('data', message => {});
-    return new Promise(async (resolvePeerConnection) => {
+    return new Promise(async (resolvePeerConnection, rejectPeerConnection) => {
         const { signal, peer } = await new Promise<{ signal: string, peer: SimplePeer }>((res, _rej) => {
             // Step 1: Initiate the peer with a signal
             const peer = new SimplePeer({ initiator: true, tickle: false });
             peer.on('close', () => {
-                console.log('Lost peer connection.');
-                globalThis.exitCurrentGame?.();
+                console.error('Lost peer connection.');
+                const backupSaveName = `backup ${toName || ''}`;
+                // Backups are unique to the current date and the save name
+                // so multiple backups in the same day and same game name will overwrite each other
+                const todayDate = new Date().setHours(0, 0, 0, 0);
+                if (globalThis.save) {
+                    globalThis.save(`${todayDate}-${backupSaveName}`, true).then(errMsg => {
+                        if (!errMsg) {
+                            Jprompt({
+                                text: `Lost connection, ${globalThis.i18n(['auto save notice', backupSaveName])}`, yesText: 'Okay', forceShow: true
+                            });
+                        }
+                        globalThis.exitCurrentGame?.();
+                    });
+                } else {
+                    globalThis.exitCurrentGame?.();
+
+                }
             });
             peer.on('error', onError);
 
@@ -50,6 +66,7 @@ export async function join({ toName, fromName, fromClientId, websocketHubUrl, on
                 Jprompt({ text: `Join request rejected from ${toName}`, yesText: 'Okay', forceShow: true });
             } else if (type === ERROR) {
                 onError(data.error);
+                rejectPeerConnection(data.error);
             }
         }
 
