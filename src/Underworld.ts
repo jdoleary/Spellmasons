@@ -2953,7 +2953,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // If there was an attempted save during the enemy turn, save now
     // that the player's turn has started
     if (globalThis.saveASAP && globalThis.save) {
-      globalThis.save(globalThis.saveASAP);
+      const forceOverwrite = globalThis.saveASAP.includes('quicksave');
+      globalThis.save(globalThis.saveASAP, forceOverwrite);
     }
 
     this.changeToFirstHotseatPlayer();
