@@ -58,13 +58,17 @@ function requestToJoin(data: RequestToJoin) {
     document.querySelectorAll('.request-to-join-p2p').forEach(el => {
         const d = document.createElement('div');
         d.innerHTML = `<div class="invite" data-join-request-name="${data.senderClientId}">
-            ${data.sender}
-            <button ${requestData} data-fn="approve-p2p">
-                Approve
-            </button>
-            <button ${requestData} data-fn="deny-p2p">
-                Deny 
-            </button>
+            <div>
+                ${data.sender}
+            </div>
+            <div>
+                <button class="p2p-lobby-respond-btn approve" ${requestData} data-fn="approve-p2p">
+                    ✅ Approve
+                </button>
+                <button class="p2p-lobby-respond-btn deny" ${requestData} data-fn="deny-p2p">
+                    ❌ Deny 
+                </button>
+            </div>
             </div>`;
         el.appendChild(d);
     });

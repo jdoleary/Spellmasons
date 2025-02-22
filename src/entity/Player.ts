@@ -396,7 +396,7 @@ export function syncLobby(underworld: Underworld) {
     // filter: Don't show disconnected players in in-game lobby.
     elInGameLobby.innerHTML = globalThis.lobbyPlayerList.filter(p => p.clientConnected).map(p => {
       return `<div class="ui-border"><div class="player"><span class="player-name"><span style="color:${p.color}">⬤&nbsp;</span>${p.name}</span><span>${p.status}</span>
-      ${p.clientId !== globalThis.clientId ? `<button data-fn="kick" data-name="${p.name}" data-clientid="${p.clientId}">Kick</button>` : ''}
+      ${p.clientId !== globalThis.clientId ? `<button class="kick-btn" data-fn="kick" data-name="${p.name}" data-clientid="${p.clientId}">Kick</button>` : ''}
       </div></div>`
     }).join('') + `<button id="openLobby" data-fn="openlobby">${isLobbyOpen ? 'Close' : 'Open'} Lobby</button>`;
   }

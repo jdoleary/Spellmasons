@@ -2774,3 +2774,26 @@ body.dragging-card .floating-card-holder .empty-slot {
   animation: none;
   filter: none;
 }
+.kick-btn {
+  background-color: #212121;
+  border: 1px solid black;
+  color: white;
+  cursor:pointer;
+}
+.kick-btn:hover {
+  background-color: #3d3d3d;
+  border: 1px solid red;
+}
+#openLobby  {
+  background-color: #212121;
+  border: 2px solid black;
+  color: white;
+  cursor:pointer;
+}
+#openLobby:hover  {
+  background-color: #3d3d3d;
+}
+.invite {
+  display:flex;
+  justify-content: space-between;
+}
