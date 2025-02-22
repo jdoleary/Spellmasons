@@ -3,55 +3,56 @@ import SimplePeer from "simple-peer/simplepeer.min.js";
 import { ensureConnectionToHub, sendToHub } from "./connector";
 import { ACCEPT_REQUEST_SIGNAL, ERROR, JOIN_REQUEST, REGISTER_CLIENT, REQUEST_REJECTED } from "./messages";
 import { RequestToJoin } from "../../types/commonTypes";
-
-document.body.addEventListener('click', (e) => {
-    const el = e.target as HTMLElement;
-    if (!el) {
-        return;
-    }
-    try {
-        switch (el.dataset['fn']) {
-            case "openlobby": {
-                globalThis.openPeerLobby(!document.body.classList.contains('peer-hub-connected'), socket);
-            }
-                break;
-            case "kick": {
-                // clientid intentionally lowercase
-                globalThis.kickPeer({ name: el.dataset['name'], clientId: el.dataset['clientid'] });
-            }
-                break;
-            case "approve-p2p": {
-                const requestData = JSON.parse(decodeURIComponent(el.dataset['request'] || ''));
-                globalThis.responseRequestToJoinP2P(requestData, true);
-                document.querySelectorAll(`.invite[data-join-request-name="${requestData.senderClientId}"]`).forEach(invite => {
-                    if (invite) {
-                        invite.remove();
-                    } else {
-                        console.error('Invite not found for', requestData.sender);
-                    }
-                });
-            }
-                break;
-            case "deny-p2p": {
-                const requestData = JSON.parse(decodeURIComponent(el.dataset['request'] || ''));
-                globalThis.responseRequestToJoinP2P(requestData, false);
-                document.querySelectorAll(`.invite[data-join-request-name="${requestData.senderClientId}"]`).forEach(invite => {
-                    if (invite) {
-                        invite.remove();
-                    } else {
-                        console.error('Invite not found for', requestData.sender);
-                    }
-                });
-            }
-                break;
-            default:
-                break;
-
+if (document && document.body && document.body.addEventListener) {
+    document.body.addEventListener('click', (e) => {
+        const el = e.target as HTMLElement;
+        if (!el) {
+            return;
         }
-    } catch (e) {
-        console.error(e);
-    }
-});
+        try {
+            switch (el.dataset['fn']) {
+                case "openlobby": {
+                    globalThis.openPeerLobby(!document.body.classList.contains('peer-hub-connected'), socket);
+                }
+                    break;
+                case "kick": {
+                    // clientid intentionally lowercase
+                    globalThis.kickPeer({ name: el.dataset['name'], clientId: el.dataset['clientid'] });
+                }
+                    break;
+                case "approve-p2p": {
+                    const requestData = JSON.parse(decodeURIComponent(el.dataset['request'] || ''));
+                    globalThis.responseRequestToJoinP2P(requestData, true);
+                    document.querySelectorAll(`.invite[data-join-request-name="${requestData.senderClientId}"]`).forEach(invite => {
+                        if (invite) {
+                            invite.remove();
+                        } else {
+                            console.error('Invite not found for', requestData.sender);
+                        }
+                    });
+                }
+                    break;
+                case "deny-p2p": {
+                    const requestData = JSON.parse(decodeURIComponent(el.dataset['request'] || ''));
+                    globalThis.responseRequestToJoinP2P(requestData, false);
+                    document.querySelectorAll(`.invite[data-join-request-name="${requestData.senderClientId}"]`).forEach(invite => {
+                        if (invite) {
+                            invite.remove();
+                        } else {
+                            console.error('Invite not found for', requestData.sender);
+                        }
+                    });
+                }
+                    break;
+                default:
+                    break;
+
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    });
+}
 function requestToJoin(data: RequestToJoin) {
     const requestData = ` data-request="${encodeURIComponent(JSON.stringify(data))}" `;
     document.querySelectorAll('.request-to-join-p2p').forEach(el => {
