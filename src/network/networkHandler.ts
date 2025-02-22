@@ -1411,6 +1411,7 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
         return parsedNewSaveTitle.displayName == parsedOtherSaveTitle.displayName;
       });
       if (conflictingSaveTitles.length) {
+        console.trace('jtest overwrite', forceOverwrite);
         const doOverwrite = forceOverwrite ? true : await Jprompt({ text: 'There is a previous save file with this name, are you sure you want to overwrite it?', yesText: 'Yes, Overwrite it', noBtnText: 'Cancel', noBtnKey: 'Escape', forceShow: true })
         if (doOverwrite) {
           conflictingSaveTitles.forEach(otherTitle => {
@@ -1582,6 +1583,14 @@ Current game version: ${globalThis.SPELLMASONS_PACKAGE_VERSION}`,
     if (overworld.underworld) {
       overworld.underworld.cleanup();
     }
+
+    // For P2P
+    if (globalThis.disconnectFromP2PHub) {
+      globalThis.disconnectFromP2PHub();
+    }
+    document.body.classList.remove('isPeerHost');
+    // end For P2P
+
     // This prevents 'esc' key from going "back" to viewGame after the underworld is cleaned up
     clearLastNonMenuView();
     // Ensure the menu is open

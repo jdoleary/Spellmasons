@@ -44,6 +44,7 @@ export function ensureConnectionToHub(wsHubUrl: string,
       });
       socket.addEventListener("open", (_) => {
         res(socket);
+        globalThis.disconnectFromP2PHub = () => socket.close();
         if (handlers.onConnectionState)
           handlers.onConnectionState(true);
       });
