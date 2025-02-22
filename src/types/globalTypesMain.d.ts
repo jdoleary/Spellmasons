@@ -331,4 +331,5 @@ declare global {
   var responseRequestToJoinP2P: (request: RequestToJoin, approved: boolean) => void | undefined;
   var kickPeer: (args: { name?: string, clientId?: string }) => void | undefined;
   var openPeerLobby: (open: boolean, socket: WebSocket) => void | undefined;
+  var disconnectFromP2PHub: () => void | undefined;
 }

@@ -1411,7 +1411,6 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
         return parsedNewSaveTitle.displayName == parsedOtherSaveTitle.displayName;
       });
       if (conflictingSaveTitles.length) {
-        console.trace('jtest overwrite', forceOverwrite);
         const doOverwrite = forceOverwrite ? true : await Jprompt({ text: 'There is a previous save file with this name, are you sure you want to overwrite it?', yesText: 'Yes, Overwrite it', noBtnText: 'Cancel', noBtnKey: 'Escape', forceShow: true })
         if (doOverwrite) {
           conflictingSaveTitles.forEach(otherTitle => {

@@ -189,10 +189,9 @@ export default class PiePeer {
 
         };
         globalThis.openPeerLobby = (open: boolean, socket: WebSocket) => {
-            const el = document.getElementById('openLobby');
-            if (el) {
+            document.querySelectorAll('.openLobbyBtn').forEach(el => {
                 el.innerHTML = open ? 'Opening...' : 'Closing...';
-            }
+            });
             if (open) {
                 if (lastRoomInfo) {
                     console.log('reopening lobby with', lastRoomInfo);

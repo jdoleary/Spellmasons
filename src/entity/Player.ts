@@ -387,10 +387,9 @@ export function syncLobby(underworld: Underworld) {
     });
 
   const isLobbyOpen = document.body.classList.contains('peer-hub-connected');
-  const el = document.getElementById('openLobby');
-  if (el) {
+  document.querySelectorAll('.openLobbyBtn').forEach(el => {
     el.innerHTML = isLobbyOpen ? 'Close Lobby' : 'Open Lobby';
-  }
+  });
   // Update lobby element
   if (elInGameLobby) {
     if (underworld.players.length == 1) {

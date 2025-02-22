@@ -2791,13 +2791,13 @@ body.dragging-card .floating-card-holder .empty-slot {
 #in-game-lobby-holder .invite {
   margin: 4px;
 }
-#openLobby:empty, body:not(.P2P) #openLobby {
+.openLobbyBtn:empty, body:not(.P2P) .openLobbyBtn {
   display:none;
 }
-body.isPeerHost #openLobby {
+body.isPeerHost .openLobbyBtn {
   display: block;
 }
-#openLobby  {
+.openLobbyBtn  {
   display: none;
   margin:8px 4px;
   padding: 4px;
@@ -2825,4 +2825,7 @@ body.isPeerHost #openLobby {
 .black-button:focus {
   outline: none;
   box-shadow: 0 0 5px white;
+}
+.hub-connection-status {
+  margin: 8px 0px;
 }
