@@ -329,4 +329,6 @@ declare global {
   var setPieToP2PMode: (active: boolean) => void | undefined;
   // Returns true if request is accepted
   var responseRequestToJoinP2P: (request: RequestToJoin, approved: boolean) => void | undefined;
+  var kickPeer: (args: { name?: string, clientId?: string }) => void | undefined;
+  var openPeerLobby: (open: boolean, socket: WebSocket) => void | undefined;
 }

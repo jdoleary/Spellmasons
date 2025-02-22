@@ -392,10 +392,13 @@ export function syncLobby(underworld: Underworld) {
       elInGameLobby.innerHTML = '';
       return;
     }
+    const isLobbyOpen = document.body.classList.contains('peer-hub-connected');
     // filter: Don't show disconnected players in in-game lobby.
     elInGameLobby.innerHTML = globalThis.lobbyPlayerList.filter(p => p.clientConnected).map(p => {
-      return `<div class="ui-border"><div class="player"><span class="player-name"><span style="color:${p.color}">⬤&nbsp;</span>${p.name}</span><span>${p.status}</span></div></div>`
-    }).join('');
+      return `<div class="ui-border"><div class="player"><span class="player-name"><span style="color:${p.color}">⬤&nbsp;</span>${p.name}</span><span>${p.status}</span>
+      <button data-fn="kick" data-name="${p.name}" data-clientid="${p.clientId}">Kick</button>
+      </div></div>`
+    }).join('') + `<button id="openLobby" data-fn="openlobby">${isLobbyOpen ? 'Close' : 'Open'} Lobby</button>`;
   }
 }
 export function enterPortal(player: IPlayer, underworld: Underworld) {

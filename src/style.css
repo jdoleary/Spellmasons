@@ -833,7 +833,7 @@ body.your-turn #end-turn-btn:hover {
   }
 
   50% {
-    box-shadow: 0 0 20px rgb(255, 231, 144, 1), 0 0 30px rgba(244, 231, 144, 1), 0 0 40px rgba(244, 231, 144, 1);
+    box-shadow: 0 0 20px #ffe790, 0 0 30px rgba(244, 231, 144, 1), 0 0 40px rgba(244, 231, 144, 1);
   }
 
 }
@@ -1701,6 +1701,16 @@ body.open-inventory #inventory-icon {
   width: 380px;
   pointer-events: none;
 }
+body.isPeerHost #in-game-lobby button {
+  display: block;
+}
+#openLobby {
+  margin:4px;
+}
+#in-game-lobby button {
+  pointer-events: all;
+  display: none;
+}
 .request-to-join-p2p {
   pointer-events:all;
 }
@@ -1974,6 +1984,13 @@ body.auto-camera #camera-recenter-tip {
   background-color: #321111;
 }
 
+.invite {
+  animation: pulseGlow 2s infinite;
+  background-color: #ffe790;
+  color: black;
+  padding: 8px;
+  border-radius: 8px;
+}
 .ui-border, #in-game-lobby .invite {
   border: 30px solid;
   border-image-outset: 0;

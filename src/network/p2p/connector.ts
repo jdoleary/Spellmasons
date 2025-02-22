@@ -13,7 +13,7 @@ export function sendToHub(socket: WebSocket, data: any) {
 
 let connectionPromise: Promise<WebSocket> | undefined;
 export function ensureConnectionToHub(wsHubUrl: string,
-  handlers: { onData: (data: any, socket: WebSocket) => void, onError: (data: any, socket: WebSocket) => void }
+  handlers: { onData: (data: any, socket: WebSocket) => void, onError: (data: any, socket: WebSocket) => void, onConnectionState?: (open: boolean) => void }
 ): Promise<WebSocket> {
   // TODO: Handle if wsHubUrl changes from current connection
   if (socket && socket.readyState == WebSocket.CLOSING) {
@@ -33,13 +33,19 @@ export function ensureConnectionToHub(wsHubUrl: string,
   if (!socket || socket.readyState == WebSocket.CLOSED) {
     connectionPromise = new Promise((res, rej) => {
       socket = new WebSocket(wsHubUrl);
-      socket.addEventListener("close", (_) => { console.log('Disconnected from hub.') });
+      socket.addEventListener("close", (_) => {
+        console.log('Disconnected from hub.');
+        if (handlers.onConnectionState)
+          handlers.onConnectionState(false);
+      });
       socket.addEventListener("error", (event) => {
         handlers.onError(event, socket);
         rej(event);
       });
       socket.addEventListener("open", (_) => {
         res(socket);
+        if (handlers.onConnectionState)
+          handlers.onConnectionState(true);
       });
       socket.addEventListener("message", (event) => {
         console.log("Message from server ", event, event.data);

@@ -14,13 +14,17 @@ import { ACCEPT_REQUEST_SIGNAL, ERROR, JOIN_REQUEST, REQUEST_REJECTED } from "./
 // This function is exposed for the consumer of this library 
 // to initiate a join request to a host for a p2p connection
 export async function join({ toName, fromName, fromClientId, websocketHubUrl, onError, onData }: { toName: string, fromName: string, fromClientId: string, websocketHubUrl: string, onError: (error: any) => void, onData: (data: any) => void }): Promise<{ peer: SimplePeer, name: string }> {
-    console.log('P2P join:', ...arguments)
+    console.log('P2P join:', ...arguments);
     // Note: it is up to the caller to
     // subscribe to peer.on('data', message => {});
     return new Promise(async (resolvePeerConnection) => {
         const { signal, peer } = await new Promise<{ signal: string, peer: SimplePeer }>((res, _rej) => {
             // Step 1: Initiate the peer with a signal
             const peer = new SimplePeer({ initiator: true, tickle: false });
+            peer.on('close', () => {
+                console.log('Lost peer connection.');
+                globalThis.exitCurrentGame?.();
+            });
             peer.on('error', onError);
 
             peer.on('signal', (data: any) => {
@@ -43,7 +47,7 @@ export async function join({ toName, fromName, fromClientId, websocketHubUrl, on
                 // and forms the final connection.
                 peer.signal(signal);
             } else if (type === REQUEST_REJECTED) {
-                alert('Join request rejected from ' + toName);
+                Jprompt({ text: `Join request rejected from ${toName}`, yesText: 'Okay', forceShow: true });
             } else if (type === ERROR) {
                 onError(data.error);
             }

@@ -11,6 +11,15 @@ document.body.addEventListener('click', (e) => {
     }
     try {
         switch (el.dataset['fn']) {
+            case "openlobby": {
+                globalThis.openPeerLobby(!document.body.classList.contains('peer-hub-connected'), socket);
+            }
+                break;
+            case "kick": {
+                // clientid intentionally lowercase
+                globalThis.kickPeer({ name: el.dataset['name'], clientId: el.dataset['clientid'] });
+            }
+                break;
             case "approve-p2p": {
                 const requestData = JSON.parse(decodeURIComponent(el.dataset['request'] || ''));
                 globalThis.responseRequestToJoinP2P(requestData, true);
@@ -59,9 +68,10 @@ function requestToJoin(data: RequestToJoin) {
         el.appendChild(d);
     });
 }
+let socket: WebSocket;
 // This function is exposed to the consumer of this library to communicate to
 // the hub that this host is available to receive join requests.
-export async function host({ fromName, websocketHubUrl, onPeerConnected, onPeerDisconnected, onError, onData }: { fromName: string, websocketHubUrl: string, onPeerConnected: (p: SimplePeer, name: string, clientId: string) => void, onPeerDisconnected: (p: SimplePeer) => void, onError: (error: any) => void, onData: (data: any) => void }) {
+export async function host({ fromName, websocketHubUrl, onPeerConnected, onPeerDisconnected, onError, onData, onConnectionState }: { fromName: string, websocketHubUrl: string, onPeerConnected: (p: SimplePeer, name: string, clientId: string) => void, onPeerDisconnected: (p: SimplePeer) => void, onError: (error: any) => void, onData: (data: any) => void, onConnectionState: (connected: boolean) => void }) {
     function responseRequestToJoinP2P(request: RequestToJoin, approved: boolean) {
         if (approved) {
             console.log('Step: Accepted join request, creating own signal.');
@@ -97,7 +107,7 @@ export async function host({ fromName, websocketHubUrl, onPeerConnected, onPeerD
             onError(data.error);
         }
     }
-    const socket = await ensureConnectionToHub(websocketHubUrl, { onData: onHubData, onError });
+    socket = await ensureConnectionToHub(websocketHubUrl, { onData: onHubData, onError, onConnectionState });
     // Step 1: Register name with Hub
     sendToHub(socket, { type: REGISTER_CLIENT, fromName });
 

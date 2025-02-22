@@ -5,8 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { host } from "./p2p/host";
 import { SERVER_HUB_URL } from "../config";
 import { join } from "./p2p/client";
-import { MESSAGE_TYPES } from "../types/MessageTypes";
-import { Pie } from "../types/commonTypes";
+import { syncLobby } from "../entity/Player";
 
 export const MessageType = {
     // Both client and server:
@@ -86,6 +85,7 @@ function error(...args: any) {
     console.error('PiePeer', ...args);
 }
 const maxLatencyDataPoints = 14;
+let lastRoomInfo: Room;
 
 export default class PiePeer {
     // onData: a callback that is invoked when data is recieved from PieServer
@@ -173,6 +173,39 @@ export default class PiePeer {
             log('Network offline');
             this._updateDebugInfo();
         });
+        globalThis.kickPeer = ({ name, clientId }: { name?: string, clientId?: string }) => {
+            const foundPeerIndex = this.peers.findIndex(p => clientId !== undefined ? p.clientId == clientId : p.name === name);
+            if (foundPeerIndex !== -1) {
+                const peer = this.peers[foundPeerIndex];
+                if (peer) {
+                    Jprompt({ text: `Are you sure you wish to kick ${name || clientId} from the game?`, noBtnText: 'Cancel', noBtnKey: 'Escape', yesText: 'Kick', forceShow: true }).then(doKick => {
+                        if (doKick) {
+                            peer.peer.destroy();
+                            this.peers.splice(foundPeerIndex, 1);
+                        }
+                    });
+                }
+            }
+
+        };
+        globalThis.openPeerLobby = (open: boolean, socket: WebSocket) => {
+            if (open) {
+                if (lastRoomInfo) {
+                    console.log('reopening lobby with', lastRoomInfo);
+                    this.makeRoom(lastRoomInfo);
+                } else {
+                    Jprompt({
+                        text: `Something went wrong. Unable to reopen lobby`,
+                        yesText: 'Okay',
+                        forceShow: true
+                    });
+                }
+            } else {
+                if (socket)
+                    socket.close();
+            }
+
+        }
 
     }
     isConnected(): boolean {
@@ -360,6 +393,8 @@ export default class PiePeer {
     // Remember to catch the rejected promise if used outside of this library
     makeRoom(roomInfo: Room) {
         this.isP2PHost = true;
+        document.body.classList.toggle('isPeerHost', this.isP2PHost);
+        lastRoomInfo = roomInfo;
         host({
             fromName: roomInfo.name,
             websocketHubUrl: hubURL,
@@ -383,14 +418,21 @@ export default class PiePeer {
                 this.hostBroadcastConnectedPeers();
             },
             onPeerDisconnected: (p) => {
-                // TODO test that this removes the correct peer
                 this.peers.splice(this.peers.findIndex(x => x.peer == p), 1);
                 this.hostBroadcastConnectedPeers();
+            },
+            onConnectionState: (hubConnected) => {
+                document.body.classList.toggle('peer-hub-connected', hubConnected);
+                console.log('Hub connected:', hubConnected);
+                // @ts-ignore: Exception: this code will only ever be run on client
+                // It's not usually okay to use devUnderworld
+                syncLobby(globalThis.devUnderworld);
             }
         });
     }
     joinRoom(roomInfo: Room, isHosting: boolean = false) {
         this.isP2PHost = false;
+        document.body.classList.toggle('isPeerHost', this.isP2PHost);
         if (this.soloMode) {
             // Now that client has joined a room in soloMode, send a 
             // manufactured clientPresenceChanged as if it came from the server
