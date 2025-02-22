@@ -385,6 +385,12 @@ export function syncLobby(underworld: Underworld) {
       }
       return { name: p.name || p.playerId, clientId: p.clientId, clientConnected: p.clientConnected, status, color: colors.convertToHashColor(p.color || 0xffffff), ready: p.lobbyReady ? i18n('Ready') : i18n('Not Ready') };
     });
+
+  const isLobbyOpen = document.body.classList.contains('peer-hub-connected');
+  const el = document.getElementById('openLobby');
+  if (el) {
+    el.innerHTML = isLobbyOpen ? 'Close Lobby' : 'Open Lobby';
+  }
   // Update lobby element
   if (elInGameLobby) {
     if (underworld.players.length == 1) {
@@ -392,13 +398,13 @@ export function syncLobby(underworld: Underworld) {
       elInGameLobby.innerHTML = '';
       return;
     }
-    const isLobbyOpen = document.body.classList.contains('peer-hub-connected');
+
     // filter: Don't show disconnected players in in-game lobby.
     elInGameLobby.innerHTML = globalThis.lobbyPlayerList.filter(p => p.clientConnected).map(p => {
       return `<div class="ui-border"><div class="player"><span class="player-name"><span style="color:${p.color}">⬤&nbsp;</span>${p.name}</span><span>${p.status}</span>
       ${p.clientId !== globalThis.clientId ? `<button class="kick-btn" data-fn="kick" data-name="${p.name}" data-clientid="${p.clientId}">Kick</button>` : ''}
       </div></div>`
-    }).join('') + `<button id="openLobby" data-fn="openlobby">${isLobbyOpen ? 'Close' : 'Open'} Lobby</button>`;
+    }).join('');
   }
 }
 export function enterPortal(player: IPlayer, underworld: Underworld) {

@@ -2799,3 +2799,9 @@ body.dragging-card .floating-card-holder .empty-slot {
   gap: 8px;
   align-items: center;
 }
+#in-game-lobby-holder .invite {
+  margin: 4px;
+}
+#openLobby:empty {
+  display:none;
+}
