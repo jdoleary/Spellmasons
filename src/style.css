@@ -2776,19 +2776,11 @@ body.dragging-card .floating-card-holder .empty-slot {
   border: 1px solid black;
   color: white;
   cursor:pointer;
+  padding: 0 4px;
 }
 .kick-btn:hover {
   background-color: #3d3d3d;
   border: 1px solid red;
-}
-#openLobby  {
-  background-color: #212121;
-  border: 2px solid black;
-  color: white;
-  cursor:pointer;
-}
-#openLobby:hover  {
-  background-color: #3d3d3d;
 }
 .invite {
   display:flex;
@@ -2799,9 +2791,22 @@ body.dragging-card .floating-card-holder .empty-slot {
 #in-game-lobby-holder .invite {
   margin: 4px;
 }
-#openLobby{
-  margin:4px;
-}
 #openLobby:empty, body:not(.P2P) #openLobby {
   display:none;
+}
+body.isPeerHost #openLobby {
+  display: block;
+}
+#openLobby  {
+  display: none;
+  margin:4px;
+  padding: 4px;
+  background-color: #212121;
+  border: 2px solid black;
+  color: white;
+  cursor:pointer;
+  pointer-events: all;
+}
+#openLobby:hover  {
+  background-color: #3d3d3d;
 }
