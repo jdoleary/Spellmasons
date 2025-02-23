@@ -26,7 +26,7 @@ export const MessageType = {
     ConnectInfo: 'ConnectInfo',
 };
 
-const hubURL = SERVER_HUB_URL + '/p2p'
+const hubURL = SERVER_HUB_URL.replace('http', 'ws') + '/p2p'
 // This will be different for every client
 const defaultIdForSolomode = uuidv4();
 
