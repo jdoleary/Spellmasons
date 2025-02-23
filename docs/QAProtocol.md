@@ -5,9 +5,7 @@
     - Push types to spellmasons-mods
 - Test Host Local Server, Host via Docker (run `testDockerImage.sh`)
 
-- Test all spells in multiplayer: ~20 minutes
-    - and end turn after each to test for desyncs
-- Test all spells in singleplayer: ~24 minutes
+- Make sure the AI can take their turn
 - Test saving if you modify underworld with new elements added to the level that need to be serialized
 - Test loading an old save file for backwards compatibility
 - Test hosting LAN server from Electron build
