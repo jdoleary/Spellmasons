@@ -5,6 +5,7 @@
     - Push types to spellmasons-mods
 - Test Host Local Server, Host via Docker (run `testDockerImage.sh`)
 
+- Test multiple separate games on the same server
 - Make sure the AI can take their turn
 - Test saving if you modify underworld with new elements added to the level that need to be serialized
 - Test loading an old save file for backwards compatibility
