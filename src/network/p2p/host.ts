@@ -77,7 +77,7 @@ let socket: WebSocket;
 // This function is exposed to the consumer of this library to communicate to
 // the hub that this host is available to receive join requests.
 export async function host({ fromName, websocketHubUrl, onPeerConnected, onPeerDisconnected, onError, onData, onConnectionState }: { fromName: string, websocketHubUrl: string, onPeerConnected: (p: SimplePeer, name: string, clientId: string) => void, onPeerDisconnected: (p: SimplePeer) => void, onError: (error: any) => void, onData: (data: any) => void, onConnectionState: (connected: boolean) => void }) {
-    function responseRequestToJoinP2P(request: RequestToJoin, approved: boolean) {
+    function responseRequestToJoinP2P(request: RequestToJoin, approved: boolean, reason?: string) {
         if (approved) {
             console.log('Step: Accepted join request, creating own signal.');
             // Host generates one peer per JOIN_REQUEST
@@ -98,16 +98,20 @@ export async function host({ fromName, websocketHubUrl, onPeerConnected, onPeerD
             // Step 2: When JOIN_REQUEST is accepted, generate own signal...
             peer.signal(request.signal);
         } else {
-            sendToHub(socket, { type: REQUEST_REJECTED, fromName, toName: request.sender })
+            sendToHub(socket, { type: REQUEST_REJECTED, fromName, toName: request.sender, reason })
         }
     }
 
     globalThis.responseRequestToJoinP2P = responseRequestToJoinP2P;
     console.log('P2P host:', ...arguments)
     async function onHubData(data: any, socket: WebSocket) {
-        const { type, fromName: sender, fromClientId: senderClientId, signal } = data;
+        const { type, fromName: sender, fromClientId: senderClientId, signal, version } = data;
         if (type === JOIN_REQUEST) {
-            requestToJoin({ sender, senderClientId, signal });
+            if (version && version !== globalThis.SPELLMASONS_PACKAGE_VERSION) {
+                globalThis.responseRequestToJoinP2P({ sender, senderClientId, signal }, false, `Version mismatch.  Host v${globalThis.SPELLMASONS_PACKAGE_VERSION} does not equal client v${version}`);
+            } else {
+                requestToJoin({ sender, senderClientId, signal });
+            }
         } else if (type === ERROR) {
             onError(data.error);
         }

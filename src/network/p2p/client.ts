@@ -60,7 +60,7 @@ export async function join({ toName, fromName, fromClientId, websocketHubUrl, on
             peer.on('data', onData);
         });
         function onHubData(data: any) {
-            const { type, signal } = data;
+            const { type, signal, reason } = data;
             if (type === ACCEPT_REQUEST_SIGNAL) {
                 console.log('Step: Request accepted, processing return signal...', data);
                 // Step 4: When the host accepts the request, it will generate
@@ -74,7 +74,12 @@ export async function join({ toName, fromName, fromClientId, websocketHubUrl, on
                     rejectPeerConnection(e);
                 }
             } else if (type === REQUEST_REJECTED) {
-                Jprompt({ text: `Join request rejected from ${toName}`, yesText: 'Okay', forceShow: true });
+                let text = `Join request rejected from ${toName}`;
+                if (reason) {
+                    text = `Unable to join ${toName}. ${reason}`;
+                }
+                Jprompt({ text, yesText: 'Okay', forceShow: true });
+                rejectPeerConnection(text);
             } else if (type === ERROR) {
                 onError(data.error);
                 rejectPeerConnection(data.error);
@@ -95,7 +100,7 @@ export async function join({ toName, fromName, fromClientId, websocketHubUrl, on
         // Step 3: Now that we're connected to hub and have a signal,
         // send a join request with the signal to the host through
         // the hub.  The toName identifies which host to send the signal to
-        sendToHub(socket, { type: JOIN_REQUEST, signal, fromName, fromClientId, toName });
+        sendToHub(socket, { type: JOIN_REQUEST, signal, fromName, fromClientId, toName, version: globalThis.SPELLMASONS_PACKAGE_VERSION });
 
     });
 }
