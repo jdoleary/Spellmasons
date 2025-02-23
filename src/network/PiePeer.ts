@@ -449,7 +449,9 @@ export default class PiePeer {
         });
     }
     joinRoom(roomInfo: Room, isHosting: boolean = false) {
-        this.isP2PHost = false;
+        // If in soloMode, you are always the host, if not in solomode, since this function is joinRoom,
+        // you are not the host
+        this.isP2PHost = this.soloMode;
         document.body.classList.toggle('isPeerHost', this.isP2PHost);
         if (this.soloMode) {
             // Now that client has joined a room in soloMode, send a 
