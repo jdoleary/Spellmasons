@@ -388,7 +388,7 @@ export function syncLobby(underworld: Underworld) {
 
   const isLobbyOpen = document.body.classList.contains('peer-hub-connected');
   document.querySelectorAll('.openLobbyBtn').forEach(el => {
-    el.innerHTML = isLobbyOpen ? 'Close Lobby' : 'Open Lobby';
+    el.innerHTML = isLobbyOpen ? 'Disallow Join Requests' : 'Allow Join Requests';
   });
   // Update lobby element
   if (elInGameLobby) {

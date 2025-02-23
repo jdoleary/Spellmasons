@@ -16,7 +16,7 @@ function updateHubConnectionStatus(connected: boolean) {
     if (connected) {
       el.innerHTML = `<span style="color:green;">⬤&nbsp;</span>Lobby is accepting join requests`;
     } else {
-      el.innerHTML = `<span style="color:red;">⬤&nbsp;</span>Lobby is closed`;
+      el.innerHTML = `<span style="color:red;">⬤&nbsp;</span>Lobby is not accepting join requests`;
     }
   });
 }
