@@ -333,4 +333,5 @@ declare global {
   var openPeerLobby: (open: boolean, socket: WebSocket) => void | undefined;
   var disconnectFromP2PHub: () => void | undefined;
   var menuJoinErr: (e: string) => void | undefined;
+  var showLegalPopup: (forcePopup: boolean) => void;
 }
