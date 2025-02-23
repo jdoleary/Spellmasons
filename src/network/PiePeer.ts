@@ -85,7 +85,7 @@ function error(...args: any) {
     console.error('PiePeer', ...args);
 }
 const maxLatencyDataPoints = 14;
-let lastRoomInfo: Room;
+let lastRoomInfo: Room | undefined;
 
 export default class PiePeer {
     // onData: a callback that is invoked when data is recieved from PieServer
@@ -402,7 +402,21 @@ export default class PiePeer {
         host({
             fromName: roomInfo.name,
             websocketHubUrl: hubURL,
-            onError: console.error,
+            onError: e => {
+                console.error('P2P host err', e);
+                if (e == 'This name is not available' && globalThis.menuJoinErr) {
+                    globalThis.menuJoinErr(e);
+                    // You can't host with this name so disconnect and let the user
+                    // try again with a new name
+                    disconnectFromP2PHub();
+                    // Turn off isP2PHost
+                    // so that the UI doesn't think that you're successfully in a lobby
+                    // with that name
+                    this.isP2PHost = false;
+                    document.body.classList.toggle('isPeerHost', this.isP2PHost);
+                    lastRoomInfo = undefined;
+                }
+            },
             onData: (msg) => {
                 try {
                     const data = JSON.parse(msg);
