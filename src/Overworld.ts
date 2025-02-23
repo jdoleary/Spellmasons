@@ -31,7 +31,10 @@ export interface Overworld {
 let overworld: Overworld;
 export default function makeOverworld(pie: Pie): Overworld {
   // Overworld is a singleton.  It is only made once
-  if (overworld) {
+  // Critical: This is **not** the case for Headless servers
+  // The Headless server must be able to create multiple overworlds to serve
+  // multiple games
+  if (!globalThis.headless && overworld) {
     overworld.pie = pie;
     return overworld;
   }
