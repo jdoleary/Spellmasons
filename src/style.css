@@ -2829,3 +2829,6 @@ body.isPeerHost .openLobbyBtn {
 .hub-connection-status {
   margin: 8px 0px;
 }
+#legal-content {
+  min-height: 100px;
+}
