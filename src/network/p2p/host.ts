@@ -77,6 +77,9 @@ let socket: WebSocket;
 // This function is exposed to the consumer of this library to communicate to
 // the hub that this host is available to receive join requests.
 export async function host({ fromName, websocketHubUrl, onPeerConnected, onPeerDisconnected, onError, onData, onConnectionState }: { fromName: string, websocketHubUrl: string, onPeerConnected: (p: SimplePeer, name: string, clientId: string) => void, onPeerDisconnected: (p: SimplePeer) => void, onError: (error: any) => void, onData: (data: any) => void, onConnectionState: (connected: boolean) => void }) {
+    if (globalThis.remoteLog)
+        globalThis.remoteLog(`Hosting P2P`);
+
     function responseRequestToJoinP2P(request: RequestToJoin, approved: boolean, reason?: string) {
         if (approved) {
             console.log('Step: Accepted join request, creating own signal.');

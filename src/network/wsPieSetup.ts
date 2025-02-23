@@ -107,6 +107,8 @@ function connect_to_wsPie_server(wsUri: string | undefined, overworld: Overworld
         reject('Unable to connect to server at ' + wsUri);
       }).then(() => {
         console.log(`Pie: Connection to server ${wsUri} succeeded`);
+        if (globalThis.remoteLog)
+          globalThis.remoteLog(`Connection to server ${wsUri} succeeded`);
         resolve();
       });
     } else {
