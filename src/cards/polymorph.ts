@@ -109,7 +109,8 @@ function polymorphUnit(fromUnit: Unit.IUnit, underworld: Underworld, prediction:
       toSourceUnit.info.subtype,
       { ...toSourceUnit.unitProps, isMiniboss: fromUnit.isMiniboss, originalLife: fromUnit.originalLife },
       underworld,
-      prediction
+      prediction,
+      state?.casterUnit
     );
 
     if (unit != undefined) {
