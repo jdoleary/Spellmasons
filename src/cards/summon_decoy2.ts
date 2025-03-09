@@ -8,17 +8,18 @@ import { playDefaultSpellSFX } from './cardUtils';
 import floatingText from '../graphics/FloatingText';
 import { addWarningAtMouse } from '../graphics/PlanningView';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
-import { runeThornyDecoysId } from '../modifierThornyDecoys';
 import { thornsId } from '../modifierThorns';
+import { runeThornyDecoysId } from '../modifierThornyDecoys';
 import { runeHardenedMinionsId } from '../modifierHardenedMinions';
+import { decoyId } from './summon_decoy';
 
-const id = 'decoy 2';
+export const decoy2Id = 'decoy 2';
 const spell: Spell = {
   card: {
-    id,
+    id: decoy2Id,
     category: CardCategory.Soul,
     sfx: 'summonDecoy',
-    requires: ['decoy'],
+    requires: [decoyId],
     supportQuantity: true,
     manaCost: 80,
     healthCost: 0,
