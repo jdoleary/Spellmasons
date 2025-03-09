@@ -7,6 +7,7 @@ import Underworld from './Underworld';
 
 export const damagelimiterId = 'Damage Limiter';
 const limit = 30;
+const limitPercentage = 0.03;
 const subspriteId = 'damage-limiter';
 function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld) {
   Image.addSubSprite(unit.image, subspriteId);
@@ -37,7 +38,10 @@ export default function registerDamageLimiter() {
   });
   registerEvents(damagelimiterId, {
     onTakeDamage: (unit: Unit.IUnit, amount: number, underworld: Underworld, prediction: boolean, damageDealer?: Unit.IUnit) => {
-      const overriddenAmount = Math.min(limit, amount);
+      let overriddenAmount = Math.min(limit, amount);
+      // Limit to % of max health
+      let overriddenPercentage = Math.min(limitPercentage * unit.healthMax, amount);
+      overriddenAmount = Math.max(overriddenAmount, overriddenPercentage);
       if (overriddenAmount < amount) {
         floatingText({ coords: unit, text: `${damagelimiterId}`, prediction })
       }
