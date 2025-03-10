@@ -614,6 +614,9 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       }
       console.log('sync: CREATE_LEVEL: Syncing / Creating level');
       if (underworld) {
+        // Only happens during CREATE_LEVEL message so that 
+        // it isn't triggered during a game load
+        underworld.giveStartOfLevelStatPoints(level);
         await underworld.createLevel(level, gameMode);
       } else {
         console.error('Cannot sync level, no underworld exists')

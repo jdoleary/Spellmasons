@@ -240,19 +240,6 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
     }
   }
 
-  // Exception: Run logic for `Investment` rune:
-  const modifier = player.unit.modifiers[investmentId];
-  if (modifier) {
-    if (player) {
-      const dividend = Math.round(player.statPointsUnspent * (modifier.quantity / 100));
-      player.statPointsUnspent += dividend;
-      if (globalThis.player === player) {
-        queueCenteredFloatingText(`${i18n(investmentId)}: ${dividend} SP`);
-      }
-    }
-  }
-
-
   Unit.resetUnitStats(player.unit, underworld);
   Unit.syncPlayerHealthManaUI(underworld);
 }

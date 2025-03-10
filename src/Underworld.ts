@@ -114,6 +114,7 @@ import { heavyImpactsId } from './modifierHeavyImpact';
 import { OutlineFilter } from '@pixi/filter-outline';
 import { LogLevel } from './RemoteLogging';
 import PiePeer from './network/PiePeer';
+import { investmentId } from './modifierInvestment';
 
 const loopCountLimit = 10000;
 export enum turn_phase {
@@ -2318,19 +2319,6 @@ export default class Underworld {
     // this call is here to show tutorial tasks immediately and prevent these bugs
     isTutorialComplete();
 
-    // Give stat points, but not in the first level
-    if (this.levelIndex > 0) {
-      for (let player of this.players) {
-        const points = config.STAT_POINTS_PER_LEVEL;
-        player.statPointsUnspent += points;
-        Player.incrementPresentedRunesForPlayer(player, this);
-        if (!tutorialChecklist.spendUpgradePoints.complete && this.levelIndex >= 3) {
-          tutorialShowTask('spendUpgradePoints');
-        }
-        CardUI.tryShowStatPointsSpendable();
-        console.log("Setup: Gave player: [" + player.clientId + "] " + points + " upgrade points for level index: " + levelIndex);
-      }
-    }
     // Update toolbar (since some card's disabledLabel needs updating on every new label)
     CardUI.recalcPositionForCards(globalThis.player, this);
     // Now that level is done being generated, set generatingLevel to
@@ -2352,6 +2340,37 @@ export default class Underworld {
   getLevelText(): string {
     return this._getLevelText(this.levelIndex);
   }
+  giveStartOfLevelStatPoints({ levelIndex }: LevelData) {
+    // Give stat points, but not in the first level
+    if (levelIndex > 0) {
+      for (let player of this.players) {
+        const points = config.STAT_POINTS_PER_LEVEL;
+        player.statPointsUnspent += points;
+        Player.incrementPresentedRunesForPlayer(player, this);
+        if (!tutorialChecklist.spendUpgradePoints.complete && levelIndex >= 3) {
+          tutorialShowTask('spendUpgradePoints');
+        }
+        CardUI.tryShowStatPointsSpendable();
+        console.log("Setup: Gave player: [" + player.clientId + "] " + points + " upgrade points for level index: " + levelIndex);
+      }
+    }
+    // Grant investment SP after saving to prevent exploit where it would grant it and then save, and then regenerating the level
+    // grants it again
+    for (let player of this.players) {
+      // Exception: Run logic for `Investment` rune:
+      const modifier = player.unit.modifiers[investmentId];
+      if (modifier) {
+        if (player) {
+          const dividend = Math.round(player.statPointsUnspent * (modifier.quantity / 100));
+          player.statPointsUnspent += dividend;
+          if (globalThis.player === player) {
+            queueCenteredFloatingText(`${i18n(investmentId)}: ${dividend} SP`);
+          }
+        }
+      }
+    }
+
+  }
   async createLevel(levelData: LevelData, gameMode?: GameMode) {
     if (gameMode !== undefined) {
       this.gameMode = gameMode;
@@ -2364,6 +2383,7 @@ export default class Underworld {
     if (levelData.levelIndex == config.LAST_LEVEL_INDEX + 1) {
       this.winTime = Date.now();
     }
+
     return new Promise<void>(resolve => {
       document.body?.classList.toggle('loading', true);
       // Add timeout so that loading can update dom
