@@ -42,7 +42,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconBloat.png',
-    description: ['spell_bloat', id, damage.toString(), id],
+    description: ['spell_bloat', i18n(id), damage.toString(), i18n(id)],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       for (let unit of state.targetedUnits.filter(u => u.alive)) {
