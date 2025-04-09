@@ -7,8 +7,6 @@ import Underworld from '../../Underworld';
 import { bloodLobber } from '../../graphics/ui/colors';
 import * as config from '../../config';
 import * as Image from '../../graphics/Image';
-import * as colors from '../../graphics/ui/colors';
-import { undyingModifierId } from '../../modifierUndying';
 import { resurrect_id } from '../../cards/resurrect';
 import { primedCorpseId } from '../../modifierPrimedCorpse';
 import { boneShrapnelCardId, boneShrapnelRadius } from '../../cards/bone_shrapnel';
@@ -62,13 +60,7 @@ const unit: UnitSource = {
     damage: 'goruHurt',
     death: 'goruDeath'
   },
-  init: (unit: Unit.IUnit, underworld: Underworld) => {
-    // TODO - Bug: Undying can be re-added by cloning/splitting/creating a Goru with no undying modifier
-    // Using originalLife might prevent this, but also prevents summoned Goru's from getting undying.
-    if (!unit.modifiers[undyingModifierId]) {
-      Unit.addModifier(unit, undyingModifierId, underworld, false, 1);
-    }
-  },
+  init: (unit: Unit.IUnit, underworld: Underworld) => { },
   action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
     // Goru has 2 "action points" and 5 actions to choose from
     // Actions are prioritized as follows:
