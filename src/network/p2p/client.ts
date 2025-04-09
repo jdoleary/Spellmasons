@@ -2,6 +2,7 @@
 import SimplePeer from "simple-peer/simplepeer.min.js";
 import { ensureConnectionToHub, sendToHub } from "./connector";
 import { ACCEPT_REQUEST_SIGNAL, ERROR, JOIN_REQUEST, REQUEST_REJECTED } from "./messages";
+import { simplePeerConf } from "./peerConf";
 
 /* Desired Flow:
 1. Host: Register name with Hub
@@ -24,7 +25,7 @@ export async function join({ toName, fromName, fromClientId, websocketHubUrl, on
     return new Promise(async (resolvePeerConnection, rejectPeerConnection) => {
         const { signal, peer } = await new Promise<{ signal: string, peer: SimplePeer }>((res, _rej) => {
             // Step 1: Initiate the peer with a signal
-            const peer = new SimplePeer({ initiator: true, tickle: false });
+            const peer = new SimplePeer(Object.assign(simplePeerConf, { initiator: true, tickle: false }));
             peer.on('close', () => {
                 console.error('Lost peer connection.');
                 onPeerDisconnected(peer);

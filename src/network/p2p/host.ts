@@ -3,6 +3,7 @@ import SimplePeer from "simple-peer/simplepeer.min.js";
 import { ensureConnectionToHub, sendToHub } from "./connector";
 import { ACCEPT_REQUEST_SIGNAL, ERROR, JOIN_REQUEST, REGISTER_CLIENT, REQUEST_REJECTED } from "./messages";
 import { RequestToJoin } from "../../types/commonTypes";
+import { simplePeerConf } from "./peerConf";
 if (document && document.body && document.body.addEventListener) {
     document.body.addEventListener('click', (e) => {
         const el = e.target as HTMLElement;
@@ -84,7 +85,7 @@ export async function host({ fromName, websocketHubUrl, onPeerConnected, onPeerD
         if (approved) {
             console.log('Step: Accepted join request, creating own signal.');
             // Host generates one peer per JOIN_REQUEST
-            const peer: SimplePeer = new SimplePeer({ initiator: false, tickle: false });
+            const peer: SimplePeer = new SimplePeer(Object.assign(simplePeerConf, { initiator: false, tickle: false }));
             peer.on('close', () => onPeerDisconnected(peer));
             peer.on('error', onError);
             peer.on('connect', () => {
