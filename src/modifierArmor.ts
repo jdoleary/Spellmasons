@@ -24,8 +24,8 @@ export default function registerArmor() {
       if (modifier) {
         // Will only reduce damage (doesn't affect healing)
         if (amount > 0) {
-          // Cannot reduce incoming damage below 1
-          amount = Math.max(amount - modifier.quantity, 1);
+          // Cannot reduce incoming damage below 0
+          amount = Math.max(amount - modifier.quantity, 0);
         }
       }
 
