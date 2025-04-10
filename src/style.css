@@ -315,18 +315,22 @@ invisibly blocked, change with caution! */
 .recording-shorts #inspector-tooltip {
   top: 30%;
 }
+
 .recording-shorts #inventory-container {
   /* This makes width 1080 which is recording resolution */
-  height:605px;
+  height: 605px;
   margin-bottom: 40%;
 }
+
 .recording-shorts #ui-positioner {
-  left:0;
-  width:1080px;
+  left: 0;
+  width: 1080px;
 }
+
 .recording-shorts .doob-stats {
-  display:none;
+  display: none;
 }
+
 .recording-shorts #camera-recenter-tip {
   display: none !important;
 }
@@ -385,8 +389,8 @@ invisibly blocked, change with caution! */
   and there must be enough room for the glow on hover */
   padding: 4px 0px 0px 5px;
   /* Center elements due to manabadges being bumped out*/
-  position:relative;
-  top:2px;
+  position: relative;
+  top: 2px;
 }
 
 #card-hand .card img {
@@ -404,11 +408,13 @@ invisibly blocked, change with caution! */
 
 
 #selected-cards .card:hover .card-inner {
-  box-shadow: 0px 0px 8px 1px rgba(255,255,255,0.9);
+  box-shadow: 0px 0px 8px 1px rgba(255, 255, 255, 0.9);
 }
+
 #selected-cards .card:hover {
-  filter:none;
+  filter: none;
 }
+
 .card:not(.disabled):hover {
   filter: drop-shadow(0 0 0.4rem rgb(255, 255, 255));
 }
@@ -426,8 +432,9 @@ invisibly blocked, change with caution! */
   display: flex;
   width: 40px;
 }
+
 .card.selected:last-child {
-  margin-right:0;
+  margin-right: 0;
 }
 
 .card.selected:last-child:after {
@@ -526,8 +533,8 @@ invisibly blocked, change with caution! */
 }
 
 .card-inspect .card .card-badge-holder {
-  top:-10px;
-  left:-10px;
+  top: -10px;
+  left: -10px;
 }
 
 .card-badge {
@@ -546,7 +553,7 @@ invisibly blocked, change with caution! */
 
 .card-mana-badge {
   background-image: url('/ui/badgeMana.png');
-  background-size:contain;
+  background-size: contain;
   background-repeat: no-repeat;
 }
 
@@ -580,7 +587,7 @@ invisibly blocked, change with caution! */
 
 .card-health-badge {
   background-image: url('/ui/badgeHealth.png');
-  background-size:contain;
+  background-size: contain;
   background-repeat: no-repeat;
 }
 
@@ -1554,15 +1561,19 @@ body.open-inventory #inventory-container.bookmark-runes .card-inspect {
   width: 64px;
   height: 64px;
 }
+
 .disabled .card-badge-holder {
   display: none;
 }
-.disabled .card-thumb{
+
+.disabled .card-thumb {
   filter: grayscale(100%);
 }
+
 .disabled .card-title {
   text-decoration: line-through;
 }
+
 .card.disabled:after {
   content: "Disabled";
   color: red;
@@ -1701,15 +1712,18 @@ body.open-inventory #inventory-icon {
   width: 380px;
   pointer-events: none;
 }
+
 body.isPeerHost #in-game-lobby button {
   display: block;
 }
+
 #in-game-lobby button {
   pointer-events: all;
   display: none;
 }
+
 .request-to-join-p2p {
-  pointer-events:all;
+  pointer-events: all;
 }
 
 #in-game-lobby .player-name {
@@ -1988,7 +2002,9 @@ body.auto-camera #camera-recenter-tip {
   padding: 8px;
   border-radius: 8px;
 }
-.ui-border, #in-game-lobby .invite {
+
+.ui-border,
+#in-game-lobby .invite {
   border: 30px solid;
   border-image-outset: 0;
   border-image-repeat: repeat stretch;
@@ -2254,10 +2270,24 @@ body:not(.view-Game) #chatbox {
   left: 8px;
 }
 
+#floating-card-holder-left-2 {
+  position: absolute;
+  bottom: 0;
+  left: 64px;
+}
+
 #floating-card-holder-right {
   position: absolute;
   bottom: 0;
   right: 8px;
+  /* Display overtop of the tooltip if the tooltip intersects it's space */
+  z-index: 1;
+}
+
+#floating-card-holder-right-2 {
+  position: absolute;
+  bottom: 0;
+  right: 64px;
   /* Display overtop of the tooltip if the tooltip intersects it's space */
   z-index: 1;
 }
@@ -2766,43 +2796,53 @@ body.dragging-card .floating-card-holder .empty-slot {
 .card-inspect .card {
   filter: drop-shadow(6px 6px 3px rgba(20, 20, 20, 0.5));
 }
+
 /* Turn off card shadow when screenshotting card */
 .screenshot .card-inspect .card {
   animation: none;
   filter: none;
 }
+
 .kick-btn {
   background-color: #212121;
   border: 1px solid black;
   color: white;
-  cursor:pointer;
+  cursor: pointer;
   padding: 0 6px;
 }
+
 .kick-btn:hover {
   background-color: #3d3d3d;
   border: 1px solid red;
 }
+
 .invite {
-  display:flex;
+  display: flex;
   justify-content: center;
   gap: 8px;
   align-items: center;
 }
+
 #in-game-lobby-holder .invite {
   margin: 4px;
 }
-.openLobbyBtn:empty, body:not(.P2P) .openLobbyBtn {
-  display:none;
+
+.openLobbyBtn:empty,
+body:not(.P2P) .openLobbyBtn {
+  display: none;
 }
+
 body.isPeerHost .openLobbyBtn {
   display: block;
 }
-.openLobbyBtn  {
+
+.openLobbyBtn {
   display: none;
-  margin:8px 4px;
+  margin: 8px 4px;
   padding: 4px;
   pointer-events: all;
 }
+
 .black-button {
   background-color: black;
   color: white;
@@ -2826,9 +2866,11 @@ body.isPeerHost .openLobbyBtn {
   outline: none;
   box-shadow: 0 0 5px white;
 }
+
 .hub-connection-status {
   margin: 8px 0px;
 }
+
 #legal-content {
   min-height: 100px;
 }
