@@ -40,7 +40,7 @@ export default function registerOnKillResurrect() {
             // we need to resurrect the data and without awaiting
             // the animation
             // Can remove below after fixing onKill async
-            Unit.resurrect(killedUnit, underworld);
+            Unit.resurrect(killedUnit, underworld, true);
             Unit.changeFaction(killedUnit, unit.faction);
             // Can remove above after fixing onKill async
             await resurrectWithAnimation(killedUnit, unit, unit.faction, underworld, prediction);

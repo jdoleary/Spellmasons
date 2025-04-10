@@ -13,6 +13,9 @@ import { buildMatchMemberExpression } from '@babel/types';
 
 export const suffocateCardId = 'suffocate';
 function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1, extra?: { [key: string]: any }) {
+  if (!unit.alive) {
+    return;
+  }
   const modifier = getOrInitModifier(unit, suffocateCardId, { isCurse: true, quantity }, () => {
     Unit.addEvent(unit, suffocateCardId);
     // Add subsprite image

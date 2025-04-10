@@ -56,7 +56,7 @@ const spell: Spell = {
   events: {
     onTooltip: (unit: Unit.IUnit, underworld: Underworld) => {
       const modifier = unit.modifiers[resurrect_id];
-      if (modifier && modifier.quantity <= 0) {
+      if (modifier && modifier.quantity >= 0) {
         // Set tooltip:
         modifier.tooltip = `${i18n(resurrect_id)} ${i18n('immune').toLocaleLowerCase()}: ${modifier.quantity + immuneForTurns}`;
       }
