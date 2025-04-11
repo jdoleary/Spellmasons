@@ -69,7 +69,7 @@ const spell: Spell = {
     },
   },
 };
-async function animate(circles: Circle[], underworld: Underworld, prediction: boolean) {
+export async function animate(circles: Circle[], underworld: Underworld, prediction: boolean) {
   if (globalThis.headless || prediction) {
     // Animations do not occur on headless, so resolve immediately or else it
     // will just waste cycles on the server

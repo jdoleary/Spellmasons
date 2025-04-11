@@ -121,6 +121,7 @@ import bolt from './bolt';
 import cursify from './cursify';
 import teach from './teach';
 import sell from './sell';
+import novas from './novas';
 // Not used as a card, for making half of looped enemies immune
 // on first turn
 import registerSummoningSickness from '../modifierSummoningSickness';
@@ -437,6 +438,9 @@ export function registerCards(overworld: Overworld) {
   registerSpell(cursify, overworld);
   registerSpell(teach, overworld);
   registerSpell(sell, overworld);
+  novas.forEach(nova =>
+    registerSpell(nova, overworld)
+  );
 
   // Blessings
   registerSpell(heal, overworld);
