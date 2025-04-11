@@ -180,6 +180,7 @@ export function registerDeathmasonEvents() {
       console.log("Deathmason onDeath() has been called");
       // For the bossmason level, if the original deathmason dies spawn 3 more:
       if (underworld.levelIndex === config.LAST_LEVEL_INDEX) {
+        storage.set(`BEAT_DIFFICULTY-${underworld.gameMode || 'normal'}`, true);
         if (unit.unitSourceId == bossmasonUnitId && unit.originalLife && unit.name == undefined) {
           ; (prediction
             ? underworld.unitsPrediction

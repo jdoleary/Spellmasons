@@ -722,7 +722,8 @@
         "precision": "Precision",
         "rune_precision": "If you do not own ANY targeting spells, your spells do not get more expensive when you use them.",
         "investment": "Investment",
-        "rune_investment": "Gain a percentage of unused SP every level"
+        "rune_investment": "Gain a percentage of unused SP every level",
+        "choose a difficulty": "Choose a Difficulty"
     },
     {
         "language": "Français",
@@ -1447,7 +1448,8 @@
         "precision": "Précision",
         "rune_precision": "Si vous ne possédez AUCUN sort de ciblage, vos sorts ne deviennent pas plus chers lorsque vous les utilisez.",
         "investment": "Investissement",
-        "rune_investment": "Gagnez un pourcentage de SP inutilisés à chaque niveau."
+        "rune_investment": "Gagnez un pourcentage de SP inutilisés à chaque niveau.",
+        "choose a difficulty": "Choisissez une difficulté"
     },
     {
         "language": "italiano",
@@ -2172,7 +2174,8 @@
         "precision": "Precisione",
         "rune_precision": "Se non possiedi ALCUN incantesimo di targeting, i tuoi incantesimi non diventano più costosi quando li utilizzi.",
         "investment": "Investimento",
-        "rune_investment": "Acquisisci una percentuale di SP inutilizzati ad ogni livello."
+        "rune_investment": "Acquisisci una percentuale di SP inutilizzati ad ogni livello.",
+        "choose a difficulty": "Scegli una difficoltà"
     },
     {
         "language": "Deutsche",
@@ -2897,7 +2900,8 @@
         "precision": "Präzision",
         "rune_precision": "Wenn du KEINE Zielzauber besitzt, werden deine Zauber nicht teurer, wenn du sie verwendest.",
         "investment": "Investition",
-        "rune_investment": "Erhalte einen Prozentsatz an ungenutztem SP mit jedem Levelaufstieg."
+        "rune_investment": "Erhalte einen Prozentsatz an ungenutztem SP mit jedem Levelaufstieg.",
+        "choose a difficulty": "Wähle eine Schwierigkeit"
     },
     {
         "language": "español",
@@ -3622,7 +3626,8 @@
         "precision": "Precisión",
         "rune_precision": "Si no posees NI UN SOLO hechizo de objetivo, tus hechizos no se vuelven más caros cuando los usas.",
         "investment": "Inversión",
-        "rune_investment": "Gana un porcentaje de SP no utilizados en cada nivel."
+        "rune_investment": "Gana un porcentaje de SP no utilizados en cada nivel.",
+        "choose a difficulty": "Elige una Dificultad"
     },
     {
         "language": "日本",
@@ -4347,7 +4352,8 @@
         "precision": "精度",
         "rune_precision": "ターゲット指定の呪文を一切持っていない場合、使用する際に呪文のコストが上昇することはありません。",
         "investment": "投資",
-        "rune_investment": "毎レベルあたり使われていないSPのパーセンテージを獲得します。"
+        "rune_investment": "毎レベルあたり使われていないSPのパーセンテージを獲得します。",
+        "choose a difficulty": "難易度を選択してください"
     },
     {
         "language": "Português",
@@ -5072,7 +5078,8 @@
         "precision": "Precisão",
         "rune_precision": "Se você não possui NENHUM feitiço de direcionamento, seus feitiços não se tornam mais caros quando você os usa.",
         "investment": "Investimento",
-        "rune_investment": "Ganhe uma porcentagem de SP não utilizado a cada nível."
+        "rune_investment": "Ganhe uma porcentagem de SP não utilizado a cada nível.",
+        "choose a difficulty": "Escolha uma Dificuldade"
     },
     {
         "language": "عربى",
@@ -5797,7 +5804,8 @@
         "precision": "دقة",
         "rune_precision": "إذا لم تمتلك أي تعويذات استهداف، فإن تعويذاتك لا تصبح أكثر تكلفة عند استخدامها.",
         "investment": "استثمار",
-        "rune_investment": "احصل على نسبة مئوية من نقاط السحر غير المستخدمة في كل مستوى."
+        "rune_investment": "احصل على نسبة مئوية من نقاط السحر غير المستخدمة في كل مستوى.",
+        "choose a difficulty": "اختر مستوى الصعوبة"
     },
     {
         "language": "한국어",
@@ -6522,7 +6530,8 @@
         "precision": "정밀함",
         "rune_precision": "목표 마법을 전혀 소지하지 않은 경우, 마법을 사용할 때 그 비용이 더 비싸지 않습니다.",
         "investment": "투자",
-        "rune_investment": "매 레벨마다 사용하지 않은 SP의 일부를 획득합니다."
+        "rune_investment": "매 레벨마다 사용하지 않은 SP의 일부를 획득합니다.",
+        "choose a difficulty": "난이도 선택하기"
     },
     {
         "language": "Русский",
@@ -7247,7 +7256,8 @@
         "precision": "Точность",
         "rune_precision": "Если у вас НЕТ НИКАКИХ заклинаний с прицеливанием, ваши заклинания не становятся дороже при использовании.",
         "investment": "Инвестиции",
-        "rune_investment": "Получайте процент неиспользуемых СП на каждом уровне."
+        "rune_investment": "Получайте процент неиспользуемых СП на каждом уровне.",
+        "choose a difficulty": "Выберите уровень сложности"
     },
     {
         "language": "中文(简)",
@@ -7972,7 +7982,8 @@
         "precision": "精准",
         "rune_precision": "如果您没有任何指向性法术，使用法术时不会增加费用。",
         "investment": "投资",
-        "rune_investment": "每升一级获得一定比例的未使用技能点。"
+        "rune_investment": "每升一级获得一定比例的未使用技能点。",
+        "choose a difficulty": "选择难度"
     },
     {
         "language": "中文(繁)",
@@ -8697,7 +8708,8 @@
         "precision": "精準",
         "rune_precision": "如果你沒有擁有任何目標法術，當你使用法術時，它們的耗費不會增加。",
         "investment": "投資",
-        "rune_investment": "每升一級獲得未使用精神點數的百分比。"
+        "rune_investment": "每升一級獲得未使用精神點數的百分比。",
+        "choose a difficulty": "選擇難度"
     },
     {
         "language": "Polski",
@@ -9422,7 +9434,8 @@
         "precision": "Precyzja",
         "rune_precision": "Jeśli nie posiadasz ŻADNYCH zaklęć celowniczych, twoje zaklęcia nie staną się droższe, gdy ich użyjesz.",
         "investment": "Inwestycja",
-        "rune_investment": "Zyskaj procent niezużytego SP na każdym poziomie."
+        "rune_investment": "Zyskaj procent niezużytego SP na każdym poziomie.",
+        "choose a difficulty": "Wybierz trudność"
     },
     {
         "language": "Dutch",
@@ -10147,6 +10160,7 @@
         "precision": "Precisie",
         "rune_precision": "Als je GEEN enkele richtspell bezit, worden je spreuken niet duurder wanneer je ze gebruikt.",
         "investment": "Investering",
-        "rune_investment": "Krijg een percentage van ongebruikte SP bij elk niveau."
+        "rune_investment": "Krijg een percentage van ongebruikte SP bij elk niveau.",
+        "choose a difficulty": "Kies een Moeilijkheidsgraad"
     }
 ]
