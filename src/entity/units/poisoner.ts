@@ -9,6 +9,8 @@ import { bloodPoisoner } from '../../graphics/ui/colors';
 import * as Image from '../../graphics/Image';
 import Underworld from '../../Underworld';
 import * as config from '../../config';
+import { animateSpell } from '../../cards/cardUtils';
+import { chooseOneOf } from '../../jmath/rand';
 
 export const POISONER_ID = 'poisoner';
 const unit: UnitSource = {
@@ -19,7 +21,7 @@ const unit: UnitSource = {
     subtype: UnitSubType.RANGED_RADIUS,
   },
   unitProps: {
-    damage: 1,
+    damage: 20,
     attackRange: 350,
     healthMax: 60,
     mana: 60,
@@ -56,22 +58,11 @@ const unit: UnitSource = {
         ).then(async () => {
           // Add projectile hit animation
           Image.addOneOffAnimation(chosenUnit, 'poisonerProjectileHit');
-          const cardsIds = [];
-          // Casts one stack of poison per damage
-          for (let i = 0; i < unit.damage; i++) {
-            cardsIds.push(poison.poisonCardId);
+          if (globalThis.sfx) {
+            globalThis.playSFX(chooseOneOf(globalThis.sfx['poison']))
           }
-          await underworld.castCards({
-            casterCardUsage: {},
-            casterUnit: unit,
-            casterPositionAtTimeOfCast: Vec.clone(unit),
-            cardIds: cardsIds,
-            castLocation: chosenUnit,
-            initialTargetedUnitId: chosenUnit.id,
-            prediction: false,
-            outOfRange: false,
-            castForFree: true,
-          });
+          await animateSpell(chosenUnit, 'spellPoison');
+          Unit.addModifier(chosenUnit, poison.poisonCardId, underworld, false, unit.damage, { sourceUnitId: unit.id });
         });
       });
     } else {
