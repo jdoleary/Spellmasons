@@ -1,3 +1,22 @@
+## 1.57.0
+Quality of Life:
+- UI: Add additional side spell holders
+- Game: Add singleplayer difficulty options after you beat Deathmason on Normal difficulty
+
+Balancing:
+- balance: Remove `undying` blessing from Goru
+- balance: Siphon cost
+    to match the scaling structure of mana steal so it can't scale infinitely.
+    Thanks @Carlos
+
+Fixes:
+- fix: p1p connection not working on firewalls
+- fix: Poisoner + Sharp Teeth Imbalance
+Thanks @Yasu
+- fix: Infinite Loop Contaminate, rez, suffocate
+- fix: Armor now allows reducing damage to 0
+Thanks RAHHHHHH :3
+
 ## 1.54.0
 balance: Adjust loop difficulty to scale
 balance: Ensure bosses keep spawning on loop levels after +3
