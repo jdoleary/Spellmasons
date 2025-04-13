@@ -14,7 +14,7 @@
     "headless-build-only": "tsc --project tsconfig.headless.json --outDir headless-server-build/ && cp package-lock.json headless-server-build/ && cp public/spellmasons-mods/build/SpellmasonsMods.cjs.js headless-server-build/src/SpellmasonsMods.cjs.js && cd headless-server-build/ && npm install --omit=dev",
     "headless-run-server": "node headless-server-build/src/HeadlessServer.js",
     "headless": "npm run headless-build-only && npm run headless-run-server",
-    "bun-headless": "cp public/spellmasons-mods/build/SpellmasonsMods.cjs.js src/SpellmasonsMods.cjs.js && bun run src/HeadlessServer.ts",
+    "bun-headless": "cp public/spellmasons-mods/build/SpellmasonsMods.cjs.js src/SpellmasonsMods.cjs.js && bun run src/HeadlessServer-Bun.ts",
     "parseLocalization": "node public/localization/parseLocalizationSource.js"
   },
   "repository": {
