@@ -20,7 +20,8 @@ import './Shims';
 // Setup mods
 import SpellmasonsAPI from './api';
 globalThis.SpellmasonsAPI = SpellmasonsAPI;
-import './SpellmasonsMods.cjs.js';
+// @ts-expect-error
+import('./SpellmasonsMods.cjs.js');
 
 import { IHostApp, onClientPresenceChanged } from './network/networkUtil';
 import { onData } from './network/networkHandler';
