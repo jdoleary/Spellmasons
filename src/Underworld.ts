@@ -1693,7 +1693,7 @@ export default class Underworld {
     // If tutorial isn't complete, make this a tutorial run
     if (levelIndex == 0) {
       this.isTutorialRun = !isTutorialComplete();
-      if (this.isTutorialRun) {
+      if (this.isTutorialRun && !storage.get(`BEAT_DIFFICULTY-tutorial`)) {
         console.log('Set gamemode to "tutorial" so that the first playthrough is easier');
         this.gameMode = 'tutorial';
         if (!isTutorialFirstStepsComplete(['portal'])) {
