@@ -3455,25 +3455,18 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // .filter out freeSpells because they shouldn't count against upgrades available since they are given to you
     return this.cardDropsDropped + config.STARTING_CARD_COUNT - player.inventory.filter(spellId => (player.freeSpells || []).indexOf(spellId) == -1).length;
   }
-  upgradeRune(runeModifierId: string, player: Player.IPlayer, payload: { cost: number, debug_playerStatPoints?: number }) {
+  upgradeRune(runeModifierId: string, player: Player.IPlayer, payload: { newSP: number }) {
     const isCurrentPlayer = player == globalThis.player;
     if (remoteLog) {
       remoteLog(`Buy Rune: ${runeModifierId}`);
     }
-    console.log('CHOOSE_RUNE', runeModifierId);
+    console.log('CHOOSE_RUNE', runeModifierId, player.statPointsUnspent);
     const modifier = Cards.allModifiers[runeModifierId];
     if (!modifier) {
       console.error(`Failed to upgrade rune ${runeModifierId}`)
       return;
     }
-    // Debug: check for desync between server and client
-    const modifierCost = Cards.calcluateModifierCostPerUpgrade(modifier, this, player);
-    const cost = payload.cost !== undefined ? payload.cost : modifierCost;
-    if (payload.cost !== modifierCost) {
-      globalThis.remoteLogWithContext(`Rune overspend desync`, LogLevel.ERROR, `server: Player stat points: ${player.statPointsUnspent}  cost: ${modifierCost} client player stat points: ${payload.debug_playerStatPoints} client rune cost: ${payload.cost}`);
-    }
-
-    player.statPointsUnspent -= cost;
+    player.statPointsUnspent = payload.newSP;
 
     if (isCurrentPlayer) {
       playSFXKey('levelUp');

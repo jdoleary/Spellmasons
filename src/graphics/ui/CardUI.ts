@@ -666,21 +666,29 @@ export function renderRunesMenu(underworld: Underworld) {
         if (isDisabled) {
           playSFXKey('deny');
         } else {
+          if (!player) {
+            console.error("Unexpected, attempted to upgrade but player does not exist");
+            return;
+          }
           const modifier = Cards.allModifiers[stat];
           if (modifier) {
             const modifierCost = Cards.calcluateModifierCostPerUpgrade(modifier, underworld, player);
             // Do not allow overspend
-            if (globalThis.player && globalThis.player.statPointsUnspent < modifierCost) {
-              console.error('Client rune overspend early return')
+            if (player.statPointsUnspent < modifierCost) {
+              console.log('Not enough SP to upgrade')
               playSFXKey('deny');
               return;
             }
-            underworld.pie.sendData({
-              type: MESSAGE_TYPES.CHOOSE_RUNE,
-              stat,
-              cost: modifierCost,
-              debug_playerStatPoints: player?.statPointsUnspent,
-            })
+
+            // Since players are the source of truth on their own device, take out cost here
+            if (modifierCost <= player.statPointsUnspent) {
+              player.statPointsUnspent -= modifierCost;
+              underworld.pie.sendData({
+                type: MESSAGE_TYPES.CHOOSE_RUNE,
+                stat,
+                newSP: player.statPointsUnspent
+              })
+            }
           } else {
             console.error('Unexpected: Attempted to upgrade rune but modifier was not found:' + stat);
           }
