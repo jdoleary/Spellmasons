@@ -5,7 +5,7 @@ import { arrowEffect } from './arrow';
 import { arrow2CardId } from './arrow2';
 import { takeDamage } from '../entity/Unit';
 
-export const arrow3CardId = 'Arrow3';
+export const arrow3CardId = 'Arrow 3';
 const damageDone = 30;
 const spell: Spell = {
   card: {

@@ -1184,7 +1184,7 @@ export function getReplacesCardText(replaces: string[], requires?: string[]) {
         thumbnail.style.padding = '0 4px';
         replacesEl.appendChild(thumbnail);
         const label = document.createElement('span');
-        label.innerText = r;
+        label.innerText = globalThis.i18n(r);
         replacesEl.appendChild(label);
       }
     }
