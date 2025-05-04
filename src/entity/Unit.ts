@@ -160,6 +160,7 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   // regardless of where the damage comes from and is removed as soon as the events are
   // done being processed.
   takingPureDamage?: boolean;
+  charges?: { [spellId: string]: number };
 }
 // This does not need to be unique to underworld, it just needs to be unique
 let lastPredictionUnitId = 0;
@@ -228,7 +229,8 @@ export function create(
       inLiquid: false,
       UITargetCircleOffsetY: -10,
       beingPushed: false,
-      predictedNextTurnDamage: 0
+      predictedNextTurnDamage: 0,
+      charges: { 'Slash': 5 },
     }, sourceUnitProps);
 
 
@@ -1721,6 +1723,11 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
     // they will not update.
     flaggedForRemoval: u.flaggedForRemoval,
   });
+
+  // Kill the ref so prediction unit's charges doesn't modifiy the real units charges
+  if (u.charges) {
+    predictionUnit.charges = { ...u.charges };
+  }
   // Make sure prediction units don't have a ref to themself in predictionCopy
   delete predictionUnit.predictionCopy;
   u.predictionCopy = predictionUnit;

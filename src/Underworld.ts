@@ -52,7 +52,7 @@ import Events from './Events';
 import { UnitSource, allUnits } from './entity/units';
 import { clearSpellEffectProjection, clearTints, drawHealthBarAboveHead, drawUnitMarker, isOutOfBounds, predictAIActions, runPredictions, updatePlanningView } from './graphics/PlanningView';
 import { chooseObjectWithProbability, chooseOneOfSeeded, getUniqueSeedString, getUniqueSeedStringPerPlayer, prng, randFloat, randInt, SeedrandomState, shuffle } from './jmath/rand';
-import { calculateCostForSingleCard } from './cards/cardUtils';
+import { calculateCostForSingleCard, CardCost } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle } from './jmath/lineSegment';
 import { expandPolygon, isVec2InsidePolygon, mergePolygon2s, Polygon2, Polygon2LineSegment, toLineSegments, toPolygon2LineSegments } from './jmath/Polygon2';
 import { calculateDistanceOfVec2Array, findPath } from './jmath/Pathfinding';
@@ -3990,6 +3990,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // quantity allows the card to have a unique scaling effect when cast sequentially after itself.
     let quantity = 1;
     let excludedTargets: Unit.IUnit[] = [];
+    let precastCharges: { [cardId: string]: number } = { ...(effectState.casterUnit.charges || {}) };
     for (let index = 0; index < effectState.cardIds.length; index++) {
       // Reset flag that informs if the last spell was refunded.
       effectState.shouldRefundLastSpell = false;
@@ -4038,9 +4039,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         // Charge for cost of spell before spell is cast so that
         // cards like split can trigger even tho they'll reduce your  mana
         // when executed if self-cast
-        const spellCostTally = {
+        const spellCostTally: CardCost = {
           manaCost: 0,
-          healthCost: 0
+          healthCost: 0,
+          staminaCost: 0
         };
         let cardUsageCountPreCast = 0;
         if (!args.castForFree) {
@@ -4051,11 +4053,16 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
             const singleCardCost = calculateCostForSingleCard(card, timesUsedSoFar, casterPlayer);
             spellCostTally.manaCost += singleCardCost.manaCost;
             spellCostTally.healthCost += singleCardCost.healthCost;
+            spellCostTally.staminaCost += singleCardCost.staminaCost;
           }
           // Apply mana and health cost to caster
           // Note: it is important that this is done BEFORE a card is actually cast because
           // the card may affect the caster's mana
           effectState.casterUnit.mana -= spellCostTally.manaCost;
+          effectState.casterUnit.stamina -= spellCostTally.staminaCost;
+          if (effectState.casterUnit.charges && effectState.casterUnit.charges[card.id]) {
+            effectState.casterUnit.charges[card.id] = (effectState.casterUnit.charges[card.id] || 0) - quantity;
+          }
 
           // Increment card usage; now that the caster is using the card
           if (casterCardUsage[cardId] === undefined) {
@@ -4095,6 +4102,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         // Refund mana if necessary 
         if (effectState.shouldRefundLastSpell) {
           effectState.casterUnit.mana += spellCostTally.manaCost;
+          // Refund charges
+          if (effectState.casterUnit) {
+            effectState.casterUnit.charges = precastCharges;
+          }
         }
         // If refund, reset cardUsageCount
         if (effectState.shouldRefundLastSpell || args.castForFree) {

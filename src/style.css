@@ -180,6 +180,10 @@ body.recording-shorts #upgrade-picker-content {
   font-size: 24px;
 }
 
+.card-badge-square {
+  border-radius: 0px !important;
+}
+
 #upgrade-picker .card-inner,
 .card-inspect .card-inner {
 
@@ -593,6 +597,22 @@ invisibly blocked, change with caution! */
 
 .card-health-badge.modified-by-usage {
   background-image: url('/ui/badgeHealthUsed.png');
+}
+
+.card-stamina-badge {
+  background-image: url('/ui/badgeStamina.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.card-stamina-badge.modified-by-usage {
+  background-image: url('/ui/badgeStaminaUsed.png');
+}
+
+.card-charge-badge {
+  background-image: url('/ui/badgeCharge.png');
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 
 .button-wrapper .hotkey-badge-holder {

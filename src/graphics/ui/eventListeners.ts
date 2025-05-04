@@ -936,19 +936,28 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
           // Ensure that the mana left after casting the prediction spell is not negative.
           // If it is negative, don't allow the cast because the caster has insufficient mana
           if ((effectState.casterUnit.mana >= 0)) {
-            clearSpellEffectProjection(underworld, true);
-            overworld.pie.sendData({
-              type: MESSAGE_TYPES.SPELL,
-              casterPositionAtTimeOfCast,
-              x: target.x,
-              y: target.y,
-              cards: cardIds,
-              initialTargetedUnitId: effectState.initialTargetedUnitId,
-              initialTargetedPickupId: effectState.initialTargetedPickupId,
-            });
-            CardUI.clearSelectedCards(underworld);
-            // Now that the cast has begun, clear the prediction tint so it doesn't color the targeted units anymore
-            clearTints(underworld);
+            // Check for insufficient charges
+            if (effectState.casterUnit.charges && Object.entries(effectState.casterUnit.charges).some(([cardId, charges]) => charges < 0)) {
+              floatingText({
+                coords: underworld.getMousePos(),
+                text: 'Insufficient Charges',
+                style: { fill: errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
+              });
+            } else {
+              clearSpellEffectProjection(underworld, true);
+              overworld.pie.sendData({
+                type: MESSAGE_TYPES.SPELL,
+                casterPositionAtTimeOfCast,
+                x: target.x,
+                y: target.y,
+                cards: cardIds,
+                initialTargetedUnitId: effectState.initialTargetedUnitId,
+                initialTargetedPickupId: effectState.initialTargetedPickupId,
+              });
+              CardUI.clearSelectedCards(underworld);
+              // Now that the cast has begun, clear the prediction tint so it doesn't color the targeted units anymore
+              clearTints(underworld);
+            }
           } else {
             floatingText({
               coords: casterUnit,
@@ -956,9 +965,7 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
               style: { fill: errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
             })
             console.log('Spell could not be cast, insufficient mana');
-
           }
-
         })
       }
     } else {

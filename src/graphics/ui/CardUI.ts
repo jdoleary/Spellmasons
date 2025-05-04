@@ -908,10 +908,24 @@ async function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: 
           coords: underworld.getMousePos(),
           text: 'Insufficient Mana',
           style: { fill: colors.errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
-        })
+        });
         explain(EXPLAIN_END_TURN);
         deselectLastCard(underworld);
+      }
+      // TODO Insufficient Stamina
 
+
+
+      // Check for insufficient charges
+      if (predictionPlayerUnit.charges) {
+        if (Object.entries(predictionPlayerUnit.charges).some(([cardId, charges]) => charges < 0)) {
+          floatingText({
+            coords: underworld.getMousePos(),
+            text: 'Insufficient Charges',
+            style: { fill: colors.errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
+          });
+          deselectLastCard(underworld);
+        }
       }
 
       const cost = calculateCost(selectedCards, player.cardUsageCounts, player);
@@ -1111,15 +1125,31 @@ function createCardElement(content: Cards.ICard, underworld?: Underworld, fullSi
   const elCardBadgeHolder = document.createElement('div');
   elCardBadgeHolder.classList.add('card-badge-holder');
   element.appendChild(elCardBadgeHolder);
+
   const elCardManaBadge = document.createElement('div');
   elCardManaBadge.classList.add('card-mana-badge', 'card-badge');
   const cost = calculateCostForSingleCard(content, 0, globalThis.player);
   updateManaBadge(elCardManaBadge, cost.manaCost, content);
   elCardBadgeHolder.appendChild(elCardManaBadge);
+
   const elCardHealthBadge = document.createElement('div');
   elCardHealthBadge.classList.add('card-health-badge', 'card-badge');
   updateHealthBadge(elCardHealthBadge, cost.healthCost, content);
   elCardBadgeHolder.appendChild(elCardHealthBadge);
+
+  const elCardStaminaBadge = document.createElement('div');
+  elCardStaminaBadge.classList.add('card-stamina-badge', 'card-badge');
+  updateStaminaBadge(elCardStaminaBadge, cost.staminaCost, content);
+  elCardBadgeHolder.appendChild(elCardStaminaBadge);
+
+  if (globalThis.player) {
+    const elCardChargeBadge = document.createElement('div');
+    elCardChargeBadge.classList.add('card-charge-badge', 'card-badge', 'card-badge-square');
+    updateChargeBadge(elCardChargeBadge, globalThis.player.unit.charges?.[content.id] || 0, content);
+    elCardBadgeHolder.appendChild(elCardChargeBadge);
+  }
+
+
   const thumbHolder = document.createElement('div');
   const thumbnail = document.createElement('img');
   thumbnail.src = getSpellThumbnailPath(hideAsUnknown ? 'unknown.png' : content.thumbnail);
@@ -1244,6 +1274,35 @@ function updateHealthBadge(elBadge: Element | null, healthCost: number, card: Ca
     console.warn("Err UI: Found card, but could not find associated health badge element to update mana cost");
   }
 }
+
+function updateStaminaBadge(elBadge: Element | null, staminaCost: number = 0, card: Cards.ICard) {
+  if (elBadge) {
+    // Hide badge if no cost
+    elBadge.classList.toggle('hidden', staminaCost === 0);
+    elBadge.innerHTML = staminaCost.toString();
+    if (staminaCost !== card.staminaCost) {
+      elBadge.classList.add('modified-by-usage')
+    } else {
+      elBadge.classList.remove('modified-by-usage')
+    }
+  } else {
+    console.warn("Err UI: Found card, but could not find associated badge element to update stamina cost");
+  }
+}
+
+function updateChargeBadge(elBadge: Element | null, charges: number = 0, card: Cards.ICard) {
+  if (elBadge) {
+    if (charges < 0) {
+      console.error(`Charges of ${card.id} is < 0`);
+    }
+    // Hide badge if no cost
+    elBadge.classList.toggle('hidden', charges === 0);
+    elBadge.innerHTML = charges.toString();
+  } else {
+    console.warn("Err UI: Found card, but could not find associated badge element to update charges");
+  }
+}
+
 // Updates the UI mana badge for cards in hand.  To be invoked whenever a player's
 // cardUsageCounts object is modified in order to sync the UI
 export function updateCardBadges(underworld: Underworld) {
@@ -1266,14 +1325,25 @@ export function updateCardBadges(underworld: Underworld) {
         if (elBadgeH) {
           updateHealthBadge(elBadgeH, cost.healthCost, card);
         }
+        const elBadgesS = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"] .card-stamina-badge`);
+        const elBadgeS = Array.from(elBadgesS)[sliceOfCardsOfSameIdUntilCurrent.length];
+        if (elBadgeS) {
+          updateStaminaBadge(elBadgeS, cost.staminaCost, card);
+        }
+        const elBadgesC = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"] .card-charge-badge`);
+        const elBadgeC = Array.from(elBadgesC)[sliceOfCardsOfSameIdUntilCurrent.length];
+        if (elBadgeC) {
+          const currentCharges = globalThis.player.unit.charges?.[card.id] || 0;
+          updateChargeBadge(elBadgeC, currentCharges - sliceOfCardsOfSameIdUntilCurrent.length, card);
+        }
       }
     }
     // Update cards in hand and inventory
     const isInventoryOpen = document.body?.classList.contains(openInvClass);
     // If inventory is open get all cards (inventory will always include cards in toolbar), if it is not, only get cards that are in the toolbar
     const cards = Cards.getCardsFromIds(isInventoryOpen ? globalThis.player.inventory : globalThis.player.cardsInToolbar.filter(x => !!x));
-    const badgesById: { [cardId: string]: { mana: HTMLElement[], health: HTMLElement[] } } = {}
-    function populateBadgesById(attr: 'mana' | 'health') {
+    const badgesById: { [cardId: string]: { mana: HTMLElement[], health: HTMLElement[], stamina: HTMLElement[], charge: HTMLElement[] } } = {}
+    function populateBadgesById(attr: 'mana' | 'health' | 'stamina' | 'charge') {
       Array.from(document.querySelectorAll(`.card-holder .card .card-${attr}-badge, #inventory-content .card .card-${attr}-badge`)).forEach((badge) => {
         const cardEl = badge.closest('.card') as (HTMLElement | undefined);
         if (cardEl) {
@@ -1283,7 +1353,9 @@ export function updateCardBadges(underworld: Underworld) {
             if (!badgeRecord) {
               badgeRecord = {
                 mana: [],
-                health: []
+                health: [],
+                stamina: [],
+                charge: [],
               }
               badgesById[cardId] = badgeRecord;
             }
@@ -1295,6 +1367,8 @@ export function updateCardBadges(underworld: Underworld) {
     }
     populateBadgesById('mana');
     populateBadgesById('health');
+    populateBadgesById('stamina');
+    populateBadgesById('charge');
     for (let card of cards) {
       const selectedCardElementsOfSameId = selectedCards.filter(c => c.id == card.id);
       const cost = calculateCostForSingleCard(card, (globalThis.player.cardUsageCounts[card.id] || 0) + selectedCardElementsOfSameId.length * card.expenseScaling, globalThis.player);
@@ -1305,6 +1379,13 @@ export function updateCardBadges(underworld: Underworld) {
         }
         for (let elBadgeHealth of badgeRecord.health) {
           updateHealthBadge(elBadgeHealth, cost.healthCost, card);
+        }
+        for (let elBadgeStamina of badgeRecord.stamina) {
+          updateStaminaBadge(elBadgeStamina, cost.staminaCost, card);
+        }
+        for (let elBadgeCharge of badgeRecord.charge) {
+          const charge = globalThis.player.unit.charges?.[card.id] || 0;
+          updateChargeBadge(elBadgeCharge, charge, card);
         }
       }
     }
