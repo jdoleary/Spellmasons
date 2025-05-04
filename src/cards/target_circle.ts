@@ -63,13 +63,13 @@ const spell: Spell = {
         // Add entities to target
         withinRadius.forEach(e => addTarget(e, state, underworld, prediction));
       }
-      await animate(animateCircles, underworld, prediction);
+      await animateTargetCircle(animateCircles, underworld, prediction);
 
       return state;
     },
   },
 };
-async function animate(circles: Circle[], underworld: Underworld, prediction: boolean) {
+export async function animateTargetCircle(circles: Circle[], underworld: Underworld, prediction: boolean, omitTargets: HasSpace[] = []) {
   if (globalThis.headless || prediction) {
     // Animations do not occur on headless, so resolve immediately or else it
     // will just waste cycles on the server
@@ -84,14 +84,14 @@ async function animate(circles: Circle[], underworld: Underworld, prediction: bo
   const entitiesTargeted: HasSpace[] = [];
   playSFXKey('targeting');
   return raceTimeout(timeoutMsAnimation, 'animatedExpand', new Promise<void>(resolve => {
-    animateFrame(circles, Date.now(), entitiesTargeted, underworld, resolve)();
+    animateFrame(circles, Date.now(), entitiesTargeted, underworld, resolve, omitTargets)();
   })).then(() => {
     globalThis.predictionGraphicsGreen?.clear();
   });
 }
 
 const millisToGrow = 1000;
-function animateFrame(circles: Circle[], startTime: number, entitiesTargeted: HasSpace[], underworld: Underworld, resolve: (value: void | PromiseLike<void>) => void) {
+function animateFrame(circles: Circle[], startTime: number, entitiesTargeted: HasSpace[], underworld: Underworld, resolve: (value: void | PromiseLike<void>) => void, omitTargets: HasSpace[] = []) {
   return function animateFrameInner() {
     if (globalThis.predictionGraphicsGreen) {
       globalThis.predictionGraphicsGreen.clear();
@@ -111,6 +111,9 @@ function animateFrame(circles: Circle[], startTime: number, entitiesTargeted: Ha
           false
         );
         withinRadius.forEach(v => {
+          if (omitTargets.includes(v)) {
+            return;
+          }
           if (!entitiesTargeted.includes(v)) {
             entitiesTargeted.push(v);
             playSFXKey('targetAquired');

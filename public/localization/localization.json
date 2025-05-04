@@ -723,7 +723,13 @@
         "rune_precision": "If you do not own ANY targeting spells, your spells do not get more expensive when you use them.",
         "investment": "Investment",
         "rune_investment": "Gain a percentage of unused SP every level",
-        "choose a difficulty": "Choose a Difficulty"
+        "choose a difficulty": "Choose a Difficulty",
+        "pain nova": "Pain Nova",
+        "spell_nova_pain": "Deal 🍞 damage to all units within a radius near you",
+        "target nova": "Target Nova",
+        "spell_nova_target": "Target all units and pickups within a radius around you",
+        "corpse nova: stamina": "Corpse Nova: Stamina",
+        "spell_nova_corpse_stamina": "Consume corpses within a radius around you and gain 🍞 stamina per corpse consumed"
     },
     {
         "language": "Français",
@@ -1449,7 +1455,13 @@
         "rune_precision": "Si vous ne possédez AUCUN sort de ciblage, vos sorts ne deviennent pas plus chers lorsque vous les utilisez.",
         "investment": "Investissement",
         "rune_investment": "Gagnez un pourcentage de SP inutilisés à chaque niveau.",
-        "choose a difficulty": "Choisissez une difficulté"
+        "choose a difficulty": "Choisissez une difficulté",
+        "pain nova": "Nova de douleur",
+        "spell_nova_pain": "Infligez des dégâts 🍞 à toutes les unités dans un rayon près de vous.",
+        "target nova": "Cible Nova",
+        "spell_nova_target": "Ciblez toutes les unités et objets à proximité autour de vous.",
+        "corpse nova: stamina": "Nova de Cadavre : Endurance",
+        "spell_nova_corpse_stamina": "Consommez des cadavres dans un rayon autour de vous et gagnez 🍞 d'endurance par cadavre consommé."
     },
     {
         "language": "italiano",
@@ -2175,7 +2187,13 @@
         "rune_precision": "Se non possiedi ALCUN incantesimo di targeting, i tuoi incantesimi non diventano più costosi quando li utilizzi.",
         "investment": "Investimento",
         "rune_investment": "Acquisisci una percentuale di SP inutilizzati ad ogni livello.",
-        "choose a difficulty": "Scegli una difficoltà"
+        "choose a difficulty": "Scegli una difficoltà",
+        "pain nova": "Nova del Dolore",
+        "spell_nova_pain": "Infliggi 🍞 danno a tutte le unità entro un raggio vicino a te.",
+        "target nova": "Bersaglio Nova",
+        "spell_nova_target": "Prendi di mira tutte le unità e i pickup entro un raggio attorno a te.",
+        "corpse nova: stamina": "Nova della Carogna: Stamina",
+        "spell_nova_corpse_stamina": "Consuma i cadaveri entro un raggio attorno a te e guadagna 🍞 stamina per ogni cadavere consumato."
     },
     {
         "language": "Deutsche",
@@ -2901,7 +2919,13 @@
         "rune_precision": "Wenn du KEINE Zielzauber besitzt, werden deine Zauber nicht teurer, wenn du sie verwendest.",
         "investment": "Investition",
         "rune_investment": "Erhalte einen Prozentsatz an ungenutztem SP mit jedem Levelaufstieg.",
-        "choose a difficulty": "Wähle eine Schwierigkeit"
+        "choose a difficulty": "Wähle eine Schwierigkeit",
+        "pain nova": "Schmerznova",
+        "spell_nova_pain": "Füge 🍞 Schaden allen Einheiten in der Nähe in einem bestimmten Umkreis zu.",
+        "target nova": "Zielnova",
+        "spell_nova_target": "Ziele auf alle Einheiten und Aufsammelobjekte innerhalb eines Radius um dich herum.",
+        "corpse nova: stamina": "Leichnamnova: Ausdauer",
+        "spell_nova_corpse_stamina": "Verzehre Leichname in einem Radius um dich herum und gewinne 🍞 Ausdauer pro verzehrtem Leichnam."
     },
     {
         "language": "español",
@@ -3627,7 +3651,13 @@
         "rune_precision": "Si no posees NI UN SOLO hechizo de objetivo, tus hechizos no se vuelven más caros cuando los usas.",
         "investment": "Inversión",
         "rune_investment": "Gana un porcentaje de SP no utilizados en cada nivel.",
-        "choose a difficulty": "Elige una Dificultad"
+        "choose a difficulty": "Elige una Dificultad",
+        "pain nova": "Nova de Dolor",
+        "spell_nova_pain": "Inflige 🍞 daño a todas las unidades en un radio cercano a ti.",
+        "target nova": "Objetivo Nova",
+        "spell_nova_target": "Apunta a todas las unidades y objetos recolectables dentro de un radio a tu alrededor.",
+        "corpse nova: stamina": "Nova de Cadáver: Resistencia",
+        "spell_nova_corpse_stamina": "Consume cadáveres en un radio a tu alrededor y gana 🍞 resistencia por cada cadáver consumido."
     },
     {
         "language": "日本",
@@ -4353,7 +4383,13 @@
         "rune_precision": "ターゲット指定の呪文を一切持っていない場合、使用する際に呪文のコストが上昇することはありません。",
         "investment": "投資",
         "rune_investment": "毎レベルあたり使われていないSPのパーセンテージを獲得します。",
-        "choose a difficulty": "難易度を選択してください"
+        "choose a difficulty": "難易度を選択してください",
+        "pain nova": "ペインノヴァ",
+        "spell_nova_pain": "半径内のすべてのユニットに🍞ダメージを与える",
+        "target nova": "ターゲットノヴァ",
+        "spell_nova_target": "周囲の半径内にあるすべてのユニットとピックアップを対象にします。",
+        "corpse nova: stamina": "コープスノヴァ：スタミナ",
+        "spell_nova_corpse_stamina": "半径内の死体を消費し、消費した死体ごとに🍞スタミナを得る。"
     },
     {
         "language": "Português",
@@ -5079,7 +5115,13 @@
         "rune_precision": "Se você não possui NENHUM feitiço de direcionamento, seus feitiços não se tornam mais caros quando você os usa.",
         "investment": "Investimento",
         "rune_investment": "Ganhe uma porcentagem de SP não utilizado a cada nível.",
-        "choose a difficulty": "Escolha uma Dificuldade"
+        "choose a difficulty": "Escolha uma Dificuldade",
+        "pain nova": "Nova da Dor",
+        "spell_nova_pain": "Causar 🍞 dano a todas as unidades em um raio próximo a você.",
+        "target nova": "Alvo Nova",
+        "spell_nova_target": "Alvo todas as unidades e itens dentro de um raio ao seu redor.",
+        "corpse nova: stamina": "Nova de Cadáver: Estamina",
+        "spell_nova_corpse_stamina": "Consuma corpos em um raio ao seu redor e ganhe 🍞 de resistência por corpo consumido."
     },
     {
         "language": "عربى",
@@ -5805,7 +5847,13 @@
         "rune_precision": "إذا لم تمتلك أي تعويذات استهداف، فإن تعويذاتك لا تصبح أكثر تكلفة عند استخدامها.",
         "investment": "استثمار",
         "rune_investment": "احصل على نسبة مئوية من نقاط السحر غير المستخدمة في كل مستوى.",
-        "choose a difficulty": "اختر مستوى الصعوبة"
+        "choose a difficulty": "اختر مستوى الصعوبة",
+        "pain nova": "نبضة الألم",
+        "spell_nova_pain": "قم بتوجيه ضرر 🍞 لكل الوحدات ضمن دائرة قريبة منك.",
+        "target nova": "نوفا المستهدفة",
+        "spell_nova_target": "استهدف جميع الوحدات والمكافآت ضمن دائرة حولك",
+        "corpse nova: stamina": "نوفا الجثث: التحمل",
+        "spell_nova_corpse_stamina": "استهلك الجثث في محيطك واحصل على 🍞 قدرة التحمل لكل جثة يتم استهلاكها."
     },
     {
         "language": "한국어",
@@ -6531,7 +6579,13 @@
         "rune_precision": "목표 마법을 전혀 소지하지 않은 경우, 마법을 사용할 때 그 비용이 더 비싸지 않습니다.",
         "investment": "투자",
         "rune_investment": "매 레벨마다 사용하지 않은 SP의 일부를 획득합니다.",
-        "choose a difficulty": "난이도 선택하기"
+        "choose a difficulty": "난이도 선택하기",
+        "pain nova": "고통의 노바",
+        "spell_nova_pain": "주변 반경 내 모든 유닛에게 🍞 피해를 입힙니다.",
+        "target nova": "타겟 노바",
+        "spell_nova_target": "주변 반경 내의 모든 유닛과 아이템을 타겟팅합니다.",
+        "corpse nova: stamina": "시신 노바: 스태미너",
+        "spell_nova_corpse_stamina": "주변 반경 내 시체를 소비하여 소비된 시체마다 🍞 체력을 얻습니다."
     },
     {
         "language": "Русский",
@@ -7257,7 +7311,13 @@
         "rune_precision": "Если у вас НЕТ НИКАКИХ заклинаний с прицеливанием, ваши заклинания не становятся дороже при использовании.",
         "investment": "Инвестиции",
         "rune_investment": "Получайте процент неиспользуемых СП на каждом уровне.",
-        "choose a difficulty": "Выберите уровень сложности"
+        "choose a difficulty": "Выберите уровень сложности",
+        "pain nova": "Боль Нова",
+        "spell_nova_pain": "Наносите 🍞 урон всем юнитам в радиусе вокруг вас.",
+        "target nova": "Цель Нова",
+        "spell_nova_target": "Целитесь во все единицы и предметы в радиусе вокруг вас.",
+        "corpse nova: stamina": "Новое Тело: Выносливость",
+        "spell_nova_corpse_stamina": "Поглощайте трупы в радиусе вокруг вас и получайте 🍞 выносливость за каждый поглощенный труп."
     },
     {
         "language": "中文(简)",
@@ -7983,7 +8043,13 @@
         "rune_precision": "如果您没有任何指向性法术，使用法术时不会增加费用。",
         "investment": "投资",
         "rune_investment": "每升一级获得一定比例的未使用技能点。",
-        "choose a difficulty": "选择难度"
+        "choose a difficulty": "选择难度",
+        "pain nova": "痛苦新星",
+        "spell_nova_pain": "对你周围半径内的所有单位造成🍞伤害。",
+        "target nova": "目标诺瓦",
+        "spell_nova_target": "在你周围的半径内锁定所有单位和拾取物品。",
+        "corpse nova: stamina": "尸体新星：耐力",
+        "spell_nova_corpse_stamina": "在你周围的范围内吞噬尸体，每吞噬一具尸体获得🍞耐力。"
     },
     {
         "language": "中文(繁)",
@@ -8709,7 +8775,13 @@
         "rune_precision": "如果你沒有擁有任何目標法術，當你使用法術時，它們的耗費不會增加。",
         "investment": "投資",
         "rune_investment": "每升一級獲得未使用精神點數的百分比。",
-        "choose a difficulty": "選擇難度"
+        "choose a difficulty": "選擇難度",
+        "pain nova": "痛苦新星",
+        "spell_nova_pain": "對你周圍半徑內的所有單位造成 🍞 傷害。",
+        "target nova": "目標新星",
+        "spell_nova_target": "在您周圍的半徑內鎖定所有單位和道具",
+        "corpse nova: stamina": "死屍新星：耐力",
+        "spell_nova_corpse_stamina": "在你周圍的範圍內消耗屍體，每消耗一具屍體便獲得 🍞 耐力。"
     },
     {
         "language": "Polski",
@@ -9435,7 +9507,13 @@
         "rune_precision": "Jeśli nie posiadasz ŻADNYCH zaklęć celowniczych, twoje zaklęcia nie staną się droższe, gdy ich użyjesz.",
         "investment": "Inwestycja",
         "rune_investment": "Zyskaj procent niezużytego SP na każdym poziomie.",
-        "choose a difficulty": "Wybierz trudność"
+        "choose a difficulty": "Wybierz trudność",
+        "pain nova": "Nowa Bólu",
+        "spell_nova_pain": "Zadaj 🍞 obrażenia wszystkim jednostkom w promieniu wokół ciebie.",
+        "target nova": "Cel Nova",
+        "spell_nova_target": "Celuj we wszystkie jednostki i przedmioty w promieniu wokół siebie.",
+        "corpse nova: stamina": "Nowa Zwłok: Wytrzymałość",
+        "spell_nova_corpse_stamina": "Konsumuj ciała w promieniu wokół siebie i zyskaj 🍞 wytrzymałość za każde zjedzone ciało."
     },
     {
         "language": "Dutch",
@@ -10161,6 +10239,12 @@
         "rune_precision": "Als je GEEN enkele richtspell bezit, worden je spreuken niet duurder wanneer je ze gebruikt.",
         "investment": "Investering",
         "rune_investment": "Krijg een percentage van ongebruikte SP bij elk niveau.",
-        "choose a difficulty": "Kies een Moeilijkheidsgraad"
+        "choose a difficulty": "Kies een Moeilijkheidsgraad",
+        "pain nova": "Pijn Nova",
+        "spell_nova_pain": "Doe 🍞 schade aan alle eenheden binnen een straal om je heen.",
+        "target nova": "Doel Nova",
+        "spell_nova_target": "Doel alle eenheden en pickups binnen een straal om je heen.",
+        "corpse nova: stamina": "Lijk Nova: Uithoudingsvermogen",
+        "spell_nova_corpse_stamina": "Consumeer lijkens in een straal om je heen en ontvang 🍞 uithoudingsvermogen per geconsumeerd lijk."
     }
 ]

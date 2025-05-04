@@ -82,6 +82,77 @@ export function makeAncientParticles(position: Vec2, prediction: boolean) {
     }, [texture]);
   simpleEmitter(position, config, () => { }, containerParticlesUnderUnits);
 }
+export function makeNova(position: Vec2, size: number, colorStart: number, colorEnd: number, prediction: boolean) {
+  if (prediction || globalThis.headless) {
+    // Don't show if just a prediction
+    return;
+  }
+  for (let i = 0; i < 6; i++) {
+    setTimeout(() => {
+      const texture = createParticleTexture();
+      if (!texture) {
+        logNoTextureWarning('makeNova');
+        return;
+      }
+      const config =
+        particles.upgradeConfig({
+          autoUpdate: true,
+          "alpha": {
+            "start": 1,
+            "end": 0.5
+          },
+          "scale": {
+            "start": 1,
+            "end": 1,
+          },
+          "color": {
+            "start": colors.convertToHashColor(colorStart),
+            "end": colors.convertToHashColor(colorEnd)
+          },
+          "speed": {
+            "start": 500,
+            "end": 0,
+            "minimumSpeedMultiplier": 1
+          },
+          "acceleration": {
+            "x": 0,
+            "y": 0
+          },
+          "maxSpeed": 0,
+          "startRotation": {
+            "min": 0,
+            "max": 360
+          },
+          "noRotation": false,
+          "rotationSpeed": {
+            "min": 0,
+            "max": 300
+          },
+          "lifetime": {
+            "min": 0.5 * size,
+            "max": 0.5 * size
+          },
+          "blendMode": "normal",
+          "frequency": 0.0001,
+          "emitterLifetime": 0.1,
+          "maxParticles": 300,
+          "pos": {
+            "x": 0,
+            "y": 0
+          },
+          "addAtBack": true,
+          "spawnType": "circle",
+          "spawnCircle": {
+            "x": 0,
+            "y": 0,
+            "r": 0
+          }
+        }, [texture]);
+      simpleEmitter(position, config);
+    }, 30 * i);
+
+  }
+}
 
 export function makeParticleExplosion(position: Vec2, size: number, colorStart: number, colorEnd: number, prediction: boolean) {
   if (prediction || globalThis.headless) {
