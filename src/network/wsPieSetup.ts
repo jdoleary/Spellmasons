@@ -168,22 +168,6 @@ export function joinRoom(overworld: Overworld, _room_info = {}, isHosting = fals
   }
   return pie.joinRoom(room_info, isHosting).then(() => {
     console.log('Pie: You are now in the room', JSON.stringify(room_info, null, 2));
-    // Useful for development to get into the game quickly
-    let quickloadName = storage.get('quickload');
-    if (quickloadName) {
-      console.log('ADMIN: quickload:', quickloadName);
-      globalThis.load?.(quickloadName);
-    } else {
-      // All clients should join at the CharacterSelect screen so they can
-      // choose their character.  Once they choose their character their
-      // Player entity is created and then the messageQueue can begin processing
-      // including LOAD_GAME_STATE.
-      // --
-      // Note: This must occur AFTER PIXI assets are done being loaded
-      // or else the characters to select wont display
-      // setView(View.CharacterSelect);
-      // FUTURE: THis might be a good place to view the lobby
-    }
   }).catch((err: string) => {
     console.error('wsPieSetup: Failed to join room:', err);
     return Promise.reject(err);

@@ -132,6 +132,19 @@ function setupAll() {
     setupPieAndUnderworld();
     globalThis.setMenu?.('PLAY');
     setView(View.Menu);
+    // Useful for development to get into the game quickly
+    let quickloadName = storage.get('dev_quickload');
+    if (quickloadName) {
+      console.log('ADMIN: quickload:', quickloadName);
+      for (var key in localStorage) {
+        const regex = new RegExp(`\\d+-${quickloadName}`);
+        const match = key.match(regex);
+        if (match && match.length) {
+          globalThis.load?.(match[0]);
+          break;
+        }
+      }
+    }
     test_spyPromises();
   }).catch(e => {
     console.error('Setup: Failed to setup pixi', e);
