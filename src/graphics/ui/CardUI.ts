@@ -1333,8 +1333,10 @@ export function updateCardBadges(underworld: Underworld) {
         const elBadgesC = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"] .card-charge-badge`);
         const elBadgeC = Array.from(elBadgesC)[sliceOfCardsOfSameIdUntilCurrent.length];
         if (elBadgeC) {
-          const currentCharges = globalThis.player.unit.charges?.[card.id] || 0;
-          updateChargeBadge(elBadgeC, currentCharges - sliceOfCardsOfSameIdUntilCurrent.length, card);
+          const cardCharges = globalThis.player.unit.charges?.[card.id]
+          if (cardCharges != undefined) {
+            updateChargeBadge(elBadgeC, cardCharges - sliceOfCardsOfSameIdUntilCurrent.length, card);
+          }
         }
       }
     }
