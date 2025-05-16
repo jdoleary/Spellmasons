@@ -814,7 +814,7 @@ export interface ICard {
   category: CardCategory;
   manaCost: number;
   healthCost: number;
-  staminaCost: number;
+  staminaCost?: number;
   costGrowthAlgorithm?: "nlogn" | "log" | 'exponential';
   probability: number;
   thumbnail: string;

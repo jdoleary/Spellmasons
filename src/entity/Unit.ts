@@ -230,7 +230,6 @@ export function create(
       UITargetCircleOffsetY: -10,
       beingPushed: false,
       predictedNextTurnDamage: 0,
-      charges: { 'Slash': 5 },
     }, sourceUnitProps);
 
 
@@ -1710,9 +1709,6 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
     // prediction unit would cache-miss each time it was recreated
     // and needed a path
     path: rest.path,
-    // Prediction units should have full stamina because they will
-    // when it is their turn
-    stamina: rest.staminaMax,
     events: [...rest.events],
     // Deep copy modifiers so it doesn't mutate the unit's actual modifiers object
     modifiers: JSON.parse(JSON.stringify(modifiers)),
@@ -1723,6 +1719,15 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
     // they will not update.
     flaggedForRemoval: u.flaggedForRemoval,
   });
+
+  // Prediction units should have full stamina because they will
+  // when it is their turn.  This is critical for melee ai attack predictions
+  // but is NOT set for player units who may use stamia for casting in which case
+  // the stamina must match the real unit so they can get an "insufficient stamina"
+  // message.
+  // Re: 8557fc
+  if (u.unitType == UnitType.AI)
+    predictionUnit.stamina = predictionUnit.staminaMax;
 
   // Kill the ref so prediction unit's charges doesn't modifiy the real units charges
   if (u.charges) {

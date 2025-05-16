@@ -936,8 +936,16 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
           // Ensure that the mana left after casting the prediction spell is not negative.
           // If it is negative, don't allow the cast because the caster has insufficient mana
           if ((effectState.casterUnit.mana >= 0)) {
-            // Check for insufficient charges
-            if (effectState.casterUnit.charges && Object.entries(effectState.casterUnit.charges).some(([cardId, charges]) => charges < 0)) {
+            // Check for insufficient stamina
+            if (effectState.casterUnit.stamina < 0) {
+              floatingText({
+                coords: underworld.getMousePos(),
+                text: 'Insufficient Stamina',
+                style: { fill: errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
+              });
+
+            } else if (effectState.casterUnit.charges && Object.entries(effectState.casterUnit.charges).some(([cardId, charges]) => charges < 0)) {
+              // Check for insufficient charges
               floatingText({
                 coords: underworld.getMousePos(),
                 text: 'Insufficient Charges',

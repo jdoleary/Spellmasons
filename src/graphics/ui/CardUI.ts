@@ -912,9 +912,16 @@ async function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: 
         explain(EXPLAIN_END_TURN);
         deselectLastCard(underworld);
       }
-      // TODO Insufficient Stamina
 
-
+      if (predictionPlayerUnit.stamina < 0) {
+        floatingText({
+          coords: underworld.getMousePos(),
+          text: 'Insufficient Stamina',
+          style: { fill: colors.errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
+        });
+        explain(EXPLAIN_END_TURN);
+        deselectLastCard(underworld);
+      }
 
       // Check for insufficient charges
       if (predictionPlayerUnit.charges) {
