@@ -47,6 +47,7 @@ export interface IPlayer {
   name: string;
   // color of robe
   color: number;
+  isCardmason?: boolean;
   // color of the player's magic
   colorMagic: number;
   endedTurn: boolean;

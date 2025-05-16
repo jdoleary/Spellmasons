@@ -1393,8 +1393,11 @@ export function updateCardBadges(underworld: Underworld) {
           updateStaminaBadge(elBadgeStamina, cost.staminaCost, card);
         }
         for (let elBadgeCharge of badgeRecord.charge) {
-          const charge = globalThis.player.unit.charges?.[card.id] || 0;
-          updateChargeBadge(elBadgeCharge, charge, card);
+          const charge = (globalThis.player.unit.charges?.[card.id]) || 0;
+          if (charge != 0) {
+            const specificCardQueuedCount = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"] .card-charge-badge`).length;
+            updateChargeBadge(elBadgeCharge, charge - specificCardQueuedCount, card);
+          }
         }
       }
     }

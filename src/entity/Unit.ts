@@ -161,6 +161,7 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   // done being processed.
   takingPureDamage?: boolean;
   charges?: { [spellId: string]: number };
+  chargesMax: number;
 }
 // This does not need to be unique to underworld, it just needs to be unique
 let lastPredictionUnitId = 0;
@@ -512,7 +513,7 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
   // so the promise doesn't hang forever
   let loadedunit: IUnit = {
     // Load defaults for new props that old save files might not have
-    ...{ strength: 1 },
+    ...{ strength: 1, chargesMax: 0 },
     ...restUnit,
     summonedBy: (prediction ? underworld.unitsPrediction : underworld.units).find(u => u.id == summonedById),
     shaderUniforms: {},
@@ -1202,72 +1203,86 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
   elManaBar2.style["width"] = `${100 * manaRatio2}%`;
   elManaBar3.style["width"] = `${100 * manaRatio3}%`;
 
-  // Set the 3 mana cost bars that show how much mana will be removed if the spell is cast
-  if (predictionPlayerUnit) {
-    if (predictionPlayerUnit.mana != unit.mana || predictionPlayerUnit.manaMax != unit.manaMax) {
-      if (predictionPlayerUnit.mana < 0) {
-        // If a player queues up a spell while another spell is casting,
-        // it may not block them from adding a spell beyond the mana that they have
-        // because the mana is actively changing from the currently casting spell,
-        // so rather than showing negative mana, show "Insufficient Mana"
-        // (Note, it will still prevent them from casting this spell on click, it's just
-        // that it won't prevent them from queing a spell)
-        elManaLabel.innerHTML = i18n('Insufficient Mana');
+
+  // Exception: Cardmason "manabar" becomes a bar that tracks the number of charges or cards the player has
+  if (globalThis.player.isCardmason && predictionPlayerUnit) {
+    elManaBar.style["width"] = `0%`;
+    elManaBar2.style["width"] = `0%`;
+    const currentCharges = countCharges(predictionPlayerUnit)
+    const ratio = currentCharges / predictionPlayerUnit.chargesMax;
+    elManaBar3.style["width"] = `${100 * ratio}%`;
+    elManaLabel.innerHTML = `${currentCharges}/${predictionPlayerUnit.chargesMax}`;
+
+
+  } else {
+    // Regular spellmasons
+    // Set the 3 mana cost bars that show how much mana will be removed if the spell is cast
+    if (predictionPlayerUnit) {
+      if (predictionPlayerUnit.mana != unit.mana || predictionPlayerUnit.manaMax != unit.manaMax) {
+        if (predictionPlayerUnit.mana < 0) {
+          // If a player queues up a spell while another spell is casting,
+          // it may not block them from adding a spell beyond the mana that they have
+          // because the mana is actively changing from the currently casting spell,
+          // so rather than showing negative mana, show "Insufficient Mana"
+          // (Note, it will still prevent them from casting this spell on click, it's just
+          // that it won't prevent them from queing a spell)
+          elManaLabel.innerHTML = i18n('Insufficient Mana');
+        } else {
+          elManaLabel.innerHTML = `${txt(predictionPlayerUnit.mana)} ${i18n('Remaining')}`;
+        }
       } else {
-        elManaLabel.innerHTML = `${txt(predictionPlayerUnit.mana)} ${i18n('Remaining')}`;
+        elManaLabel.innerHTML = `${txt(unit.mana)}/${txt(unit.manaMax)}`;
       }
-    } else {
-      elManaLabel.innerHTML = `${txt(unit.mana)}/${txt(unit.manaMax)}`;
-    }
 
-    // Display amount of post-prediction mana in each of the 3 mana bars
-    // Cannot be < 0 or more than manaMax (aka 1 full bar)
-    const predictionManaRatio1 = Math.max(0, Math.min(predictionPlayerUnit.mana / predictionPlayerUnit.manaMax, 1));
-    const predictionManaRatio2 = Math.max(0, Math.min((predictionPlayerUnit.mana - predictionPlayerUnit.manaMax) / predictionPlayerUnit.manaMax, 1));
-    const predictionManaRatio3 = Math.max(0, Math.min((predictionPlayerUnit.mana - predictionPlayerUnit.manaMax * 2) / predictionPlayerUnit.manaMax, 1));
-    elManaBar.style["width"] = `${100 * predictionManaRatio1}%`;
-    elManaBar2.style["width"] = `${100 * predictionManaRatio2}%`;
-    elManaBar3.style["width"] = `${100 * predictionManaRatio3}%`;
+      // Display amount of post-prediction mana in each of the 3 mana bars
+      // Cannot be < 0 or more than manaMax (aka 1 full bar)
+      const predictionManaRatio1 = Math.max(0, Math.min(predictionPlayerUnit.mana / predictionPlayerUnit.manaMax, 1));
+      const predictionManaRatio2 = Math.max(0, Math.min((predictionPlayerUnit.mana - predictionPlayerUnit.manaMax) / predictionPlayerUnit.manaMax, 1));
+      const predictionManaRatio3 = Math.max(0, Math.min((predictionPlayerUnit.mana - predictionPlayerUnit.manaMax * 2) / predictionPlayerUnit.manaMax, 1));
+      elManaBar.style["width"] = `${100 * predictionManaRatio1}%`;
+      elManaBar2.style["width"] = `${100 * predictionManaRatio2}%`;
+      elManaBar3.style["width"] = `${100 * predictionManaRatio3}%`;
 
-    elManaCost.style['left'] = `100%`;
-    elManaCost2.style['left'] = `100%`;
-    elManaCost3.style['left'] = `100%`;
+      elManaCost.style['left'] = `100%`;
+      elManaCost2.style['left'] = `100%`;
+      elManaCost3.style['left'] = `100%`;
 
-    if (predictionPlayerUnit.mana < unit.mana) {
-      // Visualize mana loss
-      let leftstart = predictionPlayerUnit.mana / predictionPlayerUnit.manaMax;
-      let rightEnd = unit.mana / predictionPlayerUnit.manaMax;
+      if (predictionPlayerUnit.mana < unit.mana) {
+        // Visualize mana loss
+        let leftstart = predictionPlayerUnit.mana / predictionPlayerUnit.manaMax;
+        let rightEnd = unit.mana / predictionPlayerUnit.manaMax;
 
-      // First bar
-      elManaCost.style['left'] = `${100 * leftstart}%`;
-      elManaCost.style['width'] = `${100 * Math.min((rightEnd - leftstart), 1)}%`;
+        // First bar
+        elManaCost.style['left'] = `${100 * leftstart}%`;
+        elManaCost.style['width'] = `${100 * Math.min((rightEnd - leftstart), 1)}%`;
 
-      // Second bar
-      elManaCost2.style['left'] = `${100 * (leftstart - 1)}%`;
-      elManaCost2.style['width'] = `${100 * Math.min((rightEnd - leftstart), 1)}%`;
+        // Second bar
+        elManaCost2.style['left'] = `${100 * (leftstart - 1)}%`;
+        elManaCost2.style['width'] = `${100 * Math.min((rightEnd - leftstart), 1)}%`;
 
-      // Third bar
-      elManaCost3.style['left'] = `${100 * (leftstart - 2)}%`;
-      elManaCost3.style['width'] = `${100 * Math.min((rightEnd - leftstart), 1)}%`;
-    } else {
-      // Visualize mana gain
-      let leftstart = unit.mana / predictionPlayerUnit.manaMax;
-      let rightEnd = predictionPlayerUnit.mana / predictionPlayerUnit.manaMax;
+        // Third bar
+        elManaCost3.style['left'] = `${100 * (leftstart - 2)}%`;
+        elManaCost3.style['width'] = `${100 * Math.min((rightEnd - leftstart), 1)}%`;
+      } else {
+        // Visualize mana gain
+        let leftstart = unit.mana / predictionPlayerUnit.manaMax;
+        let rightEnd = predictionPlayerUnit.mana / predictionPlayerUnit.manaMax;
 
-      // First bar
-      let barStart = Math.max(leftstart, rightEnd - 1);
-      elManaCost.style['left'] = `${100 * barStart}%`;
-      elManaCost.style['width'] = `${100 * (rightEnd - barStart)}%`;
+        // First bar
+        let barStart = Math.max(leftstart, rightEnd - 1);
+        elManaCost.style['left'] = `${100 * barStart}%`;
+        elManaCost.style['width'] = `${100 * (rightEnd - barStart)}%`;
 
-      // Second bar
-      barStart = Math.max(leftstart - 1, rightEnd - 2);
-      elManaCost2.style['left'] = `${100 * barStart}%`;
-      elManaCost2.style['width'] = `${100 * (rightEnd - 1 - barStart)}%`;
+        // Second bar
+        barStart = Math.max(leftstart - 1, rightEnd - 2);
+        elManaCost2.style['left'] = `${100 * barStart}%`;
+        elManaCost2.style['width'] = `${100 * (rightEnd - 1 - barStart)}%`;
 
-      // Third bar
-      barStart = Math.max(leftstart - 2, rightEnd - 3);
-      elManaCost3.style['left'] = `${100 * barStart}%`;
-      elManaCost3.style['width'] = `${100 * (rightEnd - 2 - barStart)}%`;
+        // Third bar
+        barStart = Math.max(leftstart - 2, rightEnd - 3);
+        elManaCost3.style['left'] = `${100 * barStart}%`;
+        elManaCost3.style['width'] = `${100 * (rightEnd - 2 - barStart)}%`;
+      }
     }
   }
 
@@ -1988,4 +2003,8 @@ export function addEvent(unit: IUnit, eventId: string) {
     unit.events.push(eventId);
     unit.events.sort(eventsSorter(allModifiers));
   }
+}
+
+export function countCharges(unit: IUnit): number {
+  return unit.charges === undefined ? 0 : Object.values(unit.charges).reduce((count: number, cardCharges) => count + cardCharges, 0);
 }
