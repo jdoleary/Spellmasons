@@ -235,7 +235,7 @@ export const upgradeSourceWhenDead: IUpgrade[] = [
     // Resurrection happens automatically at the start of each level
     effect: () => { },
     probability: 30,
-    cost: { healthCost: 0, manaCost: 0 },
+    cost: { healthCost: 0, manaCost: 0, staminaCost: 0 },
   },
 ];
 

@@ -707,7 +707,7 @@ function cardToUpgrade(c: ICard, overworld: Overworld): IUpgrade {
       addCardToHand(c, player, overworld.underworld);
     },
     probability: probability,
-    cost: { healthCost: c.healthCost, manaCost: c.manaCost }
+    cost: { healthCost: c.healthCost, manaCost: c.manaCost, staminaCost: c.staminaCost || 0 }
   };
 }
 
