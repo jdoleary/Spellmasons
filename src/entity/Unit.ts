@@ -12,7 +12,7 @@ import * as Vec from '../jmath/Vec';
 import * as CardUI from '../graphics/ui/CardUI';
 import Events from '../Events';
 import { allUnits } from './units';
-import { allCards, allModifiers, eventsSorter, Modifiers } from '../cards';
+import { allCards, allModifiers, eventsSorter, getCardsFromIds, Modifiers } from '../cards';
 import * as immune from '../cards/immune';
 import { checkIfNeedToClearTooltip, clearSpellEffectProjection, drawUICircle } from '../graphics/PlanningView';
 import floatingText, { queueCenteredFloatingText } from '../graphics/FloatingText';
@@ -231,6 +231,7 @@ export function create(
       UITargetCircleOffsetY: -10,
       beingPushed: false,
       predictedNextTurnDamage: 0,
+      chargesMax: 0,
     }, sourceUnitProps);
 
 
@@ -1531,6 +1532,14 @@ export async function startTurnForUnits(units: IUnit[], underworld: Underworld, 
     // Let mana remain above max if it already is
     // (due to other influences like mana potions, spells, etc);
     unit.mana = Math.max(unit.manaMax, unit.mana);
+    // Draw new charges
+    if (unit.charges) {
+      // Draw up to max charges
+      drawCharges(unit, underworld, unit.chargesMax - countCharges(unit));
+      if (globalThis.player && unit == globalThis.player.unit) {
+        CardUI.updateCardBadges(underworld);
+      }
+    }
   }
 
   // Regenerate stamina to max
@@ -2007,4 +2016,34 @@ export function addEvent(unit: IUnit, eventId: string) {
 
 export function countCharges(unit: IUnit): number {
   return unit.charges === undefined ? 0 : Object.values(unit.charges).reduce((count: number, cardCharges) => count + cardCharges, 0);
+}
+
+
+export function drawCharges(unit: IUnit, underworld: Underworld, count: number = 1) {
+  const player = underworld.players.find(p => p.unit == unit);
+  if (!player) {
+    console.error('No associated player found for unit to drawCharges from');
+    return;
+  }
+  const cards = getCardsFromIds(player.inventory);
+  const rSeed = `${underworld.seed}-${player.playerId}-${player.reroll}-${player.inventory.filter(x => !!x).length}`;
+  const random = seedrandom(rSeed);
+  if (unit.charges === undefined) {
+    unit.charges = {};
+  }
+
+  for (let i = 0; i < count; i++) {
+    const card = chooseObjectWithProbability(cards, random);
+    // Add a charge
+    if (card) {
+      unit.charges[card.id] = (unit.charges[card.id] || 0) + 1;
+      if (player == globalThis.player) {
+        setTimeout(() => {
+          playSFXKey('cardDraw');
+          CardUI.animateDrawCard(card, underworld);
+        }, i * (500 / math.lerp(1, 3, Math.max(count / 15, 1))));
+      }
+    }
+  }
+
 }

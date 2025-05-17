@@ -163,7 +163,7 @@ body.recording-shorts #upgrade-picker-content {
   aspect-ratio: 462/744;
 }
 
-.card-inspect .card {
+.show-card-large .card {
   width: unset;
   height: 100%;
   max-height: 744px;
@@ -172,7 +172,7 @@ body.recording-shorts #upgrade-picker-content {
 }
 
 #upgrade-picker .card-badge,
-.card-inspect .card-badge {
+.show-card-large .card-badge {
   width: 44px;
   height: 44px;
   line-height: 44px;
@@ -185,7 +185,7 @@ body.recording-shorts #upgrade-picker-content {
 }
 
 #upgrade-picker .card-inner,
-.card-inspect .card-inner {
+.show-card-large .card-inner {
 
   /* padding: 39px; */
   /* padding-top: 38px; */
@@ -196,12 +196,12 @@ body.recording-shorts #upgrade-picker-content {
 }
 
 #upgrade-picker .FORBIDDEN .card-title,
-.card-inspect .FORBIDDEN .card-title {
+.show-card-large .FORBIDDEN .card-title {
   outline: 4px solid #000000;
 }
 
 #upgrade-picker .card-title,
-.card-inspect .card-title {
+.show-card-large .card-title {
   text-align: center;
   color: black;
   font-size: 24px;
@@ -217,13 +217,13 @@ body.recording-shorts #upgrade-picker-content {
 }
 
 #upgrade-picker .card-thumb,
-.card-inspect .card-thumb {
+.show-card-large .card-thumb {
   width: 100%;
   aspect-ratio: 1/1;
 }
 
 #upgrade-picker .card-thumb img,
-.card-inspect .card-thumb img {
+.show-card-large .card-thumb img {
   width: 100%;
   height: unset;
   aspect-ratio: 1/1;
@@ -258,7 +258,7 @@ body.open-inventory .card-inspect {
 }
 
 
-.card-inspect {
+.show-card-large {
   top: 0;
   left: 0;
   width: 100%;
@@ -274,7 +274,7 @@ body.open-inventory .card-inspect {
   overflow: hidden
 }
 
-.card-inspect:empty {
+.show-card-large:empty {
   display: none;
 }
 
@@ -478,34 +478,34 @@ invisibly blocked, change with caution! */
   height: var(--selected-card-size);
 }
 
-.card-inspect .card,
+.show-card-large .card,
 #upgrade-picker .card {
   background-image: url('images/card-designs/card-COMMON.png');
   background-size: contain;
   background-repeat: no-repeat;
 }
 
-.card-inspect .card.COMMON,
+.show-card-large .card.COMMON,
 #upgrade-picker .card.COMMON {
   background-image: url('images/card-designs/card-COMMON.png');
 }
 
-.card-inspect .card.SPECIAL,
+.show-card-large .card.SPECIAL,
 #upgrade-picker .card.SPECIAL {
   background-image: url('images/card-designs/card-SPECIAL.png');
 }
 
-.card-inspect .card.UNCOMMON,
+.show-card-large .card.UNCOMMON,
 #upgrade-picker .card.UNCOMMON {
   background-image: url('images/card-designs/card-UNCOMMON.png');
 }
 
-.card-inspect .card.RARE,
+.show-card-large .card.RARE,
 #upgrade-picker .card.RARE {
   background-image: url('images/card-designs/card-RARE.png');
 }
 
-.card-inspect .card.FORBIDDEN,
+.show-card-large .card.FORBIDDEN,
 #upgrade-picker .card.FORBIDDEN {
   background-image: url('images/card-designs/card-FORBIDDEN.png');
 }
@@ -536,7 +536,7 @@ invisibly blocked, change with caution! */
   left: -12px;
 }
 
-.card-inspect .card .card-badge-holder {
+.show-card-large .card .card-badge-holder {
   top: -10px;
   left: -10px;
 }
@@ -567,7 +567,7 @@ invisibly blocked, change with caution! */
 
 
 #upgrade-picker .card-badge.modified-by-usage:before,
-.card-inspect .card-badge.modified-by-usage:before {
+.show-card-large .card-badge.modified-by-usage:before {
   width: 44px;
   height: 44px;
   line-height: 44px;
@@ -575,7 +575,7 @@ invisibly blocked, change with caution! */
   font-size: 24px;
 }
 
-.card-inspect .card .disabled-label {
+.show-card-large .card .disabled-label {
   top: 25%;
   display: flex;
 }
@@ -585,7 +585,7 @@ invisibly blocked, change with caution! */
   display: none;
 }
 
-.card-inspect .disabled-label .long {
+.show-card-large .disabled-label .long {
   display: block;
 }
 
@@ -698,7 +698,7 @@ kbd {
 }
 
 #upgrade-picker-content .card-mod-name,
-.card-inspect .card-mod-name {
+.show-card-large .card-mod-name {
   display: flex;
 }
 
@@ -715,7 +715,7 @@ kbd {
 }
 
 #upgrade-picker-content .card-rarity,
-.card-inspect .card-rarity {
+.show-card-large .card-rarity {
   display: block;
 }
 
@@ -764,13 +764,13 @@ kbd {
 @media (max-height: 1024px) {
 
   #upgrade-picker .card-inner .card-title,
-  .card-inspect .card-inner .card-title {
+  .show-card-large .card-inner .card-title {
     font-size: 1em;
     border-width: 1px;
   }
 
   #upgrade-picker-content .card-rarity,
-  .card-inspect .card-rarity {
+  .show-card-large .card-rarity {
     display: none;
   }
 
@@ -787,7 +787,7 @@ kbd {
 
 
 
-.card-inspect .card-title {
+.show-card-large .card-title {
   font-size: 30px;
   font-weight: bold;
 }
@@ -806,7 +806,7 @@ kbd {
 }
 
 #upgrade-picker-content .card-description,
-.card-inspect .card-description {
+.show-card-large .card-description {
   display: flex;
 }
 
@@ -2813,12 +2813,12 @@ body.dragging-card .floating-card-holder .empty-slot {
   height: 14px;
 }
 
-.card-inspect .card {
+.show-card-large .card {
   filter: drop-shadow(6px 6px 3px rgba(20, 20, 20, 0.5));
 }
 
 /* Turn off card shadow when screenshotting card */
-.screenshot .card-inspect .card {
+.screenshot .show-card-large .card {
   animation: none;
   filter: none;
 }
@@ -2893,4 +2893,42 @@ body.isPeerHost .openLobbyBtn {
 
 #legal-content {
   min-height: 100px;
+}
+
+#card-draw-animation-holder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+#card-draw-animation-holder .card {
+  animation: animate-card-draw 3s forwards;
+  transform-origin: center;
+  position: absolute;
+  max-width: 30%;
+  filter: drop-shadow(6px 6px 3px rgba(20, 20, 20, 0.05));
+}
+
+@keyframes animate-card-draw {
+  0% {
+    transform: translate(-50%, -50%) translate(60vw, 150vh) scale(1) rotate(0deg);
+  }
+
+  40% {
+    transform: translate(-50%, -50%) translate(50vw, 40vh) scale(1) rotate(10deg);
+  }
+
+  60% {
+    transform: translate(-50%, -50%) translate(35vw, 50vh) scale(1) rotate(-4deg);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) translate(15vw, 87vh) scale(0.0) rotate(-10deg);
+  }
 }

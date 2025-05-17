@@ -71,6 +71,7 @@ export const sfx: { [key: string]: string[] } = {
   hurt: ['./sound/sfx/hurt.mp3'],
   hurt2: ['./sound/sfx/hurt2.mp3'],
   hurt3: ['./sound/sfx/hurt3.mp3'],
+  cardDraw: ['./sound/sfx/card-draw-001.mp3', './sound/sfx/card-draw-002.mp3', './sound/sfx/card-draw-003.mp3'],
   inventory_close: ['./sound/sfx/inventory_close.mp3'],
   inventory_open: ['./sound/sfx/inventory_open.mp3'],
   levelUp: ['./sound/sfx/LvlUp.mp3'],

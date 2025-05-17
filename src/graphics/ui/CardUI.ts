@@ -1478,3 +1478,19 @@ export function cardListToImages(cardIds: string[]): string {
   }
   return html;
 }
+
+export function animateDrawCard(card: Cards.ICard, underworld: Underworld) {
+  const elHolder = document.getElementById('card-draw-animation-holder') as HTMLElement;
+  if (!elHolder) {
+    console.error('animateDrawCard el not found');
+    return;
+  }
+  if (player == globalThis.player) {
+    const el = createCardElement(card, underworld, true)
+    elHolder.appendChild(el);
+    setTimeout(() => {
+      el.remove();
+    }, 3000);
+  }
+
+}
