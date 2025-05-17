@@ -4060,7 +4060,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           // the card may affect the caster's mana
           effectState.casterUnit.mana -= spellCostTally.manaCost;
           effectState.casterUnit.stamina -= spellCostTally.staminaCost;
-          if (effectState.casterUnit.charges && effectState.casterUnit.charges[card.id]) {
+          if (effectState.casterUnit.charges && effectState.casterUnit.charges[card.id] != undefined) {
             effectState.casterUnit.charges[card.id] = (effectState.casterUnit.charges[card.id] || 0) - quantity;
           }
 

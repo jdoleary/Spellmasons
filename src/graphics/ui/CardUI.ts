@@ -1386,10 +1386,8 @@ export function updateCardBadges(underworld: Underworld) {
         if (globalThis.player.isCardmason) {
           for (let elBadgeCharge of badgeRecord.charge) {
             const charge = (globalThis.player.unit.charges?.[card.id]) || 0;
-            if (charge != 0) {
-              const specificCardQueuedCount = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"] .card-charge-badge`).length;
-              updateChargeBadge(elBadgeCharge, charge - specificCardQueuedCount, card);
-            }
+            const specificCardQueuedCount = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"] .card-charge-badge`).length;
+            updateChargeBadge(elBadgeCharge, charge - specificCardQueuedCount, card);
           }
         } else {
           for (let elBadge of badgeRecord.mana) {
