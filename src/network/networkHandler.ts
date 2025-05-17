@@ -663,7 +663,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         // computer
         break;
       }
-      const { color, colorMagic, name, lobbyReady } = payload;
+      const { color, colorMagic, name, isCardmason, lobbyReady } = payload;
       if (fromPlayer) {
         if (lobbyReady !== undefined) {
           fromPlayer.lobbyReady = lobbyReady;
@@ -686,6 +686,11 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         setPlayerNameUI(fromPlayer);
         Player.setPlayerRobeColor(fromPlayer, color, colorMagic);
         Player.syncLobby(underworld);
+        // Don't override isCardmason if it's not being set
+        if (isCardmason !== undefined) {
+          fromPlayer.isCardmason = isCardmason;
+        }
+
         // Improve joining games so that if there is an uncontrolled player with the same name, this client
         // takes over that player.  This allows clients to join saved games and reassume control of
         // a player with their same name automatically even if their cliendID has changed
@@ -1342,7 +1347,7 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
 }
 
 export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
-  globalThis.configPlayer = ({ color, colorMagic, name, lobbyReady }: { color?: number, colorMagic?: number, name?: string, lobbyReady?: boolean }) => {
+  globalThis.configPlayer = ({ color, colorMagic, name, isCardmason, lobbyReady }: { color?: number, colorMagic?: number, name?: string, isCardmason?: boolean, lobbyReady?: boolean }) => {
     if (color !== undefined) {
       storage.set(storage.STORAGE_ID_PLAYER_COLOR, color);
     }
@@ -1354,10 +1359,17 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
       capped_name = capped_name.slice(0, 70);
       storage.set(storage.STORAGE_ID_PLAYER_NAME, capped_name || '');
     }
+    if (isCardmason != undefined) {
+      // Booleans should not be stored in localStorage as booleans because they are converted to
+      // strings which is confusing as hell
+      storage.set(storage.STORAGE_ID_IS_CARDMASON, isCardmason ? 'yes' : 'no');
+    }
+    const storedIsCardmason = storage.get(storage.STORAGE_ID_IS_CARDMASON) || false;
     overworld.pie.sendData({
       type: MESSAGE_TYPES.PLAYER_CONFIG,
       color,
       colorMagic,
+      isCardmason: storedIsCardmason,
       name: capped_name,
       lobbyReady
     });

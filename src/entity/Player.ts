@@ -102,6 +102,7 @@ export function create(clientId: string, playerId: string, underworld: Underworl
   const player: IPlayer = {
     name: '',
     endedTurn: false,
+    isCardmason: false,
     clientId,
     playerId,
     // init players as not connected.  clientConnected status
@@ -492,6 +493,13 @@ export function addCardToHand(card: Cards.ICard | undefined, player: IPlayer | u
       }
     }
     player.inventory.push(card.id);
+    if (player.isCardmason) {
+      if (!player.unit.charges) {
+        player.unit.charges = {};
+      }
+      // DG5: Todo, ajust starting charges when you get a new card
+      player.unit.charges[card.id] = 1;
+    }
     if (!didReplace) {
       const emptySlotIndex = player.cardsInToolbar.indexOf('');
       // Add the spell to the toolbar

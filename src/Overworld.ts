@@ -17,6 +17,7 @@ import { calculateGameDifficulty } from "./Difficulty";
 import { setPlayerNameUI } from "./PlayerUtils";
 import registerAllMods from "./registerMod";
 import { upgradeCardsSource, upgradeSourceWhenDead } from "./Upgrade";
+import { CARDMASON_DEFAULT_CHARGES_MAX } from './config';
 
 export interface Overworld {
   pie: Pie;
@@ -119,6 +120,13 @@ export function ensureAllClientsHaveAssociatedPlayers(overworld: Overworld, clie
         const player = Player.create(clientId, playerId, underworld);
         // Assign created player to globalThis.player if they are the primary client player
         if (i == 0) Player.updateGlobalRefToPlayerIfCurrentClient(player);
+        if (globalThis.player == player) {
+          player.isCardmason = storage.get(storage.STORAGE_ID_IS_CARDMASON) == 'yes';
+          if (player.isCardmason) {
+            player.unit.chargesMax = CARDMASON_DEFAULT_CHARGES_MAX;
+            player.unit.charges = {};
+          }
+        }
         player.lobbyReady = !!defaultLobbyReady;
         const nameFromServer = names.length && names[k];
         if (nameFromServer) {

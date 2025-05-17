@@ -137,6 +137,10 @@ export function oneOffImage(coords: Vec2, imagePath: string, parent: Container |
 globalThis.calculateCostForSingleCard = calculateCostForSingleCard
 export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number = 0, caster?: IPlayer): CardCost {
     let cardCost: CardCost = { manaCost: 0, healthCost: 0, staminaCost: 0 };
+    if (caster && caster.isCardmason) {
+        // No non-charge cost for cardmasons, only charges
+        return cardCost;
+    }
     cardCost.manaCost += card.manaCost;
     cardCost.healthCost += card.healthCost;
     cardCost.staminaCost += card.staminaCost || 0;

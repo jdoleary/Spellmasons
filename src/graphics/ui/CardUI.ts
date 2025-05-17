@@ -1133,27 +1133,29 @@ function createCardElement(content: Cards.ICard, underworld?: Underworld, fullSi
   elCardBadgeHolder.classList.add('card-badge-holder');
   element.appendChild(elCardBadgeHolder);
 
-  const elCardManaBadge = document.createElement('div');
-  elCardManaBadge.classList.add('card-mana-badge', 'card-badge');
-  const cost = calculateCostForSingleCard(content, 0, globalThis.player);
-  updateManaBadge(elCardManaBadge, cost.manaCost, content);
-  elCardBadgeHolder.appendChild(elCardManaBadge);
 
-  const elCardHealthBadge = document.createElement('div');
-  elCardHealthBadge.classList.add('card-health-badge', 'card-badge');
-  updateHealthBadge(elCardHealthBadge, cost.healthCost, content);
-  elCardBadgeHolder.appendChild(elCardHealthBadge);
-
-  const elCardStaminaBadge = document.createElement('div');
-  elCardStaminaBadge.classList.add('card-stamina-badge', 'card-badge');
-  updateStaminaBadge(elCardStaminaBadge, cost.staminaCost, content);
-  elCardBadgeHolder.appendChild(elCardStaminaBadge);
-
-  if (globalThis.player) {
+  if (globalThis.player && globalThis.player.isCardmason) {
     const elCardChargeBadge = document.createElement('div');
     elCardChargeBadge.classList.add('card-charge-badge', 'card-badge', 'card-badge-square');
     updateChargeBadge(elCardChargeBadge, globalThis.player.unit.charges?.[content.id] || 0, content);
     elCardBadgeHolder.appendChild(elCardChargeBadge);
+  } else {
+    const elCardManaBadge = document.createElement('div');
+    elCardManaBadge.classList.add('card-mana-badge', 'card-badge');
+    const cost = calculateCostForSingleCard(content, 0, globalThis.player);
+    updateManaBadge(elCardManaBadge, cost.manaCost, content);
+    elCardBadgeHolder.appendChild(elCardManaBadge);
+
+    const elCardHealthBadge = document.createElement('div');
+    elCardHealthBadge.classList.add('card-health-badge', 'card-badge');
+    updateHealthBadge(elCardHealthBadge, cost.healthCost, content);
+    elCardBadgeHolder.appendChild(elCardHealthBadge);
+
+    const elCardStaminaBadge = document.createElement('div');
+    elCardStaminaBadge.classList.add('card-stamina-badge', 'card-badge');
+    updateStaminaBadge(elCardStaminaBadge, cost.staminaCost, content);
+    elCardBadgeHolder.appendChild(elCardStaminaBadge);
+
   }
 
 
@@ -1299,11 +1301,6 @@ function updateStaminaBadge(elBadge: Element | null, staminaCost: number = 0, ca
 
 function updateChargeBadge(elBadge: Element | null, charges: number = 0, card: Cards.ICard) {
   if (elBadge) {
-    if (charges < 0) {
-      console.error(`Charges of ${card.id} is < 0`);
-    }
-    // Hide badge if no cost
-    elBadge.classList.toggle('hidden', charges === 0);
     elBadge.innerHTML = charges.toString();
   } else {
     console.warn("Err UI: Found card, but could not find associated badge element to update charges");
@@ -1322,27 +1319,30 @@ export function updateCardBadges(underworld: Underworld) {
       if (card) {
         const sliceOfCardsOfSameIdUntilCurrent = selectedCards.slice(0, i).filter(c => c.id == card.id);
         const cost = calculateCostForSingleCard(card, (globalThis.player.cardUsageCounts[card.id] || 0) + sliceOfCardsOfSameIdUntilCurrent.length * card.expenseScaling, globalThis.player);
-        const elBadges = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"] .card-mana-badge`);
-        const elBadge = Array.from(elBadges)[sliceOfCardsOfSameIdUntilCurrent.length];
-        if (elBadge) {
-          updateManaBadge(elBadge, cost.manaCost, card);
-        }
-        const elBadgesH = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"] .card-health-badge`);
-        const elBadgeH = Array.from(elBadgesH)[sliceOfCardsOfSameIdUntilCurrent.length];
-        if (elBadgeH) {
-          updateHealthBadge(elBadgeH, cost.healthCost, card);
-        }
-        const elBadgesS = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"] .card-stamina-badge`);
-        const elBadgeS = Array.from(elBadgesS)[sliceOfCardsOfSameIdUntilCurrent.length];
-        if (elBadgeS) {
-          updateStaminaBadge(elBadgeS, cost.staminaCost, card);
-        }
-        const elBadgesC = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"] .card-charge-badge`);
-        const elBadgeC = Array.from(elBadgesC)[sliceOfCardsOfSameIdUntilCurrent.length];
-        if (elBadgeC) {
-          const cardCharges = globalThis.player.unit.charges?.[card.id]
-          if (cardCharges != undefined) {
-            updateChargeBadge(elBadgeC, cardCharges - sliceOfCardsOfSameIdUntilCurrent.length, card);
+        if (globalThis.player.isCardmason) {
+          const elBadgesC = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"] .card-charge-badge`);
+          const elBadgeC = Array.from(elBadgesC)[sliceOfCardsOfSameIdUntilCurrent.length];
+          if (elBadgeC) {
+            const cardCharges = globalThis.player.unit.charges?.[card.id]
+            if (cardCharges != undefined) {
+              updateChargeBadge(elBadgeC, cardCharges - sliceOfCardsOfSameIdUntilCurrent.length, card);
+            }
+          }
+        } else {
+          const elBadges = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"] .card-mana-badge`);
+          const elBadge = Array.from(elBadges)[sliceOfCardsOfSameIdUntilCurrent.length];
+          if (elBadge) {
+            updateManaBadge(elBadge, cost.manaCost, card);
+          }
+          const elBadgesH = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"] .card-health-badge`);
+          const elBadgeH = Array.from(elBadgesH)[sliceOfCardsOfSameIdUntilCurrent.length];
+          if (elBadgeH) {
+            updateHealthBadge(elBadgeH, cost.healthCost, card);
+          }
+          const elBadgesS = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"] .card-stamina-badge`);
+          const elBadgeS = Array.from(elBadgesS)[sliceOfCardsOfSameIdUntilCurrent.length];
+          if (elBadgeS) {
+            updateStaminaBadge(elBadgeS, cost.staminaCost, card);
           }
         }
       }
@@ -1383,20 +1383,23 @@ export function updateCardBadges(underworld: Underworld) {
       const cost = calculateCostForSingleCard(card, (globalThis.player.cardUsageCounts[card.id] || 0) + selectedCardElementsOfSameId.length * card.expenseScaling, globalThis.player);
       const badgeRecord = badgesById[card.id];
       if (badgeRecord) {
-        for (let elBadge of badgeRecord.mana) {
-          updateManaBadge(elBadge, cost.manaCost, card);
-        }
-        for (let elBadgeHealth of badgeRecord.health) {
-          updateHealthBadge(elBadgeHealth, cost.healthCost, card);
-        }
-        for (let elBadgeStamina of badgeRecord.stamina) {
-          updateStaminaBadge(elBadgeStamina, cost.staminaCost, card);
-        }
-        for (let elBadgeCharge of badgeRecord.charge) {
-          const charge = (globalThis.player.unit.charges?.[card.id]) || 0;
-          if (charge != 0) {
-            const specificCardQueuedCount = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"] .card-charge-badge`).length;
-            updateChargeBadge(elBadgeCharge, charge - specificCardQueuedCount, card);
+        if (globalThis.player.isCardmason) {
+          for (let elBadgeCharge of badgeRecord.charge) {
+            const charge = (globalThis.player.unit.charges?.[card.id]) || 0;
+            if (charge != 0) {
+              const specificCardQueuedCount = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"] .card-charge-badge`).length;
+              updateChargeBadge(elBadgeCharge, charge - specificCardQueuedCount, card);
+            }
+          }
+        } else {
+          for (let elBadge of badgeRecord.mana) {
+            updateManaBadge(elBadge, cost.manaCost, card);
+          }
+          for (let elBadgeHealth of badgeRecord.health) {
+            updateHealthBadge(elBadgeHealth, cost.healthCost, card);
+          }
+          for (let elBadgeStamina of badgeRecord.stamina) {
+            updateStaminaBadge(elBadgeStamina, cost.staminaCost, card);
           }
         }
       }
