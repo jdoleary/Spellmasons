@@ -2947,3 +2947,33 @@ body.isPeerHost .openLobbyBtn {
     transform: translate(-50%, -50%) translate(15vw, 87vh) scale(0.0) rotate(-10deg);
   }
 }
+
+body.cardmason .stat-row[data-stat="Mana"] {
+  display: none;
+
+}
+
+body:not(.cardmason) .stat-row[data-stat="Max Cards"] {
+  display: none;
+
+}
+
+.stat-row[data-stat="Cast Range"] .rune-name::before {
+  content: "🏹 "
+}
+
+.stat-row[data-stat="Mana"] .rune-name::before {
+  content: "🔵 "
+}
+
+.stat-row[data-stat="Health"] .rune-name::before {
+  content: "🔴 "
+}
+
+.stat-row[data-stat="Stamina"] .rune-name::before {
+  content: "🟡 "
+}
+
+.stat-row[data-stat="Max Cards"] .rune-name::before {
+  content: "🃏 "
+}
