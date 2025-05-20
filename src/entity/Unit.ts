@@ -161,7 +161,7 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   // done being processed.
   takingPureDamage?: boolean;
   charges?: { [spellId: string]: number };
-  chargesMaxAdditional: number | undefined;
+  chargesMaxAdditional?: number;
 }
 // This does not need to be unique to underworld, it just needs to be unique
 let lastPredictionUnitId = 0;
