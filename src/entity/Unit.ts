@@ -1535,7 +1535,7 @@ export async function startTurnForUnits(units: IUnit[], underworld: Underworld, 
     // Draw new charges
     if (unit.charges) {
       // Draw up to max charges
-      drawCharges(unit, underworld, getMaxCharges(unit, underworld) - countCharges(unit));
+      refillCharges(unit, underworld);
     }
   }
 
@@ -2015,7 +2015,9 @@ export function countCharges(unit: IUnit): number {
   return unit.charges === undefined ? 0 : Object.values(unit.charges).reduce((count: number, cardCharges) => count + cardCharges, 0);
 }
 
-
+export function refillCharges(unit: IUnit, underworld: Underworld) {
+  drawCharges(unit, underworld, getMaxCharges(unit, underworld) - countCharges(unit));
+}
 export function drawCharges(unit: IUnit, underworld: Underworld, count: number = 1) {
   const player = underworld.players.find(p => p.unit == unit);
   if (!player) {
@@ -2023,7 +2025,7 @@ export function drawCharges(unit: IUnit, underworld: Underworld, count: number =
     return;
   }
   const cards = getCardsFromIds(player.inventory);
-  const rSeed = `${underworld.seed}-${player.playerId}-${player.reroll}-${player.inventory.filter(x => !!x).length}`;
+  const rSeed = `${underworld.seed}-${player.playerId}-${player.discardCount || 0}-${player.inventory.filter(x => !!x).length}`;
   const random = seedrandom(rSeed);
   if (unit.charges === undefined) {
     unit.charges = {};
@@ -2044,6 +2046,8 @@ export function drawCharges(unit: IUnit, underworld: Underworld, count: number =
   }
   if (globalThis.player && unit == globalThis.player.unit) {
     CardUI.updateCardBadges(underworld);
+    underworld.syncPlayerPredictionUnitOnly();
+    syncPlayerHealthManaUI(underworld);
   }
 
 }

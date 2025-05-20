@@ -83,6 +83,8 @@ export interface IPlayer {
   // their upgrade choice so that they get to pick from fewer each time they
   // reroll.
   reroll: number;
+  // Used to seed drawing charges
+  discardCount: number | undefined;
   // Stores state that modifies spells
   spellState: { [spellId: string]: any };
   stats: Stats;
