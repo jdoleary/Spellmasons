@@ -3913,7 +3913,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         additionalBounce: 0,
       },
       initialTargetedUnitId,
-      initialTargetedPickupId
+      initialTargetedPickupId,
+      spellCostTally: undefined
     };
 
     // Get initial targets.  If initial targets are already determined (by being passed into this function, use them;
@@ -4063,7 +4064,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           // the card may affect the caster's mana
           effectState.casterUnit.mana -= spellCostTally.manaCost;
           effectState.casterUnit.stamina -= spellCostTally.staminaCost;
-          if (effectState.casterUnit.charges && effectState.casterUnit.charges[card.id] != undefined) {
+          if (effectState.casterUnit.charges) {
+            if (effectState.casterUnit.charges[card.id] === undefined) {
+              effectState.casterUnit.charges[card.id] = 0;
+            }
             effectState.casterUnit.charges[card.id] = (effectState.casterUnit.charges[card.id] || 0) - quantity;
           }
 
@@ -4105,10 +4109,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         // Refund mana if necessary 
         if (effectState.shouldRefundLastSpell) {
           effectState.casterUnit.mana += spellCostTally.manaCost;
-          // Refund charges
-          if (effectState.casterUnit) {
-            effectState.casterUnit.charges = precastCharges;
-          }
+          // Reset manacost since it was refunded
+          spellCostTally.manaCost = 0;
         }
         // If refund, reset cardUsageCount
         if (effectState.shouldRefundLastSpell || args.castForFree) {
@@ -4145,6 +4147,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         if (!prediction) {
           effectState.casterUnit.mana = Math.max(0, effectState.casterUnit.mana);
         }
+        effectState.spellCostTally = spellCostTally;
       }
       // Reset quantity once a card is cast
       quantity = 1;

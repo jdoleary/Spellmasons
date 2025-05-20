@@ -940,7 +940,8 @@ async function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: 
     }
 
     if (predictionPlayerUnit) {
-      if (predictionPlayerUnit.mana < 0) {
+      const lastCardCost = card && calculateCostForSingleCard(card, 0, player);
+      if (lastCardCost.manaCost > 0 && predictionPlayerUnit.mana < 0) {
         floatingText({
           coords: underworld.getMousePos(),
           text: 'Insufficient Mana',
@@ -950,7 +951,7 @@ async function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: 
         deselectLastCard(underworld);
       }
 
-      if (predictionPlayerUnit.stamina < 0) {
+      if (lastCardCost.staminaCost > 0 && predictionPlayerUnit.stamina < 0) {
         floatingText({
           coords: underworld.getMousePos(),
           text: 'Insufficient Stamina',
@@ -962,6 +963,7 @@ async function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: 
 
       // Check for insufficient charges
       if (predictionPlayerUnit.charges) {
+        console.log('tjest', predictionPlayerUnit.charges);
         if (Object.entries(predictionPlayerUnit.charges).some(([cardId, charges]) => charges < 0)) {
           floatingText({
             coords: underworld.getMousePos(),
@@ -972,8 +974,6 @@ async function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: 
         }
       }
 
-      const cost = calculateCost(selectedCards, player.cardUsageCounts, player);
-      const lastCardCost = card && calculateCostForSingleCard(card, 0, player);
       if (alreadyDead && (lastCardCost?.healthCost || 0) > 0) {
         floatingText({
           coords: underworld.getMousePos(),

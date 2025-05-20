@@ -937,7 +937,7 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
           // If it is negative, don't allow the cast because the caster has insufficient mana
           if ((effectState.casterUnit.mana >= 0)) {
             // Check for insufficient stamina
-            if (effectState.casterUnit.stamina < 0) {
+            if ((effectState.spellCostTally?.staminaCost || 0) > 0 && effectState.casterUnit.stamina < 0) {
               floatingText({
                 coords: underworld.getMousePos(),
                 text: 'Insufficient Stamina',

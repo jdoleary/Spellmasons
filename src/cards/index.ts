@@ -139,7 +139,7 @@ import { registerDeathmasonEvents } from '../entity/units/deathmason';
 import * as config from '../config';
 
 import { IUpgrade, upgradeCardsSource } from '../Upgrade';
-import { _getCardsFromIds } from './cardUtils';
+import { _getCardsFromIds, CardCost } from './cardUtils';
 import { addCardToHand } from '../entity/Player';
 import Underworld from '../Underworld';
 import { CardCategory, CardRarity, probabilityMap, UnitSubType, UnitType } from '../types/commonTypes';
@@ -743,6 +743,7 @@ export interface EffectState {
   // Overriddes castLocation if exists.
   initialTargetedUnitId: number | undefined;
   initialTargetedPickupId: number | undefined;
+  spellCostTally: CardCost | undefined;
 }
 export function refundLastSpell(state: EffectState, prediction: boolean, floatingMessage: string = 'No valid targets. Cost refunded.') {
   // Only refund the spell when it's not a prediction so that
