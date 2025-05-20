@@ -758,6 +758,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
           // player in multiplayer
           Image.show(fromPlayer.unit.image);
           underworld.syncTurnMessage();
+          Unit.refillCharges(fromPlayer.unit, underworld);
         } else {
           console.error('Cannot spawn player at NaN')
         }
