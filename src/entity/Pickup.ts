@@ -2,7 +2,7 @@ import type * as PIXI from 'pixi.js';
 import * as Image from '../graphics/Image';
 import type * as Player from './Player';
 import { addPixiSprite, addPixiSpriteAnimated, containerUnits, pixiText, startBloodParticleSplatter } from '../graphics/PixiUtils';
-import { syncPlayerHealthManaUI, IUnit, takeDamage, playAnimation, runPickupEvents } from './Unit';
+import { syncPlayerHealthManaUI, IUnit, takeDamage, playAnimation, runPickupEvents, drawCharges } from './Unit';
 import { checkIfNeedToClearTooltip } from '../graphics/PlanningView';
 import { MESSAGE_TYPES } from '../types/MessageTypes';
 import * as config from '../config';
@@ -669,6 +669,9 @@ export const pickups: IPickupSource[] = [
       if (unit) {
         if (!prediction) {
           playSFXKey('potionPickupMana');
+        }
+        if (unit.charges) {
+          drawCharges(unit, underworld, 1);
         }
         healManaUnit(unit, manaPotionRestoreAmount * pickup.power, undefined, underworld, prediction);
       }
