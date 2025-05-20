@@ -963,7 +963,6 @@ async function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: 
 
       // Check for insufficient charges
       if (predictionPlayerUnit.charges) {
-        console.log('tjest', predictionPlayerUnit.charges);
         if (Object.entries(predictionPlayerUnit.charges).some(([cardId, charges]) => charges < 0)) {
           floatingText({
             coords: underworld.getMousePos(),

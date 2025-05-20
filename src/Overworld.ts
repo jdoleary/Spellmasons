@@ -17,7 +17,6 @@ import { calculateGameDifficulty } from "./Difficulty";
 import { setPlayerNameUI } from "./PlayerUtils";
 import registerAllMods from "./registerMod";
 import { upgradeCardsSource, upgradeSourceWhenDead } from "./Upgrade";
-import { CARDMASON_DEFAULT_CHARGES_MAX } from './config';
 
 export interface Overworld {
   pie: Pie;

@@ -161,7 +161,7 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   // done being processed.
   takingPureDamage?: boolean;
   charges?: { [spellId: string]: number };
-  chargesMax: number;
+  chargesMaxAdditional: number | undefined;
 }
 // This does not need to be unique to underworld, it just needs to be unique
 let lastPredictionUnitId = 0;
@@ -231,7 +231,6 @@ export function create(
       UITargetCircleOffsetY: -10,
       beingPushed: false,
       predictedNextTurnDamage: 0,
-      chargesMax: 0,
     }, sourceUnitProps);
 
 
@@ -514,7 +513,7 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
   // so the promise doesn't hang forever
   let loadedunit: IUnit = {
     // Load defaults for new props that old save files might not have
-    ...{ strength: 1, chargesMax: 0 },
+    ...{ strength: 1 },
     ...restUnit,
     summonedBy: (prediction ? underworld.unitsPrediction : underworld.units).find(u => u.id == summonedById),
     shaderUniforms: {},
@@ -1210,9 +1209,10 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
     elManaBar.style["width"] = `0%`;
     elManaBar2.style["width"] = `0%`;
     const currentCharges = countCharges(predictionPlayerUnit)
-    const ratio = currentCharges / predictionPlayerUnit.chargesMax;
+    const maxCharges = getMaxCharges(predictionPlayerUnit, underworld);
+    const ratio = currentCharges / maxCharges;
     elManaBar3.style["width"] = `${100 * ratio}%`;
-    elManaLabel.innerHTML = `${currentCharges}/${predictionPlayerUnit.chargesMax}`;
+    elManaLabel.innerHTML = `${currentCharges}/${maxCharges}`;
 
 
   } else {
@@ -1535,7 +1535,7 @@ export async function startTurnForUnits(units: IUnit[], underworld: Underworld, 
     // Draw new charges
     if (unit.charges) {
       // Draw up to max charges
-      drawCharges(unit, underworld, unit.chargesMax - countCharges(unit));
+      drawCharges(unit, underworld, getMaxCharges(unit, underworld) - countCharges(unit));
     }
   }
 
@@ -2046,4 +2046,11 @@ export function drawCharges(unit: IUnit, underworld: Underworld, count: number =
     CardUI.updateCardBadges(underworld);
   }
 
+}
+export function getMaxCharges(unit: IUnit, underworld: Underworld): number {
+  if (unit.charges) {
+    return 3 + underworld.levelIndex * 3 + (unit.chargesMaxAdditional || 0)
+  } else {
+    return 0;
+  }
 }

@@ -2311,9 +2311,6 @@ export default class Underworld {
     console.log('Setup: resetPlayerForNextLevel; reset all players')
     for (let player of this.players) {
       Player.resetPlayerForNextLevel(player, this);
-      if (player.isCardmason) {
-        player.unit.chargesMax += 2;
-      }
     }
     this.changeToFirstHotseatPlayer();
 

@@ -497,8 +497,11 @@ export function addCardToHand(card: Cards.ICard | undefined, player: IPlayer | u
       if (!player.unit.charges) {
         player.unit.charges = {};
       }
-      // DG5: Todo, ajust starting charges when you get a new card
+      // Give at least 1 charge when you get a new card
       player.unit.charges[card.id] = 1;
+      // Update UI to show new charges
+      underworld.syncPlayerPredictionUnitOnly();
+      Unit.syncPlayerHealthManaUI(underworld);
     }
     if (!didReplace) {
       const emptySlotIndex = player.cardsInToolbar.indexOf('');
@@ -618,8 +621,7 @@ export function setCardmason(player: IPlayer, isCardmason: boolean) {
     document.body.classList.toggle('cardmason', isCardmason);
   }
   player.isCardmason = isCardmason;
-  if (player.isCardmason && player.unit.charges === undefined && player.unit.chargesMax === 0) {
-    player.unit.chargesMax = config.CARDMASON_DEFAULT_CHARGES_MAX;
+  if (player.isCardmason && player.unit.charges === undefined) {
     player.unit.charges = {};
   }
 
