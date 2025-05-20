@@ -2936,11 +2936,11 @@ body.isPeerHost .openLobbyBtn {
 
 @keyframes animate-card-draw {
   0% {
-    transform: translate(-50%, -50%) translate(5vw, 150vh) scale(1) rotate(0deg);
+    transform: translate(-50%, -50%) translate(10vw, 150vh) scale(1) rotate(0deg);
   }
 
   40% {
-    transform: translate(-50%, -50%) translate(10vw, 40vh) scale(1) rotate(10deg);
+    transform: translate(-50%, -50%) translate(15vw, 40vh) scale(1) rotate(10deg);
   }
 
   60% {
@@ -2948,7 +2948,7 @@ body.isPeerHost .openLobbyBtn {
   }
 
   100% {
-    transform: translate(-50%, -50%) translate(15vw, 87vh) scale(0.0) rotate(-10deg);
+    transform: translate(-50%, -50%) translate(15vw, 150vh) scale(0.0) rotate(-10deg);
   }
 }
 
