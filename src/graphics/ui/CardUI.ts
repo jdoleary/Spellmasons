@@ -179,7 +179,7 @@ export function setupCardUIEventListeners(overworld: Overworld) {
         const { unit } = globalThis.player;
         const currentChargesCount = countCharges(unit);
         if (currentChargesCount <= 1) {
-          playSFXKey('Deny');
+          playSFXKey('deny');
           centeredFloatingText(['cannot-discard'], 'red');
           return;
         }
