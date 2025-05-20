@@ -2048,6 +2048,8 @@ export function drawCharges(unit: IUnit, underworld: Underworld, count: number =
     CardUI.updateCardBadges(underworld);
     underworld.syncPlayerPredictionUnitOnly();
     syncPlayerHealthManaUI(underworld);
+    // Ensure empty charge cnards that are just drawn are no longer .disabled
+    CardUI.recalcPositionForCards(globalThis.player, underworld);
   }
 
 }
