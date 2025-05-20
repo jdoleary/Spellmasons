@@ -178,7 +178,7 @@ export function setupCardUIEventListeners(overworld: Overworld) {
       if (overworld.underworld && globalThis.player?.unit) {
         const { unit } = globalThis.player;
         const currentChargesCount = countCharges(unit);
-        if (currentChargesCount <= 1) {
+        if (currentChargesCount <= 0) {
           playSFXKey('deny');
           centeredFloatingText(['cannot-discard'], 'red');
           return;
@@ -187,7 +187,7 @@ export function setupCardUIEventListeners(overworld: Overworld) {
         Jprompt({
           text: ['confirm-discard', currentChargesCount.toString(), drawNew.toString()],
           yesText: 'Yes',
-          yesKey: 'Enter',
+          yesKey: 'Space',
           yesKeyText: 'Enter',
           noBtnText: 'Cancel',
           noBtnKey: 'Escape',
@@ -200,6 +200,12 @@ export function setupCardUIEventListeners(overworld: Overworld) {
           }
 
           // Discard all current charges and draw some fraction of discarded charges
+          if (globalThis.player) {
+            if (globalThis.player.discardCount === undefined) {
+              globalThis.player.discardCount = 0;
+            }
+            globalThis.player.discardCount++;
+          }
           unit.charges = {};
           drawCharges(unit, overworld.underworld, drawNew);
         });
@@ -1523,6 +1529,7 @@ export function animateDrawCard(card: Cards.ICard, underworld: Underworld) {
   }
   if (player == globalThis.player) {
     const el = createCardElement(card, underworld, true)
+    el.querySelector('.card-badge-holder')?.remove();
     elHolder.appendChild(el);
     setTimeout(() => {
       el.remove();
