@@ -334,4 +334,7 @@ declare global {
   var disconnectFromP2PHub: () => void | undefined;
   var menuJoinErr: (e: string) => void | undefined;
   var showLegalPopup: (forcePopup: boolean) => void;
+  // If connected to a non-host app pie server where the first client acts as the host
+  var statelessRelayPieServer: boolean | undefined;
+  var isHostForStatelessPie: boolean | undefined;
 }

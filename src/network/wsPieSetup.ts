@@ -131,7 +131,7 @@ function defaultRoomInfo(_room_info = {}): Room {
   return room_info;
 }
 
-export function joinRoom(overworld: Overworld, _room_info = {}, isHosting = false): Promise<void> {
+export function joinRoom(overworld: Overworld, _room_info = {}, makeRoomIfNonexistant = false): Promise<void> {
   if (!overworld.pie) {
     console.error('Could not join room, pie instance is undefined');
     return Promise.reject();
@@ -147,7 +147,7 @@ export function joinRoom(overworld: Overworld, _room_info = {}, isHosting = fals
   room_info.name = room_info.name.toLowerCase();
   // Create a new underworld to sync with the payload so that no old state carries over
   const underworld = new Underworld(overworld, overworld.pie, Math.random().toString());
-  if (isHosting && pie instanceof PiePeer) {
+  if (makeRoomIfNonexistant && pie instanceof PiePeer) {
     console.log('Setup: PiePeer host creating level');
     // Generate the level data
     underworld.lastLevelCreated = underworld.generateLevelDataSyncronous(0);
@@ -166,7 +166,7 @@ export function joinRoom(overworld: Overworld, _room_info = {}, isHosting = fals
     }, underworld);
     console.log('Mods: set active mods', underworld.activeMods);
   }
-  return pie.joinRoom(room_info, isHosting).then(() => {
+  return pie.joinRoom(room_info, makeRoomIfNonexistant).then(() => {
     console.log('Pie: You are now in the room', JSON.stringify(room_info, null, 2));
   }).catch((err: string) => {
     console.error('wsPieSetup: Failed to join room:', err);
@@ -207,6 +207,17 @@ ${explainUpdateText}
     if (o.hostAppVersion !== undefined && o.hostAppVersion !== version) {
       console.warn('Host app version does not match client version');
     }
+    // If hostAppVersion is undefined, assume the client has connected to a stateless pie server (relay) with no host app
+    globalThis.statelessRelayPieServer = o.hostAppVersion === undefined;
+    if (globalThis.statelessRelayPieServer) {
+      console.log('Pie: Connected to stateless relay pie server');
+      if (globalThis.remoteLog)
+        globalThis.remoteLog(`using Stateless Relay Pie server`);
+    } else {
+      if (globalThis.remoteLog)
+        globalThis.remoteLog(`using Stateful HostApp Pie server`);
+    }
+
     globalThis.clientId = o.clientId;
   };
   pie.onData = d => onData(d, overworld);

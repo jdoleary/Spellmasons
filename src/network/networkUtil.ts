@@ -23,6 +23,22 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs, overworld:
   // clientPresenceChanged message is only ever received if the current client is in a room
   // The client will also receive one when they first join a room.
   globalThis.setMenuIsInRoom?.(true);
+
+  // If first client to join a stateless pie server, create the underworld and flag self as host
+  if (globalThis.statelessRelayPieServer && overworld.underworld?.pie) {
+    const isFirstClient = o.clients.findIndex(c => c == globalThis.clientId) == 0;
+    globalThis.isHostForStatelessPie = isFirstClient;
+    const { underworld } = overworld;
+    if (isFirstClient && underworld.lastLevelCreated == undefined) {
+      console.log('Setup: Host creating level');
+      // Generate the level data
+      underworld.lastLevelCreated = underworld.generateLevelDataSyncronous(0);
+      // Actually create the level 
+      underworld.createLevelSyncronous(underworld.lastLevelCreated);
+    }
+  } else {
+    globalThis.isHostForStatelessPie = false;
+  }
   // Ensure each client corresponds with a Player instance
   ensureAllClientsHaveAssociatedPlayers(overworld, o.clients, o.names || []);
   if (overworld.underworld) {

@@ -106,6 +106,11 @@ globalThis.isHost = (pie: Pie) => {
   if (pie instanceof PiePeer) {
     return !!pie.isP2PHost;
   }
+
+  // If connected to a stateless relay pie server...
+  if (globalThis.statelessRelayPieServer) {
+    return !!globalThis.isHostForStatelessPie;
+  }
   // isHost only if playing singleplayer, otherwise the headless hostApp is the host
   // and this file is the entry point to the non-headless client so it will never be the
   // hostApp
