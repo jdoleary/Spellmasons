@@ -368,10 +368,14 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined, under
         if (card) {
           const element = createCardElement(card, underworld);
           element.classList.add('slot');
+          const outOfCharges = globalThis.player.unit.charges && (globalThis.player.unit.charges[card.id] === undefined || globalThis.player.unit.charges[card.id] == 0);
           const isDisabled = (globalThis.player.disabledCards || []).includes(card.id);
-          if (isDisabled) {
+          if (isDisabled || outOfCharges) {
             element.classList.add('disabled');
           }
+          if (outOfCharges)
+            element.classList.add('out-of-charges');
+
           if (!isDisabled) {
             element.draggable = true;
             // When the user clicks on a card

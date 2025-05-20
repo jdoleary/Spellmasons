@@ -1604,6 +1604,10 @@ body.open-inventory #inventory-container.bookmark-runes .card-inspect {
   background-color: #2f0d0d;
 }
 
+.card.disabled.out-of-charges:after {
+  content: "";
+}
+
 #card-hand .slot:nth-of-type(1) {
   position: absolute;
   left: 111px;
@@ -2932,15 +2936,15 @@ body.isPeerHost .openLobbyBtn {
 
 @keyframes animate-card-draw {
   0% {
-    transform: translate(-50%, -50%) translate(60vw, 150vh) scale(1) rotate(0deg);
+    transform: translate(-50%, -50%) translate(5vw, 150vh) scale(1) rotate(0deg);
   }
 
   40% {
-    transform: translate(-50%, -50%) translate(50vw, 40vh) scale(1) rotate(10deg);
+    transform: translate(-50%, -50%) translate(10vw, 40vh) scale(1) rotate(10deg);
   }
 
   60% {
-    transform: translate(-50%, -50%) translate(35vw, 50vh) scale(1) rotate(-4deg);
+    transform: translate(-50%, -50%) translate(20vw, 50vh) scale(1) rotate(-4deg);
   }
 
   100% {
