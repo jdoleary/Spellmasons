@@ -6,7 +6,7 @@ import {
   clearSpellEffectProjection, modifiersToText, runPredictions,
 } from '../PlanningView';
 import { calculateCost, calculateCostForSingleCard, levelsUntilCardIsEnabled } from '../../cards/cardUtils';
-import floatingText from '../FloatingText';
+import floatingText, { centeredFloatingText } from '../FloatingText';
 import { NUMBER_OF_TOOLBAR_SLOTS } from '../../config';
 import Underworld from '../../Underworld';
 import { CardCategory, CardRarity, probabilityMap } from '../../types/commonTypes';
@@ -18,6 +18,7 @@ import { chooseBookmark } from '../../views';
 import { quantityWithUnit } from '../../cards/util';
 import { presentRunes } from '../../jmath/RuneUtil';
 import { sellCardId } from '../../cards/sell';
+import { countCharges, drawCharges } from '../../entity/Unit';
 
 const elCardHolders = document.getElementById('card-holders') as HTMLElement;
 const elInvContent = document.getElementById('inventory-content') as HTMLElement;
@@ -56,6 +57,7 @@ export function resetInventoryContent() {
 
 }
 export const elInvButton = document.getElementById('inventory-icon') as HTMLElement;
+export const elDiscardAll = document.getElementById('discard-charges-icon') as HTMLElement;
 const elBookmarkRunes = document.getElementById('bookmark-runes')
 export function tryShowStatPointsSpendable() {
   // Only show glow if player can afford a rune upgrade
@@ -166,6 +168,41 @@ export function setupCardUIEventListeners(overworld: Overworld) {
       e.stopPropagation();
       if (overworld.underworld) {
         toggleInventory(undefined, undefined, overworld.underworld);
+      } else {
+        console.error('Cannot toggleInventory, underworld is undefined');
+
+      }
+    });
+    elDiscardAll?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (overworld.underworld && globalThis.player?.unit) {
+        const { unit } = globalThis.player;
+        const currentChargesCount = countCharges(unit);
+        if (currentChargesCount <= 1) {
+          playSFXKey('Deny');
+          centeredFloatingText(['cannot-discard'], 'red');
+          return;
+        }
+        const drawNew = Math.floor(currentChargesCount / 2);
+        Jprompt({
+          text: ['confirm-discard', currentChargesCount.toString(), drawNew.toString()],
+          yesText: 'Yes',
+          yesKey: 'Enter',
+          yesKeyText: 'Enter',
+          noBtnText: 'Cancel',
+          noBtnKey: 'Escape',
+        }).then(confirm => {
+          if (!confirm) {
+            return;
+          }
+          if (!overworld.underworld) {
+            return;
+          }
+
+          // Discard all current charges and draw some fraction of discarded charges
+          unit.charges = {};
+          drawCharges(unit, overworld.underworld, drawNew);
+        });
       } else {
         console.error('Cannot toggleInventory, underworld is undefined');
 

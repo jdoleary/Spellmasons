@@ -1536,9 +1536,6 @@ export async function startTurnForUnits(units: IUnit[], underworld: Underworld, 
     if (unit.charges) {
       // Draw up to max charges
       drawCharges(unit, underworld, unit.chargesMax - countCharges(unit));
-      if (globalThis.player && unit == globalThis.player.unit) {
-        CardUI.updateCardBadges(underworld);
-      }
     }
   }
 
@@ -2044,6 +2041,9 @@ export function drawCharges(unit: IUnit, underworld: Underworld, count: number =
         }, i * (500 / math.lerp(1, 3, Math.max(count / 15, 1))));
       }
     }
+  }
+  if (globalThis.player && unit == globalThis.player.unit) {
+    CardUI.updateCardBadges(underworld);
   }
 
 }

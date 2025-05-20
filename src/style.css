@@ -1699,6 +1699,21 @@ body.open-inventory #inventory-container.bookmark-runes .card-inspect {
   background-image: url('images/spell/toolbar-slot.png');
 }
 
+#discard-charges-icon {
+  width: 83px;
+  height: 74px;
+  background-image: url('images/spell/discard-all.png');
+  background-size: contain;
+  position: absolute;
+  left: -66px;
+  top: 19px;
+  display: none;
+}
+
+body.cardmason #discard-charges-icon {
+  display: block;
+}
+
 #inventory-icon {
   width: 78px;
   height: 106px;

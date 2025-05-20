@@ -12,6 +12,9 @@
 - Test hosting LAN server from Electron build
 - Test tutorial ALWAYS on electron build
 
+NEW:
+- Test cardmason sync on new multiplayer game
+
 --- Archived
 - Test loading a saved multiplayer game
 - Test Hotseat multiplayer basics

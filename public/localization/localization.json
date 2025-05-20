@@ -729,7 +729,13 @@
         "target nova": "Target Nova",
         "spell_nova_target": "Target all units and pickups within a radius around you",
         "corpse nova: stamina": "Corpse Nova: Stamina",
-        "spell_nova_corpse_stamina": "Consume corpses within a radius around you and gain 🍞 stamina per corpse consumed"
+        "spell_nova_corpse_stamina": "Consume corpses within a radius around you and gain 🍞 stamina per corpse consumed",
+        "insufficient stamina": "Insufficient Stamina",
+        "insufficient charges": "Insufficient Charges",
+        "singleplayer": "Singleplayer",
+        "wizard-type-disabled": "Cannot change wizard type during an active game",
+        "cannot-discard": "Not enough cards to discard",
+        "confirm-discard": "Discard 🍞 cards and draw 🍞 new cards?"
     },
     {
         "language": "Français",
@@ -1461,7 +1467,13 @@
         "target nova": "Cible Nova",
         "spell_nova_target": "Ciblez toutes les unités et objets à proximité autour de vous.",
         "corpse nova: stamina": "Nova de Cadavre : Endurance",
-        "spell_nova_corpse_stamina": "Consommez des cadavres dans un rayon autour de vous et gagnez 🍞 d'endurance par cadavre consommé."
+        "spell_nova_corpse_stamina": "Consommez des cadavres dans un rayon autour de vous et gagnez 🍞 d'endurance par cadavre consommé.",
+        "insufficient stamina": "",
+        "insufficient charges": "",
+        "singleplayer": "",
+        "wizard-type-disabled": "",
+        "cannot-discard": "",
+        "confirm-discard": ""
     },
     {
         "language": "italiano",
@@ -2193,7 +2205,13 @@
         "target nova": "Bersaglio Nova",
         "spell_nova_target": "Prendi di mira tutte le unità e i pickup entro un raggio attorno a te.",
         "corpse nova: stamina": "Nova della Carogna: Stamina",
-        "spell_nova_corpse_stamina": "Consuma i cadaveri entro un raggio attorno a te e guadagna 🍞 stamina per ogni cadavere consumato."
+        "spell_nova_corpse_stamina": "Consuma i cadaveri entro un raggio attorno a te e guadagna 🍞 stamina per ogni cadavere consumato.",
+        "insufficient stamina": "",
+        "insufficient charges": "",
+        "singleplayer": "",
+        "wizard-type-disabled": "",
+        "cannot-discard": "",
+        "confirm-discard": ""
     },
     {
         "language": "Deutsche",
@@ -2925,7 +2943,13 @@
         "target nova": "Zielnova",
         "spell_nova_target": "Ziele auf alle Einheiten und Aufsammelobjekte innerhalb eines Radius um dich herum.",
         "corpse nova: stamina": "Leichnamnova: Ausdauer",
-        "spell_nova_corpse_stamina": "Verzehre Leichname in einem Radius um dich herum und gewinne 🍞 Ausdauer pro verzehrtem Leichnam."
+        "spell_nova_corpse_stamina": "Verzehre Leichname in einem Radius um dich herum und gewinne 🍞 Ausdauer pro verzehrtem Leichnam.",
+        "insufficient stamina": "",
+        "insufficient charges": "",
+        "singleplayer": "",
+        "wizard-type-disabled": "",
+        "cannot-discard": "",
+        "confirm-discard": ""
     },
     {
         "language": "español",
@@ -3657,7 +3681,13 @@
         "target nova": "Objetivo Nova",
         "spell_nova_target": "Apunta a todas las unidades y objetos recolectables dentro de un radio a tu alrededor.",
         "corpse nova: stamina": "Nova de Cadáver: Resistencia",
-        "spell_nova_corpse_stamina": "Consume cadáveres en un radio a tu alrededor y gana 🍞 resistencia por cada cadáver consumido."
+        "spell_nova_corpse_stamina": "Consume cadáveres en un radio a tu alrededor y gana 🍞 resistencia por cada cadáver consumido.",
+        "insufficient stamina": "",
+        "insufficient charges": "",
+        "singleplayer": "",
+        "wizard-type-disabled": "",
+        "cannot-discard": "",
+        "confirm-discard": ""
     },
     {
         "language": "日本",
@@ -4389,7 +4419,13 @@
         "target nova": "ターゲットノヴァ",
         "spell_nova_target": "周囲の半径内にあるすべてのユニットとピックアップを対象にします。",
         "corpse nova: stamina": "コープスノヴァ：スタミナ",
-        "spell_nova_corpse_stamina": "半径内の死体を消費し、消費した死体ごとに🍞スタミナを得る。"
+        "spell_nova_corpse_stamina": "半径内の死体を消費し、消費した死体ごとに🍞スタミナを得る。",
+        "insufficient stamina": "",
+        "insufficient charges": "",
+        "singleplayer": "",
+        "wizard-type-disabled": "",
+        "cannot-discard": "",
+        "confirm-discard": ""
     },
     {
         "language": "Português",
@@ -5121,7 +5157,13 @@
         "target nova": "Alvo Nova",
         "spell_nova_target": "Alvo todas as unidades e itens dentro de um raio ao seu redor.",
         "corpse nova: stamina": "Nova de Cadáver: Estamina",
-        "spell_nova_corpse_stamina": "Consuma corpos em um raio ao seu redor e ganhe 🍞 de resistência por corpo consumido."
+        "spell_nova_corpse_stamina": "Consuma corpos em um raio ao seu redor e ganhe 🍞 de resistência por corpo consumido.",
+        "insufficient stamina": "",
+        "insufficient charges": "",
+        "singleplayer": "",
+        "wizard-type-disabled": "",
+        "cannot-discard": "",
+        "confirm-discard": ""
     },
     {
         "language": "عربى",
@@ -5853,7 +5895,13 @@
         "target nova": "نوفا المستهدفة",
         "spell_nova_target": "استهدف جميع الوحدات والمكافآت ضمن دائرة حولك",
         "corpse nova: stamina": "نوفا الجثث: التحمل",
-        "spell_nova_corpse_stamina": "استهلك الجثث في محيطك واحصل على 🍞 قدرة التحمل لكل جثة يتم استهلاكها."
+        "spell_nova_corpse_stamina": "استهلك الجثث في محيطك واحصل على 🍞 قدرة التحمل لكل جثة يتم استهلاكها.",
+        "insufficient stamina": "",
+        "insufficient charges": "",
+        "singleplayer": "",
+        "wizard-type-disabled": "",
+        "cannot-discard": "",
+        "confirm-discard": ""
     },
     {
         "language": "한국어",
@@ -6585,7 +6633,13 @@
         "target nova": "타겟 노바",
         "spell_nova_target": "주변 반경 내의 모든 유닛과 아이템을 타겟팅합니다.",
         "corpse nova: stamina": "시신 노바: 스태미너",
-        "spell_nova_corpse_stamina": "주변 반경 내 시체를 소비하여 소비된 시체마다 🍞 체력을 얻습니다."
+        "spell_nova_corpse_stamina": "주변 반경 내 시체를 소비하여 소비된 시체마다 🍞 체력을 얻습니다.",
+        "insufficient stamina": "",
+        "insufficient charges": "",
+        "singleplayer": "",
+        "wizard-type-disabled": "",
+        "cannot-discard": "",
+        "confirm-discard": ""
     },
     {
         "language": "Русский",
@@ -7317,7 +7371,13 @@
         "target nova": "Цель Нова",
         "spell_nova_target": "Целитесь во все единицы и предметы в радиусе вокруг вас.",
         "corpse nova: stamina": "Новое Тело: Выносливость",
-        "spell_nova_corpse_stamina": "Поглощайте трупы в радиусе вокруг вас и получайте 🍞 выносливость за каждый поглощенный труп."
+        "spell_nova_corpse_stamina": "Поглощайте трупы в радиусе вокруг вас и получайте 🍞 выносливость за каждый поглощенный труп.",
+        "insufficient stamina": "",
+        "insufficient charges": "",
+        "singleplayer": "",
+        "wizard-type-disabled": "",
+        "cannot-discard": "",
+        "confirm-discard": ""
     },
     {
         "language": "中文(简)",
@@ -8049,7 +8109,13 @@
         "target nova": "目标诺瓦",
         "spell_nova_target": "在你周围的半径内锁定所有单位和拾取物品。",
         "corpse nova: stamina": "尸体新星：耐力",
-        "spell_nova_corpse_stamina": "在你周围的范围内吞噬尸体，每吞噬一具尸体获得🍞耐力。"
+        "spell_nova_corpse_stamina": "在你周围的范围内吞噬尸体，每吞噬一具尸体获得🍞耐力。",
+        "insufficient stamina": "",
+        "insufficient charges": "",
+        "singleplayer": "",
+        "wizard-type-disabled": "",
+        "cannot-discard": "",
+        "confirm-discard": ""
     },
     {
         "language": "中文(繁)",
@@ -8781,7 +8847,13 @@
         "target nova": "目標新星",
         "spell_nova_target": "在您周圍的半徑內鎖定所有單位和道具",
         "corpse nova: stamina": "死屍新星：耐力",
-        "spell_nova_corpse_stamina": "在你周圍的範圍內消耗屍體，每消耗一具屍體便獲得 🍞 耐力。"
+        "spell_nova_corpse_stamina": "在你周圍的範圍內消耗屍體，每消耗一具屍體便獲得 🍞 耐力。",
+        "insufficient stamina": "",
+        "insufficient charges": "",
+        "singleplayer": "",
+        "wizard-type-disabled": "",
+        "cannot-discard": "",
+        "confirm-discard": ""
     },
     {
         "language": "Polski",
@@ -9513,7 +9585,13 @@
         "target nova": "Cel Nova",
         "spell_nova_target": "Celuj we wszystkie jednostki i przedmioty w promieniu wokół siebie.",
         "corpse nova: stamina": "Nowa Zwłok: Wytrzymałość",
-        "spell_nova_corpse_stamina": "Konsumuj ciała w promieniu wokół siebie i zyskaj 🍞 wytrzymałość za każde zjedzone ciało."
+        "spell_nova_corpse_stamina": "Konsumuj ciała w promieniu wokół siebie i zyskaj 🍞 wytrzymałość za każde zjedzone ciało.",
+        "insufficient stamina": "",
+        "insufficient charges": "",
+        "singleplayer": "",
+        "wizard-type-disabled": "",
+        "cannot-discard": "",
+        "confirm-discard": ""
     },
     {
         "language": "Dutch",
@@ -10245,6 +10323,12 @@
         "target nova": "Doel Nova",
         "spell_nova_target": "Doel alle eenheden en pickups binnen een straal om je heen.",
         "corpse nova: stamina": "Lijk Nova: Uithoudingsvermogen",
-        "spell_nova_corpse_stamina": "Consumeer lijkens in een straal om je heen en ontvang 🍞 uithoudingsvermogen per geconsumeerd lijk."
+        "spell_nova_corpse_stamina": "Consumeer lijkens in een straal om je heen en ontvang 🍞 uithoudingsvermogen per geconsumeerd lijk.",
+        "insufficient stamina": "",
+        "insufficient charges": "",
+        "singleplayer": "",
+        "wizard-type-disabled": "",
+        "cannot-discard": "",
+        "confirm-discard": ""
     }
 ]

@@ -612,3 +612,15 @@ export function incrementPresentedRunesForPlayer(player: Pick<IPlayer, 'lockedRu
   player.lockedRunes = player.lockedRunes.filter(lr => lr.runePresentedIndexWhenLocked === undefined);
 
 }
+
+export function setCardmason(player: IPlayer, isCardmason: boolean) {
+  if (globalThis.player == player) {
+    document.body.classList.toggle('cardmason', isCardmason);
+  }
+  player.isCardmason = isCardmason;
+  if (player.isCardmason && player.unit.charges === undefined && player.unit.chargesMax === 0) {
+    player.unit.chargesMax = config.CARDMASON_DEFAULT_CHARGES_MAX;
+    player.unit.charges = {};
+  }
+
+}
