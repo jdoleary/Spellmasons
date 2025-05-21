@@ -14,30 +14,6 @@ const wordMap: { [key: string]: string } = {
   'staminaMax': 'Stamina',
 }
 export default function registerStatUpgradeModifiers() {
-  registerModifiers('Max Cards', {
-    description: `rune_max_cards`,
-    _costPerUpgrade: 30,
-    constant: true,
-    add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
-      const player = underworld.players.find(p => p.unit == unit);
-      if (!player) {
-        console.error('Attempted to upgrade stat for unit with no associated player');
-        return;
-      }
-
-      player.unit.chargesMaxAdditional = (player.unit.chargesMaxAdditional || 0) + 1
-
-      if (player == globalThis.player) {
-        // Now that the player unit's properties have changed, sync the new
-        // state with the player's predictionUnit so it is properly
-        // reflected in the bar
-        // (note: this would be auto corrected on the next mouse move anyway)
-        underworld.syncPlayerPredictionUnitOnly();
-        Unit.syncPlayerHealthManaUI(underworld);
-      }
-    },
-    probability: 0,
-  });
   ['healthMax', 'manaMax', 'staminaMax', 'attackRange'].map(stat => {
     registerModifiers(wordMap[stat] || stat, {
       description: `rune_${stat}`,
