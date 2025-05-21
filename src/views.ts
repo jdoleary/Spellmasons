@@ -107,6 +107,9 @@ export function setView(v: View) {
       }
       break;
     case View.Game:
+      // Clear menu last route so any "Esc" goes to pause menu
+      // @ts-ignore
+      globalThis.lastRoute = '';
       resizePixi();
       // Start non-theme soundtrack
       if (playMusicIfNotAlreadyPlaying) {
