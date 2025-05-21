@@ -735,7 +735,10 @@
         "singleplayer": "Singleplayer",
         "wizard-type-disabled": "Cannot change wizard type during an active game",
         "cannot-discard": "Not enough cards to discard",
-        "confirm-discard": "Discard 🍞 cards and draw 🍞 new cards?"
+        "confirm-discard": "Discard 🍞 cards and draw 🍞 new cards?",
+        "rune_max_cards": "Increase the maximum number of cards you can hold",
+        "max cards": "Max Cards",
+        "draw card": " +1 Card"
     },
     {
         "language": "Français",
@@ -1473,7 +1476,10 @@
         "singleplayer": "",
         "wizard-type-disabled": "",
         "cannot-discard": "",
-        "confirm-discard": ""
+        "confirm-discard": "",
+        "rune_max_cards": "",
+        "max cards": "",
+        "draw card": ""
     },
     {
         "language": "italiano",
@@ -2211,7 +2217,10 @@
         "singleplayer": "",
         "wizard-type-disabled": "",
         "cannot-discard": "",
-        "confirm-discard": ""
+        "confirm-discard": "",
+        "rune_max_cards": "",
+        "max cards": "",
+        "draw card": ""
     },
     {
         "language": "Deutsche",
@@ -2949,7 +2958,10 @@
         "singleplayer": "",
         "wizard-type-disabled": "",
         "cannot-discard": "",
-        "confirm-discard": ""
+        "confirm-discard": "",
+        "rune_max_cards": "",
+        "max cards": "",
+        "draw card": ""
     },
     {
         "language": "español",
@@ -3687,7 +3699,10 @@
         "singleplayer": "",
         "wizard-type-disabled": "",
         "cannot-discard": "",
-        "confirm-discard": ""
+        "confirm-discard": "",
+        "rune_max_cards": "",
+        "max cards": "",
+        "draw card": ""
     },
     {
         "language": "日本",
@@ -4425,7 +4440,10 @@
         "singleplayer": "",
         "wizard-type-disabled": "",
         "cannot-discard": "",
-        "confirm-discard": ""
+        "confirm-discard": "",
+        "rune_max_cards": "",
+        "max cards": "",
+        "draw card": ""
     },
     {
         "language": "Português",
@@ -5163,7 +5181,10 @@
         "singleplayer": "",
         "wizard-type-disabled": "",
         "cannot-discard": "",
-        "confirm-discard": ""
+        "confirm-discard": "",
+        "rune_max_cards": "",
+        "max cards": "",
+        "draw card": ""
     },
     {
         "language": "عربى",
@@ -5901,7 +5922,10 @@
         "singleplayer": "",
         "wizard-type-disabled": "",
         "cannot-discard": "",
-        "confirm-discard": ""
+        "confirm-discard": "",
+        "rune_max_cards": "",
+        "max cards": "",
+        "draw card": ""
     },
     {
         "language": "한국어",
@@ -6639,7 +6663,10 @@
         "singleplayer": "",
         "wizard-type-disabled": "",
         "cannot-discard": "",
-        "confirm-discard": ""
+        "confirm-discard": "",
+        "rune_max_cards": "",
+        "max cards": "",
+        "draw card": ""
     },
     {
         "language": "Русский",
@@ -7377,7 +7404,10 @@
         "singleplayer": "",
         "wizard-type-disabled": "",
         "cannot-discard": "",
-        "confirm-discard": ""
+        "confirm-discard": "",
+        "rune_max_cards": "",
+        "max cards": "",
+        "draw card": ""
     },
     {
         "language": "中文(简)",
@@ -8115,7 +8145,10 @@
         "singleplayer": "",
         "wizard-type-disabled": "",
         "cannot-discard": "",
-        "confirm-discard": ""
+        "confirm-discard": "",
+        "rune_max_cards": "",
+        "max cards": "",
+        "draw card": ""
     },
     {
         "language": "中文(繁)",
@@ -8853,7 +8886,10 @@
         "singleplayer": "",
         "wizard-type-disabled": "",
         "cannot-discard": "",
-        "confirm-discard": ""
+        "confirm-discard": "",
+        "rune_max_cards": "",
+        "max cards": "",
+        "draw card": ""
     },
     {
         "language": "Polski",
@@ -9591,7 +9627,10 @@
         "singleplayer": "",
         "wizard-type-disabled": "",
         "cannot-discard": "",
-        "confirm-discard": ""
+        "confirm-discard": "",
+        "rune_max_cards": "",
+        "max cards": "",
+        "draw card": ""
     },
     {
         "language": "Dutch",
@@ -10329,6 +10368,9 @@
         "singleplayer": "",
         "wizard-type-disabled": "",
         "cannot-discard": "",
-        "confirm-discard": ""
+        "confirm-discard": "",
+        "rune_max_cards": "",
+        "max cards": "",
+        "draw card": ""
     }
 ]

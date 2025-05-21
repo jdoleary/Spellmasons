@@ -669,8 +669,10 @@ export const pickups: IPickupSource[] = [
       if (unit) {
         if (unit.charges) {
           drawCharges(unit, underworld, 1);
-          floatingText({ coords: unit, text: i18n([`Draw Cards`, '1']), style: { fill: 'blue', ...config.PIXI_TEXT_DROP_SHADOW } });
-          playSFXKey('potionPickupMana');
+          if (!prediction) {
+            floatingText({ coords: unit, text: i18n([`Draw Card`]), style: { fill: 'blue', ...config.PIXI_TEXT_DROP_SHADOW } });
+            playSFXKey('potionPickupMana');
+          }
         } else {
           healManaUnit(unit, manaPotionRestoreAmount * pickup.power, undefined, underworld, prediction);
         }

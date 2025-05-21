@@ -740,3 +740,6 @@ Singleplayer	Singleplayer
 wizard-type-disabled	Cannot change wizard type during an active game													
 cannot-discard	Not enough cards to discard													
 confirm-discard	Discard 🍞 cards and draw 🍞 new cards?													
+rune_max_cards	Increase the maximum number of cards you can hold													
+Max Cards	Max Cards													
+Draw Card	 +1 Card													
