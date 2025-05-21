@@ -4109,6 +4109,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           // Reset manacost since it was refunded
           spellCostTally.manaCost = 0;
         }
+        // Refund charges if necessary 
+        if (effectState.shouldRefundLastSpell && effectState.casterPlayer && effectState.casterPlayer.isCardmason && effectState.casterPlayer.unit.charges) {
+          effectState.casterPlayer.unit.charges[cardId] = (effectState.casterPlayer.unit.charges[cardId] || 0) + quantity;
+        }
         // If refund, reset cardUsageCount
         if (effectState.shouldRefundLastSpell || args.castForFree) {
           casterCardUsage[cardId] = cardUsageCountPreCast;
