@@ -24,6 +24,8 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs, overworld:
   // The client will also receive one when they first join a room.
   globalThis.setMenuIsInRoom?.(true);
 
+  // Ensure each client corresponds with a Player instance
+  ensureAllClientsHaveAssociatedPlayers(overworld, o.clients, o.names || []);
   // If first client to join a stateless pie server, create the underworld and flag self as host
   if (globalThis.statelessRelayPieServer && overworld.underworld?.pie) {
     const isFirstClient = o.clients.findIndex(c => c == globalThis.clientId) == 0;
@@ -39,8 +41,6 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs, overworld:
   } else {
     globalThis.isHostForStatelessPie = false;
   }
-  // Ensure each client corresponds with a Player instance
-  ensureAllClientsHaveAssociatedPlayers(overworld, o.clients, o.names || []);
   if (overworld.underworld) {
     overworld.underworld.progressGameState();
   }
