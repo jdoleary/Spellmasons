@@ -188,7 +188,7 @@ export function setupCardUIEventListeners(overworld: Overworld) {
           text: ['confirm-discard', currentChargesCount.toString(), drawNew.toString()],
           yesText: 'Yes',
           yesKey: 'Space',
-          yesKeyText: 'Enter',
+          yesKeyText: 'Space',
           noBtnText: 'Cancel',
           noBtnKey: 'Escape',
         }).then(confirm => {
