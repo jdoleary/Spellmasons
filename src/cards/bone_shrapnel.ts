@@ -21,6 +21,7 @@ const spell: Spell = {
     manaCost: 25,
     healthCost: 0,
     expenseScaling: 1,
+    onlySelectDeadUnits: true,
     probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconCorpseExplosion.png',
     description: [`spell_bone_shrapnel`, damage.toString()],
