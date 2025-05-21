@@ -56,6 +56,7 @@ const spell: Spell = {
             initialTargetedUnitId: undefined,
             shouldRefundLastSpell: false,
             aggregator: projectile.state.aggregator,
+            spellCostTally: { manaCost: 0, healthCost: 0, staminaCost: 0 },
           }, regularArrow.card, 1, underworld, prediction, false);
         }
       }

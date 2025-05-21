@@ -11,6 +11,7 @@
 - Test loading an old save file for backwards compatibility
 - Test hosting LAN server from Electron build
 - Test tutorial ALWAYS on electron build
+- Run `npm run headless-build-only` to check tsc errors which `npm run bun-headless` will not catch
 
 NEW:
 - Test cardmason sync on new multiplayer game

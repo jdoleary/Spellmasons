@@ -138,6 +138,7 @@ export function create(clientId: string, playerId: string, underworld: Underworl
     upgradesLeftToChoose: config.STARTING_CARD_COUNT,
     lobbyReady: false,
     reroll: 0,
+    discardCount: 0,
     spellState: {},
     cursesChosen: 0,
     stats: {
