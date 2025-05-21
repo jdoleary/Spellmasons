@@ -667,13 +667,13 @@ export const pickups: IPickupSource[] = [
     },
     effect: ({ unit, pickup, player, underworld, prediction }) => {
       if (unit) {
-        if (!prediction) {
-          playSFXKey('potionPickupMana');
-        }
         if (unit.charges) {
           drawCharges(unit, underworld, 1);
+          floatingText({ coords: unit, text: i18n([`Draw Cards`, '1']), style: { fill: 'blue', ...config.PIXI_TEXT_DROP_SHADOW } });
+          playSFXKey('potionPickupMana');
+        } else {
+          healManaUnit(unit, manaPotionRestoreAmount * pickup.power, undefined, underworld, prediction);
         }
-        healManaUnit(unit, manaPotionRestoreAmount * pickup.power, undefined, underworld, prediction);
       }
     },
   },
