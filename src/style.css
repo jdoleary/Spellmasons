@@ -1596,6 +1596,7 @@ body.open-inventory #inventory-container.bookmark-runes .card-inspect {
   display: none;
 }
 
+.out-of-charges .card-thumb,
 .disabled .card-thumb {
   filter: grayscale(100%);
 }
@@ -1614,7 +1615,8 @@ body.open-inventory #inventory-container.bookmark-runes .card-inspect {
   background-color: #2f0d0d;
 }
 
-.card.disabled.out-of-charges:after {
+.card.out-of-charges:after,
+.card.disabled:after {
   content: "";
 }
 

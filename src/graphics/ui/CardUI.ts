@@ -201,10 +201,10 @@ export function setupCardUIEventListeners(overworld: Overworld) {
 
           // Discard all current charges and draw some fraction of discarded charges
           if (globalThis.player) {
-            if (globalThis.player.discardCount === undefined) {
-              globalThis.player.discardCount = 0;
+            if (globalThis.player.drawChargesSeed === undefined) {
+              globalThis.player.drawChargesSeed = 0;
             }
-            globalThis.player.discardCount++;
+            globalThis.player.drawChargesSeed++;
           }
           unit.charges = {};
           drawCharges(unit, overworld.underworld, drawNew);
@@ -368,13 +368,10 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined, under
         if (card) {
           const element = createCardElement(card, underworld);
           element.classList.add('slot');
-          const outOfCharges = globalThis.player.unit.charges && (globalThis.player.unit.charges[card.id] === undefined || globalThis.player.unit.charges[card.id] == 0);
           const isDisabled = (globalThis.player.disabledCards || []).includes(card.id);
-          if (isDisabled || outOfCharges) {
+          if (isDisabled) {
             element.classList.add('disabled');
           }
-          if (outOfCharges)
-            element.classList.add('out-of-charges');
 
           if (!isDisabled) {
             element.draggable = true;
@@ -1447,6 +1444,12 @@ export function updateCardBadges(underworld: Underworld) {
           }
         }
       }
+      const outOfCharges = globalThis.player.unit.charges && (globalThis.player.unit.charges[card.id] === undefined || globalThis.player.unit.charges[card.id] == 0);
+      const matchingElements = document.querySelectorAll(`.card[data-card-id="${card.id}"]`);
+      if (outOfCharges)
+        matchingElements.forEach(el => el.classList.add('out-of-charges'));
+      else
+        matchingElements.forEach(el => el.classList.remove('out-of-charges'));
     }
 
     // Update hotkey badges

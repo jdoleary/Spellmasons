@@ -84,7 +84,7 @@ export interface IPlayer {
   // reroll.
   reroll: number;
   // Used to seed drawing charges
-  discardCount: number | undefined;
+  drawChargesSeed: number | undefined;
   // Stores state that modifies spells
   spellState: { [spellId: string]: any };
   stats: Stats;
@@ -138,7 +138,7 @@ export function create(clientId: string, playerId: string, underworld: Underworl
     upgradesLeftToChoose: config.STARTING_CARD_COUNT,
     lobbyReady: false,
     reroll: 0,
-    discardCount: 0,
+    drawChargesSeed: 0,
     spellState: {},
     cursesChosen: 0,
     stats: {

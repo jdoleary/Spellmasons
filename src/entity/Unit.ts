@@ -2024,12 +2024,19 @@ export function drawCharges(unit: IUnit, underworld: Underworld, count: number =
     console.error('No associated player found for unit to drawCharges from');
     return;
   }
+  if (!player.drawChargesSeed) {
+    player.drawChargesSeed = 0;
+  }
+  player.drawChargesSeed++;
   if (!player.isCardmason) {
     console.warn('Aborting drawCharges for non-cardmason player');
     return;
   }
-  const cards = getCardsFromIds(player.inventory);
-  const rSeed = `${underworld.seed}-${player.playerId}-${player.discardCount || 0}-${player.inventory.filter(x => !!x).length}`;
+  let cards = getCardsFromIds(player.inventory);
+  const replacedCardIds = cards.flatMap(card => card.replaces || []);
+  // Exclude replaced cards from being drawn
+  cards = cards.filter(c => !replacedCardIds.includes(c.id))
+  const rSeed = `${underworld.seed}-${player.playerId}-${player.drawChargesSeed}-${player.inventory.filter(x => !!x).length}`;
   const random = seedrandom(rSeed);
   if (unit.charges === undefined) {
     unit.charges = {};
@@ -2052,8 +2059,6 @@ export function drawCharges(unit: IUnit, underworld: Underworld, count: number =
     CardUI.updateCardBadges(underworld);
     underworld.syncPlayerPredictionUnitOnly();
     syncPlayerHealthManaUI(underworld);
-    // Ensure empty charge cnards that are just drawn are no longer .disabled
-    CardUI.recalcPositionForCards(globalThis.player, underworld);
   }
 
 }
