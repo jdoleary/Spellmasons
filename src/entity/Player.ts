@@ -624,6 +624,11 @@ export function setCardmason(player: IPlayer, isCardmason: boolean) {
   if (globalThis.player == player) {
     document.body.classList.toggle('cardmason', isCardmason);
   }
+  // isCardmason comes from localStorage where it is a string, this double check prevents a bug
+  if (typeof isCardmason === 'string') {
+    console.error('isCardmason must be a boolean');
+    isCardmason = isCardmason == 'yes';
+  }
   player.isCardmason = isCardmason;
   if (player.isCardmason && player.unit.charges === undefined) {
     player.unit.charges = {};

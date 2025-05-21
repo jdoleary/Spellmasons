@@ -1365,7 +1365,7 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
       // strings which is confusing as hell
       storage.set(storage.STORAGE_ID_IS_CARDMASON, isCardmason ? 'yes' : 'no');
     }
-    const storedIsCardmason = storage.get(storage.STORAGE_ID_IS_CARDMASON) || false;
+    const storedIsCardmason = (storage.get(storage.STORAGE_ID_IS_CARDMASON) == 'yes') || false;
     overworld.pie.sendData({
       type: MESSAGE_TYPES.PLAYER_CONFIG,
       color,
