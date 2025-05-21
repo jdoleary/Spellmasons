@@ -2024,6 +2024,10 @@ export function drawCharges(unit: IUnit, underworld: Underworld, count: number =
     console.error('No associated player found for unit to drawCharges from');
     return;
   }
+  if (!player.isCardmason) {
+    console.warn('Aborting drawCharges for non-cardmason player');
+    return;
+  }
   const cards = getCardsFromIds(player.inventory);
   const rSeed = `${underworld.seed}-${player.playerId}-${player.discardCount || 0}-${player.inventory.filter(x => !!x).length}`;
   const random = seedrandom(rSeed);

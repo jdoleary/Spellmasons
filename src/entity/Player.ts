@@ -245,6 +245,7 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
   }
 
   Unit.resetUnitStats(player.unit, underworld);
+  Unit.refillCharges(player.unit, underworld);
   Unit.syncPlayerHealthManaUI(underworld);
 }
 // Keep a global reference to the current client's player
