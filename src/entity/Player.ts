@@ -48,6 +48,7 @@ export interface IPlayer {
   // color of robe
   color: number;
   isCardmason?: boolean;
+  lockedDiscardCards: string[];
   // color of the player's magic
   colorMagic: number;
   endedTurn: boolean;
@@ -105,6 +106,7 @@ export function create(clientId: string, playerId: string, underworld: Underworl
     name: '',
     endedTurn: false,
     isCardmason: false,
+    lockedDiscardCards: [],
     clientId,
     playerId,
     // init players as not connected.  clientConnected status
@@ -288,6 +290,8 @@ export function load(player: IPlayerSerialized, index: number, underworld: Under
   const playerLoaded: IPlayer = {
     // @ts-ignore: Allow overwrite by spread for backwards compatibility
     statPointsUnspent: 0,
+    // @ts-ignore: Allow overwrite by spread for backwards compatibility
+    lockedDiscardCards: [],
     ...player,
     unit: reassignedUnit,
   };
@@ -634,6 +638,19 @@ export function setCardmason(player: IPlayer, isCardmason: boolean) {
   player.isCardmason = isCardmason;
   if (player.isCardmason && player.unit.charges === undefined) {
     player.unit.charges = {};
+  }
+
+}
+const IS_DISCARD_LOCKED_CLASSNAME = 'is-discard-locked';
+export function syncLockedCardsAndCSS(player?: IPlayer) {
+  if (player && player == globalThis.player) {
+    // Clear all
+    document.querySelectorAll(`.${IS_DISCARD_LOCKED_CLASSNAME}`).forEach(el => el.classList.remove(IS_DISCARD_LOCKED_CLASSNAME));
+    // Add currently locked
+    for (let lockedCardId of player.lockedDiscardCards) {
+      document.querySelectorAll(`.card[data-card-id="${lockedCardId}"]`).forEach(el => el.classList.add(IS_DISCARD_LOCKED_CLASSNAME))
+    }
+
   }
 
 }

@@ -671,6 +671,7 @@ kbd {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  position: relative;
 }
 
 .card-thumb {
@@ -2992,4 +2993,21 @@ body:not(.cardmason) .stat-row[data-stat="Max Cards"] {
 
 .stat-row[data-stat="Max Cards"] .rune-name::before {
   content: "🃏 "
+}
+
+.lock-discard {
+  background-image: url(/ui/icons/spell-lock.png);
+  display: none;
+  pointer-events: none;
+  width: 44px;
+  height: 44px;
+  background-size: cover;
+  position: absolute;
+  top: -16px;
+  left: 37px;
+}
+
+/*Only ever show if player is cardmason*/
+body.cardmason .card.is-discard-locked .lock-discard {
+  display: block;
 }

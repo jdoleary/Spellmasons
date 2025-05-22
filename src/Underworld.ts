@@ -3211,6 +3211,27 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // Ensure players can only end the turn when it IS their turn
     if (this.turn_phase == turn_phase.PlayerTurns) {
       player.endedTurn = true;
+      // Discard all but locked cards
+      const { unit } = player;
+      if (player.isCardmason) {
+
+        if (player.drawChargesSeed === undefined) {
+          player.drawChargesSeed = 0;
+        }
+        player.drawChargesSeed++;
+        // Discard all non-locked cards
+        if (unit.charges) {
+          for (let chargeKey of Object.keys(unit.charges || {}).filter(key => !player.lockedDiscardCards.includes(key))) {
+            delete unit.charges[chargeKey]
+          }
+          if (globalThis.player && unit == globalThis.player.unit) {
+            CardUI.updateCardBadges(this);
+            this.syncPlayerPredictionUnitOnly();
+            Unit.syncPlayerHealthManaUI(this);
+          }
+        }
+
+      }
       console.log('[GAME] Turn Phase\nPlayer ended turn: ', player);
       this.syncTurnMessage();
       await this.progressGameState();

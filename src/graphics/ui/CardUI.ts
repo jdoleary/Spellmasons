@@ -1,4 +1,4 @@
-import type * as Player from '../../entity/Player';
+import * as Player from '../../entity/Player';
 import * as colors from './colors';
 import * as Cards from '../../cards';
 import * as config from '../../config';
@@ -416,6 +416,7 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined, under
       console.log(`No corresponding source card exists for "${cardId}"`);
     }
   }
+  Player.syncLockedCardsAndCSS(player);
   updateCardBadges(underworld);
 }
 export const openInvClass = 'open-inventory';
@@ -808,16 +809,31 @@ function addToolbarListener(
   underworld: Underworld
 ) {
   element.addEventListener('contextmenu', (e) => {
-    if (element.classList.contains(ACTIVE_TOOLBAR_ELEMENT_CLASSNAME)) {
-      // just close the inventory
-      toggleInventory(undefined, false, underworld);
+    if (document.body.classList.contains('cardmason') && globalThis.player) {
+      // Cardmason locks card for rerolling
+      const cardId = globalThis.player.inventory[toolbarIndex]
+      if (cardId) {
+        if (globalThis.player.lockedDiscardCards.includes(cardId)) {
+          globalThis.player.lockedDiscardCards = globalThis.player.lockedDiscardCards.filter(x => x != cardId);
+        } else {
+          globalThis.player.lockedDiscardCards.push(cardId);
+        }
+        Player.syncLockedCardsAndCSS(globalThis.player);
+      }
+
     } else {
-      document.querySelectorAll(`.${ACTIVE_TOOLBAR_ELEMENT_CLASSNAME}`).forEach(el => {
-        el.classList.remove(ACTIVE_TOOLBAR_ELEMENT_CLASSNAME);
-      })
-      // Otherwise open the inventory with the right-clicked element selected
-      element.classList.add(ACTIVE_TOOLBAR_ELEMENT_CLASSNAME)
-      toggleInventory(toolbarIndex, true, underworld);
+      // For spellmason, right click manages inventory (probably unknown and unused since I never talk about it in tutorial)
+      if (element.classList.contains(ACTIVE_TOOLBAR_ELEMENT_CLASSNAME)) {
+        // just close the inventory
+        toggleInventory(undefined, false, underworld);
+      } else {
+        document.querySelectorAll(`.${ACTIVE_TOOLBAR_ELEMENT_CLASSNAME}`).forEach(el => {
+          el.classList.remove(ACTIVE_TOOLBAR_ELEMENT_CLASSNAME);
+        })
+        // Otherwise open the inventory with the right-clicked element selected
+        element.classList.add(ACTIVE_TOOLBAR_ELEMENT_CLASSNAME)
+        toggleInventory(toolbarIndex, true, underworld);
+      }
     }
     e.preventDefault();
     e.stopPropagation();
@@ -1169,6 +1185,11 @@ function createCardElement(content: Cards.ICard, underworld?: Underworld, fullSi
   const elCardHotkeyBadge = document.createElement('div');
   elCardHotkeyBadge.classList.add('hotkey-badge');
   elCardHotkeyBadge.innerHTML = ``;
+
+  // Add lock icon for Cardmason
+  const elCardLockDiscard = document.createElement('div');
+  elCardLockDiscard.classList.add('lock-discard');
+  elCardInner.appendChild(elCardLockDiscard);
 
   elCardHotkeyBadgeHolder.appendChild(elCardHotkeyBadge);
   // Card costs
