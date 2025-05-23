@@ -50,7 +50,7 @@ import { ANCIENT_UNIT_ID } from './units/ancient';
 import { IPickup } from './Pickup';
 import seedrandom from 'seedrandom';
 import { slimeId } from '../modifierSlime';
-import { isRune } from '../cards/cardUtils';
+import { cardmasonCardProbabilities, isRune } from '../cards/cardUtils';
 import { VAMPIRE_ID } from './units/vampire';
 import { growthId } from '../modifierGrowth';
 import { resurrect_id } from '../cards/resurrect';
@@ -2042,15 +2042,18 @@ export function drawCharges(unit: IUnit, underworld: Underworld, count: number =
     unit.charges = {};
   }
 
+  const cardsWithManaBasedProbability = cardmasonCardProbabilities(cards);
+  // Debug probabilities
+  // console.table(cardsWithManaBasedProbability.map(c => ({ id: c.id, p: c.probability, c: c.cost })).sort((a, b) => a.p - b.p));
   for (let i = 0; i < count; i++) {
-    const card = chooseObjectWithProbability(cards, random);
+    const alteredCard = chooseObjectWithProbability(cardsWithManaBasedProbability, random);
     // Add a charge
-    if (card) {
-      unit.charges[card.id] = (unit.charges[card.id] || 0) + 1;
+    if (alteredCard) {
+      unit.charges[alteredCard.id] = (unit.charges[alteredCard.id] || 0) + 1;
       if (player == globalThis.player) {
         setTimeout(() => {
           playSFXKey('cardDraw');
-          CardUI.animateDrawCard(card, underworld);
+          CardUI.animateDrawCard(alteredCard.card, underworld);
         }, i * (500 / math.lerp(1, 3, Math.max(count / 15, 1))));
       }
     }

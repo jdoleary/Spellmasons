@@ -286,3 +286,20 @@ export function _getCardsFromIds(cardIds: string[], cards: { [cardId: string]: I
     }
     return result;
 }
+
+const getCardCostSum = (card: ICard) => card.manaCost + card.healthCost + (card.staminaCost || 0);
+export function cardmasonCardProbabilities(cards: ICard[]): { id: string, probability: number, card: ICard, cost: number }[] {
+    const highestCostSum = cards.reduce((highest, cur) => {
+        const cardCostSum = getCardCostSum(cur);
+        return cardCostSum > highest ? cardCostSum : highest
+    }, 0);
+    // Probability doesn't handle decimals so scale everything up so that 15 and 40 don't round down to be 10 and 40
+    const scalar = 10;
+    return cards.map(c => {
+        // Default to highestCostSum to prevent division by 0.  That makes free cards like "Sell" ultra rare. This may need to be balanced away
+        const cardCostSum = getCardCostSum(c) || highestCostSum;
+        const probability = Math.round(scalar * highestCostSum / cardCostSum);
+        return ({ id: c.id, probability, card: c, cost: cardCostSum })
+    });
+
+}
