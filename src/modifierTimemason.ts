@@ -10,6 +10,7 @@ export default function registerTimemason() {
     description: 'class_timemason',
     _costPerUpgrade: 200,
     maxUpgradeCount: 1,
+    omitForCardmason: true,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       const player = underworld.players.find(p => p.unit == unit);
       if (player) {
