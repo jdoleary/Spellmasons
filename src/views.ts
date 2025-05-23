@@ -439,7 +439,7 @@ function animateMenu() {
         el.style.transform = `translate(${x + result.x}px, ${y + result.y}px)`;
         // Reposition green to make space for the logo
         if (el == elBgGreen) {
-          el.style.transform += `  translate(0, 343.0226px) scale(1.5)`;
+          el.style.transform += ` translate(-50px, 383.0226px) scale(1.8)`;
         }
       }
 
