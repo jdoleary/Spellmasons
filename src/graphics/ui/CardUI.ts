@@ -807,7 +807,7 @@ function addToolbarListener(
   element.addEventListener('contextmenu', (e) => {
     if (document.body.classList.contains('cardmason') && globalThis.player) {
       // Cardmason locks card for rerolling
-      const cardId = globalThis.player.inventory[toolbarIndex]
+      const cardId = globalThis.player.cardsInToolbar[toolbarIndex];
       if (cardId) {
         Player.toggleCardLockedForDiscard(globalThis.player, cardId, underworld);
       }
