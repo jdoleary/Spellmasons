@@ -201,13 +201,9 @@ export function setupCardUIEventListeners(overworld: Overworld) {
 
           // Discard all current charges and draw some fraction of discarded charges
           if (globalThis.player) {
-            if (globalThis.player.drawChargesSeed === undefined) {
-              globalThis.player.drawChargesSeed = 0;
-            }
-            globalThis.player.drawChargesSeed++;
+            Player.discardCards(globalThis.player, overworld.underworld);
+            drawCharges(globalThis.player.unit, overworld.underworld, drawNew);
           }
-          unit.charges = {};
-          drawCharges(unit, overworld.underworld, drawNew);
         });
       } else {
         console.error('Cannot toggleInventory, underworld is undefined');
@@ -813,14 +809,8 @@ function addToolbarListener(
       // Cardmason locks card for rerolling
       const cardId = globalThis.player.inventory[toolbarIndex]
       if (cardId) {
-        if (globalThis.player.lockedDiscardCards.includes(cardId)) {
-          globalThis.player.lockedDiscardCards = globalThis.player.lockedDiscardCards.filter(x => x != cardId);
-        } else {
-          globalThis.player.lockedDiscardCards.push(cardId);
-        }
-        Player.syncLockedCardsAndCSS(globalThis.player);
+        Player.toggleCardLockedForDiscard(globalThis.player, cardId, underworld);
       }
-
     } else {
       // For spellmason, right click manages inventory (probably unknown and unused since I never talk about it in tutorial)
       if (element.classList.contains(ACTIVE_TOOLBAR_ELEMENT_CLASSNAME)) {
@@ -852,6 +842,12 @@ function addListenersToCardElement(
   }
   element.addEventListener('click', (e) => {
     e.stopPropagation();
+    const target = e.target as HTMLElement;
+    // if clicking on the lock-discard icon, toggle it
+    if (target && target.classList.contains('lock-discard')) {
+      Player.toggleCardLockedForDiscard(globalThis.player, cardId, underworld)
+      return;
+    }
     if (levelsUntilCardIsEnabled(cardId, underworld) > 0) {
       floatingText({ coords: underworld.getMousePos(), text: i18n('Disabled'), style: { fill: 'red' } });
       playSFXKey('deny');

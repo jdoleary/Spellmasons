@@ -2998,16 +2998,30 @@ body:not(.cardmason) .stat-row[data-stat="Max Cards"] {
 .lock-discard {
   background-image: url(/ui/icons/spell-lock.png);
   display: none;
-  pointer-events: none;
   width: 44px;
   height: 44px;
   background-size: cover;
   position: absolute;
-  top: -16px;
-  left: 37px;
+  top: -23px;
+  left: 32px;
+}
+
+.card-holder .card:hover .lock-discard {
+  display: block;
+  opacity: 0.5;
 }
 
 /*Only ever show if player is cardmason*/
 body.cardmason .card.is-discard-locked .lock-discard {
   display: block;
+  opacity: 1.0;
+}
+
+#discard-charges-icon:hover {
+  filter: drop-shadow(0 0 0.4rem rgb(255, 255, 255));
+  transform: translate(0, -1px);
+}
+
+#discard-charges-icon:active {
+  transform: translate(0, 1px);
 }

@@ -736,9 +736,9 @@
         "wizard-type-disabled": "Cannot change wizard type during an active game",
         "cannot-discard": "Not enough cards to discard",
         "confirm-discard": "Discard 🍞 cards and draw 🍞 new cards?",
-        "rune_max_cards": "Increase the maximum number of cards you can hold",
-        "max cards": "Max Cards",
-        "draw card": " +1 Card"
+        "draw card": " +1 Card",
+        "keep card when discarding": "Keep card when discarding",
+        "allow discarding": "Allow discarding"
     },
     {
         "language": "Français",
@@ -1477,9 +1477,9 @@
         "wizard-type-disabled": "",
         "cannot-discard": "",
         "confirm-discard": "",
-        "rune_max_cards": "",
-        "max cards": "",
-        "draw card": ""
+        "draw card": "",
+        "keep card when discarding": "",
+        "allow discarding": ""
     },
     {
         "language": "italiano",
@@ -2218,9 +2218,9 @@
         "wizard-type-disabled": "",
         "cannot-discard": "",
         "confirm-discard": "",
-        "rune_max_cards": "",
-        "max cards": "",
-        "draw card": ""
+        "draw card": "",
+        "keep card when discarding": "",
+        "allow discarding": ""
     },
     {
         "language": "Deutsche",
@@ -2959,9 +2959,9 @@
         "wizard-type-disabled": "",
         "cannot-discard": "",
         "confirm-discard": "",
-        "rune_max_cards": "",
-        "max cards": "",
-        "draw card": ""
+        "draw card": "",
+        "keep card when discarding": "",
+        "allow discarding": ""
     },
     {
         "language": "español",
@@ -3700,9 +3700,9 @@
         "wizard-type-disabled": "",
         "cannot-discard": "",
         "confirm-discard": "",
-        "rune_max_cards": "",
-        "max cards": "",
-        "draw card": ""
+        "draw card": "",
+        "keep card when discarding": "",
+        "allow discarding": ""
     },
     {
         "language": "日本",
@@ -4441,9 +4441,9 @@
         "wizard-type-disabled": "",
         "cannot-discard": "",
         "confirm-discard": "",
-        "rune_max_cards": "",
-        "max cards": "",
-        "draw card": ""
+        "draw card": "",
+        "keep card when discarding": "",
+        "allow discarding": ""
     },
     {
         "language": "Português",
@@ -5182,9 +5182,9 @@
         "wizard-type-disabled": "",
         "cannot-discard": "",
         "confirm-discard": "",
-        "rune_max_cards": "",
-        "max cards": "",
-        "draw card": ""
+        "draw card": "",
+        "keep card when discarding": "",
+        "allow discarding": ""
     },
     {
         "language": "عربى",
@@ -5923,9 +5923,9 @@
         "wizard-type-disabled": "",
         "cannot-discard": "",
         "confirm-discard": "",
-        "rune_max_cards": "",
-        "max cards": "",
-        "draw card": ""
+        "draw card": "",
+        "keep card when discarding": "",
+        "allow discarding": ""
     },
     {
         "language": "한국어",
@@ -6664,9 +6664,9 @@
         "wizard-type-disabled": "",
         "cannot-discard": "",
         "confirm-discard": "",
-        "rune_max_cards": "",
-        "max cards": "",
-        "draw card": ""
+        "draw card": "",
+        "keep card when discarding": "",
+        "allow discarding": ""
     },
     {
         "language": "Русский",
@@ -7405,9 +7405,9 @@
         "wizard-type-disabled": "",
         "cannot-discard": "",
         "confirm-discard": "",
-        "rune_max_cards": "",
-        "max cards": "",
-        "draw card": ""
+        "draw card": "",
+        "keep card when discarding": "",
+        "allow discarding": ""
     },
     {
         "language": "中文(简)",
@@ -8146,9 +8146,9 @@
         "wizard-type-disabled": "",
         "cannot-discard": "",
         "confirm-discard": "",
-        "rune_max_cards": "",
-        "max cards": "",
-        "draw card": ""
+        "draw card": "",
+        "keep card when discarding": "",
+        "allow discarding": ""
     },
     {
         "language": "中文(繁)",
@@ -8887,9 +8887,9 @@
         "wizard-type-disabled": "",
         "cannot-discard": "",
         "confirm-discard": "",
-        "rune_max_cards": "",
-        "max cards": "",
-        "draw card": ""
+        "draw card": "",
+        "keep card when discarding": "",
+        "allow discarding": ""
     },
     {
         "language": "Polski",
@@ -9628,9 +9628,9 @@
         "wizard-type-disabled": "",
         "cannot-discard": "",
         "confirm-discard": "",
-        "rune_max_cards": "",
-        "max cards": "",
-        "draw card": ""
+        "draw card": "",
+        "keep card when discarding": "",
+        "allow discarding": ""
     },
     {
         "language": "Dutch",
@@ -10369,8 +10369,8 @@
         "wizard-type-disabled": "",
         "cannot-discard": "",
         "confirm-discard": "",
-        "rune_max_cards": "",
-        "max cards": "",
-        "draw card": ""
+        "draw card": "",
+        "keep card when discarding": "",
+        "allow discarding": ""
     }
 ]

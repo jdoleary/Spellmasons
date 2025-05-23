@@ -21,8 +21,7 @@ import { setPlayerNameUI } from '../PlayerUtils';
 import { cameraAutoFollow } from '../graphics/PixiUtils';
 import { allUnits } from './units';
 import { incrementPresentedRunesIndex } from '../jmath/RuneUtil';
-import { investmentId } from '../modifierInvestment';
-import { centeredFloatingText, queueCenteredFloatingText } from '../graphics/FloatingText';
+import floatingText from '../graphics/FloatingText';
 
 const elInGameLobby = document.getElementById('in-game-lobby') as (HTMLElement | undefined);
 const elInstructions = document.getElementById('instructions') as (HTMLElement | undefined);
@@ -650,7 +649,44 @@ export function syncLockedCardsAndCSS(player?: IPlayer) {
     for (let lockedCardId of player.lockedDiscardCards) {
       document.querySelectorAll(`.card[data-card-id="${lockedCardId}"]`).forEach(el => el.classList.add(IS_DISCARD_LOCKED_CLASSNAME))
     }
-
   }
+}
+export function toggleCardLockedForDiscard(player: IPlayer | undefined, cardId: string, underworld: Underworld) {
+  if (!player) {
+    return;
+  }
+  const doLock = !player.lockedDiscardCards.includes(cardId)
+  if (doLock) {
+    player.lockedDiscardCards.push(cardId);
+  } else {
+    player.lockedDiscardCards = player.lockedDiscardCards.filter(x => x != cardId);
+  }
+  floatingText({
+    coords: underworld.getMousePos(),
+    text: doLock ? "Keep card when discarding" : "Allow discarding",
+    style: { fill: colors.trueWhite, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
+  });
+  syncLockedCardsAndCSS(globalThis.player);
+}
+export function discardCards(player: IPlayer, underworld: Underworld) {
+  // Discard all but locked cards
+  const { unit } = player;
+  if (player.isCardmason) {
 
+    if (player.drawChargesSeed === undefined) {
+      player.drawChargesSeed = 0;
+    }
+    player.drawChargesSeed++;
+    // Discard all non-locked cards
+    if (unit.charges) {
+      for (let chargeKey of Object.keys(unit.charges || {}).filter(key => !player.lockedDiscardCards.includes(key))) {
+        delete unit.charges[chargeKey]
+      }
+      if (globalThis.player && unit == globalThis.player.unit) {
+        CardUI.updateCardBadges(underworld);
+        underworld.syncPlayerPredictionUnitOnly();
+        Unit.syncPlayerHealthManaUI(underworld);
+      }
+    }
+  }
 }
