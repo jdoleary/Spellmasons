@@ -36,7 +36,7 @@ const novas: Spell[] = [
       sfx: 'nova',
       probability: probabilityMap[CardRarity.RARE],
       thumbnail: 'spellIconNovaPain.png',
-      description: ['spell_nova_pain'],
+      description: ['spell_nova_pain', DAMAGE_NOVA_DAMAGE.toString()],
       allowNonUnitTarget: true,
       effect: async (state, card, quantity, underworld, prediction) => {
         const colorStart = 0x000;
