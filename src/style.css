@@ -2995,6 +2995,11 @@ body:not(.cardmason) .stat-row[data-stat="Max Cards"] {
   content: "🃏 "
 }
 
+/*Do NOT show lock in selected cards*/
+body.cardmason #selected-cards .card.is-discard-locked .lock-discard {
+  display: none;
+}
+
 .lock-discard {
   background-image: url(/ui/icons/spell-lock.png);
   display: none;
