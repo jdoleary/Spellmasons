@@ -4396,6 +4396,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   // This array remains in the same order for a given player in a given game
   getShuffledRunesForPlayer(player?: Player.IPlayer): ({ key: string } & Cards.Modifiers)[] {
     let listOfRemainingRunesToChoose = Object.entries(Cards.allModifiers).flatMap(([key, modifier]) => {
+      if (player?.isCardmason && modifier.omitForCardmason) {
+        return [];
+      }
       if (modifier._costPerUpgrade && !modifier.constant) {
         return [{ key, ...modifier }];
       } else {

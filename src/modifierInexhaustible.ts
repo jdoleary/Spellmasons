@@ -10,6 +10,7 @@ export default function registerInexhaustible() {
     description: 'rune_inexhaustible',
     _costPerUpgrade: 200,
     maxUpgradeCount: 1,
+    omitForCardmason: true,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, inexhaustibleId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         // 

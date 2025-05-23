@@ -11,6 +11,7 @@ export default function registerBloodWarlock() {
     description: 'rune_bloodwarlock',
     _costPerUpgrade: 160,
     maxUpgradeCount: 1,
+    omitForCardmason: true,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       const player = underworld.players.find(p => p.unit == unit);
       if (player) {

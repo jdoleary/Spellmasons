@@ -277,6 +277,8 @@ export interface Modifiers {
   maxUpgradeCount?: number;
   // Allows certain non-rune modifiers to persist between levels
   keepBetweenLevels?: boolean;
+  // Prevent this rune from showing for cardmason
+  omitForCardmason?: boolean;
 }
 export function calcluateModifierCostPerUpgrade(mod: Modifiers, underworld: Underworld, player?: Player.IPlayer): number {
   if (mod._costPerUpgrade === undefined) {

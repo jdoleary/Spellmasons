@@ -17,6 +17,7 @@ export default function registerManaBarrier() {
     _costPerUpgrade: 100,
     maxUpgradeCount: 3,
     quantityPerUpgrade: 5,
+    omitForCardmason: true,
     addModifierVisuals: (unit: Unit.IUnit, underworld: Underworld) => {
       // Add subsprite image
       // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type

@@ -12,6 +12,7 @@ export default function registerOnKillMana() {
     unitOfMeasure: 'Mana',
     _costPerUpgrade: 20,
     quantityPerUpgrade: 1,
+    omitForCardmason: true,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, onKillManaId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, onKillManaId);
