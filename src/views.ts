@@ -437,6 +437,10 @@ function animateMenu() {
         el.dataset.x = (x + result.x).toString();
         el.dataset.y = (y + result.y).toString();
         el.style.transform = `translate(${x + result.x}px, ${y + result.y}px)`;
+        // Reposition green to make space for the logo
+        if (el == elBgGreen) {
+          el.style.transform += `  translate(0, 343.0226px) scale(1.5)`;
+        }
       }
 
     }
