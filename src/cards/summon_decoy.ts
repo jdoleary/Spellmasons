@@ -23,7 +23,7 @@ const spell: Spell = {
     manaCost: 60,
     healthCost: 0,
     expenseScaling: 2,
-    probability: probabilityMap[CardRarity.COMMON],
+    probability: probabilityMap[CardRarity.SPECIAL],
     thumbnail: 'spellIconDecoy.png',
     description: 'spell_summon_decoy',
     allowNonUnitTarget: true,
