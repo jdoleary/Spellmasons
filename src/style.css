@@ -3009,6 +3009,8 @@ body.cardmason #selected-cards .card.is-discard-locked .lock-discard {
   position: absolute;
   top: -23px;
   left: 32px;
+  /* Show over top of disabled grey */
+  z-index: 1;
 }
 
 .card-holder .card:hover .lock-discard {
