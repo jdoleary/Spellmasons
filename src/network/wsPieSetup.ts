@@ -232,15 +232,6 @@ ${explainUpdateText}
   };
 }
 
-globalThis.addEventListener('keydown', event => {
-  if (event.code == 'F12' && globalThis.electronSettings) {
-    // @ts-ignore
-    globalThis.electronSettings.toggleDevTools();
-  } else if (globalThis.steamworks && event.code == 'Tab' && event.shiftKey) {
-    globalThis.steamworks.shiftTab();
-  }
-})
-
 let useP2P = false;
 globalThis.setPieToP2PMode = (active: boolean) => {
   useP2P = active;
