@@ -248,8 +248,12 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
 
   Unit.resetUnitStats(player.unit, underworld);
   // If in the beginning of a level set charges to full
-  if (!player.isSpawned)
+  if (!player.isSpawned) {
+    // Do not allow keeping locked cards between levels
+    discardCards(player, underworld, true);
+    // Refill cards
     Unit.refillCharges(player.unit, underworld);
+  }
   Unit.syncPlayerHealthManaUI(underworld);
 }
 // Keep a global reference to the current client's player
@@ -668,7 +672,7 @@ export function toggleCardLockedForDiscard(player: IPlayer | undefined, cardId: 
   });
   syncLockedCardsAndCSS(globalThis.player);
 }
-export function discardCards(player: IPlayer, underworld: Underworld) {
+export function discardCards(player: IPlayer, underworld: Underworld, forceDiscardAll?: boolean) {
   // Discard all but locked cards
   const { unit } = player;
   if (player.isCardmason) {
@@ -679,7 +683,7 @@ export function discardCards(player: IPlayer, underworld: Underworld) {
     player.drawChargesSeed++;
     // Discard all non-locked cards
     if (unit.charges) {
-      for (let chargeKey of Object.keys(unit.charges || {}).filter(key => !player.lockedDiscardCards.includes(key))) {
+      for (let chargeKey of Object.keys(unit.charges || {}).filter(key => forceDiscardAll || !player.lockedDiscardCards.includes(key))) {
         delete unit.charges[chargeKey]
       }
       if (globalThis.player && unit == globalThis.player.unit) {
