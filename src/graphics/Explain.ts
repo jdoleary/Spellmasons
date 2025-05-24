@@ -180,13 +180,13 @@ const explainMap: { [key: string]: ExplainData } = {
     })
   },
   [EXPLAIN_CARDMASON_CARDS]: {
-    prompt: () => ({ imageSrc: 'images/explain/cardmason-basics.gif', text: 'The Cardmason has a limited number of cards to use - but cards no longer cost mana to cast.\n\nEvery turn you\'ll discard all of your cards and redraw up to your max hand size.', yesText: 'Okay' })
+    prompt: () => ({ imageSrc: 'images/explain/cardmason-basics.gif', text: 'cardmason basics text', yesText: 'Okay' })
   },
   [EXPLAIN_CARDMASON_LOCK]: {
-    prompt: () => ({ imageSrc: 'images/explain/lock-cards.gif', text: 'You can prevent a card from being discarded by "locking" it.\n\nTo lock a card, either right click on it or click on the lock icon in the upper right corner.\n\nCards cannot be kept between levels, only between turns.', yesText: 'Okay' })
+    prompt: () => ({ imageSrc: 'images/explain/lock-cards.gif', text: 'Cardmason Locking Cards Text', yesText: 'Okay' })
   },
   [EXPLAIN_CARDMASON_REDRAW]: {
-    prompt: () => ({ imageSrc: 'images/explain/redraw.gif', text: 'If the cards you have are not useful to you, you can discard them all and redraw 1 card for every 2 discarded cards.', yesText: 'Okay' })
+    prompt: () => ({ imageSrc: 'images/explain/redraw.gif', text: 'Cardmason Redraw Text', yesText: 'Okay' })
   },
 }
 globalThis.explainKeys = Object.keys(explainMap);
