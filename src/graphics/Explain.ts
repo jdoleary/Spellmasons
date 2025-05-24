@@ -71,10 +71,14 @@ export const EXPLAIN_MINI_BOSSES = 'miniboss';
 export const EXPLAIN_PING = 'Pinging';
 export const EXPLAIN_BOOKMARKS = 'Bookmarks';
 export const EXPLAIN_UPGRADE_BOOKMARK = 'Upgrade Points';
+export const EXPLAIN_CARDMASON_CARDS = 'Cardmason Basics';
+export const EXPLAIN_CARDMASON_LOCK = 'Cardmason Locking Cards';
+export const EXPLAIN_CARDMASON_REDRAW = 'Cardmason Redraw';
 interface ExplainData {
   condition?: () => boolean;
   // Returns args to pass into Jprompt
   prompt: () => PromptArgs;
+  forCardmason?: boolean;
 };
 
 const explainMap: { [key: string]: ExplainData } = {
@@ -175,6 +179,15 @@ const explainMap: { [key: string]: ExplainData } = {
       imageSrc: 'images/explain/skillpoints.gif', text: 'explain upgrade bookmark', yesText: 'Got it!'
     })
   },
+  [EXPLAIN_CARDMASON_CARDS]: {
+    prompt: () => ({ imageSrc: 'images/explain/cardmason-basics.gif', text: 'The Cardmason has a limited number of cards to use - but cards no longer cost mana to cast.\n\nEvery turn you\'ll discard all of your cards and redraw up to your max hand size.', yesText: 'Okay' })
+  },
+  [EXPLAIN_CARDMASON_LOCK]: {
+    prompt: () => ({ imageSrc: 'images/explain/lock-cards.gif', text: 'You can prevent a card from being discarded by "locking" it.\n\nTo lock a card, either right click on it or click on the lock icon in the upper right corner.\n\nCards cannot be kept between levels, only between turns.', yesText: 'Okay' })
+  },
+  [EXPLAIN_CARDMASON_REDRAW]: {
+    prompt: () => ({ imageSrc: 'images/explain/redraw.gif', text: 'If the cards you have are not useful to you, you can discard them all and redraw 1 card for every 2 discarded cards.', yesText: 'Okay' })
+  },
 }
 globalThis.explainKeys = Object.keys(explainMap);
 export const autoExplains = [
@@ -187,7 +200,12 @@ export const autoExplains = [
   EXPLAIN_CAMERA,
   EXPLAIN_FORGE_ORDER,
   EXPLAIN_BOOKMARKS,
-]
+];
+export const autoExplainsCardmason = [
+  EXPLAIN_CARDMASON_CARDS,
+  EXPLAIN_CARDMASON_LOCK,
+  EXPLAIN_CARDMASON_REDRAW
+];
 export function autoExplain() {
   // @ts-ignore: This global isn't on the server
   if (globalThis.devUnderworld && globalThis.devUnderworld.levelIndex > 2) {
@@ -198,6 +216,16 @@ export function autoExplain() {
         return;
       }
     }
+  }
+  if (globalThis.player && globalThis.player.isCardmason) {
+    for (let e of autoExplainsCardmason) {
+      if (!isAlreadyExplained(e)) {
+        explain(e);
+        // Stop after finding one that needs explaining
+        return;
+      }
+    }
+
   }
 
 }

@@ -985,7 +985,7 @@ async function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: 
         if (Object.entries(predictionPlayerUnit.charges).some(([cardId, charges]) => charges < 0)) {
           floatingText({
             coords: underworld.getMousePos(),
-            text: 'Insufficient Charges',
+            text: 'Insufficient Cards',
             style: { fill: colors.errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
           });
           deselectLastCard(underworld);

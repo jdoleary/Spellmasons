@@ -948,7 +948,7 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
               // Check for insufficient charges
               floatingText({
                 coords: underworld.getMousePos(),
-                text: 'Insufficient Charges',
+                text: 'Insufficient Cards',
                 style: { fill: errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
               });
             } else {
