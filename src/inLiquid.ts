@@ -1,3 +1,4 @@
+import { SubmergeId } from "./cards/submerge";
 import { HasSpace } from "./entity/Type";
 import { isUnit, IUnit, takeDamage } from "./entity/Unit";
 import Events from "./Events";
@@ -59,6 +60,10 @@ export function add(entity: HasSpace, underworld: Underworld, prediction: boolea
   }
 }
 export function remove(entity: HasSpace) {
+  // Do not remove inLiquid if entity has Submerge curse
+  if (isUnit(entity) && entity.modifiers[SubmergeId]) {
+    return;
+  }
   entity.inLiquid = false;
   if (entity.image) {
     removeMask(entity.image);

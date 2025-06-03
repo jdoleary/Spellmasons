@@ -93,6 +93,8 @@ import connect from './connect';
 import target_similar from './target_similar';
 import target_similar_2 from './target_similar_2';
 import target_injured from './target_injured';
+import target_submerged from './target_submerged';
+import submerge from './submerge';
 import target_all from './target_all';
 import target_bounty from './target_bounty';
 import give_bounty from './give_bounty';
@@ -529,6 +531,8 @@ export function registerCards(overworld: Overworld) {
   registerSpell(target_similar_2, overworld);
   config.IS_ANNIVERSARY_UPDATE_OUT &&
     registerSpell(target_injured, overworld);
+  registerSpell(target_submerged, overworld);
+  registerSpell(submerge, overworld);
   registerSpell(target_all, overworld);
   registerSpell(target_bounty, overworld);
   registerSpell(give_bounty, overworld);
