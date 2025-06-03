@@ -57,7 +57,6 @@
     "object-hash": "^3.0.0",
     "pixi.js": "^6.4.2",
     "seedrandom": "^3.0.5",
-    "simple-peer": "^9.11.1",
     "stats.js": "^0.17.0",
     "uuid": "^11.0.5"
   }
