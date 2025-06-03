@@ -124,6 +124,7 @@ import cursify from './cursify';
 import teach from './teach';
 import sell from './sell';
 import novas from './novas';
+import nukitsuke from './nukitsuke';
 // Not used as a card, for making half of looped enemies immune
 // on first turn
 import registerSummoningSickness from '../modifierSummoningSickness';
@@ -445,6 +446,7 @@ export function registerCards(overworld: Overworld) {
   novas.forEach(nova =>
     registerSpell(nova, overworld)
   );
+  registerSpell(nukitsuke, overworld);
 
   // Blessings
   registerSpell(heal, overworld);

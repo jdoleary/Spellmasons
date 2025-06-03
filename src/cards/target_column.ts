@@ -75,7 +75,7 @@ const spell: Spell = {
     },
   },
 };
-function getColumnPoints(castLocation: Vec2, vector: Vec2, width: number, depth: number): Vec2[] {
+export function getColumnPoints(castLocation: Vec2, vector: Vec2, width: number, depth: number): Vec2[] {
   const p1 = moveAlongVector(castLocation, invert(vector), -width);
   const p2 = moveAlongVector(castLocation, invert(vector), width);
   const p3 = moveAlongVector(p2, vector, depth);
