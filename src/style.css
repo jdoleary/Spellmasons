@@ -3013,7 +3013,7 @@ body.cardmason #selected-cards .card.is-discard-locked .lock-discard {
   z-index: 1;
 }
 
-.card-holder .card:hover .lock-discard {
+body.cardmason .card-holder .card:hover .lock-discard {
   display: block;
   opacity: 0.5;
 }
