@@ -277,7 +277,7 @@ declare global {
   var electronSettings: undefined | {
     setFullscreen: (value: boolean) => void;
     setUIZoom: (value: number) => void;
-    p2pSend: (peerSteamId: string, message: any) => void;
+    p2pSend: (peerSteamId: bigint, message: any) => void;
   }
   var steamworks: undefined | {
     shiftTab: () => void;

@@ -5,9 +5,10 @@ import { host } from "./p2p/host";
 import { SERVER_HUB_URL } from "../config";
 // import { join } from "./p2p/client";
 import { syncLobby } from "../entity/Player";
+import * as msgpack from "@msgpack/msgpack";
 
 export interface SteamPeer {
-    id: string;
+    id: bigint;
     connected: boolean;
 }
 
@@ -39,7 +40,11 @@ const defaultIdForSolomode = uuidv4();
 if (globalThis.steamworks) {
     // @ts-ignore
     // TODO SteamP2P
-    globalThis.steamworks.subscribeToP2PMessages(data => console.log('steamp2p data:', data))
+    globalThis.steamworks.subscribeToP2PMessages(data => {
+        console.log('steamp2p data, encoded', data);
+        const text = msgpack.decode(data);
+        console.log('steamp2p data, decoded', text);
+    })
 } else {
     console.log('Steamp2p setup error globalThis.steamworks is undefined');
 }
@@ -134,7 +139,11 @@ export default class PiePeer {
     };
     // This is a main difference between piePeer and wsPieClient.  PiePeer has SimplePeer connections
     // whereas wsPieClient has a WebSocket connection
-    peers: { peer: SteamPeer, name: string, clientId: string }[] = [];
+    peers: { peer: SteamPeer, name: string, clientId: string }[] = [
+        // STEAM P2P test
+        // { peer: { id: BigInt('76561197972952962'), connected: true }, name: "PC", clientId: "jtest" },
+        { peer: { id: BigInt('76561199435786047'), connected: true }, name: "laptop", clientId: "jtest2" }
+    ];
     // Stores information of the current room to support automatic re-joining
     currentRoomInfo?: Room;
     stats: {
@@ -443,8 +452,9 @@ export default class PiePeer {
                     // host should echo any recieved data to all connections
                     // Send to all connections
                     this.peers.forEach(({ peer }: { peer: SteamPeer }) => {
+                        console.log('steamp2p PiePeer: sending to peer v2', peer.id, data);
                         if (globalThis.electronSettings)
-                            globalThis.electronSettings.p2pSend(peer.id, data);
+                            globalThis.electronSettings.p2pSend(peer.id, msgpack.encode(data));
                     });
                 } catch (e) {
                     log('Err: Unable to parse data from msg', msg);
@@ -568,7 +578,7 @@ export default class PiePeer {
                 // Send to all connections
                 this.peers.forEach(({ peer }: { peer: SteamPeer }) => {
                     if (globalThis.electronSettings)
-                        globalThis.electronSettings.p2pSend(peer.id, message);
+                        globalThis.electronSettings.p2pSend(peer.id, msgpack.encode(message));
                 });
                 // If the host, also "send" to self (handle immediately)
                 if (this.isP2PHost) {

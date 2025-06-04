@@ -210,7 +210,9 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underwo
     }
     pie.sendData({
       type: MESSAGE_TYPES.CHOOSE_UPGRADE,
-      upgrade,
+      upgrade: {
+        title: upgrade.title
+      },
     });
   });
   element.addEventListener('mouseenter', (e) => {
