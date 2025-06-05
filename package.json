@@ -47,8 +47,6 @@
     "@pixi/filter-glow": "^4.2.0",
     "@pixi/filter-multi-color-replace": "^4.2.0",
     "@pixi/filter-outline": "^4.2.0",
-    "@sentry/browser": "^7.31.1",
-    "@sentry/node": "^7.31.1",
     "@websocketpie/client": "^1.1.5",
     "@websocketpie/server": "^1.2.0",
     "@websocketpie/server-bun": "^1.2.0",

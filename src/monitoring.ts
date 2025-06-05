@@ -1,19 +1,9 @@
-import * as Sentry from "@sentry/browser";
 import Stats from 'stats.js';
 
 export function setupMonitoring() {
   const release = `spellmasons@${globalThis.SPELLMASONS_PACKAGE_VERSION}`;
   if (!location.href.includes('http://localhost')) {
-    console.log('Setup: Monitoring with Sentry', release);
-    Sentry.init({
-      dsn: "https://3e73188cf44c491da09fb834f36f55f5@o4504650001874944.ingest.sentry.io/4504650002923520",
-      release,
-      // Set tracesSampleRate to 1.0 to capture 100%
-      // of transactions for performance monitoring.
-      // We recommend adjusting this value in production
-      tracesSampleRate: 0.1,
-    });
-    Sentry.setTag("SpellmasonsRunner", "Browser");
+    console.log('Setup: Monitoring with ', release);
   } else {
     console.log('Setup: Monitoring with Sentry disabled due to localhost')
   }

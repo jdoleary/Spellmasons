@@ -1,20 +1,11 @@
 // This file is the entrypoint for the headless server and must set globalThis.headless
 // to true to denote that there is no graphics nor audio code
 globalThis.headless = true;
-import * as Sentry from "@sentry/node";
 import { enableRemoteLogging } from "./RemoteLogging";
 import { version } from '../package.json';
 globalThis.SPELLMASONS_PACKAGE_VERSION = version;
 enableRemoteLogging();
 const release = `spellmasons@${version}`;
-Sentry.init({
-    dsn: "https://4cf64a58d4aa4fa4959212aeccd3d6a1@o4504650001874944.ingest.sentry.io/4504650012819456",
-    release,
-    // We recommend adjusting this value in production, or using tracesSampler
-    // for finer control
-    tracesSampleRate: 0.1,
-});
-Sentry.setTag("SpellmasonsRunner", "HeadlessServer");
 
 import './Shims';
 // Setup mods
