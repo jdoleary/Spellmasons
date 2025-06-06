@@ -38,16 +38,22 @@ const defaultIdForSolomode = uuidv4();
 
 
 if (globalThis.steamworks) {
-    globalThis.p2pSend = (peerId: bigint, message: any) => {
-        if (globalThis.electronSettings)
-            globalThis.electronSettings.p2pSend(peerId, msgpack.encode(message));
-        else
+    globalThis.p2pSend = (message: any, peerId?: bigint) => {
+        if (globalThis.electronSettings) {
+            if (peerId !== undefined) {
+                globalThis.electronSettings.p2pSend(peerId, msgpack.encode(message));
+            } else {
+                globalThis.electronSettings.p2pSendToAllPeers(msgpack.encode(message));
+            }
+
+        } else {
+
             console.error('Unexpected, no globalThis.electronSettings, cannot p2pSend')
+        }
     }
     // @ts-ignore
     // TODO SteamP2P
     globalThis.steamworks.subscribeToP2PMessages(data => {
-        console.log('steamp2p data, encoded', data);
         const text = msgpack.decode(data);
         console.log('steamp2p data, decoded', text);
     })

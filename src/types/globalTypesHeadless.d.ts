@@ -279,10 +279,12 @@ declare global {
     setUIZoom: (value: number) => void;
     // This needs to have message wrapped in msgpack buffer, use globalThis.p2pSend for ease of use
     p2pSend: (peerSteamId: bigint, message: any) => void;
+    p2pSendToAllPeers: (message: any) => void;
     p2pCreateLobby: () => void;
-    getLobbyMembers: () => Promise<{ steamId64: bigint, steamId32: string, accountId: number }[]>
+    getLobbyMembers: () => Promise<{ steamId64: bigint, steamId32: string, accountId: number }[]>;
+    mySteamId: () => Promise<string>;
   }
-  var p2pSend: (peerSteamId: bigint, message: any) => void;
+  var p2pSend: (message: any, peerSteamId?: bigint) => void;
   var steamworks: undefined | {
     shiftTab: () => void;
     achievements: (value: number) => void;
