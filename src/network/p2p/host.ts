@@ -72,35 +72,9 @@ function requestToJoin(data: RequestToJoin) {
 }
 // This function is exposed to the consumer of this library to communicate to
 // the hub that this host is available to receive join requests.
-export async function host({ fromName, websocketHubUrl, onPeerConnected, onPeerDisconnected, onError, onData, onConnectionState }: { fromName: string, websocketHubUrl: string, onPeerConnected: (p: SteamPeer, name: string, clientId: string) => void, onPeerDisconnected: (p: SteamPeer) => void, onError: (error: any) => void, onData: (data: any) => void, onConnectionState: (connected: boolean) => void }) {
+export async function host({ fromName, websocketHubUrl, onError, onData, onConnectionState }: { fromName: string, websocketHubUrl: string, onError: (error: any) => void, onData: (data: any) => void, onConnectionState: (connected: boolean) => void }) {
     if (globalThis.remoteLog)
         globalThis.remoteLog(`Hosting P2P`);
-
-    // function responseRequestToJoinP2P(request: RequestToJoin, approved: boolean, reason?: string) {
-    //     if (approved) {
-    //         console.log('Step: Accepted join request, creating own signal.');
-    //         // TODO Steam P2P
-    //         // Host generates one peer per JOIN_REQUEST
-    //         const peer: SimplePeer = new SimplePeer(Object.assign(simplePeerConf, { initiator: false, tickle: false }));
-    //         peer.on('close', () => onPeerDisconnected(peer));
-    //         peer.on('error', onError);
-    //         peer.on('connect', () => {
-    //             console.log('Connected!');
-    //             // Step 4: Connection has been made!
-    //             onPeerConnected(peer, request.sender, request.senderClientId);
-    //         });
-    //         peer.on('signal', (data: any) => {
-    //             console.log('Step: Signal created, sending signals back to requester...');
-    //             // Step 3: When own signal is generated, send back to client and await final connection
-    //             sendToHub(socket, { type: ACCEPT_REQUEST_SIGNAL, fromName, signal: data, toName: request.sender })
-    //         });
-    //         peer.on('data', onData);
-    //         // Step 2: When JOIN_REQUEST is accepted, generate own signal...
-    //         peer.signal(request.signal);
-    //     } else {
-    //         sendToHub(socket, { type: REQUEST_REJECTED, fromName, toName: request.sender, reason })
-    //     }
-    // }
 
     globalThis.responseRequestToJoinP2P = () => console.warn('TODO SteamP2P');
 

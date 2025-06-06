@@ -283,6 +283,7 @@ declare global {
     p2pCreateLobby: () => void;
     getLobbyMembers: () => Promise<{ steamId64: bigint, steamId32: string, accountId: number }[]>;
     mySteamId: () => Promise<string>;
+    subscribeToLobbyChanges: (cb: (x: { lobby: bigint, making_change: bigint, member_state_change: 'Entered' | 'Left', user_changed: bigint }) => void) => void;
   }
   var p2pSend: (message: any, peerSteamId?: bigint) => void;
   var steamworks: undefined | {

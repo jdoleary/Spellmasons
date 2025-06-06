@@ -118,6 +118,8 @@ function error(...args: any) {
 const maxLatencyDataPoints = 14;
 let lastRoomInfo: Room | undefined;
 
+let didSubscribeToLobbyChanges = false;
+
 export default class PiePeer {
     // onData: a callback that is invoked when data is recieved from PieServer
     onData?: (x: OnDataArgs) => void;
@@ -210,19 +212,19 @@ export default class PiePeer {
         });
         // TODO SteamP2P
         globalThis.kickPeer = ({ name, clientId }: { name?: string, clientId?: string }) => {
-            const foundPeerIndex = this.peers.findIndex(p => clientId !== undefined ? p.clientId == clientId : p.name === name);
-            if (foundPeerIndex !== -1) {
-                const peer = this.peers[foundPeerIndex];
-                if (peer) {
-                    Jprompt({ text: `Are you sure you wish to kick ${name || clientId} from the game?`, noBtnText: 'Cancel', noBtnKey: 'Escape', yesText: 'Kick', forceShow: true }).then(doKick => {
-                        if (doKick) {
-                            // TODO SteamP2P
-                            // peer.peer.destroy();
-                            this.peers.splice(foundPeerIndex, 1);
-                        }
-                    });
-                }
-            }
+            // const foundPeerIndex = this.peers.findIndex(p => clientId !== undefined ? p.clientId == clientId : p.name === name);
+            // if (foundPeerIndex !== -1) {
+            //     const peer = this.peers[foundPeerIndex];
+            //     if (peer) {
+            //         Jprompt({ text: `Are you sure you wish to kick ${name || clientId} from the game?`, noBtnText: 'Cancel', noBtnKey: 'Escape', yesText: 'Kick', forceShow: true }).then(doKick => {
+            //             if (doKick) {
+            //                 // TODO SteamP2P
+            //                 // peer.peer.destroy();
+            //                 this.peers.splice(foundPeerIndex, 1);
+            //             }
+            //         });
+            //     }
+            // }
 
         };
         // TODO SteamP2P
@@ -250,8 +252,9 @@ export default class PiePeer {
 
     }
     isConnected(): boolean {
+        // TODO STEAMP2P
         return this.soloMode
-            || window.navigator.onLine && this.peers.some(({ peer }) => peer.connected);
+            || window.navigator.onLine;// && this.peers.some(({ peer }) => peer.connected);
     }
     // heartbeat is used to determine on the client-side if the client is unaware that 
     // it is disconnected from the server.
@@ -277,7 +280,6 @@ export default class PiePeer {
         // Disconnect if currently connected so we can fake a singleplayer connection
         await this.disconnect();
         this.soloMode = true;
-        this.peers = [];
         if (this.onConnectInfo) {
             this.onConnectInfo({
                 type: MessageType.ConnectInfo,
@@ -325,20 +327,8 @@ export default class PiePeer {
                 log('"Disconnected" from soloMode');
                 return
             }
-            if (this.peers.every(({ peer }) => !peer.connected)) {
-                // Resolve immediately, client is already not connected 
-                log('Attempted to disconnect but there was no preexisting connection to disconnect from.');
-                this.peers = [];
-                resolve();
-                return
-            } else {
-                // TODO SteamP2P
-                // this.peers.forEach(({ peer }) => peer.destroy());
-                this.peers = [];
-                // Updates debug info to show that it is closing
-                this._updateDebugInfo();
-                log('Disconnected.');
-            }
+            // TODO SteamP2P: disconnect from lobby
+
         }).then(() => {
             // Updates debug info to show that it is closed
             this._updateDebugInfo();
@@ -425,11 +415,12 @@ export default class PiePeer {
             if (!this.clientId) {
                 this.clientId = defaultIdForSolomode;
             }
-            this.sendMessage({
-                type: MessageType.ClientPresenceChanged,
-                clients: [this.clientId, ...this.peers.map(({ clientId }) => clientId)],
-                names: [getMyPlayerName(), ...this.peers.map(({ name }) => name)]
-            })
+            // TODO SteamP2P: No more peers
+            // this.sendMessage({
+            //     type: MessageType.ClientPresenceChanged,
+            //     clients: [this.clientId, ...this.peers.map(({ clientId }) => clientId)],
+            //     names: [getMyPlayerName(), ...this.peers.map(({ name }) => name)]
+            // })
         }
 
     }
@@ -459,27 +450,16 @@ export default class PiePeer {
             onData: (msg) => {
                 try {
                     const data = JSON.parse(msg);
-                    // TODO SteamP2P. This is where it should subscribe
                     this.handleMessage(data);
                     // host should echo any recieved data to all connections
                     // Send to all connections
-                    this.peers.forEach(({ peer }: { peer: SteamPeer }) => {
-                        console.log('steamp2p PiePeer: sending to peer v2', peer.id, data);
-                        if (globalThis.electronSettings)
-                            globalThis.p2pSend(peer.id, data);
-                    });
+                    console.log('steamp2p PiePeer: Echoing to all peers', data);
+                    if (globalThis.electronSettings)
+                        globalThis.p2pSend(data);
                 } catch (e) {
                     log('Err: Unable to parse data from msg', msg);
                     error(e);
                 }
-            },
-            onPeerConnected: (peer, name, clientId) => {
-                this.peers.push({ peer, name, clientId });
-                this.hostBroadcastConnectedPeers();
-            },
-            onPeerDisconnected: (p) => {
-                this.peers.splice(this.peers.findIndex(x => x.peer == p), 1);
-                this.hostBroadcastConnectedPeers();
             },
             onConnectionState: (hubConnected) => {
                 document.body.classList.toggle('peer-hub-connected', hubConnected);
@@ -491,6 +471,9 @@ export default class PiePeer {
         });
     }
     joinRoom(roomInfo: Room, isHosting: boolean = false) {
+        if (!globalThis.electronSettings) {
+            return Promise.reject('no electron Settings');
+        }
         // If in soloMode, you are always the host, if not in solomode, since this function is joinRoom,
         // you are not the host
         this.isP2PHost = this.soloMode;
@@ -514,36 +497,17 @@ export default class PiePeer {
                 return Promise.reject();
             }
             if (isHosting) {
-                this.makeRoom(roomInfo);
-                return Promise.resolve(roomInfo);
+                globalThis.electronSettings.p2pCreateLobby();
+                if (!didSubscribeToLobbyChanges) {
+                    didSubscribeToLobbyChanges = true;
+                    globalThis.electronSettings.subscribeToLobbyChanges((x) => {
+                        console.log('TODO SteamP2P, lobby changes', x);
+                        // TODO SteamP2P, hook up onData and onClientPresenceChanged
+                    })
+                }
+                return Promise.resolve();
             }
-
-            if (!this.clientId) {
-                this.clientId = defaultIdForSolomode;
-            }
-            return Promise.reject('TODO SteamP2P');
-            // return join({
-            //     toName: roomInfo.name,
-            //     fromName: playerName,
-            //     fromClientId: this.clientId,
-            //     websocketHubUrl: hubURL,
-            //     onError: console.error,
-            //     onData: (msg) => {
-            //         try {
-            //             this.handleMessage(JSON.parse(msg));
-            //         } catch (e) {
-            //             log('Err: Unable to parse msg', msg);
-            //             error(e);
-            //         }
-            //     },
-            //     onPeerDisconnected: (p) => {
-            //         this.peers.splice(this.peers.findIndex(x => x.peer == p), 1);
-            //     },
-            // }).then(({ peer, name }) => {
-            //     // ClientId is only needed for host peers list
-            //     this.peers.push({ peer, name, clientId: 'unknown' });
-            //     return roomInfo;
-            // });
+            return Promise.reject('Joining client joins without spellmasons menu button.  Use steam overlay instead');
         }
     }
     leaveRoom() {
@@ -585,13 +549,11 @@ export default class PiePeer {
             // In soloMode there is no this.ws so just handle the message immediately as 
             // if it bounced back from PieServer
             this.handleMessage(message);
-        } else if (this.peers.length) {
+        } else {
             try {
                 // Send to all connections
-                this.peers.forEach(({ peer }: { peer: SteamPeer }) => {
-                    if (globalThis.electronSettings)
-                        globalThis.p2pSend(peer.id, message);
-                });
+                if (globalThis.electronSettings)
+                    globalThis.p2pSend(message);
                 // If the host, also "send" to self (handle immediately)
                 if (this.isP2PHost) {
                     this.handleMessage(message);
@@ -600,8 +562,6 @@ export default class PiePeer {
                 error('Err: Unable to stringify', message);
                 error(e);
             }
-        } else {
-            error('Unexpected: Attempted to send data but this.ws is undefined and not in soloMode');
         }
     }
     _updateDebugInfo(message?: { clients: object[] }) {
