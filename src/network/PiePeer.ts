@@ -460,7 +460,7 @@ export default class PiePeer {
                     this.peers.forEach(({ peer }: { peer: SteamPeer }) => {
                         console.log('steamp2p PiePeer: sending to peer v2', peer.id, data);
                         if (globalThis.electronSettings)
-                            globalThis.electronSettings.p2pSend(peer.id, msgpack.encode(data));
+                            globalThis.p2pSend(peer.id, data);
                     });
                 } catch (e) {
                     log('Err: Unable to parse data from msg', msg);
@@ -584,7 +584,7 @@ export default class PiePeer {
                 // Send to all connections
                 this.peers.forEach(({ peer }: { peer: SteamPeer }) => {
                     if (globalThis.electronSettings)
-                        globalThis.electronSettings.p2pSend(peer.id, msgpack.encode(message));
+                        globalThis.p2pSend(peer.id, message);
                 });
                 // If the host, also "send" to self (handle immediately)
                 if (this.isP2PHost) {
