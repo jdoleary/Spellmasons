@@ -219,8 +219,12 @@ declare global {
   var electronSettings: undefined | {
     setFullscreen: (value: boolean) => void;
     setUIZoom: (value: number) => void;
+    // This needs to have message wrapped in msgpack buffer, use globalThis.p2pSend for ease of use
     p2pSend: (peerSteamId: bigint, message: any) => void;
+    p2pCreateLobby: () => void;
+    getLobbyMembers: () => Promise<{ steamId64: bigint, steamId32: string, accountId: number }[]>
   }
+  var p2pSend: (peerSteamId: bigint, message: any) => void;
   var steamworks: undefined | {
     shiftTab: () => void;
     achievements: (value: number) => void;

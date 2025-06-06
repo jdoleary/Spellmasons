@@ -38,6 +38,12 @@ const defaultIdForSolomode = uuidv4();
 
 
 if (globalThis.steamworks) {
+    globalThis.p2pSend = (peerId: bigint, message: any) => {
+        if (globalThis.electronSettings)
+            globalThis.electronSettings.p2pSend(peerId, msgpack.encode(message));
+        else
+            console.error('Unexpected, no globalThis.electronSettings, cannot p2pSend')
+    }
     // @ts-ignore
     // TODO SteamP2P
     globalThis.steamworks.subscribeToP2PMessages(data => {
