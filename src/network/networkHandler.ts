@@ -1366,14 +1366,16 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
       storage.set(storage.STORAGE_ID_IS_CARDMASON, isCardmason ? 'yes' : 'no');
     }
     const storedIsCardmason = (storage.get(storage.STORAGE_ID_IS_CARDMASON) == 'yes') || false;
-    overworld.pie.sendData({
-      type: MESSAGE_TYPES.PLAYER_CONFIG,
-      color,
-      colorMagic,
-      isCardmason: storedIsCardmason,
-      name: capped_name,
-      lobbyReady
-    });
+    if (overworld.underworld) {
+      overworld.pie.sendData({
+        type: MESSAGE_TYPES.PLAYER_CONFIG,
+        color,
+        colorMagic,
+        isCardmason: storedIsCardmason,
+        name: capped_name,
+        lobbyReady
+      });
+    }
   }
 
 
@@ -1599,12 +1601,7 @@ Current game version: ${globalThis.SPELLMASONS_PACKAGE_VERSION}`,
       overworld.underworld.cleanup();
     }
 
-    // For P2P
-    if (globalThis.disconnectFromP2PHub) {
-      globalThis.disconnectFromP2PHub();
-    }
     document.body.classList.remove('isPeerHost');
-    // end For P2P
 
     // This prevents 'esc' key from going "back" to viewGame after the underworld is cleaned up
     clearLastNonMenuView();
