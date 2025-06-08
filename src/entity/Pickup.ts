@@ -305,7 +305,7 @@ export function setPosition(pickup: IPickup, x: number, y: number) {
   pickup.y = y;
   Image.setPosition(pickup.image, { x, y });
 }
-export type IPickupSerialized = Omit<IPickup, "image" | "effect" | "text" | "real" | "emitter"> & {
+export type IPickupSerialized = Omit<IPickup, "image" | "effect" | "text" | "real" | "emitter" | "description" | "willTrigger"> & {
   image?: Image.IImageAnimatedSerialized,
   emitter?: string
 };
@@ -313,7 +313,7 @@ export function serialize(p: IPickup): IPickupSerialized {
   // effect is a callback and cannot be serialized
   // real and predictionCopy are references and cannot be serialized
   // because it would be cyclical
-  const { effect, text, real, emitter, predictionCopy, ...rest } = p;
+  const { effect, text, real, emitter, predictionCopy, description, willTrigger, ...rest } = p;
   const serialized: IPickupSerialized = {
     ...rest,
     image: p.image ? Image.serialize(p.image) : undefined,
