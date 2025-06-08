@@ -282,6 +282,7 @@ declare global {
     p2pSendToAllPeers: (message: any) => void;
     p2pCreateLobby: () => void;
     getLobbyMembers: () => Promise<{ steamId64: bigint, steamId32: string, accountId: number }[]>;
+    leaveLobby: () => void;
     mySteamId: () => Promise<string>;
     subscribeToLobbyChanges: (cb: (x: { lobby: bigint, making_change: bigint, member_state_change: 'Entered' | 'Left', user_changed: bigint }) => void) => void;
   }
@@ -401,7 +402,6 @@ declare global {
   // Returns true if request is accepted
   var responseRequestToJoinP2P: (request: RequestToJoin, approved: boolean, reason?: string) => void | undefined;
   var kickPeer: (args: { name?: string, clientId?: string }) => void | undefined;
-  var openPeerLobby: (open: boolean, socket: WebSocket) => void | undefined;
   var disconnectFromP2PHub: () => void | undefined;
   var menuJoinErr: (e: string) => void | undefined;
   var showLegalPopup: (forcePopup: boolean) => void;

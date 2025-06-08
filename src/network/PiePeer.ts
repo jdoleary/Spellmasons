@@ -1,11 +1,11 @@
 // @ts-ignore: Import is fine
 import * as storage from '../storage';
 import { v4 as uuidv4 } from 'uuid';
-import { host } from "./p2p/host";
 import { SERVER_HUB_URL } from "../config";
-// import { join } from "./p2p/client";
 import { syncLobby } from "../entity/Player";
 import * as msgpack from "@msgpack/msgpack";
+import { clearTints } from '../graphics/PlanningView';
+import { onData } from './networkHandler';
 
 export interface SteamPeer {
     id: bigint;
@@ -31,13 +31,14 @@ export const MessageType = {
     ConnectInfo: 'ConnectInfo',
 };
 
-const hubURL = SERVER_HUB_URL.replace('http', 'ws') + '/p2p'
 // This will be different for every client
-const defaultIdForSolomode = uuidv4();
-
-
+let defaultIdForSolomode = uuidv4();
 
 if (globalThis.steamworks) {
+    globalThis.electronSettings?.mySteamId().then(steamId => {
+        console.log('PiePeer: Overridding clientId with steamId', steamId)
+        defaultIdForSolomode = steamId;
+    });
     globalThis.p2pSend = (message: any, peerId?: bigint) => {
         if (globalThis.electronSettings) {
             if (peerId !== undefined) {
@@ -52,10 +53,21 @@ if (globalThis.steamworks) {
         }
     }
     // @ts-ignore
-    // TODO SteamP2P
     globalThis.steamworks.subscribeToP2PMessages(data => {
         const text = msgpack.decode(data);
-        console.log('steamp2p data, decoded', text);
+        if (!piePeerInstance) {
+            if (globalThis.pie && globalThis.pie.currentRoomInfo) {
+                console.warn('Recieved a p2p message but already in a non p2p room. aborting..')
+            } else {
+                setPieToP2PMode(true)
+            }
+        }
+        console.log('jtest steamp2p data, decoded', text);
+        if (piePeerInstance && piePeerInstance.onData) {
+            piePeerInstance.onData(text as OnDataArgs);
+        } else {
+            console.error('PiePeerInstance missing or onData not defined', piePeerInstance, piePeerInstance?.onData);
+        }
     })
 } else {
     console.log('Steamp2p setup error globalThis.steamworks is undefined');
@@ -120,6 +132,7 @@ let lastRoomInfo: Room | undefined;
 
 let didSubscribeToLobbyChanges = false;
 
+let piePeerInstance: PiePeer;
 export default class PiePeer {
     // onData: a callback that is invoked when data is recieved from PieServer
     onData?: (x: OnDataArgs) => void;
@@ -141,7 +154,6 @@ export default class PiePeer {
     // soloMode fakes a connection so that the pieClient API can be used
     // with a single user that echos messages back to itself.
     soloMode: boolean;
-    isP2PHost?: boolean;
     // promiseCBs is useful for storing promise callbacks (resolve, reject)
     // that need to be invoked in a different place than where they were created.
     // Since PieClient does a lot of asyncronous work through websockets, a 
@@ -151,13 +163,6 @@ export default class PiePeer {
     promiseCBs: {
         joinRoom?: { resolve: (x: any) => void, reject: (x: any) => void };
     };
-    // This is a main difference between piePeer and wsPieClient.  PiePeer has SimplePeer connections
-    // whereas wsPieClient has a WebSocket connection
-    peers: { peer: SteamPeer, name: string, clientId: string }[] = [
-        // STEAM P2P test
-        // { peer: { id: BigInt('76561197972952962'), connected: true }, name: "PC", clientId: "jtest" },
-        { peer: { id: BigInt('76561199435786047'), connected: true }, name: "laptop", clientId: "jtest2" }
-    ];
     // Stores information of the current room to support automatic re-joining
     currentRoomInfo?: Room;
     stats: {
@@ -192,6 +197,15 @@ export default class PiePeer {
         };
         this.useStats = false;
         this.clientId = defaultIdForSolomode;
+        if (globalThis.steamworks) {
+            globalThis.electronSettings?.mySteamId().then(steamId => {
+                if (steamId != this.clientId) {
+                    console.log('PiePeer: Overridding clientId with steamId in constructor', steamId)
+                    defaultIdForSolomode = steamId;
+                    this.clientId = steamId;
+                }
+            })
+        }
         this.stats = {
             latency: {
                 min: Number.MAX_SAFE_INTEGER,
@@ -227,34 +241,11 @@ export default class PiePeer {
             // }
 
         };
-        // TODO SteamP2P
-        globalThis.openPeerLobby = (open: boolean, socket: WebSocket) => {
-            document.querySelectorAll('.openLobbyBtn').forEach(el => {
-                el.innerHTML = open ? 'Allowing...' : 'Disallowing...';
-            });
-            if (open) {
-                if (lastRoomInfo) {
-                    console.log('reopening lobby with', lastRoomInfo);
-                    this.makeRoom(lastRoomInfo);
-                } else {
-                    Jprompt({
-                        text: `Something went wrong. Unable to reopen lobby`,
-                        yesText: 'Okay',
-                        forceShow: true
-                    });
-                }
-            } else {
-                if (socket)
-                    socket.close();
-            }
-
-        }
+        piePeerInstance = this;
 
     }
     isConnected(): boolean {
-        // TODO STEAMP2P
-        return this.soloMode
-            || window.navigator.onLine;// && this.peers.some(({ peer }) => peer.connected);
+        return this.soloMode || document.body.classList.contains('inP2PLobby');
     }
     // heartbeat is used to determine on the client-side if the client is unaware that 
     // it is disconnected from the server.
@@ -315,6 +306,7 @@ export default class PiePeer {
         clearTimeout(this.reconnectTimeoutId);
     }
     async disconnect(): Promise<void> {
+        globalThis.electronSettings?.leaveLobby();
         // Stop attempt to auto reconnect if a manual disconnect occurs
         clearTimeout(this.reconnectTimeoutId);
         // If disconnect is invoked while a connect() is already in progress this will
@@ -381,7 +373,16 @@ export default class PiePeer {
                 }
                 break;
             case MessageType.ServerAssignedData:
-                this.clientId = message.clientId;
+                // TODO SteamP2P
+                if (globalThis.steamworks) {
+                    globalThis.electronSettings?.mySteamId().then(steamId => {
+                        if (steamId != this.clientId) {
+                            console.log(`PiePeer: Overridding ServerAssigned clientId ${message.clientId} with steamId`, steamId)
+                            defaultIdForSolomode = steamId;
+                            this.clientId = steamId;
+                        }
+                    })
+                }
                 if (this.onServerAssignedData) {
                     this.onServerAssignedData(message);
                 }
@@ -410,74 +411,14 @@ export default class PiePeer {
                 error(`Above message of type ${message.type} not recognized!`);
         }
     }
-    hostBroadcastConnectedPeers() {
-        if (this.isP2PHost) {
-            if (!this.clientId) {
-                this.clientId = defaultIdForSolomode;
-            }
-            // TODO SteamP2P: No more peers
-            // this.sendMessage({
-            //     type: MessageType.ClientPresenceChanged,
-            //     clients: [this.clientId, ...this.peers.map(({ clientId }) => clientId)],
-            //     names: [getMyPlayerName(), ...this.peers.map(({ name }) => name)]
-            // })
-        }
 
-    }
-    // Remember to catch the rejected promise if used outside of this library
-    makeRoom(roomInfo: Room) {
-        this.isP2PHost = true;
-        document.body.classList.toggle('isPeerHost', this.isP2PHost);
-        lastRoomInfo = roomInfo;
-        host({
-            fromName: roomInfo.name,
-            websocketHubUrl: hubURL,
-            onError: e => {
-                console.error('P2P host err', e);
-                if (e == 'This name is not available' && globalThis.menuJoinErr) {
-                    globalThis.menuJoinErr(e);
-                    // You can't host with this name so disconnect and let the user
-                    // try again with a new name
-                    disconnectFromP2PHub();
-                    // Turn off isP2PHost
-                    // so that the UI doesn't think that you're successfully in a lobby
-                    // with that name
-                    this.isP2PHost = false;
-                    document.body.classList.toggle('isPeerHost', this.isP2PHost);
-                    lastRoomInfo = undefined;
-                }
-            },
-            onData: (msg) => {
-                try {
-                    const data = JSON.parse(msg);
-                    this.handleMessage(data);
-                    // host should echo any recieved data to all connections
-                    // Send to all connections
-                    console.log('steamp2p PiePeer: Echoing to all peers', data);
-                    if (globalThis.electronSettings)
-                        globalThis.p2pSend(data);
-                } catch (e) {
-                    log('Err: Unable to parse data from msg', msg);
-                    error(e);
-                }
-            },
-            onConnectionState: (hubConnected) => {
-                document.body.classList.toggle('peer-hub-connected', hubConnected);
-                console.log('Hub connected:', hubConnected);
-                // @ts-ignore: Exception: this code will only ever be run on client
-                // It's not usually okay to use devUnderworld
-                syncLobby(globalThis.devUnderworld);
-            }
-        });
-    }
     joinRoom(roomInfo: Room, isHosting: boolean = false) {
         if (!globalThis.electronSettings) {
             return Promise.reject('no electron Settings');
         }
         // If in soloMode, you are always the host, if not in solomode, since this function is joinRoom,
         // you are not the host
-        this.isP2PHost = this.soloMode;
-        document.body.classList.toggle('isPeerHost', this.isP2PHost);
+        document.body.classList.toggle('isPeerHost', true);
         if (this.soloMode) {
             // Now that client has joined a room in soloMode, send a 
             // manufactured clientPresenceChanged as if it came from the server
@@ -497,12 +438,22 @@ export default class PiePeer {
                 return Promise.reject();
             }
             if (isHosting) {
+                document.body.classList.toggle('isPeerHost', true);
                 globalThis.electronSettings.p2pCreateLobby();
+
                 if (!didSubscribeToLobbyChanges) {
                     didSubscribeToLobbyChanges = true;
                     globalThis.electronSettings.subscribeToLobbyChanges((x) => {
-                        console.log('TODO SteamP2P, lobby changes', x);
-                        // TODO SteamP2P, hook up onData and onClientPresenceChanged
+                        console.log('SteamP2P, lobby changes', x);
+                        globalThis.electronSettings?.getLobbyMembers().then(members => {
+                            console.log('SteamP2P, sending updated members', members);
+                            const message = {
+                                type: MessageType.ClientPresenceChanged,
+                                clients: members.map(({ steamId64 }) => steamId64.toString())
+                            };
+                            this.sendMessage(message);
+
+                        })
                     })
                 }
                 return Promise.resolve();
@@ -544,6 +495,7 @@ export default class PiePeer {
             fromClient: this.clientId,
             time: Date.now(),
         });
+        console.log('jtest sendMessage', message, 'as host', globalThis.isHost(this))
         // If not connected, send all messages to self
         if (this.soloMode || !this.isConnected()) {
             // In soloMode there is no this.ws so just handle the message immediately as 
@@ -555,7 +507,7 @@ export default class PiePeer {
                 if (globalThis.electronSettings)
                     globalThis.p2pSend(message);
                 // If the host, also "send" to self (handle immediately)
-                if (this.isP2PHost) {
+                if (globalThis.isHost(this)) {
                     this.handleMessage(message);
                 }
             } catch (e) {
@@ -567,7 +519,4 @@ export default class PiePeer {
     _updateDebugInfo(message?: { clients: object[] }) {
         debug('TODO: update debug info');
     }
-}
-function getMyPlayerName() {
-    return globalThis.player?.name || storage.get(storage.STORAGE_ID_PLAYER_NAME);
 }
