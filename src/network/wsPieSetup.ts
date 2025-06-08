@@ -272,6 +272,10 @@ export function setupPieAndUnderworld() {
     pie.useStats = true;
     console.log('Client: Initialize Underworld');
     const overworld = makeOverworld(pie);
+    if (useP2P) {
+      // Since p2p uses "lobbies" instead of rooms, initialize underworld immediately.
+      new Underworld(overworld, overworld.pie, Math.random().toString());
+    }
     addHandlers(pie, overworld);
     globalThis.connect_to_wsPie_server = wsUri => connect_to_wsPie_server(wsUri, overworld);
     globalThis.isConnected = pie.isConnected.bind(pie);
