@@ -402,7 +402,6 @@ declare global {
   // Returns true if request is accepted
   var responseRequestToJoinP2P: (request: RequestToJoin, approved: boolean, reason?: string) => void | undefined;
   var kickPeer: (args: { name?: string, clientId?: string }) => void | undefined;
-  var disconnectFromP2PHub: () => void | undefined;
   var menuJoinErr: (e: string) => void | undefined;
   var showLegalPopup: (forcePopup: boolean) => void;
   // If connected to a non-host app pie server where the first client acts as the host
