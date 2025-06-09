@@ -108,7 +108,8 @@ export function ensureAllClientsHaveAssociatedPlayers(overworld: Overworld, clie
     }
     for (let i = 0; i < globalThis.numberOfHotseatPlayers; i++) {
       // playerId helps distinguish multiple players on one client
-      let playerId = clientId + "_" + i;
+
+      let playerId = globalThis.numberOfHotseatPlayers > 1 ? clientId + "_" + i : clientId;
 
       const player = underworld.players.find(p => p.playerId == playerId);
       if (!player) {

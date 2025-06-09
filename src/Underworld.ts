@@ -1479,7 +1479,6 @@ export default class Underworld {
     globalThis.player = undefined;
 
     this.lastLevelCreated = undefined;
-    console.trace('jtest clean up underworld')
 
     globalThis.updateInGameMenuStatus?.()
   }
@@ -2395,7 +2394,7 @@ export default class Underworld {
     });
   }
   generateLevelDataSyncronous(levelIndex: number, gameMode?: GameMode): LevelData {
-    console.log('jtest Setup: generateLevelDataSyncronous', levelIndex, gameMode);
+    console.log('Setup: generateLevelDataSyncronous', levelIndex, gameMode);
     // Generate level
     let level;
     do {
