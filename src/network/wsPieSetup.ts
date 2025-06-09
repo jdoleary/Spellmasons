@@ -21,8 +21,7 @@ import { MESSAGE_TYPES } from '../types/MessageTypes';
 import { GameMode } from '../types/commonTypes';
 import { elEndTurnBtn } from '../HTMLElements';
 import { sendEventToServerHub } from '../RemoteLogging';
-import { test_spyPromises } from '../promiseSpy';
-import PiePeer from './PiePeer';
+import PiePeer, { piePeerSingleton } from './PiePeer';
 // Locally hosted, locally accessed
 // const wsUri = 'ws://localhost:8080';
 // Locally hosted, available to LAN (use your own IP)
@@ -257,7 +256,7 @@ export function setupPieAndUnderworld() {
   } else {
     console.log(`Client: Initialize ${useP2P ? 'PiePeer' : 'PieClient'}`);
     // TODO: This is where it decides if we do p2p or websocketPie
-    const pie = useP2P ? new PiePeer() : new PieClient();
+    const pie = useP2P ? piePeerSingleton : new PieClient();
     document.body.classList.toggle('pieIsInstanceOfPiePeer', useP2P);
     // Every time PieClient is instantiated it will create a clientId, overwrite this
     // with the stored clientId if there is one
@@ -272,8 +271,8 @@ export function setupPieAndUnderworld() {
     pie.useStats = true;
     console.log('Client: Initialize Underworld');
     const overworld = makeOverworld(pie);
-    if (useP2P) {
-      // Since p2p uses "lobbies" instead of rooms, initialize underworld immediately.
+    if (useP2P && overworld.underworld == undefined) {
+      // Since p2p uses "lobbies" instead of rooms, initialize underworld immediately if it doesn't already exist
       new Underworld(overworld, overworld.pie, Math.random().toString());
     }
     addHandlers(pie, overworld);

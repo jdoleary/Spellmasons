@@ -1,11 +1,7 @@
 // @ts-ignore: Import is fine
 import * as storage from '../storage';
 import { v4 as uuidv4 } from 'uuid';
-import { SERVER_HUB_URL } from "../config";
-import { syncLobby } from "../entity/Player";
 import * as msgpack from "@msgpack/msgpack";
-import { clearTints } from '../graphics/PlanningView';
-import { onData } from './networkHandler';
 
 export interface SteamPeer {
     id: bigint;
@@ -52,6 +48,7 @@ if (globalThis.steamworks) {
             console.error('Unexpected, no globalThis.electronSettings, cannot p2pSend')
         }
     }
+    console.log('Subscribe to p2p messages');
     // @ts-ignore
     globalThis.steamworks.subscribeToP2PMessages(data => {
         const text = msgpack.decode(data);
@@ -132,7 +129,6 @@ let lastRoomInfo: Room | undefined;
 
 let didSubscribeToLobbyChanges = false;
 
-let piePeerInstance: PiePeer;
 export default class PiePeer {
     // onData: a callback that is invoked when data is recieved from PieServer
     onData?: (x: OnDataArgs) => void;
@@ -241,7 +237,6 @@ export default class PiePeer {
             // }
 
         };
-        piePeerInstance = this;
 
     }
     isConnected(): boolean {
@@ -520,3 +515,5 @@ export default class PiePeer {
         debug('TODO: update debug info');
     }
 }
+
+export const piePeerSingleton: PiePeer = new PiePeer();
