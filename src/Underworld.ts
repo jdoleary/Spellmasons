@@ -1479,6 +1479,7 @@ export default class Underworld {
     globalThis.player = undefined;
 
     this.lastLevelCreated = undefined;
+    console.trace('jtest clean up underworld')
 
     globalThis.updateInGameMenuStatus?.()
   }
@@ -2394,7 +2395,7 @@ export default class Underworld {
     });
   }
   generateLevelDataSyncronous(levelIndex: number, gameMode?: GameMode): LevelData {
-    console.log('Setup: generateLevelDataSyncronous', levelIndex, gameMode);
+    console.log('jtest Setup: generateLevelDataSyncronous', levelIndex, gameMode);
     // Generate level
     let level;
     do {
@@ -4344,7 +4345,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   // are removed
   serializeForSaving(): IUnderworldSerialized {
     const { pie, overworld, random, players, units, pickups, walls, pathingPolygons, liquidSprites,
-      unitsPrediction, pickupsPrediction, particleFollowers, forceMove, triggerGameLoopHeadless, _gameLoopHeadless, ...rest } = this;
+      unitsPrediction, pickupsPrediction, particleFollowers, forceMove, triggerGameLoopHeadless, _gameLoopHeadless,
+      awaitForceMoves, queueGameLoop, ...rest } = this;
     return {
       ...rest,
       // isRestarting is an id for SetTimeout and cannot be serialized
@@ -4423,7 +4425,7 @@ export type IUnderworldSerialized = Omit<Pick<Underworld, UnderworldNonFunctionP
   | "unitsPrediction" | "pickups" | "pickupsPrediction" | "random" | "turnInterval" | "liquidSprites"
   | "particleFollowers"
   // walls and pathingPolygons are omitted because they are derived from obstacles when cacheWalls() in invoked
-  | "walls" | "pathingPolygons" | "triggerGameLoopHeadless" | "_gameLoopHeadless"> & {
+  | "walls" | "pathingPolygons" | "triggerGameLoopHeadless" | "_gameLoopHeadless" | "awaitForceMoves" | "queueGameLoop"> & {
     players: Player.IPlayerSerialized[],
     units: Unit.IUnitSerialized[],
     pickups: Pickup.IPickupSerialized[],
