@@ -52,7 +52,7 @@ if (globalThis.steamworks) {
     // @ts-ignore
     globalThis.steamworks.subscribeToP2PMessages(data => {
         const text = msgpack.decode(data);
-        if (!piePeerInstance) {
+        if (!piePeerSingleton) {
             if (globalThis.pie && globalThis.pie.currentRoomInfo) {
                 console.warn('Recieved a p2p message but already in a non p2p room. aborting..')
             } else {
@@ -60,10 +60,10 @@ if (globalThis.steamworks) {
             }
         }
         console.log('jtest steamp2p data, decoded', text);
-        if (piePeerInstance && piePeerInstance.onData) {
-            piePeerInstance.onData(text as OnDataArgs);
+        if (piePeerSingleton && piePeerSingleton.onData) {
+            piePeerSingleton.onData(text as OnDataArgs);
         } else {
-            console.error('PiePeerInstance missing or onData not defined', piePeerInstance, piePeerInstance?.onData);
+            console.error('PiePeerSingleton missing or onData not defined', piePeerSingleton, piePeerSingleton?.onData);
         }
     })
 } else {
