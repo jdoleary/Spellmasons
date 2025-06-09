@@ -32,7 +32,7 @@ let defaultIdForSolomode = uuidv4();
 
 if (globalThis.steamworks) {
     globalThis.electronSettings?.mySteamId().then(steamId => {
-        console.log('PiePeer: Overridding clientId with steamId', steamId)
+        console.log('PiePeer: Overridding clientId with steamId and storing in local storage', steamId)
         defaultIdForSolomode = steamId;
         storage.set(storage.STORAGE_PIE_CLIENTID_KEY, steamId);
     });

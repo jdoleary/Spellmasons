@@ -4345,7 +4345,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   serializeForSaving(): IUnderworldSerialized {
     const { pie, overworld, random, players, units, pickups, walls, pathingPolygons, liquidSprites,
       unitsPrediction, pickupsPrediction, particleFollowers, forceMove, triggerGameLoopHeadless, _gameLoopHeadless,
-      awaitForceMoves, queueGameLoop, ...rest } = this;
+      awaitForceMoves, queueGameLoop, gameLoop, gameLoopForceMove, gameLoopUnit,
+      removeEventListeners, ...rest } = this;
     return {
       ...rest,
       // isRestarting is an id for SetTimeout and cannot be serialized
@@ -4424,7 +4425,8 @@ export type IUnderworldSerialized = Omit<Pick<Underworld, UnderworldNonFunctionP
   | "unitsPrediction" | "pickups" | "pickupsPrediction" | "random" | "turnInterval" | "liquidSprites"
   | "particleFollowers"
   // walls and pathingPolygons are omitted because they are derived from obstacles when cacheWalls() in invoked
-  | "walls" | "pathingPolygons" | "triggerGameLoopHeadless" | "_gameLoopHeadless" | "awaitForceMoves" | "queueGameLoop"> & {
+  | "walls" | "pathingPolygons" | "triggerGameLoopHeadless" | "_gameLoopHeadless" | "awaitForceMoves" | "queueGameLoop" | "gameLoop" | "gameLoopForceMove" | "gameLoopUnit"
+  | "removeEventListeners"> & {
     players: Player.IPlayerSerialized[],
     units: Unit.IUnitSerialized[],
     pickups: Pickup.IPickupSerialized[],
