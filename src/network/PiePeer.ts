@@ -502,10 +502,8 @@ export default class PiePeer {
                 // Send to all connections
                 if (globalThis.electronSettings)
                     globalThis.p2pSend(message);
-                // If the host, also "send" to self (handle immediately)
-                if (globalThis.isHost(this)) {
-                    this.handleMessage(message);
-                }
+                // Also "send" to self (handle immediately)
+                this.handleMessage(message);
             } catch (e) {
                 error('Err: Unable to stringify', message);
                 error(e);
