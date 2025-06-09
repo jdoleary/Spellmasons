@@ -62,7 +62,7 @@ if (globalThis.steamworks) {
         }
         console.log('jtest steamp2p data, decoded', text);
         if (piePeerSingleton && piePeerSingleton.onData) {
-            piePeerSingleton.onData(text as OnDataArgs);
+            piePeerSingleton.handleMessage(text);
         } else {
             console.error('PiePeerSingleton missing or onData not defined', piePeerSingleton, piePeerSingleton?.onData);
         }
