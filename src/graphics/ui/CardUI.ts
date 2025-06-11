@@ -129,7 +129,7 @@ const drop = (ev: any, overworld: Overworld, startIndex: number) => {
   }
   const dropIndex = startIndex + (dropElement.parentNode ? Array.from(dropElement.parentNode.children).indexOf(dropElement) : -1);
   const cardId = dragCard && dragCard.dataset.cardId
-  if (globalThis.player && dropIndex !== -1 && dragCard && cardId !== undefined) {
+  if (globalThis.player && dropIndex !== -1 && dragCard && exists(cardId)) {
     const startDragCardIndex = getStartDragCardIndex();
     if (startDragCardIndex !== -1) {
       // Then the drag card is already in the toolbar and this is a swap between
@@ -475,7 +475,7 @@ export function syncInventory(slotModifyingIndex: number | undefined, underworld
         if (isDisabled) {
           elCard.classList.add('disabled');
         }
-        if (!isDisabled && slotModifyingIndex !== undefined) {
+        if (!isDisabled && exists(slotModifyingIndex)) {
           elCard.addEventListener('click', (e) => {
             if (globalThis.player) {
               globalThis.player.cardsInToolbar[slotModifyingIndex] = inventoryCardId;
@@ -513,12 +513,12 @@ export function syncInventory(slotModifyingIndex: number | undefined, underworld
     // Runes bookmark is always enabled
     document.getElementById('bookmark-runes')?.classList.toggle('disabled', false);
     // Add an inventory element to clear the currently selected toolbar item
-    if (slotModifyingIndex !== undefined) {
+    if (exists(slotModifyingIndex)) {
       const elClearSlotModifiyingIndex = createNonCardInventoryElement('toolbar-slot.png', 'Empty');
       if (elClearSlotModifiyingIndex) {
         elInvContent.appendChild(elClearSlotModifiyingIndex);
         elClearSlotModifiyingIndex.addEventListener('click', () => {
-          if (globalThis.player && slotModifyingIndex !== undefined) {
+          if (globalThis.player && exists(slotModifyingIndex)) {
             globalThis.player.cardsInToolbar[slotModifyingIndex] = '';
             recalcPositionForCards(globalThis.player, underworld);
             toggleInventory(undefined, false, underworld);
@@ -576,7 +576,7 @@ export function renderRunesMenu(underworld: Underworld) {
   globalThis.cheapestAvailableRune = chosenRunes.reduce<number>((cheapest, current) => {
     const modifier = Cards.allModifiers[current]
     const modifierCost = modifier && Cards.calcluateModifierCostPerUpgrade(modifier, underworld, globalThis.player)
-    if (modifierCost !== undefined && modifierCost < cheapest) {
+    if (exists(modifierCost) && modifierCost < cheapest) {
       return modifierCost;
     } else {
       return cheapest;
@@ -593,7 +593,7 @@ export function renderRunesMenu(underworld: Underworld) {
     // Note: The &nbsp; is to align the rune-name with the top of the button
     return `<div class="stat-row flex" data-stat="${modifierKey}">
               <div class="stat-row-left">
-                <div class="plus-btn-container" style="color:black"><div class="stat-value" style="color:black">${modifierCost !== undefined && `${modifierCost < 0 ? '+' : ''}${Math.abs(modifierCost)}sp` || '&nbsp;'}</div></div>
+                <div class="plus-btn-container" style="color:black"><div class="stat-value" style="color:black">${exists(modifierCost) && `${modifierCost < 0 ? '+' : ''}${Math.abs(modifierCost)}sp` || '&nbsp;'}</div></div>
                 <div>
                   <div>&nbsp;</div>
                   <div class="rune-name-holder">
@@ -1417,7 +1417,7 @@ export function updateCardBadges(underworld: Underworld) {
         const cardEl = badge.closest('.card') as (HTMLElement | undefined);
         if (cardEl) {
           const cardId = cardEl.dataset.cardId;
-          if (cardId !== undefined) {
+          if (exists(cardId)) {
             let badgeRecord = badgesById[cardId]
             if (!badgeRecord) {
               badgeRecord = {

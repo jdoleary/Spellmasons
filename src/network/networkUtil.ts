@@ -90,7 +90,7 @@ export function getVersionInequality(clientVersion?: string, serverVersion?: str
   if (clientVersion && serverVersion) {
     const [clientMajor, clientMinor, _clientPatch] = clientVersion.split('.');
     const [serverMajor, serverMinor, _serverPath] = serverVersion.split('.');
-    if ((clientMajor !== undefined && clientMinor !== undefined && serverMajor !== undefined && serverMinor !== undefined)) {
+    if ((exists(clientMajor) && exists(clientMinor) && exists(serverMajor) && exists(serverMinor))) {
       if ((clientMajor !== serverMajor || clientMinor !== serverMinor)) {
         if (parseInt(serverMajor) > parseInt(clientMajor)) {
           return 'client behind'

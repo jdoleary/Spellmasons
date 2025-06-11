@@ -51,25 +51,25 @@ export function getSavedData() {
           globalThis.setFontOverride(options.fontOverride);
         }
         globalThis.noScreenshake = options.noScreenshake;
-        if (options.cinematicCameraEnabled !== undefined) {
+        if (exists(options.cinematicCameraEnabled)) {
           globalThis.cinematicCameraEnabled = options.cinematicCameraEnabled;
         }
-        if (options.volume !== undefined) {
+        if (exists(options.volume)) {
           globalThis.changeVolume?.(options.volume, false)
         }
-        if (options.volumeMusic !== undefined) {
+        if (exists(options.volumeMusic)) {
           globalThis.changeVolumeMusic?.(options.volumeMusic, false)
         }
-        if (options.volumeGame !== undefined) {
+        if (exists(options.volumeGame)) {
           globalThis.changeVolumeGame?.(options.volumeGame, false)
         }
-        if (options.UIEasyOnTheEyes !== undefined) {
+        if (exists(options.UIEasyOnTheEyes)) {
           globalThis.UIEasyOnTheEyes = options.UIEasyOnTheEyes;
         }
-        if (options.limitParticleEmitters !== undefined) {
+        if (exists(options.limitParticleEmitters)) {
           globalThis.limitParticleEmitters = options.limitParticleEmitters;
         }
-        if (options.alwaysDrawHealthBars !== undefined) {
+        if (exists(options.alwaysDrawHealthBars)) {
           globalThis.alwaysDrawHealthBars = options.alwaysDrawHealthBars;
         }
         globalThis.activeMods = [];

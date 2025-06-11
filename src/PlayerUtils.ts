@@ -66,7 +66,7 @@ export function getEndOfRange(caster: Player.IPlayer, target: Vec2): Vec2 {
 
 export function setPlayerNameUI(player: Player.IPlayer) {
     const { name } = player;
-    if (name !== undefined) {
+    if (exists(name)) {
         player.name = name;
         player.unit.name = name;
         if (globalThis.pixi && player.unit.image) {

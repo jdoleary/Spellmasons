@@ -203,7 +203,7 @@ ${explainUpdateText}
         elVersionInfoHeadless.innerText = '';
       }
     }
-    if (o.hostAppVersion !== undefined && o.hostAppVersion !== version) {
+    if (exists(o.hostAppVersion) && o.hostAppVersion !== version) {
       console.warn('Host app version does not match client version');
     }
     // If hostAppVersion is undefined, assume the client has connected to a stateless pie server (relay) with no host app

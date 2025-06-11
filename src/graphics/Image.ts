@@ -214,7 +214,7 @@ export function changeSprite(image: IImageAnimated | undefined, imagePath: strin
       const { onFrameChange, onComplete, loop, animationSpeed } = options;
       sprite.onFrameChange = onFrameChange;
       sprite.loop = loop;
-      if (animationSpeed !== undefined) {
+      if (exists(animationSpeed)) {
         sprite.animationSpeed = animationSpeed;
       }
       sprite.onComplete = () => {
@@ -260,7 +260,7 @@ export function serialize(image: IImageAnimated): IImageAnimatedSerialized {
     return c.imagePath
   })
     // remove nulls
-    .flatMap(x => x !== null && x !== undefined ? [x] : []);
+    .flatMap(x => x !== null && exists(x) ? [x] : []);
   return {
     scaleModifiers: image.scaleModifiers,
     sprite: {
@@ -313,7 +313,7 @@ export function getAnimationPathFromSprite(sprite: PIXI.Sprite): string {
 }
 export function getSubspriteImagePaths(image: IImageAnimated): string[] {
   // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
-  return image.sprite.children.filter(c => c !== undefined).map(c => c.imagePath);
+  return image.sprite.children.filter(c => exists(c)).map(c => c.imagePath);
 }
 // syncronize updates an existing originalImage to match the properties of imageSerialized
 // mutates originalImage

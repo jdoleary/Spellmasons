@@ -38,7 +38,7 @@ if (globalThis.steamworks) {
     });
     globalThis.p2pSend = (message: any, peerId?: bigint) => {
         if (globalThis.electronSettings) {
-            if (peerId !== undefined) {
+            if (exists(peerId)) {
                 globalThis.electronSettings.p2pSend(peerId, msgpack.encode(message));
             } else {
                 globalThis.electronSettings.p2pSendToAllPeers(msgpack.encode(message));
@@ -223,7 +223,7 @@ export default class PiePeer {
         });
         // TODO SteamP2P
         globalThis.kickPeer = ({ name, clientId }: { name?: string, clientId?: string }) => {
-            // const foundPeerIndex = this.peers.findIndex(p => clientId !== undefined ? p.clientId == clientId : p.name === name);
+            // const foundPeerIndex = this.peers.findIndex(p => exists(clientId) ? p.clientId == clientId : p.name === name);
             // if (foundPeerIndex !== -1) {
             //     const peer = this.peers[foundPeerIndex];
             //     if (peer) {

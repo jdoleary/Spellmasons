@@ -46,7 +46,7 @@ export function getNeighbors(tileIndex: number, tiles: Material[], widthOf2DArra
 export function conway(tiles: Material[], widthOf2DArray: number, underworld: Underworld) {
     for (let i = 0; i < tiles.length; i++) {
         const tile = tiles[i];
-        if (tile !== undefined) {
+        if (exists(tile)) {
             const neighbors = getNeighbors(i, tiles, widthOf2DArray);
             tiles[i] = mutateViaRules(tile, neighbors, underworld);
         }

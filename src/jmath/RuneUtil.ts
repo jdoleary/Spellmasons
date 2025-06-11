@@ -8,7 +8,7 @@ export function presentRunes(allRunes: WithKey[], numOfRunesNeeded: number, star
     for (let i = 0; i < numOfRunesNeeded - lockedRunes.length + skippedLockedRunes; i++) {
         let chosen: string | undefined = getElementAtIndexLooped(allRunes, i + (startIndex || 0))?.key;
         // If a rune has been locked in this index, choose it; otherwise choose a seeded random rune
-        if (chosen !== undefined) {
+        if (exists(chosen)) {
             const lockedRune = lockedRunes.find(lr => lr.key == chosen);
             if (lockedRune) {
                 skippedLockedRunes++;

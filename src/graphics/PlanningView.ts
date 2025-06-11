@@ -612,7 +612,7 @@ export async function _runPredictions(underworld: Underworld) {
   if (!underworld) {
     return;
   }
-  if (globalThis.currentPredictionId !== undefined) {
+  if (exists(globalThis.currentPredictionId)) {
     globalThis.currentPredictionId++;
   }
   const startTime = performance.now();

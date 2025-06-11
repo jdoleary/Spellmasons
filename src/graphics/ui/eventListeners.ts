@@ -499,7 +499,7 @@ export function useMousePosition(underworld: Underworld, e?: MouseEvent) {
   // Move the spawn "ghost" around so players can see where they will
   // spawn if they click
   if (globalThis.player && !globalThis.player?.isSpawned) {
-    if (globalThis.cinematicCameraTarget !== undefined) {
+    if (exists(globalThis.cinematicCameraTarget)) {
       // Ensure spawn "ghost" isn't visible while cinematic camera is moving
       globalThis.player.unit.x = NaN;
       globalThis.player.unit.y = NaN;
@@ -777,7 +777,7 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
       });
       playSFXKey('deny');
     } else {
-      if (globalThis.cinematicCameraTarget !== undefined) {
+      if (exists(globalThis.cinematicCameraTarget)) {
         console.log('Cannot spawn during cinematic intro')
       } else {
         // Some people are experiencing an issue where they accidentally spawn after

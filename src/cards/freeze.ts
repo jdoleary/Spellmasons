@@ -40,7 +40,7 @@ const spell: Spell = {
           Unit.addModifier(unit, freezeCardId, underworld, prediction, quantity);
         }
         for (let pickup of state.targetedPickups) {
-          if (pickup.turnsLeftToGrab !== undefined) {
+          if (exists(pickup.turnsLeftToGrab)) {
             pickup.turnsLeftToGrab += quantity;
             // Update the text now that turnsLeftToGrab has changed
             Pickup.sync(pickup);

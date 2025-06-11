@@ -126,7 +126,7 @@ export function setupLiquidFilter() {
 export function cleanUpLiquidFilter() {
   // Note: cleanup only needs to clear the interval, the rest is cleaned up
   // when containerLiquid.removeChildren() is called on level cleanup
-  if (updateLiquidFilterIntervalId !== undefined) {
+  if (exists(updateLiquidFilterIntervalId)) {
     clearInterval(updateLiquidFilterIntervalId)
   }
 }
@@ -418,7 +418,7 @@ function useScreenshake(stage: PIXI.Container, deltaTime: number) {
     return;
   }
 
-  const featureFlagScreenShakeMult = globalThis.featureFlags?.screenShakeMult !== undefined ? globalThis.featureFlags.screenShakeMult : 1;
+  const featureFlagScreenShakeMult = exists(globalThis.featureFlags?.screenShakeMult) ? globalThis.featureFlags.screenShakeMult : 1;
   screenshake.camOffset.x = (Math.random() * 2 - 1) * screenshake.intensity * lerpValue * featureFlagScreenShakeMult;
   screenshake.camOffset.y = (Math.random() * 2 - 1) * screenshake.intensity * lerpValue * featureFlagScreenShakeMult;
 

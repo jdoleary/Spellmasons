@@ -15,7 +15,7 @@ const developmentMods: Mod[] = [
 // in Modding.md if you want to make your mod public
 if (location.href.includes('localhost')) {
     console.log("Development mods: ON");
-    globalThis.mods = globalThis.mods !== undefined ? [...globalThis.mods, ...developmentMods] : developmentMods;
+    globalThis.mods = exists(globalThis.mods) ? [...globalThis.mods, ...developmentMods] : developmentMods;
 }
 
 export default developmentMods;

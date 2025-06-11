@@ -185,7 +185,7 @@ function makeLevelMaterialsArrayRoomStyle(params: CaveParams, underworld: Underw
             stampHeight = randInt(6, MAX_STAMP_SIZE, underworld.random);
         }
         let stamp: Material[] = Array(stampWidth * stampHeight).fill(Material.GROUND);
-        let stampPosition: Vec.Vec2 = lastStamp !== undefined
+        let stampPosition: Vec.Vec2 = exists(lastStamp)
             // Ensure all stamps after the first stamp are touching each other so you get one cohesive map
             ? { x: randInt(lastStamp.position.x, lastStamp.position.x + lastStamp.width, underworld.random), y: randInt(lastStamp.position.y, lastStamp.position.y + lastStamp.height, underworld.random) }
             // First stamp can be put anywhere

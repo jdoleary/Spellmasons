@@ -644,7 +644,7 @@ export function getInsideAnglesOfPoint(polygon: Polygon2, pointIndex: number): {
 // inside of point's polygon
 export function doesLineFromPointToTargetProjectAwayFromOwnPolygon(polygon: Polygon2, pointIndex: number, target: Vec2): boolean {
   const point = polygon[pointIndex];
-  if (point !== undefined) {
+  if (exists(point)) {
     const { start, end } = getInsideAnglesOfPoint(polygon, pointIndex);
     const angleToTarget = Vec.getAngleBetweenVec2s(point, target);
     return !isAngleBetweenAngles(angleToTarget, start, end);

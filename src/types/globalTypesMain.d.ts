@@ -344,4 +344,6 @@ declare global {
   // If connected to a non-host app pie server where the first client acts as the host
   var statelessRelayPieServer: boolean | undefined;
   var isHostForStatelessPie: boolean | undefined;
+  var isNullOrUndef: <T>(x: T) => x is Extract<T, null | undefined>;
+  var exists: <T>(x: T) => x is NonNullable<T>;
 }

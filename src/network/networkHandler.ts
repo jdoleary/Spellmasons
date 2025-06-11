@@ -116,7 +116,7 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       if (isHost(overworld.pie) && overworld.underworld && globalThis.numberOfHotseatPlayers == 1) {
         const { player } = payload;
         const foundPlayerIndex = overworld.underworld.players.findIndex(p => p.playerId == player.playerId);
-        if (foundPlayerIndex !== undefined) {
+        if (exists(foundPlayerIndex)) {
           // Report Differences to evaluate where client server player desyncs are ocurring
           const currentPlayer = overworld.underworld.players[foundPlayerIndex];
           if (currentPlayer) {
@@ -256,7 +256,7 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
             const preexistingIndex = fromPlayer.lockedRunes.findIndex(lr => lr.key === key);
             const preexistingLockedRune = fromPlayer.lockedRunes[preexistingIndex];
             if (preexistingLockedRune) {
-              if (preexistingLockedRune.runePresentedIndexWhenLocked !== undefined) {
+              if (exists(preexistingLockedRune.runePresentedIndexWhenLocked)) {
                 // Relock it
                 delete preexistingLockedRune.runePresentedIndexWhenLocked;
               } else {
@@ -498,7 +498,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       underworld.syncPlayers(players, true);
       // Protect against old versions that didn't send lastUnitId with
       // this message
-      if (lastUnitId !== undefined) {
+      if (exists(lastUnitId)) {
         underworld.lastUnitId = lastUnitId
       }
       break;
@@ -665,7 +665,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       }
       const { color, colorMagic, name, isCardmason, lobbyReady } = payload;
       if (fromPlayer) {
-        if (lobbyReady !== undefined) {
+        if (exists(lobbyReady)) {
           fromPlayer.lobbyReady = lobbyReady;
           // If all connected players are also ready, start the game:
           const connectedPlayers = underworld.players.filter(p => p.clientConnected);
@@ -680,14 +680,14 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
             }
           }
         }
-        if (name !== undefined) {
+        if (exists(name)) {
           fromPlayer.name = name;
         }
         setPlayerNameUI(fromPlayer);
         Player.setPlayerRobeColor(fromPlayer, color, colorMagic);
         Player.syncLobby(underworld);
         // Don't override isCardmason if it's not being set
-        if (isCardmason !== undefined) {
+        if (exists(isCardmason)) {
           Player.setCardmason(fromPlayer, isCardmason);
         }
 
@@ -783,7 +783,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       // This message is only for the host, it ensures that the player position
       // of the host matches exactly the player position on the player's client
       if (isHost(overworld.pie)) {
-        if (fromPlayer && fromPlayer.unit && payload.position.x !== undefined && payload.position.y !== undefined) {
+        if (fromPlayer && fromPlayer.unit && exists(payload.position.x) && exists(payload.position.y)) {
           Unit.setLocation(fromPlayer.unit, payload.position, underworld, false);
           fromPlayer.unit.stamina = payload.stamina;
         }
@@ -1349,10 +1349,10 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
 
 export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
   globalThis.configPlayer = ({ color, colorMagic, name, isCardmason, lobbyReady }: { color?: number, colorMagic?: number, name?: string, isCardmason?: boolean, lobbyReady?: boolean }) => {
-    if (color !== undefined) {
+    if (exists(color)) {
       storage.set(storage.STORAGE_ID_PLAYER_COLOR, color);
     }
-    if (color !== undefined) {
+    if (exists(color)) {
       storage.set(storage.STORAGE_ID_PLAYER_COLOR_MAGIC, colorMagic);
     }
     let capped_name = name;
@@ -1502,7 +1502,7 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
 
       const { underworld: savedUnderworld, version, numberOfHotseatPlayers, camera } = fileSaveObj as SaveFile;
       const { players } = savedUnderworld;
-      if (numberOfHotseatPlayers !== undefined || players.length > 1) {
+      if (exists(numberOfHotseatPlayers) || players.length > 1) {
         // Allow loading multiplayer games as a singleplayer hotseat game.
         globalThis.numberOfHotseatPlayers = players.length;
         if (overworld.pie.soloMode) {

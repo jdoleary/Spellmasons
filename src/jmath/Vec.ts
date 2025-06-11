@@ -7,7 +7,7 @@ export interface Vec2 {
   y: number;
 }
 export function isVec2(maybeVec2: any | Vec2): maybeVec2 is Vec2 {
-  return maybeVec2 !== undefined && typeof maybeVec2.x === 'number' && typeof maybeVec2.y === 'number';
+  return exists(maybeVec2) && typeof maybeVec2.x === 'number' && typeof maybeVec2.y === 'number';
 }
 
 // TODO - see comment below and getAngleBetween functions

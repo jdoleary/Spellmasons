@@ -103,7 +103,7 @@ async function spreadCurses(unit: IUnit, ignore: IUnit[], curses: CurseData[], r
 
   const nearbyUnits = underworld.getUnitsWithinDistanceOfTarget(unit, range, prediction)
     // Filter out undefineds
-    .filter(x => x !== undefined)
+    .filter(x => exists(x))
     // Do not spread to dead units
     .filter(x => x?.alive)
     // Filter out self

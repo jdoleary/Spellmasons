@@ -41,7 +41,7 @@ export function wrappedEmitter(config: particles.EmitterConfigV3, container: Con
         }
         return undefined;
     }
-    if (globalThis.emitters && globalThis.limitParticleEmitters !== undefined && globalThis.limitParticleEmitters !== -1 && globalThis.emitters?.length >= globalThis.limitParticleEmitters) {
+    if (globalThis.emitters && exists(globalThis.limitParticleEmitters) && globalThis.limitParticleEmitters !== -1 && globalThis.emitters?.length >= globalThis.limitParticleEmitters) {
         if (resolver) {
             resolver();
         }
@@ -73,7 +73,7 @@ export function simpleEmitter(position: Vec2, config: particles.EmitterConfigV3,
         }
         return undefined
     }
-    if (globalThis.emitters && globalThis.limitParticleEmitters !== undefined && globalThis.limitParticleEmitters !== -1 && globalThis.emitters?.length >= globalThis.limitParticleEmitters) {
+    if (globalThis.emitters && exists(globalThis.limitParticleEmitters) && globalThis.limitParticleEmitters !== -1 && globalThis.emitters?.length >= globalThis.limitParticleEmitters) {
         if (resolver) {
             resolver();
         }
@@ -124,7 +124,7 @@ export function addTrail(position: Vec2, target: Vec2, underworld: Underworld, c
     if (!containerParticles) {
         return Promise.resolve();
     }
-    if (globalThis.emitters && globalThis.limitParticleEmitters !== undefined && globalThis.limitParticleEmitters !== -1 && globalThis.emitters?.length >= globalThis.limitParticleEmitters) {
+    if (globalThis.emitters && exists(globalThis.limitParticleEmitters) && globalThis.limitParticleEmitters !== -1 && globalThis.emitters?.length >= globalThis.limitParticleEmitters) {
         return Promise.resolve();
     }
     const emitter: JEmitter = new particles.Emitter(containerParticles, config);

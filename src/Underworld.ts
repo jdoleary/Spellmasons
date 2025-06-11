@@ -347,7 +347,7 @@ export default class Underworld {
     }
   }
   syncPlayerPredictionUnitOnly() {
-    if (this.unitsPrediction && globalThis.player !== undefined) {
+    if (this.unitsPrediction && exists(globalThis.player)) {
       const predictionUnit = this.unitsPrediction.find(u => u.id == globalThis.player?.unit.id);
       if (predictionUnit) {
         // Override the properties but keep the reference intact or else
@@ -752,7 +752,7 @@ export default class Underworld {
         startPos.y += unitImageYOffset;
         const done = this.runForceMove(forceMoveInst, deltaTime, false);
         const endPos = { x: forceMoveInst.pushedObject.x, y: forceMoveInst.pushedObject.y + unitImageYOffset };
-        if (!globalThis.noGore && graphicsBloodSmear && Unit.isUnit(forceMoveInst.pushedObject) && forceMoveInst.pushedObject.health !== undefined && forceMoveInst.pushedObject.health <= 0) {
+        if (!globalThis.noGore && graphicsBloodSmear && Unit.isUnit(forceMoveInst.pushedObject) && exists(forceMoveInst.pushedObject.health) && forceMoveInst.pushedObject.health <= 0) {
           const size = 3;
           for (let j of smearJitter) {
             // Multiple blood trails
@@ -1102,7 +1102,7 @@ export default class Underworld {
       // specifically to be used in this context - sorting containerUnits - so that
       // a display object may have a sort position that is different than it's actual
       // y position
-      const ay = a.ySortPositionOverride !== undefined ? a.ySortPositionOverride : a.y;
+      const ay = exists(a.ySortPositionOverride) ? a.ySortPositionOverride : a.y;
       // Protect against a DisplayObject with NaN from disrupting the entire sort
       const A = (ay + aExtraHeight + config.UNIT_SIZE_RADIUS * a.scale.y);
       if (isNaN(A)) {
@@ -1112,7 +1112,7 @@ export default class Underworld {
       // specifically to be used in this context - sorting containerUnits - so that
       // a display object may have a sort position that is different than it's actual
       // y position
-      const by = b.ySortPositionOverride !== undefined ? b.ySortPositionOverride : b.y;
+      const by = exists(b.ySortPositionOverride) ? b.ySortPositionOverride : b.y;
       // Protect against a DisplayObject with NaN from disrupting the entire sort
       const B = (by + bExtraHeight + config.UNIT_SIZE_RADIUS * b.scale.y);
       if (isNaN(B)) {
@@ -1428,7 +1428,7 @@ export default class Underworld {
   //   }
   //   // Prevent requestAnimationFrame from calling this method next time, since this underworld
   //   // instance is being cleaned up
-  //   if (requestAnimationFrameGameLoopId !== undefined) {
+  //   if (exists(requestAnimationFrameGameLoopId)) {
   //     cancelAnimationFrame(requestAnimationFrameGameLoopId);
   //   }
   // }
@@ -2122,7 +2122,7 @@ export default class Underworld {
     let unobstructedPoint = extra?.unobstructedPoint || undefined;
 
     let spawnPoint = undefined;
-    const radius = extra?.radiusOverride !== undefined ? extra.radiusOverride : config.COLLISION_MESH_RADIUS / 4;
+    const radius = exists(extra?.radiusOverride) ? extra.radiusOverride : config.COLLISION_MESH_RADIUS / 4;
     for (let s of math.honeycombGenerator(radius, center, 7)) {
       spawnPoint = s;
 
@@ -2372,7 +2372,7 @@ export default class Underworld {
 
   }
   async createLevel(levelData: LevelData, gameMode?: GameMode) {
-    if (gameMode !== undefined) {
+    if (exists(gameMode)) {
       this.gameMode = gameMode;
       // Must be called when difficulty (gameMode) changes to update summon spell stats
       Cards.refreshSummonCardDescriptions(this);
@@ -2935,7 +2935,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       for (let cardId of p.inventory) {
         // Decrement, cap at 0
         const cardUsage = p.cardUsageCounts[cardId];
-        if (cardUsage !== undefined) {
+        if (exists(cardUsage)) {
           p.cardUsageCounts[cardId] = Math.max(0, cardUsage - 1);
         }
       }
@@ -3082,7 +3082,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
     // Pickups - Turns left to grab
     for (let p of this.pickups) {
-      if (p.turnsLeftToGrab !== undefined) {
+      if (exists(p.turnsLeftToGrab)) {
         p.turnsLeftToGrab--;
         if (p.turnsLeftToGrab < 0) {
           // Remove pickup
@@ -3940,7 +3940,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // it is unusual, but possible, to skip this for very specific spells
     if (useInitialTarget) {
       // Get first unit at cast location
-      if (effectState.initialTargetedUnitId !== undefined) {
+      if (exists(effectState.initialTargetedUnitId)) {
         const initialTargetUnit = this.units.find(u => u.id === effectState.initialTargetedUnitId);
         if (initialTargetUnit) {
           Cards.addTarget(initialTargetUnit, effectState, this, prediction);
@@ -3955,7 +3955,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         }
       }
       // Get first pickup at cast location
-      if (effectState.initialTargetedPickupId !== undefined) {
+      if (exists(effectState.initialTargetedPickupId)) {
         const initialTargetPickup = this.pickups.find(p => p.id === effectState.initialTargetedPickupId);
         if (initialTargetPickup) {
           Cards.addTarget(initialTargetPickup, effectState, this, prediction);
@@ -4008,7 +4008,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         // explicitly supports quantity
         if (card.supportQuantity) {
           const nextCardId = effectState.cardIds[index + 1];
-          if (nextCardId !== undefined) {
+          if (exists(nextCardId)) {
             if (nextCardId === cardId) {
               quantity++;
               continue;

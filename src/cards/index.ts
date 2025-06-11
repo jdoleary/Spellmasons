@@ -936,9 +936,9 @@ export function eventsSorter(lookup: typeof allModifiers): (eventA: string, even
     // Unstaged events trigger last so they are easier to debug
     const DEFAULT_STAGE = 'Unstaged Events';
     const lookupA = lookup[eventA];
-    const eventAStage: MODIFIER_STAGE = lookupA?.stage !== undefined ? lookupA.stage : DEFAULT_STAGE;
+    const eventAStage: MODIFIER_STAGE = exists(lookupA?.stage) ? lookupA.stage : DEFAULT_STAGE;
     const lookupB = lookup[eventB];
-    const eventBStage: MODIFIER_STAGE = lookupB?.stage !== undefined ? lookupB.stage : DEFAULT_STAGE;
+    const eventBStage: MODIFIER_STAGE = exists(lookupB?.stage) ? lookupB.stage : DEFAULT_STAGE;
     const indexA = MODIFIER_ORDER.indexOf(eventAStage);
     const indexB = MODIFIER_ORDER.indexOf(eventBStage);
     const orderA = indexA === -1 ? MODIFIER_ORDER.indexOf(DEFAULT_STAGE) : indexA;

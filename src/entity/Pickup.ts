@@ -127,7 +127,7 @@ export function create({ pos, pickupSource, idOverride, logSource }:
   if (isNaN(x) || isNaN(y)) {
     console.error('Unexpected: Created pickup at NaN', pickupSource.name);
   }
-  const id = idOverride !== undefined
+  const id = exists(idOverride)
     ? idOverride
     : prediction
       ? ++lastPredictionPickupId
@@ -296,7 +296,7 @@ export function sync(pickup: IPickup) {
     pickup.image.sprite.x = pickup.x;
     pickup.image.sprite.y = pickup.y;
   }
-  if (pickup.turnsLeftToGrab !== undefined && pickup.text) {
+  if (exists(pickup.turnsLeftToGrab) && pickup.text) {
     pickup.text.text = `${pickup.turnsLeftToGrab}`;
   }
 }
