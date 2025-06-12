@@ -4,7 +4,7 @@
   "description": "",
   "private": true,
   "scripts": {
-    "prepare": "husky install",
+    "prepare": "echo New Clone? Run 'husky install'",
     "start": "vite",
     "tsc": "tsc",
     "build_types": "tsc --project tsconfig.outputtypes.json && cp -r public/spellmasons-mods/types/src/. ../spellmasons-mods/types",
