@@ -16,6 +16,7 @@ import { allCards } from './cards';
 import { boneShrapnelCardId } from './cards/bone_shrapnel';
 import { executeCardId } from './cards/execute';
 import { precisionId } from './modifierPrecision';
+import { CORPSE_NOVA_STAMINA_ID } from './cards/novas';
 export interface IUpgrade {
   title: string;
   // Replaces previous upgrades.  They are required for this upgrade to present itself
@@ -90,7 +91,7 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, unde
     // Upgrade list is filtered down to damage spells only
     upgradeList = upgradeList.filter(c => (
       // Any card in the damage category is acceptable, unless dependent on special conditions
-      ![bleedCardId, drownCardId, boneShrapnelCardId, executeCardId].includes(c.title) && c.cardCategory == CardCategory.Damage)
+      ![bleedCardId, drownCardId, boneShrapnelCardId, executeCardId, CORPSE_NOVA_STAMINA_ID].includes(c.title) && c.cardCategory == CardCategory.Damage)
       // Poison is acceptable here, even though it is a curse
       || [poisonCardId].includes(c.title)
     );

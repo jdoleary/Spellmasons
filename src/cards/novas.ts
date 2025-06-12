@@ -24,6 +24,7 @@ function getAdjustedRadius(radiusBoost: number = 0) {
 
 const DAMAGE_NOVA_DAMAGE = 20;
 const CORPSE_NOVA_STAMINA_PER_CORPSE = 20;
+export const CORPSE_NOVA_STAMINA_ID = 'Corpse Nova: Stamina';
 const novas: Spell[] = [
   {
     card: {
@@ -131,7 +132,7 @@ const novas: Spell[] = [
   },
   {
     card: {
-      id: 'Corpse Nova: Stamina',
+      id: CORPSE_NOVA_STAMINA_ID,
       category: CardCategory.Soul,
       supportQuantity: false,
       manaCost: 30,
