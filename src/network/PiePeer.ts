@@ -334,7 +334,7 @@ export default class PiePeer {
     }
     handleMessage(message: any) {
         console.log('PiePeer handleMessage:', message);
-        if (message.peerLobbyId != peerLobbyId) {
+        if (!this.soloMode && peerLobbyId != '' && message.peerLobbyId != peerLobbyId) {
             console.warn('Ignoring message from wrong lobby', peerLobbyId, message);
             return;
         }
