@@ -96,7 +96,8 @@ export function ensureAllClientsHaveAssociatedPlayers(overworld: Overworld, clie
   }
   const { underworld } = overworld;
   if (!underworld) {
-    console.error('Cannot sync clients with players, no underworld exists.');
+    console.error('Cannot sync clients with players, no underworld exists.  Creating an Underworld as a safety, but this may cause other problems since it wasn\'t created when the room was joined');
+    new Underworld(overworld, overworld.pie, Math.random().toString());
     return;
   }
   overworld.clients = clients;
