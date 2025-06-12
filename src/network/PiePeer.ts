@@ -50,29 +50,35 @@ if (globalThis.steamworks) {
             console.error('Unexpected, no globalThis.electronSettings, cannot p2pSend')
         }
     }
-    console.log('Subscribe to p2p messages 2');
+    console.log('Subscribe to p2p messages 6');
     // @ts-ignore
     globalThis.steamworks.subscribeToP2PMessages(data => {
-        const text = msgpack.decode(data);
-        if (!piePeerSingleton) {
-            if (globalThis.pie && globalThis.pie.currentRoomInfo) {
-                console.warn('Recieved a p2p message but already in a non p2p room. aborting..')
+        console.log('jtest got p2p message, pre decode')
+        try {
+
+            const text = msgpack.decode(data);
+            if (!piePeerSingleton) {
+                if (globalThis.pie && globalThis.pie.currentRoomInfo) {
+                    console.warn('Recieved a p2p message but already in a non p2p room. aborting..')
+                } else {
+                    setPieToP2PMode(true)
+                }
+            }
+            console.log('jtest steamp2p data, decoded', text);
+            if (piePeerSingleton && piePeerSingleton.onData) {
+                piePeerSingleton.handleMessage(text);
+                // Host echos message to all clients
+                if (globalThis.isHost(piePeerSingleton)) {
+                    console.log("Host echo message to all clients", text);
+                    // Send to all connections
+                    if (globalThis.electronSettings)
+                        globalThis.p2pSend(text);
+                }
             } else {
-                setPieToP2PMode(true)
+                console.error('PiePeerSingleton missing or onData not defined', piePeerSingleton, piePeerSingleton?.onData);
             }
-        }
-        console.log('jtest steamp2p data, decoded', text);
-        if (piePeerSingleton && piePeerSingleton.onData) {
-            piePeerSingleton.handleMessage(text);
-            // Host echos message to all clients
-            if (globalThis.isHost(piePeerSingleton)) {
-                console.log("Host echo message to all clients", text);
-                // Send to all connections
-                if (globalThis.electronSettings)
-                    globalThis.p2pSend(text);
-            }
-        } else {
-            console.error('PiePeerSingleton missing or onData not defined', piePeerSingleton, piePeerSingleton?.onData);
+        } catch (e) {
+            console.error('subscribeToP2PMessages callback error:', e);
         }
     })
 } else {
