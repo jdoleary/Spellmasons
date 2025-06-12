@@ -412,4 +412,5 @@ declare global {
   var peerPing: () => Promise<boolean>;
   var peerLobbyId: string;
   var peers: Set<string>;
+  var peerHostBroadcastClientsPresenceChanged: (pie: PiePeer) => void;
 }

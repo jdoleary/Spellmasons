@@ -306,7 +306,9 @@ export default class PiePeer {
         clearTimeout(this.reconnectTimeoutId);
     }
     async disconnect(): Promise<void> {
-        // TODO send message to host to leave peer lobby
+        this.sendData({
+            type: MESSAGE_TYPES.PEER_VOLUNTARY_DISCONNECT,
+        });
         globalThis.peers.clear();
         globalThis.peerLobbyId = '';
         globalThis.electronSettings?.leaveLobby();
@@ -458,13 +460,7 @@ export default class PiePeer {
                             for (let m of members) {
                                 globalThis.peers.add(m.steamId64.toString());
                             }
-                            const message = {
-                                type: MessageType.ClientPresenceChanged,
-                                clients: Array.from(globalThis.peers),
-                                // Tell all the peers which lobby they are in
-                                peerLobbyId: globalThis.peerLobbyId,
-                            };
-                            this.sendMessage(message);
+                            peerHostBroadcastClientsPresenceChanged(this);
 
                         })
                     })
@@ -531,5 +527,18 @@ export default class PiePeer {
         debug('TODO: update debug info');
     }
 }
+globalThis.peerHostBroadcastClientsPresenceChanged = (pie: PiePeer) => {
+    if (isHost(pie)) {
+        const message = {
+            type: MessageType.ClientPresenceChanged,
+            clients: Array.from(globalThis.peers),
+            // Tell all the peers which lobby they are in
+            peerLobbyId: globalThis.peerLobbyId,
+        };
+        pie.sendMessage(message);
+    }
+
+}
+
 
 export const piePeerSingleton: PiePeer = new PiePeer();

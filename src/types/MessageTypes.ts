@@ -50,4 +50,5 @@ export enum MESSAGE_TYPES {
   // For asking a player for their player config to update the menu lobby
   GET_PLAYER_CONFIG,
   KICKED_FROM_PEER_LOBBY,
+  PEER_VOLUNTARY_DISCONNECT,
 }

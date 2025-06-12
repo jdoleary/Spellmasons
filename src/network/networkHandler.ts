@@ -47,7 +47,7 @@ import PiePeer from './PiePeer';
 
 export const NO_LOG_LIST = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING, MESSAGE_TYPES.MOVE_PLAYER, MESSAGE_TYPES.SET_PLAYER_POSITION];
 export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING, MESSAGE_TYPES.MOVE_PLAYER, MESSAGE_TYPES.SET_PLAYER_POSITION,
-MESSAGE_TYPES.PEER_PING, MESSAGE_TYPES.PEER_PONG, MESSAGE_TYPES.GET_PLAYER_CONFIG, MESSAGE_TYPES.KICKED_FROM_PEER_LOBBY
+MESSAGE_TYPES.PEER_PING, MESSAGE_TYPES.PEER_PONG, MESSAGE_TYPES.GET_PLAYER_CONFIG, MESSAGE_TYPES.KICKED_FROM_PEER_LOBBY, MESSAGE_TYPES.PEER_VOLUNTARY_DISCONNECT
 ];
 export const elInstructions = document.getElementById('instructions') as (HTMLElement | undefined);
 export function onData(d: OnDataArgs, overworld: Overworld) {
@@ -477,6 +477,15 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
 
   const fromPlayer = getFromPlayerViaClientId(fromClient, underworld);
   switch (type) {
+    case MESSAGE_TYPES.PEER_VOLUNTARY_DISCONNECT: {
+      globalThis.peers.delete(fromClient);
+      if (underworld.pie instanceof PiePeer) {
+        globalThis.peerHostBroadcastClientsPresenceChanged(underworld.pie);
+      } else {
+        console.error('pie is not PiePeer and recieved PEER_VOLUNTARY_DISCONNECT')
+      }
+      break;
+    }
     case MESSAGE_TYPES.KICKED_FROM_PEER_LOBBY: {
       const { peerLobbyId, peerSteamId } = payload;
       if (underworld.pie instanceof PiePeer) {
