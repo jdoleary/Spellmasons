@@ -42,7 +42,7 @@ if (globalThis.steamworks) {
             if (exists(peerId)) {
                 globalThis.electronSettings.p2pSend(peerId, msgpack.encode(message));
             } else {
-                globalThis.electronSettings.p2pSendMany(msgpack.encode(message), Array.from(globalThis.peers));
+                globalThis.electronSettings.p2pSendMany(msgpack.encode(message), Array.from(globalThis.peers).map(id => BigInt(id)));
             }
 
         } else {
@@ -50,7 +50,7 @@ if (globalThis.steamworks) {
             console.error('Unexpected, no globalThis.electronSettings, cannot p2pSend')
         }
     }
-    console.log('Subscribe to p2p messages');
+    console.log('Subscribe to p2p messages 2');
     // @ts-ignore
     globalThis.steamworks.subscribeToP2PMessages(data => {
         const text = msgpack.decode(data);
@@ -454,7 +454,7 @@ export default class PiePeer {
                             }
                             const message = {
                                 type: MessageType.ClientPresenceChanged,
-                                clients: globalThis.peers,
+                                clients: Array.from(globalThis.peers),
                                 // Tell all the peers which lobby they are in
                                 peerLobbyId: globalThis.peerLobbyId,
                             };

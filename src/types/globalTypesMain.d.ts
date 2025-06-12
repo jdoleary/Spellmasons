@@ -221,7 +221,7 @@ declare global {
     setUIZoom: (value: number) => void;
     // This needs to have message wrapped in msgpack buffer, use globalThis.p2pSend for ease of use
     p2pSend: (peerSteamId: bigint, message: any) => void;
-    p2pSendMany: (message: any, peerSteamIds: string[]) => void;
+    p2pSendMany: (message: any, peerSteamIds: bigint[]) => void;
     p2pCreateLobby: () => void;
     getLobbyMembers: () => Promise<{ steamId64: bigint, steamId32: string, accountId: number }[]>
     leaveLobby: () => void;

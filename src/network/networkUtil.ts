@@ -27,7 +27,9 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs, overworld:
   // The client will also receive one when they first join a room.
   globalThis.setMenuIsInRoom?.(true);
   if (o.peerLobbyId) {
-    if (o.peerLobbyId == '') {
+    // If not in a lobby
+    if (!peerLobbyId) {
+      // Set that client is in a lobby
       globalThis.peerLobbyId = o.peerLobbyId;
       if (!isHost(overworld.pie)) {
         // Now that we have a peer lobby Id, no need to stay in the steam lobby
@@ -36,7 +38,17 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs, overworld:
       }
     } else if (o.peerLobbyId !== globalThis.peerLobbyId) {
       // TODO This may cause an issue because the host will still think they are connected, they will have to send a leave lobby message to the host
+      console.warn(`Already in ${peerLobbyId}, attempted to join ${o.peerLobbyId}`)
       Jprompt({ text: 'Cannot join a new lobby until you have left your existing lobby.', yesText: 'Okay', forceShow: true })
+      return;
+    }
+  }
+  // Clients update peers list when client presence changes
+  // Host manages peers list separately when handshake occurs and should not update own
+  // list here or else may clobber during race condition
+  if (o.peerLobbyId == peerLobbyId && !globalThis.isHost(overworld.pie)) {
+    for (let steamId64String of o.clients) {
+      globalThis.peers.add(steamId64String);
     }
   }
 

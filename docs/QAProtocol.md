@@ -13,7 +13,11 @@
 - Test tutorial ALWAYS on electron build
 - Run `npm run headless-build-only` to check tsc errors which `npm run bun-headless` will not catch
 
-NEW:
+
+NEW for June:
+- Make sure that p2p update doesn't break dedicated servers
+- Make sure mods work in p2p
+NEW for July:
 - Test cardmason sync on new multiplayer game
 
 --- Archived
