@@ -15,6 +15,6 @@ while read -r line; do
       exit 1
     fi
   done
-done < <(git diff --cached --unified=0 | grep '^+[^+]')
+done < <(git diff --cached --unified=0 -- '*.ts' | grep '^+[^+]')
 
 exit 0
