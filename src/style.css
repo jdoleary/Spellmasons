@@ -2927,6 +2927,10 @@ body.isPeerHost .openLobbyBtn {
   min-height: 100px;
 }
 
+#legal-content h1 {
+  text-shadow: none !important;
+}
+
 #card-draw-animation-holder {
   position: absolute;
   top: 0;
