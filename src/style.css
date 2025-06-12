@@ -2927,7 +2927,9 @@ body.isPeerHost .openLobbyBtn {
   min-height: 100px;
 }
 
-#legal-content h1 {
+#legal-content h1,
+#legal-content h3,
+#legal-content h2 {
   text-shadow: none !important;
 }
 
