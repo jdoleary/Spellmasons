@@ -24,6 +24,12 @@ import { incrementPresentedRunesIndex } from '../jmath/RuneUtil';
 import floatingText from '../graphics/FloatingText';
 
 const elInGameLobby = document.getElementById('in-game-lobby') as (HTMLElement | undefined);
+elInGameLobby?.addEventListener('click', (e) => {
+  const t = e.target as HTMLElement;
+  if (t.classList.contains('kick-btn')) {
+    globalThis.kickPeer(t.dataset.clientid);
+  }
+});
 const elInstructions = document.getElementById('instructions') as (HTMLElement | undefined);
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
@@ -406,6 +412,7 @@ export function syncLobby(underworld: Underworld) {
       ${p.clientId !== globalThis.clientId ? `<button class="kick-btn" data-fn="kick" data-name="${p.name}" data-clientid="${p.clientId}">Kick</button>` : ''}
       </div></div>`
     }).join('');
+
   }
 }
 export function enterPortal(player: IPlayer, underworld: Underworld) {

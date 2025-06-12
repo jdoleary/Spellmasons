@@ -488,7 +488,8 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         globalThis.peers.delete(peerSteamId);
         if (peerSteamId == underworld.pie.clientId) {
           console.log('I got kicked from the peer lobby');
-          underworld.pie.leaveRoom();
+          Jprompt({ text: 'Removed from game', yesText: 'Okay', forceShow: true });
+          globalThis.pieLeaveRoom?.();
         }
       }
       break;
