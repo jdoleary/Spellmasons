@@ -476,7 +476,7 @@ export function addOneOffAnimation(imageHaver: any, spritePath: string, oneOffOp
       return resolve();
     }
     const finishOnFrame = oneOffOptions?.keyFrame;
-    const onFrameChange = (finishOnFrame === undefined) ? undefined : (currentFrame: number) => {
+    const onFrameChange = (isNullOrUndef(finishOnFrame)) ? undefined : (currentFrame: number) => {
       if (currentFrame >= finishOnFrame) {
         resolve();
       }

@@ -385,7 +385,7 @@ export function addModifier(unit: IUnit, key: string, underworld: Underworld, pr
       return;
     }
     if (modifier.add) {
-      if (allCards[key]?.supportQuantity && quantity == undefined) {
+      if (allCards[key]?.supportQuantity && isNullOrUndef(quantity)) {
         console.error('Dev warning:', key, 'supportsQuantity; however quantity was not provided to the addModifier function.');
       }
       modifier.add(unit, underworld, prediction, quantity, extra);
@@ -731,7 +731,7 @@ export function playComboAnimation(unit: IUnit, key: string | undefined, keyMome
       return reject(err);
     }
     const finishOnFrame = combo.keyFrame;
-    const onFrameChange = (finishOnFrame === undefined || keyMoment === undefined) ? undefined : (currentFrame: number) => {
+    const onFrameChange = (isNullOrUndef(finishOnFrame) || isNullOrUndef(keyMoment)) ? undefined : (currentFrame: number) => {
       if (currentFrame >= finishOnFrame && !keyMomentTriggered) {
         // This is when the keyMoment is INTENTED to be triggered: at a specified "finishOnFrame" of the
         // animation
@@ -1670,7 +1670,7 @@ export function makeMiniboss(unit: IUnit, underworld: Underworld) {
   // Filter out modifiers with no probability and add the modifier key to the object.
   let availableSpawnModifiers = Object.entries(allModifiers).flatMap(([key, mod]) => typeof mod.probability === 'number' ? [{ ...mod, id: key }] : [])
     // Remove modifiers that are unavailable until later levels
-    .filter(mod => mod.unavailableUntilLevelIndex === undefined || underworld.levelIndex >= mod.unavailableUntilLevelIndex);
+    .filter(mod => isNullOrUndef(mod.unavailableUntilLevelIndex) || underworld.levelIndex >= mod.unavailableUntilLevelIndex);
 
 
   //// start: Special Modifier Exceptions
@@ -2012,7 +2012,7 @@ export function addEvent(unit: IUnit, eventId: string) {
 }
 
 export function countCharges(unit: IUnit): number {
-  return unit.charges === undefined ? 0 : Object.values(unit.charges).reduce((count: number, cardCharges) => count + cardCharges, 0);
+  return isNullOrUndef(unit.charges) ? 0 : Object.values(unit.charges).reduce((count: number, cardCharges) => count + cardCharges, 0);
 }
 
 export function refillCharges(unit: IUnit, underworld: Underworld) {
@@ -2038,7 +2038,7 @@ export function drawCharges(unit: IUnit, underworld: Underworld, count: number =
   cards = cards.filter(c => !replacedCardIds.includes(c.id))
   const rSeed = `${underworld.seed}-${player.playerId}-${player.drawChargesSeed}-${player.inventory.filter(x => !!x).length}`;
   const random = seedrandom(rSeed);
-  if (unit.charges === undefined) {
+  if (isNullOrUndef(unit.charges)) {
     unit.charges = {};
   }
 

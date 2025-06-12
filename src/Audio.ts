@@ -250,7 +250,7 @@ export async function playNextSong() {
   // Loops through songs
   const index = getLoopableIndex(songIndex++, music)
   currentSong = music[index];
-  if (globalThis.view === undefined || globalThis.view == View.Menu) {
+  if (isNullOrUndef(globalThis.view) || globalThis.view == View.Menu) {
     currentSong = music_theme;
   }
   if (!currentSong) {
@@ -300,7 +300,7 @@ export async function playNextSong() {
 
   // task: Master all audio and sfx
   // task: Make independent volume sliders for audio and music
-  musicInstance.volume = (globalThis.volume === undefined ? 1 : globalThis.volume) * (globalThis.volumeMusic === undefined ? 1 : globalThis.volumeMusic);
+  musicInstance.volume = (isNullOrUndef(globalThis.volume) ? 1 : globalThis.volume) * (isNullOrUndef(globalThis.volumeMusic) ? 1 : globalThis.volumeMusic);
   try {
     musicInstance.play().catch(e => console.error('music play err:', e));
   } catch (e) {
@@ -371,7 +371,7 @@ export function playSFX(path?: string) {
   // In order to allow sounds to overlap, they must be 
   // fully instantiated each time they are played
   const audioInstance = new Audio(path);
-  audioInstance.volume = (globalThis.volume === undefined ? 1 : globalThis.volume) * (globalThis.volumeGame === undefined ? 1 : globalThis.volumeGame);
+  audioInstance.volume = (isNullOrUndef(globalThis.volume) ? 1 : globalThis.volume) * (isNullOrUndef(globalThis.volumeGame) ? 1 : globalThis.volumeGame);
   audioInstance.play();
 
 }
@@ -385,7 +385,7 @@ export function setupAudio() {
   globalThis.changeVolume = (volume: number, saveSetting: boolean = true) => {
     globalThis.volume = volume;
     if (musicInstance) {
-      musicInstance.volume = globalThis.volume * (globalThis.volumeMusic === undefined ? 1 : globalThis.volumeMusic);
+      musicInstance.volume = globalThis.volume * (isNullOrUndef(globalThis.volumeMusic) ? 1 : globalThis.volumeMusic);
     }
     if (saveSetting) {
 
@@ -400,7 +400,7 @@ export function setupAudio() {
       storage.assign(storage.STORAGE_OPTIONS, { volumeMusic: globalThis.volumeMusic });
     }
     if (musicInstance) {
-      musicInstance.volume = (globalThis.volume === undefined ? 1 : globalThis.volume) * globalThis.volumeMusic;
+      musicInstance.volume = (isNullOrUndef(globalThis.volume) ? 1 : globalThis.volume) * globalThis.volumeMusic;
     }
     playMusicIfNotAlreadyPlaying();
   };

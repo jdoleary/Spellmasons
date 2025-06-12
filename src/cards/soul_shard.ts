@@ -106,7 +106,7 @@ const spell: Spell = {
 };
 
 function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1, extra?: any) {
-  if (extra.shardOwnerId == undefined) {
+  if (isNullOrUndef(extra.shardOwnerId)) {
     console.log("Cannot add soul shard modifier without a shard owner id");
     return;
   }
@@ -117,7 +117,7 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
 
   if (modifier.shardOwnerId != extra.shardOwnerId) {
     // If we're changing to a new shard owner, remove the modifier from the old one
-    if (modifier.shardOwnerId != undefined) {
+    if (exists(modifier.shardOwnerId)) {
       removeShardOwner(modifier.shardOwnerId, underworld, prediction);
     }
 
@@ -217,7 +217,7 @@ function drawLineBetweenTargest(shardOwner: HasSpace, shardBearer: HasSpace): bo
   if (!globalThis.headless) {
     const graphics = globalThis.projectileGraphics;
     if (graphics) {
-      if (shardOwner == undefined || shardBearer == undefined) {
+      if (isNullOrUndef(shardOwner) || isNullOrUndef(shardBearer)) {
         return false;
       }
       graphics.lineStyle(1, colors.healthDarkRed, 0.8);

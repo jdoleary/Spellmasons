@@ -188,7 +188,7 @@ export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
   handleInputDown(getKeyCodeMapping(event.code, event), overworld);
 }
 function handleInputDown(keyCodeMapping: string | undefined, overworld: Overworld) {
-  if (keyCodeMapping === undefined) {
+  if (isNullOrUndef(keyCodeMapping)) {
     return;
   }
   const { underworld } = overworld;
@@ -409,7 +409,7 @@ export function keyupListener(overworld: Overworld, event: KeyboardEvent) {
   handleInputUp(getKeyCodeMapping(event.code, event), overworld);
 }
 function handleInputUp(keyCodeMapping: string | undefined, overworld: Overworld) {
-  if (keyCodeMapping === undefined) {
+  if (isNullOrUndef(keyCodeMapping)) {
     return;
   }
   switch (keyCodeMapping) {
@@ -762,7 +762,7 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
   }
   // Get current client's player
   const selfPlayer = globalThis.player;
-  if (selfPlayer === undefined) {
+  if (isNullOrUndef(selfPlayer)) {
     console.error("Attempting to invoke clickHandler while globalThis.player is undefined");
     return;
   }

@@ -301,7 +301,7 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       // This is why it is okay that updating the game state happens 
       // asynchronously.
       // or in the case of allowForceInitGameState, clients who have reconnected
-      if (underworld.allowForceInitGameState || underworld.lastLevelCreated === undefined) {
+      if (underworld.allowForceInitGameState || isNullOrUndef(underworld.lastLevelCreated)) {
         underworld.allowForceInitGameState = false;
         // If a client loads a full game state, they should be fully synced
         // so clear the onDataQueue to prevent old messages from being processed
@@ -1360,7 +1360,7 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
       capped_name = capped_name.slice(0, 70);
       storage.set(storage.STORAGE_ID_PLAYER_NAME, capped_name || '');
     }
-    if (isCardmason != undefined) {
+    if (exists(isCardmason)) {
       // Booleans should not be stored in localStorage as booleans because they are converted to
       // strings which is confusing as hell
       storage.set(storage.STORAGE_ID_IS_CARDMASON, isCardmason ? 'yes' : 'no');
@@ -1491,7 +1491,7 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
         });
         return;
       }
-      if (globalThis.player == undefined) {
+      if (isNullOrUndef(globalThis.player)) {
         console.log('LOAD: connectToSingleplayer in preparation for load');
         if (globalThis.connectToSingleplayer) {
           await globalThis.connectToSingleplayer();

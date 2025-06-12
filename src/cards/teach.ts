@@ -101,7 +101,7 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
     Unit.addEvent(unit, teachCardId);
   });
 
-  if (extra && extra.spell != undefined) {
+  if (extra && exists(extra.spell)) {
     modifier.spell = extra.spell;
     // Once a spell is assigned, set their damage to 0 so as to not mess up smartTargeting since
     // their predicted damage is now unknown

@@ -207,7 +207,7 @@ ${explainUpdateText}
       console.warn('Host app version does not match client version');
     }
     // If hostAppVersion is undefined, assume the client has connected to a stateless pie server (relay) with no host app
-    globalThis.statelessRelayPieServer = o.hostAppVersion === undefined;
+    globalThis.statelessRelayPieServer = isNullOrUndef(o.hostAppVersion);
     if (globalThis.statelessRelayPieServer) {
       console.log('Pie: Connected to stateless relay pie server');
       if (globalThis.remoteLog)
@@ -271,7 +271,7 @@ export function setupPieAndUnderworld() {
     pie.useStats = true;
     console.log('Client: Initialize Underworld');
     const overworld = makeOverworld(pie);
-    if (useP2P && overworld.underworld == undefined) {
+    if (useP2P && isNullOrUndef(overworld.underworld)) {
       // Since p2p uses "lobbies" instead of rooms, initialize underworld immediately if it doesn't already exist
       new Underworld(overworld, overworld.pie, Math.random().toString());
     }

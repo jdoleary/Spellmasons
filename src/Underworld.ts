@@ -539,7 +539,7 @@ export default class Underworld {
     } else if (isForceMoveProjectile(forceMoveInst)) {
       // ignoreCollisionLiftime is only set if we ignore collisions
       // so for everything else, run collision logic
-      if (forceMoveInst.ignoreCollisionLifetime == undefined) {
+      if (isNullOrUndef(forceMoveInst.ignoreCollisionLifetime)) {
         const collision = handleWallCollision(forceMoveInst, this, deltaTime);
         if (collision.wall) {
           if (Events.onProjectileCollisionSource) {
@@ -1628,7 +1628,7 @@ export default class Underworld {
         const obstacle = t && toObstacle(t, map.biome);
         return obstacle ? [obstacle] : [];
       }),
-      imageOnlyTiles: tiles.flatMap(x => x == undefined ? [] : [x]),
+      imageOnlyTiles: tiles.flatMap(x => isNullOrUndef(x) ? [] : [x]),
       width,
       pickups: [],
       enemies: [
@@ -1759,7 +1759,7 @@ export default class Underworld {
       return undefined;
     }
     // flatMap removes undefineds
-    levelData.imageOnlyTiles = tiles.flatMap(x => x == undefined ? [] : [x]);
+    levelData.imageOnlyTiles = tiles.flatMap(x => isNullOrUndef(x) ? [] : [x]);
 
     // Adjust difficulty via level index for tutorial runs so that it's not as hard
     // If the player has not completed the tutorial, this will make the game easier
@@ -2078,7 +2078,7 @@ export default class Underworld {
     // Ex. This can be used to prevent a summoner from summoning over a wall
     if (unobstructedPoint) {
       // Ensure spawnPoint isn't through any walls or liquidBounds
-      if ([...this.walls, ...this.liquidBounds].some(wall => unobstructedPoint != undefined && lineSegmentIntersection({ p1: unobstructedPoint, p2: spawnPoint }, wall))) {
+      if ([...this.walls, ...this.liquidBounds].some(wall => exists(unobstructedPoint) && lineSegmentIntersection({ p1: unobstructedPoint, p2: spawnPoint }, wall))) {
         return false;
       }
     }
@@ -2106,7 +2106,7 @@ export default class Underworld {
       spawnPoint = undefined;
     }
 
-    if (spawnPoint == undefined) {
+    if (isNullOrUndef(spawnPoint)) {
       console.error('Could not find valid spawn point in world bounds');
     }
 
@@ -2122,7 +2122,7 @@ export default class Underworld {
     let unobstructedPoint = extra?.unobstructedPoint || undefined;
 
     let spawnPoint = undefined;
-    const radius = exists(extra?.radiusOverride) ? extra.radiusOverride : config.COLLISION_MESH_RADIUS / 4;
+    const radius = extra && exists(extra.radiusOverride) ? extra.radiusOverride : config.COLLISION_MESH_RADIUS / 4;
     for (let s of math.honeycombGenerator(radius, center, 7)) {
       spawnPoint = s;
 
@@ -2135,7 +2135,7 @@ export default class Underworld {
       spawnPoint = undefined;
     }
 
-    if (spawnPoint == undefined) {
+    if (isNullOrUndef(spawnPoint)) {
       console.error('Could not find valid spawn point in radius');
       spawnPoint = center;
     }
@@ -2400,8 +2400,8 @@ export default class Underworld {
     do {
       // Invoke generateRandomLevel again until it succeeds
       level = this.generateRandomLevelData(levelIndex);
-      if (level == undefined) console.log("Undefined level. Regenerating");
-    } while (level === undefined);
+      if (isNullOrUndef(level)) console.log("Undefined level. Regenerating");
+    } while (isNullOrUndef(level));
     this.pie.sendData({
       type: MESSAGE_TYPES.CREATE_LEVEL,
       level,
@@ -2441,7 +2441,7 @@ export default class Underworld {
     const cellX = Math.round(coord.x / config.OBSTACLE_SIZE);
     const cellY = Math.round(coord.y / config.OBSTACLE_SIZE);
     const originalTile = this.lastLevelCreated?.imageOnlyTiles[vec2ToOneDimentionIndexPreventWrap({ x: cellX, y: cellY }, this.lastLevelCreated?.width)];
-    return !!originalTile && (originalTile.image === undefined || originalTile.image == '' || originalTile.image.includes('wall'));
+    return !!originalTile && (isNullOrUndef(originalTile.image) || originalTile.image == '' || originalTile.image.includes('wall'));
   }
   getMousePos(): Vec2 {
     if (!(app && containerBoard)) {
@@ -3998,7 +3998,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       // Reset flag that informs if the last spell was refunded.
       effectState.shouldRefundLastSpell = false;
       const cardId = effectState.cardIds[index];
-      if (cardId === undefined) {
+      if (isNullOrUndef(cardId)) {
         console.error('card id is undefined in loop', index, effectState.cardIds);
         continue;
       }

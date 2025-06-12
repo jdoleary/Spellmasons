@@ -283,7 +283,7 @@ export function processLineSegment(processingLineSegment: LineSegment.LineSegmen
   do {
     // Get the closest branch
     const branch = getClosestBranch(currentLine, [...lineSegments, ...danglingLineSegments, ...usedLineSegments]);
-    if (branch === undefined) {
+    if (isNullOrUndef(branch)) {
       if (lastMatch) {
         // This is the first way to close a poly.  Branching has reached a dead end
         // and there is a lastMatch so close the poly at the last match.
@@ -600,7 +600,7 @@ export function getPointsFromPolygonStartingAt(polygon: Polygon2, startPoint: Ve
       }
     })
     // Typeguard
-    if (vec2s.some(v => v == undefined)) {
+    if (vec2s.some(v => isNullOrUndef(v))) {
       console.error('One or more polygonIndicies are undefined')
       return [];
     }

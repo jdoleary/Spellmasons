@@ -26,7 +26,7 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
     }
   });
 
-  if (extra && extra.sourceUnitId != undefined) {
+  if (extra && exists(extra.sourceUnitId)) {
     modifier.sourceUnitId = extra.sourceUnitId;
   }
 

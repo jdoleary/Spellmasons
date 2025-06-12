@@ -605,7 +605,7 @@ export function renderRunesMenu(underworld: Underworld) {
                 </div>
               </div>
               ${constant ? '' : `
-                <div class="stat-lock ${globalThis.player.lockedRunes.find(r => r.key === modifierKey && r.runePresentedIndexWhenLocked === undefined) ? 'locked' : ''}" data-key="${modifierKey}" data-index="${index}"></div>
+                <div class="stat-lock ${globalThis.player.lockedRunes.find(r => r.key === modifierKey && isNullOrUndef(r.runePresentedIndexWhenLocked)) ? 'locked' : ''}" data-key="${modifierKey}" data-index="${index}"></div>
               `}
             </div>`;
   }
@@ -1384,7 +1384,7 @@ export function updateCardBadges(underworld: Underworld) {
           const elBadgeC = Array.from(elBadgesC)[sliceOfCardsOfSameIdUntilCurrent.length];
           if (elBadgeC) {
             const cardCharges = globalThis.player.unit.charges?.[card.id]
-            if (cardCharges != undefined) {
+            if (exists(cardCharges)) {
               updateChargeBadge(elBadgeC, cardCharges - sliceOfCardsOfSameIdUntilCurrent.length, card);
             }
           }

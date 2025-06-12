@@ -181,7 +181,7 @@ export function setPlayerRobeColor(player: IPlayer, color: number | string, colo
   if (typeof color === 'string') {
     color = parseInt(color);
   }
-  if (color === undefined || isNaN(color)) {
+  if (isNullOrUndef(color) || isNaN(color)) {
     console.log('Prevented setting robe color to invalid value', color);
     return;
   }
@@ -331,7 +331,7 @@ export function load(player: IPlayerSerialized, index: number, underworld: Under
   }
   // Account for pervious serialized versions of the game not having cursesChosen
   // and make sure it's loaded and not undefined
-  if (playerLoaded.cursesChosen === undefined) {
+  if (isNullOrUndef(playerLoaded.cursesChosen)) {
     playerLoaded.cursesChosen = 0;
   }
   // Make sure player unit stays hidden if they are in a portal
@@ -625,7 +625,7 @@ export function incrementPresentedRunesForPlayer(player: Pick<IPlayer, 'lockedRu
   // Remove old unlocked level indexes
   // Note: This must occur AFTER incrementPresentedRunesIndex so that 
   // it doesn't skip over runes that were omitted due to previously locked runes
-  player.lockedRunes = player.lockedRunes.filter(lr => lr.runePresentedIndexWhenLocked === undefined);
+  player.lockedRunes = player.lockedRunes.filter(lr => isNullOrUndef(lr.runePresentedIndexWhenLocked));
 
 }
 
@@ -639,7 +639,7 @@ export function setCardmason(player: IPlayer, isCardmason: boolean) {
     isCardmason = isCardmason == 'yes';
   }
   player.isCardmason = isCardmason;
-  if (player.isCardmason && player.unit.charges === undefined) {
+  if (player.isCardmason && isNullOrUndef(player.unit.charges)) {
     player.unit.charges = {};
   }
 
@@ -677,7 +677,7 @@ export function discardCards(player: IPlayer, underworld: Underworld, forceDisca
   const { unit } = player;
   if (player.isCardmason) {
 
-    if (player.drawChargesSeed === undefined) {
+    if (isNullOrUndef(player.drawChargesSeed)) {
       player.drawChargesSeed = 0;
     }
     player.drawChargesSeed++;

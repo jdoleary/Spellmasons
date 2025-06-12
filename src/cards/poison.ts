@@ -96,7 +96,7 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
     Unit.addEvent(unit, poisonCardId);
   });
 
-  if (extra && extra.sourceUnitId != undefined) {
+  if (extra && exists(extra.sourceUnitId)) {
     modifier.sourceUnitId = extra.sourceUnitId;
 
     // If source unit has heavyToxins modifier, it should also inflict slow

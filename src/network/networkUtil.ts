@@ -31,7 +31,7 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs, overworld:
     const isFirstClient = o.clients.findIndex(c => c == globalThis.clientId) == 0;
     globalThis.isHostForStatelessPie = isFirstClient;
     const { underworld } = overworld;
-    if (isFirstClient && underworld.lastLevelCreated == undefined) {
+    if (isFirstClient && isNullOrUndef(underworld.lastLevelCreated)) {
       console.log('Setup: Host creating level');
       // Generate the level data
       underworld.lastLevelCreated = underworld.generateLevelDataSyncronous(0);

@@ -41,7 +41,7 @@ export type ForceMoveProjectile = ForceMove & {
   collidingUnitIds: number[];
   collideFnKey: string;
   state: EffectState;
-  // If this number != undefined, the projectile will ignore all collisions,
+  // If this exists(number), the projectile will ignore all collisions,
   // and be destroyed after a lifetime instead. Used for vfx
   ignoreCollisionLifetime?: number | undefined;
 }

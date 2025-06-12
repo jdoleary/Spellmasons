@@ -149,7 +149,7 @@ export function findPath(startPoint: Vec2, target: Vec2, pathingLineSegments: Po
   // before finding the shortest path.  This currently happens
   // right after processPaths is invoked
   const shortestPath = paths.reduce<Path | undefined>((shortest, contender) => {
-    if (shortest === undefined) {
+    if (isNullOrUndef(shortest)) {
       return contender
     } else {
       if (shortest.distance > contender.distance) {

@@ -15,7 +15,7 @@ export default function registerImpendingDoom() {
         Unit.addEvent(unit, impendingDoomId);
       });
 
-      if (extra && extra.sourceUnitId != undefined) {
+      if (extra && exists(extra.sourceUnitId)) {
         modifier.sourceUnitId = extra.sourceUnitId;
       }
     }

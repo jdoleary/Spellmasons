@@ -90,7 +90,7 @@ globalThis.awaitingSpawn = false;
 globalThis.currentHoverElement = null;
 // Default to 1 for singleplayer
 globalThis.numberOfHotseatPlayers = 1;
-if (globalThis.UIEasyOnTheEyes === undefined) {
+if (isNullOrUndef(globalThis.UIEasyOnTheEyes)) {
   globalThis.UIEasyOnTheEyes = false;
 }
 globalThis.setOption = (key: string, value: any) => {

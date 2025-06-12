@@ -418,7 +418,7 @@ function useScreenshake(stage: PIXI.Container, deltaTime: number) {
     return;
   }
 
-  const featureFlagScreenShakeMult = exists(globalThis.featureFlags?.screenShakeMult) ? globalThis.featureFlags.screenShakeMult : 1;
+  const featureFlagScreenShakeMult = globalThis.featureFlags && exists(globalThis.featureFlags.screenShakeMult) ? globalThis.featureFlags.screenShakeMult : 1;
   screenshake.camOffset.x = (Math.random() * 2 - 1) * screenshake.intensity * lerpValue * featureFlagScreenShakeMult;
   screenshake.camOffset.y = (Math.random() * 2 - 1) * screenshake.intensity * lerpValue * featureFlagScreenShakeMult;
 

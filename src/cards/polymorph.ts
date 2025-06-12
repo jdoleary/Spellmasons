@@ -86,7 +86,7 @@ function polymorphUnit(fromUnit: Unit.IUnit, underworld: Underworld, prediction:
       }), seed)?.unitSource.id;
     }
 
-    if (toUnitId == undefined) {
+    if (isNullOrUndef(toUnitId)) {
       console.error("Polymorph failed to choose a new unit type.");
       return undefined;
     }
@@ -113,7 +113,7 @@ function polymorphUnit(fromUnit: Unit.IUnit, underworld: Underworld, prediction:
       state?.casterUnit
     );
 
-    if (unit != undefined) {
+    if (exists(unit)) {
       // Persist death state: We shouldn't use Unit.die here because we dont want to 
       // play sfx, invoke death events, log enemy killed, or use much other die() logic
       if (!fromUnit.alive) {
@@ -241,14 +241,14 @@ function polymorphPickup(fromPickup: IPickup, underworld: Underworld, prediction
       toPickupSource = chooseOneOfSeeded(possiblePickupTypes, seed);
     }
 
-    if (toPickupSource == undefined) {
+    if (isNullOrUndef(toPickupSource)) {
       console.error("Polymorph failed to choose a new pickup type.");
       return undefined;
     }
   }
 
   const pickup = Pickup.create({ pos: fromPickup, pickupSource: toPickupSource, logSource: 'spawnPickup' }, underworld, prediction);
-  if (pickup != undefined) {
+  if (exists(pickup)) {
     if (!prediction) {
       playSFXKey('spawnPotion');
       floatingText({ coords: fromPickup, text: toPickupSource.name });
