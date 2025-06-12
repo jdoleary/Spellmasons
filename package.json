@@ -36,10 +36,10 @@
     "@types/seedrandom": "^3.0.1",
     "@types/stats.js": "^0.17.0",
     "husky": "^7.0.4",
-    "jest": "^26.6.3",
+    "jest": "^30.0.0",
     "prettier": "^2.0.5",
     "typescript": "^5.2.2",
-    "vite": "^2.9.18"
+    "vite": "^6.3.5"
   },
   "dependencies": {
     "@msgpack/msgpack": "^3.1.2",
