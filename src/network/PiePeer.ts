@@ -334,6 +334,10 @@ export default class PiePeer {
     }
     handleMessage(message: any) {
         console.log('PiePeer handleMessage:', message);
+        if (message.peerLobbyId != peerLobbyId) {
+            console.warn('Ignoring message from wrong lobby', peerLobbyId, message);
+            return;
+        }
         // Stats
         // if (message.time) {
         //     const currentMessageLatency = Date.now() - message.time;
@@ -502,6 +506,8 @@ export default class PiePeer {
     sendMessage(message: { type: string } & any) {
         Object.assign(message, {
             fromClient: this.clientId,
+            // Ensure that messages are only processed if in the same lobby
+            peerLobbyId,
             time: Date.now(),
         });
         console.log('jtest sendMessage', message, 'as host', globalThis.isHost(this))
