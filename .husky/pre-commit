@@ -1,0 +1,20 @@
+#!/bin/bash
+echo "hooks/pre-commit: Checking for unallowed strings..."
+
+# Do not allow "undefined checks" because msgpack will turn undefined into null.
+# Instead use globalThis.exists() or globalThis.isNullOrUndef()
+BANNED_PATTERNS=("(!==?|==)\s*undefined")
+
+# Check each banned string
+while read -r line; do
+  for pattern in "${BANNED_PATTERNS[@]}"; do
+    if echo "$line" | grep -Eq "$pattern"; then
+      echo "❌ Commit rejected: Found banned pattern \"$pattern\" in:"
+      echo "  $line"
+      echo "use globalThis.exists or globalThis.isNullOrUndef instead"
+      exit 1
+    fi
+  done
+done < <(git diff --cached --unified=0 | grep '^+[^+]')
+
+exit 0
