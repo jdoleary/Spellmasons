@@ -43,9 +43,12 @@ import { teleport } from '../effects/teleport';
 import Events from '../Events';
 import { mergeExcessPickups, mergeExcessUnits } from '../stability';
 import { distance, lerp } from '../jmath/math';
+import PiePeer from './PiePeer';
 
 export const NO_LOG_LIST = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING, MESSAGE_TYPES.MOVE_PLAYER, MESSAGE_TYPES.SET_PLAYER_POSITION];
-export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING, MESSAGE_TYPES.MOVE_PLAYER, MESSAGE_TYPES.SET_PLAYER_POSITION];
+export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING, MESSAGE_TYPES.MOVE_PLAYER, MESSAGE_TYPES.SET_PLAYER_POSITION,
+MESSAGE_TYPES.PEER_PING, MESSAGE_TYPES.PEER_PONG, MESSAGE_TYPES.GET_PLAYER_CONFIG, MESSAGE_TYPES.KICKED_FROM_PEER_LOBBY
+];
 export const elInstructions = document.getElementById('instructions') as (HTMLElement | undefined);
 export function onData(d: OnDataArgs, overworld: Overworld) {
   const { payload, fromClient } = d;
@@ -432,6 +435,33 @@ function logHandleOnDataMessage(type: MESSAGE_TYPES, payload: any, fromClient: s
   }
 
 }
+let peerPings: {
+  peerPingId: number,
+  peerLobbyId: string,
+  time: number,
+  res: (value: string | PromiseLike<string>) => void,
+  rej: (value: string | PromiseLike<string>) => void,
+}[] = [];
+let peerPingIndex = 0;
+// Consume promise response, may not be available but not in same lobby
+globalThis.peerPing = () => {
+  if (!globalThis.pie) {
+    return Promise.reject('No globalThis.pie');
+  }
+  globalThis.pie.sendData({
+    type: MESSAGE_TYPES.PEER_PONG,
+  });
+  return raceTimeout(10_000, 'peerPing timed out', new Promise<string>((res, rej) => {
+    peerPings.push({
+      peerPingId: peerPingIndex++,
+      peerLobbyId: globalThis.peerLobbyId,
+      time: Date.now(),
+      res,
+      rej,
+    })
+  }))
+
+}
 let lastSpellMessageTime = 0;
 async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise<any> {
   currentlyProcessingOnDataMessage = d;
@@ -447,6 +477,55 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
 
   const fromPlayer = getFromPlayerViaClientId(fromClient, underworld);
   switch (type) {
+    case MESSAGE_TYPES.KICKED_FROM_PEER_LOBBY: {
+      const { peerLobbyId, peerSteamId } = payload;
+      if (underworld.pie instanceof PiePeer) {
+
+        if (peerLobbyId != globalThis.peerLobbyId) {
+          console.warn('Got Kick peer message for the wrong lobby', d);
+          return;
+        }
+        globalThis.peers.delete(peerSteamId);
+        if (peerSteamId == underworld.pie.clientId) {
+          console.log('I got kicked from the peer lobby');
+          underworld.pie.leaveRoom();
+        }
+      }
+      break;
+    }
+    case MESSAGE_TYPES.PEER_PING: {
+      console.log('Sending Peer Ping', d);
+      // Respond with pong
+      underworld.pie.sendData({
+        type: MESSAGE_TYPES.PEER_PONG,
+        peerPingId: payload.peerPingId,
+      });
+      break;
+    }
+    case MESSAGE_TYPES.PEER_PONG: {
+      console.log(`Got pong after ${Date.now() - payload.time}ms.`, d);
+      const rec = peerPings.find(x => x.peerPingId == payload.peerPingId)
+      if (rec) {
+        if (rec.peerLobbyId !== globalThis.peerLobbyId) {
+          rec.rej('Not in same lobby');
+        } else {
+          rec.res('Connected');
+        }
+        // Delete record
+        peerPings = peerPings.filter(x => x !== rec);
+      } else {
+        console.warn('Got pong but wasn\'t waiting for any ping', d);
+      }
+      break;
+    }
+    case MESSAGE_TYPES.GET_PLAYER_CONFIG: {
+      overworld.pie.sendData({
+        type: MESSAGE_TYPES.PLAYER_CONFIG,
+        color: storage.get(storage.STORAGE_ID_PLAYER_COLOR),
+        name: storage.get(storage.STORAGE_ID_PLAYER_NAME),
+      });
+      break;
+    }
     case MESSAGE_TYPES.CHANGE_CHARACTER: {
       if (fromPlayer) {
         const userSource = allUnits[payload.unitId];

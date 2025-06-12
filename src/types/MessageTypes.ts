@@ -44,4 +44,10 @@ export enum MESSAGE_TYPES {
   // Just for visual juice, a player plays the bookIdle animation
   // when viewing the inventory
   VIEWING_INVENTORY,
+  // To see if connected to a peer, returns a promise, use globalThis.peerPing
+  PEER_PING,
+  PEER_PONG,
+  // For asking a player for their player config to update the menu lobby
+  GET_PLAYER_CONFIG,
+  KICKED_FROM_PEER_LOBBY,
 }

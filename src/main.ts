@@ -106,10 +106,6 @@ globalThis.isHost = (pie: Pie) => {
   if (pie instanceof PiePeer) {
 
     const isPeerHost = document.body.classList.contains('isPeerHost');
-    // const inP2PLobby = document.body.classList.contains('inP2PLobby');
-    // if (isPeerHost && !inP2PLobby) {
-    //   console.error('isPeerHost out of sync.  This class should only be set if inP2PLobby');
-    // }
     if (!document.body.classList.contains('pieIsInstanceOfPiePeer')) {
       console.error('pieIsInstanceOfPiePeer is out of sync. It should be set when pie instanceOf PiePeer');
     }

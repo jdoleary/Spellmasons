@@ -17,12 +17,28 @@ export interface ClientPresenceChangedArgs {
   clients: string[];
   names?: string[];
   time: number;
+  // For peer connections only
+  peerLobbyId?: string;
+
 }
 export function onClientPresenceChanged(o: ClientPresenceChangedArgs, overworld: Overworld) {
   console.log('clientPresenceChanged', o);
   // clientPresenceChanged message is only ever received if the current client is in a room
   // The client will also receive one when they first join a room.
   globalThis.setMenuIsInRoom?.(true);
+  if (o.peerLobbyId) {
+    if (o.peerLobbyId == '') {
+      globalThis.peerLobbyId = o.peerLobbyId;
+      if (!isHost(overworld.pie)) {
+        // Now that we have a peer lobby Id, no need to stay in the steam lobby
+        // but the host remains to accept new connections
+        globalThis.electronSettings?.leaveLobby();
+      }
+    } else if (o.peerLobbyId !== globalThis.peerLobbyId) {
+      // TODO This may cause an issue because the host will still think they are connected, they will have to send a leave lobby message to the host
+      Jprompt({ text: 'Cannot join a new lobby until you have left your existing lobby.', yesText: 'Okay', forceShow: true })
+    }
+  }
 
   // Ensure each client corresponds with a Player instance
   ensureAllClientsHaveAssociatedPlayers(overworld, o.clients, o.names || []);

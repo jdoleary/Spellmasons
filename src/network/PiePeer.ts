@@ -2,6 +2,7 @@
 import * as storage from '../storage';
 import { v4 as uuidv4 } from 'uuid';
 import * as msgpack from "@msgpack/msgpack";
+import { MESSAGE_TYPES } from '../types/MessageTypes';
 
 export interface SteamPeer {
     id: bigint;
@@ -41,7 +42,7 @@ if (globalThis.steamworks) {
             if (exists(peerId)) {
                 globalThis.electronSettings.p2pSend(peerId, msgpack.encode(message));
             } else {
-                globalThis.electronSettings.p2pSendToAllPeers(msgpack.encode(message));
+                globalThis.electronSettings.p2pSendMany(msgpack.encode(message), Array.from(globalThis.peers));
             }
 
         } else {
@@ -63,6 +64,13 @@ if (globalThis.steamworks) {
         console.log('jtest steamp2p data, decoded', text);
         if (piePeerSingleton && piePeerSingleton.onData) {
             piePeerSingleton.handleMessage(text);
+            // Host echos message to all clients
+            if (globalThis.isHost(piePeerSingleton)) {
+                console.log("Host echo message to all clients", text);
+                // Send to all connections
+                if (globalThis.electronSettings)
+                    globalThis.p2pSend(text);
+            }
         } else {
             console.error('PiePeerSingleton missing or onData not defined', piePeerSingleton, piePeerSingleton?.onData);
         }
@@ -221,27 +229,17 @@ export default class PiePeer {
             log('Network offline');
             this._updateDebugInfo();
         });
-        // TODO SteamP2P
-        globalThis.kickPeer = ({ name, clientId }: { name?: string, clientId?: string }) => {
-            // const foundPeerIndex = this.peers.findIndex(p => exists(clientId) ? p.clientId == clientId : p.name === name);
-            // if (foundPeerIndex !== -1) {
-            //     const peer = this.peers[foundPeerIndex];
-            //     if (peer) {
-            //         Jprompt({ text: `Are you sure you wish to kick ${name || clientId} from the game?`, noBtnText: 'Cancel', noBtnKey: 'Escape', yesText: 'Kick', forceShow: true }).then(doKick => {
-            //             if (doKick) {
-            //                 // TODO SteamP2P
-            //                 // peer.peer.destroy();
-            //                 this.peers.splice(foundPeerIndex, 1);
-            //             }
-            //         });
-            //     }
-            // }
-
+        globalThis.kickPeer = (steamId: string) => {
+            this.sendData({
+                type: MESSAGE_TYPES.KICKED_FROM_PEER_LOBBY,
+                peerLobbyId: globalThis.peerLobbyId,
+                peerSteamId: steamId
+            });
         };
 
     }
     isConnected(): boolean {
-        return this.soloMode || document.body.classList.contains('inP2PLobby');
+        return this.soloMode || !!globalThis.peerLobbyId;
     }
     // heartbeat is used to determine on the client-side if the client is unaware that 
     // it is disconnected from the server.
@@ -302,6 +300,9 @@ export default class PiePeer {
         clearTimeout(this.reconnectTimeoutId);
     }
     async disconnect(): Promise<void> {
+        // TODO send message to host to leave peer lobby
+        globalThis.peers.clear();
+        globalThis.peerLobbyId = '';
         globalThis.electronSettings?.leaveLobby();
         // Stop attempt to auto reconnect if a manual disconnect occurs
         clearTimeout(this.reconnectTimeoutId);
@@ -408,13 +409,13 @@ export default class PiePeer {
         }
     }
 
-    joinRoom(roomInfo: Room, isHosting: boolean = false) {
+    joinRoom(roomInfo: Room, isHosting: boolean = false): Promise<any> {
         if (!globalThis.electronSettings) {
             return Promise.reject('no electron Settings');
         }
         // If in soloMode, you are always the host, if not in solomode, since this function is joinRoom,
         // you are not the host
-        document.body.classList.toggle('isPeerHost', true);
+        document.body.classList.toggle('isPeerHost', isHosting || this.soloMode);
         if (this.soloMode) {
             // Now that client has joined a room in soloMode, send a 
             // manufactured clientPresenceChanged as if it came from the server
@@ -427,25 +428,35 @@ export default class PiePeer {
             });
             return Promise.resolve(roomInfo);
         } else {
-            // TODO(p2p): Handle player name better, in wspie, it's already stored in an underworld
             const playerName = storage.get(storage.STORAGE_ID_PLAYER_NAME);
             if (!playerName) {
                 alert('You must choose a name in settings before joining a game');
-                return Promise.reject();
+                return Promise.reject('You must choose a name in settings before joining a game');
             }
             if (isHosting) {
                 document.body.classList.toggle('isPeerHost', true);
                 globalThis.electronSettings.p2pCreateLobby();
+                if (globalThis.peerLobbyId != '') {
+                    Jprompt({ text: 'You cannot create a new lobby while you are in an existing lobby', yesText: 'Okay', forceShow: true })
+                    return Promise.reject('You cannot create a new lobby while you are in an existing lobby');
+                }
+                globalThis.peerLobbyId = uuidv4();
 
                 if (!didSubscribeToLobbyChanges) {
                     didSubscribeToLobbyChanges = true;
                     globalThis.electronSettings.subscribeToLobbyChanges((x) => {
                         console.log('SteamP2P, lobby changes', x);
+                        // Lobby members are ephemeral, if a member joins, add them to the set and then they will exit the lobby
                         globalThis.electronSettings?.getLobbyMembers().then(members => {
                             console.log('SteamP2P, sending updated members', members);
+                            for (let m of members) {
+                                globalThis.peers.add(m.steamId64.toString());
+                            }
                             const message = {
                                 type: MessageType.ClientPresenceChanged,
-                                clients: members.map(({ steamId64 }) => steamId64.toString())
+                                clients: globalThis.peers,
+                                // Tell all the peers which lobby they are in
+                                peerLobbyId: globalThis.peerLobbyId,
                             };
                             this.sendMessage(message);
 

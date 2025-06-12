@@ -279,7 +279,7 @@ declare global {
     setUIZoom: (value: number) => void;
     // This needs to have message wrapped in msgpack buffer, use globalThis.p2pSend for ease of use
     p2pSend: (peerSteamId: bigint, message: any) => void;
-    p2pSendToAllPeers: (message: any) => void;
+    p2pSendMany: (message: any, peerSteamIds: string[]) => void;
     p2pCreateLobby: () => void;
     getLobbyMembers: () => Promise<{ steamId64: bigint, steamId32: string, accountId: number }[]>;
     leaveLobby: () => void;
@@ -401,7 +401,7 @@ declare global {
   var setPieToP2PMode: (active: boolean) => void | undefined;
   // Returns true if request is accepted
   var responseRequestToJoinP2P: (request: RequestToJoin, approved: boolean, reason?: string) => void | undefined;
-  var kickPeer: (args: { name?: string, clientId?: string }) => void | undefined;
+  var kickPeer: (steamId) => void | undefined;
   var menuJoinErr: (e: string) => void | undefined;
   var showLegalPopup: (forcePopup: boolean) => void;
   // If connected to a non-host app pie server where the first client acts as the host
@@ -409,4 +409,7 @@ declare global {
   var isHostForStatelessPie: boolean | undefined;
   var isNullOrUndef: <T>(x: T) => x is Extract<T, null | undefined>;
   var exists: <T>(x: T) => x is NonNullable<T>;
+  var peerPing: () => Promise<boolean>;
+  var peerLobbyId: string;
+  var peers: Set<string>;
 }

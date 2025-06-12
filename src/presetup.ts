@@ -29,6 +29,8 @@ globalThis.volumeGame = 0.6;
 globalThis.cinematicCameraEnabled = true;
 globalThis.savePrefix = 'spellmasons-save-';
 globalThis.quicksaveKey = 'quicksave';
+globalThis.peerLobbyId = '';
+globalThis.peers = new Set<string>();
 // Never commit this to true.  To make a demo build, you should
 // toggle this to true, make the build and toggle it back off
 globalThis.isDemo = false;
