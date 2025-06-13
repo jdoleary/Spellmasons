@@ -24,6 +24,8 @@ NEW for July:
 
 --- Archived
 - Uncomment: commits: `gate: Temporarily disable Cardmason until update`
+- Uncomment: commits: `gate: Temporarily disable new spells until update`
+    - config.IS_JULY25_UPDATE_OUT
 - Test loading a saved multiplayer game
 - Test Hotseat multiplayer basics
     - Test one player dying and next player carrying on to next level and make sure they both spawn

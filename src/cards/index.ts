@@ -443,10 +443,10 @@ export function registerCards(overworld: Overworld) {
   registerSpell(cursify, overworld);
   registerSpell(teach, overworld);
   registerSpell(sell, overworld);
-  novas.forEach(nova =>
+  config.IS_JULY25_UPDATE_OUT && novas.forEach(nova =>
     registerSpell(nova, overworld)
   );
-  registerSpell(nukitsuke, overworld);
+  config.IS_JULY25_UPDATE_OUT && registerSpell(nukitsuke, overworld);
 
   // Blessings
   registerSpell(heal, overworld);
@@ -533,8 +533,8 @@ export function registerCards(overworld: Overworld) {
   registerSpell(target_similar_2, overworld);
   config.IS_ANNIVERSARY_UPDATE_OUT &&
     registerSpell(target_injured, overworld);
-  registerSpell(target_submerged, overworld);
-  registerSpell(submerge, overworld);
+  config.IS_JULY25_UPDATE_OUT && registerSpell(target_submerged, overworld);
+  config.IS_JULY25_UPDATE_OUT && registerSpell(submerge, overworld);
   registerSpell(target_all, overworld);
   registerSpell(target_bounty, overworld);
   registerSpell(give_bounty, overworld);
