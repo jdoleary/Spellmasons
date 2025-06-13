@@ -751,7 +751,12 @@
         "spell_target_submerged": "Target 🍞 units that are submerged in liquid.  Stackable",
         "target submerged": "Target Submerged",
         "spell_submerge": "Units that receive this curse are considered to be submerged in liquid at all times, even when on dry ground.",
-        "submerge": "Submerge"
+        "submerge": "Submerge",
+        "nukitsuke": "Nukitsuke",
+        "spell_nukitsuke": "Dash towards the first target, dealing 🍞 damage to anything you pass through",
+        "cannot join a new lobby until you have left your existing lobby.": "Cannot join a new lobby until you have left your existing lobby.",
+        "you cannot create a new lobby while you are in an existing lobby": "You cannot create a new lobby while you are in an existing lobby",
+        "removed from game": "Removed from game"
     },
     {
         "language": "Français",
@@ -1505,7 +1510,12 @@
         "spell_target_submerged": "Ciblez 🍞 unités qui sont submergées dans un liquide. Empilable.",
         "target submerged": "Cible sous-marine",
         "spell_submerge": "Les unités qui reçoivent cette malédiction sont considérées comme étant immergées dans un liquide en permanence, même lorsqu'elles sont sur un sol sec.",
-        "submerge": "Submerger"
+        "submerge": "Submerger",
+        "nukitsuke": "Nukitsuke",
+        "spell_nukitsuke": "Foncez vers la première cible, infligeant 🍞 de dégâts à tout ce que vous traversez.",
+        "cannot join a new lobby until you have left your existing lobby.": "Vous ne pouvez pas rejoindre un nouveau lobby tant que vous n'avez pas quitté votre lobby existant.",
+        "you cannot create a new lobby while you are in an existing lobby": "Vous ne pouvez pas créer un nouveau salon pendant que vous êtes dans un salon existant.",
+        "removed from game": "Retiré du jeu"
     },
     {
         "language": "italiano",
@@ -2259,7 +2269,12 @@
         "spell_target_submerged": "Bersaglio 🍞 unità che sono sommerse in liquido. Sovrapposte.",
         "target submerged": "Obiettivo Sottomarino",
         "spell_submerge": "Le unità che ricevono questa maledizione sono considerate immerse in un liquido in ogni momento, anche quando sono a terra asciutta.",
-        "submerge": "Sommerso"
+        "submerge": "Sommerso",
+        "nukitsuke": "Nukitsuke",
+        "spell_nukitsuke": "Corri verso il primo obiettivo, infliggendo 🍞 danni a tutto ciò che attraversi.",
+        "cannot join a new lobby until you have left your existing lobby.": "Non puoi unirti a un nuovo lobby finché non hai lasciato il tuo lobby attuale.",
+        "you cannot create a new lobby while you are in an existing lobby": "Non puoi creare una nuova lobby mentre sei in una lobby esistente.",
+        "removed from game": "Rimosso dal gioco"
     },
     {
         "language": "Deutsche",
@@ -3013,7 +3028,12 @@
         "spell_target_submerged": "Ziele auf 🍞 Einheiten, die in Flüssigkeit eingetaucht sind. Stapelbar.",
         "target submerged": "Ziel Unterwasser",
         "spell_submerge": "Einheiten, die diesem Fluch unterliegen, gelten jederzeit als in Flüssigkeit eingetaucht, selbst wenn sie sich auf festem Boden befinden.",
-        "submerge": "Eintauchen"
+        "submerge": "Eintauchen",
+        "nukitsuke": "Nukitsuke",
+        "spell_nukitsuke": "Renne auf das erste Ziel zu und füge allem, was du durchquerst, 🍞 Schaden zu.",
+        "cannot join a new lobby until you have left your existing lobby.": "Du kannst keinem neuen Lobby beitreten, bis du deine bestehende Lobby verlassen hast.",
+        "you cannot create a new lobby while you are in an existing lobby": "Du kannst keine neue Lobby erstellen, während du dich in einer bestehenden Lobby befindest.",
+        "removed from game": "Aus dem Spiel entfernt"
     },
     {
         "language": "español",
@@ -3767,7 +3787,12 @@
         "spell_target_submerged": "Objetivo 🍞 unidades que están sumergidas en líquido. Apilable.",
         "target submerged": "Objetivo Submarino",
         "spell_submerge": "Las unidades que reciban esta maldición se consideran sumergidas en líquido en todo momento, incluso cuando están en tierra firme.",
-        "submerge": "Sumergir"
+        "submerge": "Sumergir",
+        "nukitsuke": "Nukitsuke",
+        "spell_nukitsuke": "Corre hacia el primer objetivo, infligiendo 🍞 daño a todo lo que atravieses.",
+        "cannot join a new lobby until you have left your existing lobby.": "No puedes unirte a un nuevo vestíbulo hasta que hayas salido de tu vestíbulo actual.",
+        "you cannot create a new lobby while you are in an existing lobby": "No puedes crear un nuevo vestíbulo mientras estás en un vestíbulo existente.",
+        "removed from game": "Eliminado del juego"
     },
     {
         "language": "日本",
@@ -4521,7 +4546,12 @@
         "spell_target_submerged": "液体に沈んでいる2つのユニットをターゲットにします。重ねて使用可能。",
         "target submerged": "水中のターゲット",
         "spell_submerge": "この呪いを受けたユニットは、乾燥した地面にいるときでさえ常に液体に浸かっていると見なされます。",
-        "submerge": "沈む"
+        "submerge": "沈む",
+        "nukitsuke": "Nukitsuke",
+        "spell_nukitsuke": "最初のターゲットに向かってダッシュし、通過するものすべてに🍞ダメージを与えます。",
+        "cannot join a new lobby until you have left your existing lobby.": "既存のロビーを退出するまで、新しいロビーに参加できません。",
+        "you cannot create a new lobby while you are in an existing lobby": "既存のロビーにいる間は、新しいロビーを作成することはできません。",
+        "removed from game": "ゲームから削除されました"
     },
     {
         "language": "Português",
@@ -5275,7 +5305,12 @@
         "spell_target_submerged": "Alvo 🍞 unidades que estão submersas em líquido. Empilhável",
         "target submerged": "Alvo Submerso",
         "spell_submerge": "Unidades que recebem esta maldição são consideradas submersas em líquido o tempo todo, mesmo quando estão em terreno seco.",
-        "submerge": "Submergir"
+        "submerge": "Submergir",
+        "nukitsuke": "Nukitsuke",
+        "spell_nukitsuke": "Corra em direção ao primeiro alvo, causando 🍞 de dano a tudo que você passar.",
+        "cannot join a new lobby until you have left your existing lobby.": "Não é possível entrar em uma nova sala até que você tenha saído da sua sala atual.",
+        "you cannot create a new lobby while you are in an existing lobby": "Você não pode criar um novo lobby enquanto estiver em um lobby existente.",
+        "removed from game": "Removido do jogo"
     },
     {
         "language": "عربى",
@@ -6029,7 +6064,12 @@
         "spell_target_submerged": "استهدف وحدتين مغمورتين في سائل. قابلة للتكديس.",
         "target submerged": "الهدف تحت الماء",
         "spell_submerge": "تعتبر الوحدات التي تتلقى هذه اللعنة غارقة في سائل في جميع الأوقات، حتى عند التواجد على أرض جافة.",
-        "submerge": "غمر"
+        "submerge": "غمر",
+        "nukitsuke": "Nukitsuke",
+        "spell_nukitsuke": "اندفع نحو الهدف الأول، مُتسببًا في ضرر 🍞 لأي شيء تعبر من خلاله",
+        "cannot join a new lobby until you have left your existing lobby.": "لا يمكنك الانضمام إلى لوبي جديد حتى تترك لوبيك الحالي.",
+        "you cannot create a new lobby while you are in an existing lobby": "لا يمكنك إنشاء غرفة جديدة بينما أنت في غرفة موجودة بالفعل.",
+        "removed from game": "تمت إزالته من اللعبة"
     },
     {
         "language": "한국어",
@@ -6783,7 +6823,12 @@
         "spell_target_submerged": "액체에 잠긴 두 개의 유닛을 목표로 하세요. 중첩 가능.",
         "target submerged": "수중 목표",
         "spell_submerge": "이 저주를 받은 유닛은 항상 액체에 잠겨 있는 것으로 간주되며, 마른 땅 위에 있을 때도 마찬가지입니다.",
-        "submerge": "잠수하다"
+        "submerge": "잠수하다",
+        "nukitsuke": "Nukitsuke",
+        "spell_nukitsuke": "첫 번째 목표를 향해 돌진하여 지나가는 모든 것에 🍞 피해를 줍니다.",
+        "cannot join a new lobby until you have left your existing lobby.": "기존 대기실을 나가기 전까지 새로운 대기실에 참여할 수 없습니다.",
+        "you cannot create a new lobby while you are in an existing lobby": "기존 로비에 있을 때는 새 로비를 생성할 수 없습니다.",
+        "removed from game": "게임에서 제거됨"
     },
     {
         "language": "Русский",
@@ -7537,7 +7582,12 @@
         "spell_target_submerged": "Цельте на ДВЕ единицы, скрытые в жидкости. Стекаемые.",
         "target submerged": "Цель под водой",
         "spell_submerge": "Юниты, получившие это проклятие, считаются погруженными в жидкость в любое время, даже когда находятся на сухой земле.",
-        "submerge": "Погрузить"
+        "submerge": "Погрузить",
+        "nukitsuke": "Nukitsuke",
+        "spell_nukitsuke": "Бросьтесь к первой цели, нанося 🍞 урон всему, что попадается на пути.",
+        "cannot join a new lobby until you have left your existing lobby.": "Не можете присоединиться к новой лобби, пока не покинете текущее лобби.",
+        "you cannot create a new lobby while you are in an existing lobby": "Вы не можете создать новую лобби, пока находитесь в существующей лобби.",
+        "removed from game": "Убрано из игры"
     },
     {
         "language": "中文(简)",
@@ -8291,7 +8341,12 @@
         "spell_target_submerged": "目标两个被液体淹没的单位。可叠加",
         "target submerged": "水下目标",
         "spell_submerge": "受到这个诅咒的单位被视为始终浸泡在液体中，即使在干燥的土地上也是如此。",
-        "submerge": "沉没"
+        "submerge": "沉没",
+        "nukitsuke": "Nukitsuke",
+        "spell_nukitsuke": "冲向第一个目标，对你经过的任何东西造成🍞伤害",
+        "cannot join a new lobby until you have left your existing lobby.": "在离开当前大厅之前，无法加入新的大厅。",
+        "you cannot create a new lobby while you are in an existing lobby": "您无法在已有的大厅中创建新大厅。",
+        "removed from game": "已从游戏中移除"
     },
     {
         "language": "中文(繁)",
@@ -9045,7 +9100,12 @@
         "spell_target_submerged": "目標兩個潛入液體中的單位。可堆疊。",
         "target submerged": "水下目標",
         "spell_submerge": "受到這個詛咒的單位被視為始終浸沒在液體中，即使在乾燥的土地上也是如此。",
-        "submerge": "淹沒"
+        "submerge": "淹沒",
+        "nukitsuke": "Nukitsuke",
+        "spell_nukitsuke": "向第一個目標衝刺，對經過的任何物體造成🍞傷害",
+        "cannot join a new lobby until you have left your existing lobby.": "在您離開現有的遊戲大廳之前，無法加入新的遊戲大廳。",
+        "you cannot create a new lobby while you are in an existing lobby": "在您已經在一個現有大廳時，無法創建新大廳。",
+        "removed from game": "從遊戲中移除"
     },
     {
         "language": "Polski",
@@ -9799,7 +9859,12 @@
         "spell_target_submerged": "Celuj w 🍞 jednostki zanurzone w cieczy. Można układać.",
         "target submerged": "Cel podwodny",
         "spell_submerge": "Jednostki, które otrzymają tę klątwę, są uważane za zanurzone w cieczy w każdym momencie, nawet gdy stoją na suchej ziemi.",
-        "submerge": "Zanurzyć"
+        "submerge": "Zanurzyć",
+        "nukitsuke": "Nukitsuke",
+        "spell_nukitsuke": "Pędź w stronę pierwszego celu, zadając 🍞 obrażenia wszystkiemu, co napotkasz na swojej drodze.",
+        "cannot join a new lobby until you have left your existing lobby.": "Nie możesz dołączyć do nowego lobby, dopóki nie opuścisz swojego obecnego lobby.",
+        "you cannot create a new lobby while you are in an existing lobby": "Nie możesz stworzyć nowego lobby, gdy jesteś w istniejącym lobby.",
+        "removed from game": "Usunięto z gry"
     },
     {
         "language": "Dutch",
@@ -10553,7 +10618,12 @@
         "spell_target_submerged": "Richt op 🍞 eenheden die ondergedompeld zijn in vloeistof. Stapelbaar",
         "target submerged": "Doel Onderwater",
         "spell_submerge": "Eenheden die deze vloek ontvangen, worden te allen tijde als ondergedompeld in vloeistof beschouwd, zelfs wanneer ze op droge grond staan.",
-        "submerge": "Onderdompelen"
+        "submerge": "Onderdompelen",
+        "nukitsuke": "Nukitsuke",
+        "spell_nukitsuke": "Snijd naar het eerste doelwit en breng 🍞 schade toe aan alles wat je passeert.",
+        "cannot join a new lobby until you have left your existing lobby.": "Je kunt geen nieuwe lobby joinen totdat je je bestaande lobby hebt verlaten.",
+        "you cannot create a new lobby while you are in an existing lobby": "Je kunt geen nieuwe lobby maken terwijl je in een bestaande lobby bent.",
+        "removed from game": "Verwijderd uit het spel"
     },
     {
         "language": "Предреформенный русскій",
@@ -11307,6 +11377,11 @@
         "spell_target_submerged": "",
         "target submerged": "",
         "spell_submerge": "",
-        "submerge": ""
+        "submerge": "",
+        "nukitsuke": "Nukitsuke",
+        "spell_nukitsuke": "",
+        "cannot join a new lobby until you have left your existing lobby.": "",
+        "you cannot create a new lobby while you are in an existing lobby": "",
+        "removed from game": ""
     }
 ]
