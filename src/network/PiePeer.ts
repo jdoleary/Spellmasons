@@ -68,7 +68,8 @@ if (globalThis.steamworks) {
             if (piePeerSingleton && piePeerSingleton.onData) {
                 piePeerSingleton.handleMessage(text);
                 // Host echos message to all clients
-                if (globalThis.isHost(piePeerSingleton)) {
+                // @ts-ignore jtestNoEcho just for QA, remove for Major launch
+                if (globalThis.isHost(piePeerSingleton) && !globalThis.jtestNoEcho) {
                     console.log("Host echo message to all clients", text);
                     // Send to all connections
                     if (globalThis.electronSettings)
