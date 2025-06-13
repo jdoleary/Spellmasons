@@ -30,10 +30,11 @@ const spell: Spell = {
     effect: async (state, card, quantity, underworld, prediction) => {
       const targets = getCurrentTargets(state);
       playDefaultSpellSFX(card, prediction);
-      if (targets[0]) {
-        const vector = normalizedVector(state.casterUnit, targets[0]).vector || { x: 0, y: 0 };
+      const target = targets[0];
+      if (target) {
+        const vector = normalizedVector(state.casterUnit, target).vector || { x: 0, y: 0 };
         const width = config.COLLISION_MESH_RADIUS / 2;
-        const depth = distance(state.casterUnit, targets[0]);
+        const depth = distance(state.casterUnit, target);
         const targetingColumn = getColumnPoints(state.casterUnit, vector, width, depth);
         const withinColumn: IUnit[] = underworld.getPotentialTargets(
           prediction
@@ -41,9 +42,12 @@ const spell: Spell = {
           return isVec2InsidePolygon(t, targetingColumn);
         }).flatMap(t => isUnit(t) ? [t] : []);
 
-        await forcePushToDestination(state.casterUnit, targets[0], quantity, underworld, prediction, state.casterUnit);
+        await forcePushToDestination(state.casterUnit, target, quantity, underworld, prediction, state.casterUnit);
 
         for (let unit of withinColumn) {
+          if (unit === state.casterUnit) {
+            continue;
+          }
           takeDamage({
             unit: unit,
             amount: damage,
