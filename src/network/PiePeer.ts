@@ -53,7 +53,6 @@ if (globalThis.steamworks) {
     console.log('Subscribe to p2p messages 10');
     // @ts-ignore
     globalThis.steamworks?.subscribeToP2PMessages(data => {
-        console.log('jtest got p2p message, pre decode')
         try {
 
             const text = msgpack.decode(data);
@@ -64,7 +63,6 @@ if (globalThis.steamworks) {
                     setPieToP2PMode(true)
                 }
             }
-            console.log('jtest steamp2p data, decoded', text);
             if (piePeerSingleton && piePeerSingleton.onData) {
                 piePeerSingleton.handleMessage(text);
                 // Echo disabled: Not needed because all peers for connections to each other
@@ -503,7 +501,6 @@ export default class PiePeer {
             peerLobbyId,
             time: Date.now(),
         });
-        console.log('jtest sendMessage', message, 'as host', globalThis.isHost(this))
         // If not connected, send all messages to self
         if (this.soloMode || !this.isConnected()) {
             // In soloMode there is no this.ws so just handle the message immediately as 
