@@ -12,6 +12,7 @@ console.log('Setup: presetup.ts')
 import './localization';
 import * as PIXI from 'pixi.js';
 import * as storage from './storage';
+import './sharedGlobals';
 import { setupAudio } from './Audio';
 // globalThis.pixi must be set before ANY other js files are
 // processes so that files know that this isn't a headless
@@ -45,13 +46,3 @@ storage.getSavedData();
 // TODO: Remove from svelte menu, music is now played when level is created.
 // TODO: Ensure music works on electron without being associated with a button press
 globalThis.playMusic = () => { };
-
-// Type guard that checks if a value is null or undefined
-globalThis.isNullOrUndef = <T>(x: T): x is Extract<T, null | undefined> => {
-    return x === undefined || x === null;
-};
-
-// Type guard that checks if a value exists (is not null or undefined)
-globalThis.exists = <T>(x: T): x is NonNullable<T> => {
-    return !globalThis.isNullOrUndef(x);
-};

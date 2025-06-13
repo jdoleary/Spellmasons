@@ -50,9 +50,9 @@ if (globalThis.steamworks) {
             console.error('Unexpected, no globalThis.electronSettings, cannot p2pSend')
         }
     }
-    console.log('Subscribe to p2p messages 6');
+    console.log('Subscribe to p2p messages 9');
     // @ts-ignore
-    globalThis.steamworks.subscribeToP2PMessages(data => {
+    globalThis.steamworks?.subscribeToP2PMessages(data => {
         console.log('jtest got p2p message, pre decode')
         try {
 
@@ -228,14 +228,6 @@ export default class PiePeer {
         };
         this.cancelNextReconnectAttempt = false;
 
-        window.addEventListener('online', () => {
-            log('Network online');
-            this._updateDebugInfo();
-        });
-        window.addEventListener('offline', () => {
-            log('Network offline');
-            this._updateDebugInfo();
-        });
         globalThis.kickPeer = (steamId: string) => {
             this.sendData({
                 type: MESSAGE_TYPES.KICKED_FROM_PEER_LOBBY,

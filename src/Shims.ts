@@ -67,4 +67,7 @@ global.localStorage = {
     setItem: () => { },
 }
 global.getChosenLanguageCode = () => '';
+import "./sharedGlobals";
+global.peerLobbyId = '';
+global.peers = new Set();
 export { };
