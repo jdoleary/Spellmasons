@@ -371,7 +371,7 @@ export function setClientConnected(player: IPlayer, connected: boolean, underwor
   // Override: If in hotseat multiplayer than all clients are considered connected
   player.clientConnected = globalThis.numberOfHotseatPlayers > 1 ? true : connected;
   if (connected) {
-    Image.removeSubSprite(player.unit.image, 'disconnected.png');
+    Image.removeSubSprite(player.unit.image, 'disconnected.png', true);
     underworld.queueGameLoop();
   } else {
     Image.addSubSprite(player.unit.image, 'disconnected.png');

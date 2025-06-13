@@ -433,7 +433,7 @@ export function addSubSprite(image: IImageAnimated | undefined, imageName: strin
   }
   return;
 }
-export function removeSubSprite(image: IImageAnimated | undefined, imagePath: string) {
+export function removeSubSprite(image: IImageAnimated | undefined, imagePath: string, squelchError?: boolean) {
   if (!image) {
     return;
   }
@@ -443,7 +443,9 @@ export function removeSubSprite(image: IImageAnimated | undefined, imagePath: st
     // Remove PIXI.Sprite instance
     subSprite.parent.removeChild(subSprite);
   } else {
-    console.log('Cannot remove subsprite', imagePath, 'subsprite is missing from sprite.children');
+    if (!squelchError) {
+      console.log('Cannot remove subsprite', imagePath, 'subsprite is missing from sprite.children');
+    }
   }
 }
 export function show(image?: IImageAnimated) {
