@@ -50,7 +50,7 @@ if (globalThis.steamworks) {
             console.error('Unexpected, no globalThis.electronSettings, cannot p2pSend')
         }
     }
-    console.log('Subscribe to p2p messages 9');
+    console.log('Subscribe to p2p messages 10');
     // @ts-ignore
     globalThis.steamworks?.subscribeToP2PMessages(data => {
         console.log('jtest got p2p message, pre decode')
@@ -67,14 +67,14 @@ if (globalThis.steamworks) {
             console.log('jtest steamp2p data, decoded', text);
             if (piePeerSingleton && piePeerSingleton.onData) {
                 piePeerSingleton.handleMessage(text);
-                // Host echos message to all clients
-                // @ts-ignore jtestNoEcho just for QA, remove for Major launch
-                if (globalThis.isHost(piePeerSingleton) && !globalThis.jtestNoEcho) {
-                    console.log("Host echo message to all clients", text);
-                    // Send to all connections
-                    if (globalThis.electronSettings)
-                        globalThis.p2pSend(text);
-                }
+                // Echo disabled: Not needed because all peers for connections to each other
+                // // Host echos message to all clients
+                // if (globalThis.isHost(piePeerSingleton)) {
+                //     console.log("Host echo message to all clients", text);
+                //     // Send to all connections
+                //     if (globalThis.electronSettings)
+                //         globalThis.p2pSend(text);
+                // }
             } else {
                 console.error('PiePeerSingleton missing or onData not defined', piePeerSingleton, piePeerSingleton?.onData);
             }
