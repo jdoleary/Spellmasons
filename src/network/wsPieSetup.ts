@@ -330,7 +330,9 @@ export function setupPieAndUnderworld() {
     }
     globalThis.connectToSingleplayer = connectToSingleplayer;
     globalThis.startSingleplayer = function startSingleplayer(numberOfHotseatPlayers: number, gameMode?: GameMode) {
-      console.log('Start Game: Attempt to start the game')
+      console.log('Start Game: Attempt to start the game');
+      // PiePeer can't handle singleplayer
+      globalThis.setPieToP2PMode(false);
       globalThis.numberOfHotseatPlayers = numberOfHotseatPlayers;
       return connectToSingleplayer().then(() => {
         // Create first level
