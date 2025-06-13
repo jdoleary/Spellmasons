@@ -636,7 +636,7 @@ export function incrementPresentedRunesForPlayer(player: Pick<IPlayer, 'lockedRu
 
 }
 
-export function setCardmason(player: IPlayer, isCardmason: boolean) {
+export function setCardmason(player: IPlayer, isCardmason: boolean, underworld?: Underworld) {
   if (globalThis.player == player) {
     document.body.classList.toggle('cardmason', isCardmason);
   }
@@ -646,10 +646,18 @@ export function setCardmason(player: IPlayer, isCardmason: boolean) {
     isCardmason = isCardmason == 'yes';
   }
   player.isCardmason = isCardmason;
-  if (player.isCardmason && isNullOrUndef(player.unit.charges)) {
-    player.unit.charges = {};
+  if (player.isCardmason) {
+    if (isNullOrUndef(player.unit.charges)) {
+      player.unit.charges = {};
+    }
+  } else {
+    delete player.unit.charges;
   }
-
+  // Update UI and prediction entities when player changes cardmason status
+  if (underworld) {
+    CardUI.updateCardBadges(underworld);
+    underworld.syncPredictionEntities();
+  }
 }
 const IS_DISCARD_LOCKED_CLASSNAME = 'is-discard-locked';
 export function syncLockedCardsAndCSS(player?: IPlayer) {

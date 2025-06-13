@@ -1741,6 +1741,11 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
     flaggedForRemoval: u.flaggedForRemoval,
   });
 
+  // Remove charges if missing on Unit to sync cardmason state
+  if (isNullOrUndef(u.charges)) {
+    delete predictionUnit.charges;
+  }
+
   // Prediction units should have full stamina because they will
   // when it is their turn.  This is critical for melee ai attack predictions
   // but is NOT set for player units who may use stamia for casting in which case

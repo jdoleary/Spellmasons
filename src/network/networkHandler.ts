@@ -777,7 +777,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         Player.syncLobby(underworld);
         // Don't override isCardmason if it's not being set
         if (exists(isCardmason)) {
-          Player.setCardmason(fromPlayer, isCardmason);
+          Player.setCardmason(fromPlayer, isCardmason, overworld.underworld);
         }
 
         // Improve joining games so that if there is an uncontrolled player with the same name, this client

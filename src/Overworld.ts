@@ -123,7 +123,7 @@ export function ensureAllClientsHaveAssociatedPlayers(overworld: Overworld, clie
         if (i == 0) Player.updateGlobalRefToPlayerIfCurrentClient(player);
         if (globalThis.player == player) {
           const isCardmason = storage.get(storage.STORAGE_ID_IS_CARDMASON) == 'yes';
-          Player.setCardmason(player, isCardmason);
+          Player.setCardmason(player, isCardmason, overworld.underworld);
         }
         player.lobbyReady = !!defaultLobbyReady;
         const nameFromServer = names.length && names[k];

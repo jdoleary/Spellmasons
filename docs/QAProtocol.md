@@ -19,6 +19,8 @@ NEW for June:
 - Make sure mods work in p2p
 NEW for July:
 - Test cardmason sync on new multiplayer game
+- Test wizard picker large and small
+- Rename cardmason as deathmason with clouds and everything "Play as the Deathmason!"
 
 --- Archived
 - Test loading a saved multiplayer game
