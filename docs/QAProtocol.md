@@ -23,6 +23,7 @@ NEW for July:
 - Rename cardmason as deathmason with clouds and everything "Play as the Deathmason!"
 
 --- Archived
+- Uncomment: commits: `gate: Temporarily disable Cardmason until update`
 - Test loading a saved multiplayer game
 - Test Hotseat multiplayer basics
     - Test one player dying and next player carrying on to next level and make sure they both spawn
