@@ -1036,7 +1036,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
           }
           Player.syncLobby(underworld);
         } else {
-          if (!underworld.pie.soloMode) {
+          if (!underworld.pie.soloMode && !globalThis.peerLobbyId) {
             console.error('Unexpected: Client recieving END_TURN message should include playersTurnEnded from server.')
           }
         }
