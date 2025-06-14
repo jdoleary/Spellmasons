@@ -4064,7 +4064,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           effectState.casterUnit.mana -= spellCostTally.manaCost;
           effectState.casterUnit.stamina -= spellCostTally.staminaCost;
           if (effectState.casterUnit.charges) {
-            if (effectState.casterUnit.charges[card.id] === undefined) {
+            if (isNullOrUndef(effectState.casterUnit.charges[card.id])) {
               effectState.casterUnit.charges[card.id] = 0;
             }
             effectState.casterUnit.charges[card.id] = (effectState.casterUnit.charges[card.id] || 0) - quantity;
