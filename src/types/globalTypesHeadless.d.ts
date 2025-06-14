@@ -401,7 +401,7 @@ declare global {
   var setPieToP2PMode: (active: boolean) => void | undefined;
   // Returns true if request is accepted
   var responseRequestToJoinP2P: (request: RequestToJoin, approved: boolean, reason?: string) => void | undefined;
-  var kickPeer: (steamId) => void | undefined;
+  var kickPeer: (steamId: string, name?: string) => void | undefined;
   var menuJoinErr: (e: string) => void | undefined;
   var showLegalPopup: (forcePopup: boolean) => void;
   // If connected to a non-host app pie server where the first client acts as the host

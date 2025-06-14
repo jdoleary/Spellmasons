@@ -50,7 +50,7 @@ if (globalThis.steamworks) {
             console.error('Unexpected, no globalThis.electronSettings, cannot p2pSend')
         }
     }
-    console.log('Subscribe to p2p messages 10');
+    console.log('Subscribe to p2p messages beta');
     // @ts-ignore
     globalThis.steamworks?.subscribeToP2PMessages(data => {
         try {
@@ -226,12 +226,17 @@ export default class PiePeer {
         };
         this.cancelNextReconnectAttempt = false;
 
-        globalThis.kickPeer = (steamId: string) => {
-            this.sendData({
-                type: MESSAGE_TYPES.KICKED_FROM_PEER_LOBBY,
-                peerLobbyId: globalThis.peerLobbyId,
-                peerSteamId: steamId
+        globalThis.kickPeer = (steamId: string, name?: string) => {
+            Jprompt({ text: globalThis.i18n(['kick-conf', name || 'player']), noBtnText: 'Cancel', noBtnKey: 'Escape', yesText: 'kick-player', forceShow: true }).then(confirm => {
+                if (confirm) {
+                    this.sendData({
+                        type: MESSAGE_TYPES.KICKED_FROM_PEER_LOBBY,
+                        peerLobbyId: globalThis.peerLobbyId,
+                        peerSteamId: steamId
+                    });
+                }
             });
+
         };
 
     }

@@ -512,6 +512,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
           Jprompt({ text: 'Removed from game', yesText: 'Okay', forceShow: true });
           globalThis.pieLeaveRoom?.();
         }
+        globalThis.peerHostBroadcastClientsPresenceChanged(underworld.pie);
       }
       break;
     }

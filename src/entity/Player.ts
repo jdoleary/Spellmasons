@@ -26,8 +26,8 @@ import floatingText from '../graphics/FloatingText';
 const elInGameLobby = document.getElementById('in-game-lobby') as (HTMLElement | undefined);
 elInGameLobby?.addEventListener('click', (e) => {
   const t = e.target as HTMLElement;
-  if (t.classList.contains('kick-btn')) {
-    globalThis.kickPeer(t.dataset.clientid);
+  if (t.classList.contains('kick-btn') && t.dataset.clientid) {
+    globalThis.kickPeer(t.dataset.clientid, t.dataset.name || t.dataset.clientid);
   }
 });
 const elInstructions = document.getElementById('instructions') as (HTMLElement | undefined);
@@ -409,7 +409,7 @@ export function syncLobby(underworld: Underworld) {
     // filter: Don't show disconnected players in in-game lobby.
     elInGameLobby.innerHTML = globalThis.lobbyPlayerList.filter(p => p.clientConnected).map(p => {
       return `<div class="ui-border"><div class="player"><span class="player-name"><span style="color:${p.color}">⬤&nbsp;</span>${p.name}</span><span>${p.status}</span>
-      ${p.clientId !== globalThis.clientId ? `<button class="kick-btn" data-fn="kick" data-name="${p.name}" data-clientid="${p.clientId}">Kick</button>` : ''}
+      ${p.clientId !== globalThis.clientId ? `<button class="kick-btn" data-fn="kick" data-name="${p.name}" data-clientid="${p.clientId}" data-localize-text="kick-player">Kick</button>` : ''}
       </div></div>`
     }).join('');
 

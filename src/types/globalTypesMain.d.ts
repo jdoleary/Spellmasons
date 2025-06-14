@@ -352,6 +352,6 @@ declare global {
   var peerLobbyId: string;
   // Steamids of peers that we are connected to
   var peers: Set<string>;
-  var kickPeer: (steamId) => void | undefined;
+  var kickPeer: (steamId: string, name?: string) => void | undefined;
   var peerHostBroadcastClientsPresenceChanged: (pie: PiePeer) => void;
 }
