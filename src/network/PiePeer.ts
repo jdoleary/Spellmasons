@@ -466,7 +466,8 @@ export default class PiePeer {
         }
     }
     leaveRoom() {
-        this.disconnect();
+        // exitCurrentGame implicitly disconnects connection
+        globalThis.exitCurrentGame?.();
         // Clear currentRoomInfo even if pie is connected in soloMode
         this.currentRoomInfo = undefined;
         if (this.soloMode) {
