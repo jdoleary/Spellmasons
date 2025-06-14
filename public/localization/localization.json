@@ -756,7 +756,9 @@
         "spell_nukitsuke": "Dash towards the first target, dealing 🍞 damage to anything you pass through",
         "cannot join a new lobby until you have left your existing lobby.": "Cannot join a new lobby until you have left your existing lobby.",
         "you cannot create a new lobby while you are in an existing lobby": "You cannot create a new lobby while you are in an existing lobby",
-        "removed from game": "Removed from game"
+        "removed from game": "Removed from game",
+        "kick-player": "Kick",
+        "kick-conf": "Are you sure you want to remove 🍞 from the game?"
     },
     {
         "language": "Français",
@@ -1515,7 +1517,9 @@
         "spell_nukitsuke": "Foncez vers la première cible, infligeant 🍞 de dégâts à tout ce que vous traversez.",
         "cannot join a new lobby until you have left your existing lobby.": "Vous ne pouvez pas rejoindre un nouveau lobby tant que vous n'avez pas quitté votre lobby existant.",
         "you cannot create a new lobby while you are in an existing lobby": "Vous ne pouvez pas créer un nouveau salon pendant que vous êtes dans un salon existant.",
-        "removed from game": "Retiré du jeu"
+        "removed from game": "Retiré du jeu",
+        "kick-player": "Supprimer le joueur",
+        "kick-conf": "Es-tu sûr de vouloir enlever 🍞 du jeu ?"
     },
     {
         "language": "italiano",
@@ -2274,7 +2278,9 @@
         "spell_nukitsuke": "Corri verso il primo obiettivo, infliggendo 🍞 danni a tutto ciò che attraversi.",
         "cannot join a new lobby until you have left your existing lobby.": "Non puoi unirti a un nuovo lobby finché non hai lasciato il tuo lobby attuale.",
         "you cannot create a new lobby while you are in an existing lobby": "Non puoi creare una nuova lobby mentre sei in una lobby esistente.",
-        "removed from game": "Rimosso dal gioco"
+        "removed from game": "Rimosso dal gioco",
+        "kick-player": "Rimuovi Giocatore",
+        "kick-conf": "Sei sicuro di voler rimuovere 🍞 dal gioco?"
     },
     {
         "language": "Deutsche",
@@ -3033,7 +3039,9 @@
         "spell_nukitsuke": "Renne auf das erste Ziel zu und füge allem, was du durchquerst, 🍞 Schaden zu.",
         "cannot join a new lobby until you have left your existing lobby.": "Du kannst keinem neuen Lobby beitreten, bis du deine bestehende Lobby verlassen hast.",
         "you cannot create a new lobby while you are in an existing lobby": "Du kannst keine neue Lobby erstellen, während du dich in einer bestehenden Lobby befindest.",
-        "removed from game": "Aus dem Spiel entfernt"
+        "removed from game": "Aus dem Spiel entfernt",
+        "kick-player": "Spieler Entfernen",
+        "kick-conf": "Bist du dir sicher, dass du 🍞 aus dem Spiel entfernen möchtest?"
     },
     {
         "language": "español",
@@ -3792,7 +3800,9 @@
         "spell_nukitsuke": "Corre hacia el primer objetivo, infligiendo 🍞 daño a todo lo que atravieses.",
         "cannot join a new lobby until you have left your existing lobby.": "No puedes unirte a un nuevo vestíbulo hasta que hayas salido de tu vestíbulo actual.",
         "you cannot create a new lobby while you are in an existing lobby": "No puedes crear un nuevo vestíbulo mientras estás en un vestíbulo existente.",
-        "removed from game": "Eliminado del juego"
+        "removed from game": "Eliminado del juego",
+        "kick-player": "Eliminar Jugador",
+        "kick-conf": "¿Estás seguro de que quieres eliminar 🍞 del juego?"
     },
     {
         "language": "日本",
@@ -4551,7 +4561,9 @@
         "spell_nukitsuke": "最初のターゲットに向かってダッシュし、通過するものすべてに🍞ダメージを与えます。",
         "cannot join a new lobby until you have left your existing lobby.": "既存のロビーを退出するまで、新しいロビーに参加できません。",
         "you cannot create a new lobby while you are in an existing lobby": "既存のロビーにいる間は、新しいロビーを作成することはできません。",
-        "removed from game": "ゲームから削除されました"
+        "removed from game": "ゲームから削除されました",
+        "kick-player": "プレイヤーを削除する",
+        "kick-conf": "本当にゲームから🍞を削除してもいいですか？"
     },
     {
         "language": "Português",
@@ -5310,7 +5322,9 @@
         "spell_nukitsuke": "Corra em direção ao primeiro alvo, causando 🍞 de dano a tudo que você passar.",
         "cannot join a new lobby until you have left your existing lobby.": "Não é possível entrar em uma nova sala até que você tenha saído da sua sala atual.",
         "you cannot create a new lobby while you are in an existing lobby": "Você não pode criar um novo lobby enquanto estiver em um lobby existente.",
-        "removed from game": "Removido do jogo"
+        "removed from game": "Removido do jogo",
+        "kick-player": "Remover Jogador",
+        "kick-conf": "Você tem certeza de que deseja remover o 🍞 do jogo?"
     },
     {
         "language": "عربى",
@@ -6069,7 +6083,9 @@
         "spell_nukitsuke": "اندفع نحو الهدف الأول، مُتسببًا في ضرر 🍞 لأي شيء تعبر من خلاله",
         "cannot join a new lobby until you have left your existing lobby.": "لا يمكنك الانضمام إلى لوبي جديد حتى تترك لوبيك الحالي.",
         "you cannot create a new lobby while you are in an existing lobby": "لا يمكنك إنشاء غرفة جديدة بينما أنت في غرفة موجودة بالفعل.",
-        "removed from game": "تمت إزالته من اللعبة"
+        "removed from game": "تمت إزالته من اللعبة",
+        "kick-player": "إزالة اللاعب",
+        "kick-conf": "هل أنت متأكد أنك تريد إزالة 🍞 من اللعبة؟"
     },
     {
         "language": "한국어",
@@ -6828,7 +6844,9 @@
         "spell_nukitsuke": "첫 번째 목표를 향해 돌진하여 지나가는 모든 것에 🍞 피해를 줍니다.",
         "cannot join a new lobby until you have left your existing lobby.": "기존 대기실을 나가기 전까지 새로운 대기실에 참여할 수 없습니다.",
         "you cannot create a new lobby while you are in an existing lobby": "기존 로비에 있을 때는 새 로비를 생성할 수 없습니다.",
-        "removed from game": "게임에서 제거됨"
+        "removed from game": "게임에서 제거됨",
+        "kick-player": "플레이어 제거",
+        "kick-conf": "정말로 게임에서 🍞을(를) 제거하시겠습니까?"
     },
     {
         "language": "Русский",
@@ -7587,7 +7605,9 @@
         "spell_nukitsuke": "Бросьтесь к первой цели, нанося 🍞 урон всему, что попадается на пути.",
         "cannot join a new lobby until you have left your existing lobby.": "Не можете присоединиться к новой лобби, пока не покинете текущее лобби.",
         "you cannot create a new lobby while you are in an existing lobby": "Вы не можете создать новую лобби, пока находитесь в существующей лобби.",
-        "removed from game": "Убрано из игры"
+        "removed from game": "Убрано из игры",
+        "kick-player": "Удалить игрока",
+        "kick-conf": "Вы уверены, что хотите удалить 🍞 из игры?"
     },
     {
         "language": "中文(简)",
@@ -8346,7 +8366,9 @@
         "spell_nukitsuke": "冲向第一个目标，对你经过的任何东西造成🍞伤害",
         "cannot join a new lobby until you have left your existing lobby.": "在离开当前大厅之前，无法加入新的大厅。",
         "you cannot create a new lobby while you are in an existing lobby": "您无法在已有的大厅中创建新大厅。",
-        "removed from game": "已从游戏中移除"
+        "removed from game": "已从游戏中移除",
+        "kick-player": "移除玩家",
+        "kick-conf": "你确定要从游戏中移除🍞吗？"
     },
     {
         "language": "中文(繁)",
@@ -9105,7 +9127,9 @@
         "spell_nukitsuke": "向第一個目標衝刺，對經過的任何物體造成🍞傷害",
         "cannot join a new lobby until you have left your existing lobby.": "在您離開現有的遊戲大廳之前，無法加入新的遊戲大廳。",
         "you cannot create a new lobby while you are in an existing lobby": "在您已經在一個現有大廳時，無法創建新大廳。",
-        "removed from game": "從遊戲中移除"
+        "removed from game": "從遊戲中移除",
+        "kick-player": "移除玩家",
+        "kick-conf": "你確定要將 🍞 從遊戲中移除嗎？"
     },
     {
         "language": "Polski",
@@ -9864,7 +9888,9 @@
         "spell_nukitsuke": "Pędź w stronę pierwszego celu, zadając 🍞 obrażenia wszystkiemu, co napotkasz na swojej drodze.",
         "cannot join a new lobby until you have left your existing lobby.": "Nie możesz dołączyć do nowego lobby, dopóki nie opuścisz swojego obecnego lobby.",
         "you cannot create a new lobby while you are in an existing lobby": "Nie możesz stworzyć nowego lobby, gdy jesteś w istniejącym lobby.",
-        "removed from game": "Usunięto z gry"
+        "removed from game": "Usunięto z gry",
+        "kick-player": "Usuń Gracza",
+        "kick-conf": "Czy na pewno chcesz usunąć 🍞 z gry?"
     },
     {
         "language": "Dutch",
@@ -10623,7 +10649,9 @@
         "spell_nukitsuke": "Snijd naar het eerste doelwit en breng 🍞 schade toe aan alles wat je passeert.",
         "cannot join a new lobby until you have left your existing lobby.": "Je kunt geen nieuwe lobby joinen totdat je je bestaande lobby hebt verlaten.",
         "you cannot create a new lobby while you are in an existing lobby": "Je kunt geen nieuwe lobby maken terwijl je in een bestaande lobby bent.",
-        "removed from game": "Verwijderd uit het spel"
+        "removed from game": "Verwijderd uit het spel",
+        "kick-player": "Verwijder Speler",
+        "kick-conf": "Weet je zeker dat je 🍞 uit het spel wilt verwijderen?"
     },
     {
         "language": "Предреформенный русскій",
@@ -11382,6 +11410,8 @@
         "spell_nukitsuke": "",
         "cannot join a new lobby until you have left your existing lobby.": "",
         "you cannot create a new lobby while you are in an existing lobby": "",
-        "removed from game": ""
+        "removed from game": "",
+        "kick-player": "",
+        "kick-conf": ""
     }
 ]
