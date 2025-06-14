@@ -479,6 +479,18 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
   switch (type) {
     case MESSAGE_TYPES.PEER_VOLUNTARY_DISCONNECT: {
       globalThis.peers.delete(fromClient);
+      if (payload.hostDisconnected) {
+        const backupSaveName = `backup`;
+        // Backups are unique to the current date and the save name
+        // so multiple backups in the same day and same game name will overwrite each other
+        const todayDate = new Date().setHours(0, 0, 0, 0);
+        globalThis.save?.(`${todayDate}-${backupSaveName}`, true).then(errMsg => {
+          if (!errMsg) {
+            Jprompt({ text: ['auto save notice', backupSaveName], yesText: 'Okay', forceShow: true });
+          }
+        });
+        globalThis.exitCurrentGame?.();
+      }
       if (underworld.pie instanceof PiePeer) {
         globalThis.peerHostBroadcastClientsPresenceChanged(underworld.pie);
       } else {

@@ -299,6 +299,7 @@ export default class PiePeer {
     async disconnect(): Promise<void> {
         this.sendData({
             type: MESSAGE_TYPES.PEER_VOLUNTARY_DISCONNECT,
+            hostDisconnected: globalThis.isHost(this)
         });
         globalThis.peers.clear();
         globalThis.peerLobbyId = '';
