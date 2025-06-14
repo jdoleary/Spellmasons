@@ -915,7 +915,10 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean, so
     // as the callbacks may create predictions that need to be processed such as
     // bloat + die causing a push.  Otherwise a raceTimeout could occur
     if (prediction) {
-      underworld.fullySimulateForceMovePredictions();
+      if (underworld.forceMovePrediction.length > 0) {
+        console.warn('Old fullySimulateForceMovesPredictions invokation caught unresolved forceMoves, this should not occur any more');
+        underworld.fullySimulateForceMovePredictions();
+      }
     }
     // Invoke gameLoopHeadless after onDeath callbacks
     // as the callbacks may create predictions that need to be processed such as

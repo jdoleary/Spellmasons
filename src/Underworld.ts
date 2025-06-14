@@ -4082,6 +4082,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         }
         //// end INCUR MANA COST ////
         const cardEffectPromise = card.effect(effectState, card, quantity, this, prediction, outOfRange);
+        // Await force moves produced by the cast SYNCRONOUSLY, such as a pull from Dash
         await this.awaitForceMoves(prediction);
 
         // Await the cast
@@ -4100,6 +4101,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         } catch (e) {
           console.error('Unexpected error from card.effect', e);
         }
+
+        // Await force moves produced by the cast ASYNCRONOUSLY, such as pushes from an explosion on death due to the cast
+        await this.awaitForceMoves(prediction);
+
         if (!prediction) {
           test_endCheckPromises();
         }
