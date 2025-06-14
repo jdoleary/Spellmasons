@@ -868,7 +868,6 @@ export function deselectLastCard(underworld: Underworld) {
     if (cardGroup) {
       (cardGroup.children.item(0) as HTMLElement).click();
       manageSelectedCardsParentVisibility();
-      runPredictions(underworld);
     } else {
       console.warn(`Cannot deselect last card in selected cards`)
     }
