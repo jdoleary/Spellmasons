@@ -309,6 +309,9 @@ export default class PiePeer {
         globalThis.peers.clear();
         globalThis.peerLobbyId = '';
         globalThis.electronSettings?.leaveLobby();
+        // Note: This must occur **after** the PEER_VOLUNTARY_DISCONNECT message so that we know if it's
+        // the host that's disconnecting.
+        document.body.classList.remove('isPeerHost');
         // Stop attempt to auto reconnect if a manual disconnect occurs
         clearTimeout(this.reconnectTimeoutId);
         // If disconnect is invoked while a connect() is already in progress this will

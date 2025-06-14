@@ -1703,7 +1703,6 @@ Current game version: ${globalThis.SPELLMASONS_PACKAGE_VERSION}`,
       overworld.underworld.cleanup();
     }
 
-    document.body.classList.remove('isPeerHost');
 
     // This prevents 'esc' key from going "back" to viewGame after the underworld is cleaned up
     clearLastNonMenuView();
