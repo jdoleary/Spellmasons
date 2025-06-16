@@ -762,7 +762,12 @@
         "self hosted": "Self Hosted",
         "local multiplayer": "Local Multiplayer",
         "steam player to player": "Steam Player to Player",
-        "online multiplayer": "Online Multiplayer"
+        "online multiplayer": "Online Multiplayer",
+        "invite friends": "Invite Friends",
+        "back to lobby": "Back to Lobby",
+        "host lobby": "Host Lobby",
+        "exit lobby": "Exit Lobby",
+        "play": "Play"
     },
     {
         "language": "Français",
@@ -1527,7 +1532,12 @@
         "self hosted": "Auto-hébergé",
         "local multiplayer": "Multijoueur Local",
         "steam player to player": "Connexion directe Steam",
-        "online multiplayer": "Multijoueur en ligne"
+        "online multiplayer": "Multijoueur en ligne",
+        "invite friends": "Inviter des amis",
+        "back to lobby": "Retour au hall",
+        "host lobby": "Créer un salon",
+        "exit lobby": "Sortie du hall",
+        "play": "Commencer le jeu"
     },
     {
         "language": "italiano",
@@ -2292,7 +2302,12 @@
         "self hosted": "Autonomamente Ospitato",
         "local multiplayer": "Giocatore locale",
         "steam player to player": "Connessione Diretta Steam",
-        "online multiplayer": "Multiplayer Online"
+        "online multiplayer": "Multiplayer Online",
+        "invite friends": "Invita amici",
+        "back to lobby": "Torna al Lobby",
+        "host lobby": "Crea un Lobby",
+        "exit lobby": "Esci dalla lobby",
+        "play": "Inizia Gioco"
     },
     {
         "language": "Deutsche",
@@ -3057,7 +3072,12 @@
         "self hosted": "Selbst gehostet",
         "local multiplayer": "Lokaler Mehrspielermodus",
         "steam player to player": "Dampf Direktverbindung",
-        "online multiplayer": "Online-Mehrspieler"
+        "online multiplayer": "Online-Mehrspieler",
+        "invite friends": "Freunde einladen",
+        "back to lobby": "Zur Lobby zurück",
+        "host lobby": "Lobby erstellen",
+        "exit lobby": "Ausgangsbereich",
+        "play": "Spiel starten"
     },
     {
         "language": "español",
@@ -3822,7 +3842,12 @@
         "self hosted": "Autohospedado",
         "local multiplayer": "Multijugador local",
         "steam player to player": "Conexión Directa de Steam",
-        "online multiplayer": "Multijugador en línea"
+        "online multiplayer": "Multijugador en línea",
+        "invite friends": "Invitar Amigos",
+        "back to lobby": "Volver al vestíbulo",
+        "host lobby": "Crear un vestíbulo",
+        "exit lobby": "Salida del vestíbulo",
+        "play": "Iniciar Juego"
     },
     {
         "language": "日本",
@@ -4587,7 +4612,12 @@
         "self hosted": "セルフホステッド",
         "local multiplayer": "ローカルマルチプレイヤー",
         "steam player to player": "スチームダイレクト接続",
-        "online multiplayer": "オンラインマルチプレイヤー"
+        "online multiplayer": "オンラインマルチプレイヤー",
+        "invite friends": "友達を招待する",
+        "back to lobby": "ロビーに戻る",
+        "host lobby": "ロビーを作成する",
+        "exit lobby": "ロビーを出る",
+        "play": "ゲームスタート"
     },
     {
         "language": "Português",
@@ -5352,7 +5382,12 @@
         "self hosted": "Auto-Hospedado",
         "local multiplayer": "Multijogador Local",
         "steam player to player": "Conexão Direta via Steam",
-        "online multiplayer": "Multijogador Online"
+        "online multiplayer": "Multijogador Online",
+        "invite friends": "Convite para Amigos",
+        "back to lobby": "Voltar ao Saguão",
+        "host lobby": "Criar um Salão",
+        "exit lobby": "Sair do Lobby",
+        "play": "Iniciar Jogo"
     },
     {
         "language": "عربى",
@@ -6117,7 +6152,12 @@
         "self hosted": "مستضاف ذاتيًا",
         "local multiplayer": "اللعب المحلي المتعدد",
         "steam player to player": "الاتصال المباشر بالبخار",
-        "online multiplayer": "العب اونلاين مع لاعبين آخرين"
+        "online multiplayer": "العب اونلاين مع لاعبين آخرين",
+        "invite friends": "دعوة الأصدقاء",
+        "back to lobby": "العودة إلى الردهة",
+        "host lobby": "إنشاء غرفة انتظار",
+        "exit lobby": "خروج من اللوبي",
+        "play": "ابدأ اللعبة"
     },
     {
         "language": "한국어",
@@ -6882,7 +6922,12 @@
         "self hosted": "자체 호스팅",
         "local multiplayer": "로컬 멀티플레이어",
         "steam player to player": "스팀 직접 연결",
-        "online multiplayer": "온라인 멀티플레이어"
+        "online multiplayer": "온라인 멀티플레이어",
+        "invite friends": "친구 초대",
+        "back to lobby": "로비로 돌아가기",
+        "host lobby": "로비 만들기",
+        "exit lobby": "로비 나가기",
+        "play": "게임 시작"
     },
     {
         "language": "Русский",
@@ -7647,7 +7692,12 @@
         "self hosted": "Самостоятельно размещенный",
         "local multiplayer": "Местный мультиплеер",
         "steam player to player": "Паровая прямая связь",
-        "online multiplayer": "Онлайн Многопользовательский режим"
+        "online multiplayer": "Онлайн Многопользовательский режим",
+        "invite friends": "Пригласить друзей",
+        "back to lobby": "Вернуться в лобби",
+        "host lobby": "Создать лобби",
+        "exit lobby": "Выход из лобби",
+        "play": "Начать игру"
     },
     {
         "language": "中文(简)",
@@ -8412,7 +8462,12 @@
         "self hosted": "自托管",
         "local multiplayer": "本地多人游戏",
         "steam player to player": "蒸汽直连",
-        "online multiplayer": "在线多人游戏"
+        "online multiplayer": "在线多人游戏",
+        "invite friends": "邀请好友",
+        "back to lobby": "返回大厅",
+        "host lobby": "创建大厅",
+        "exit lobby": "退出大堂",
+        "play": "开始游戏"
     },
     {
         "language": "中文(繁)",
@@ -9177,7 +9232,12 @@
         "self hosted": "自我托管",
         "local multiplayer": "本地多人遊戲",
         "steam player to player": "蒸汽直接連接",
-        "online multiplayer": "線上多人遊戲"
+        "online multiplayer": "線上多人遊戲",
+        "invite friends": "邀請朋友",
+        "back to lobby": "返回大廳",
+        "host lobby": "創建大廳",
+        "exit lobby": "退出大廳",
+        "play": "開始遊戲"
     },
     {
         "language": "Polski",
@@ -9942,7 +10002,12 @@
         "self hosted": "Hostowany samodzielnie",
         "local multiplayer": "Lokalny tryb wieloosobowy",
         "steam player to player": "Bezpośrednie połączenie Steam",
-        "online multiplayer": "Tryb wieloosobowy online"
+        "online multiplayer": "Tryb wieloosobowy online",
+        "invite friends": "Zaproś przyjaciół",
+        "back to lobby": "Z powrotem do Lobby",
+        "host lobby": "Stwórz Lobby",
+        "exit lobby": "Wyjście z holu",
+        "play": "Zacznij Grę"
     },
     {
         "language": "Dutch",
@@ -10707,7 +10772,12 @@
         "self hosted": "Zelfgehost",
         "local multiplayer": "Lokaal Multiplayer",
         "steam player to player": "Stoom Directe Verbinding",
-        "online multiplayer": "Online Multiplayer"
+        "online multiplayer": "Online Multiplayer",
+        "invite friends": "Nodig Vrienden Uit",
+        "back to lobby": "Terug naar de Lobby",
+        "host lobby": "Creëer een Lobby",
+        "exit lobby": "Verlaat Lobby",
+        "play": "Start Spel"
     },
     {
         "language": "Предреформенный русскій",
@@ -11472,6 +11542,11 @@
         "self hosted": "",
         "local multiplayer": "",
         "steam player to player": "",
-        "online multiplayer": ""
+        "online multiplayer": "",
+        "invite friends": "",
+        "back to lobby": "",
+        "host lobby": "",
+        "exit lobby": "",
+        "play": ""
     }
 ]
