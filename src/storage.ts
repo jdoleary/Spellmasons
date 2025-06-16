@@ -134,7 +134,7 @@ export function remove(key: string) {
   }
 }
 export function set(key: string, value: any) {
-  console.debug('Setting ', key, 'to', value, 'in local storage');
+  console.debug('Setting ', key, 'to', value.toString().slice(0, 64), 'in local storage');
   if (globalThis.headless) {
     // Headless server does not use storage
     return;
