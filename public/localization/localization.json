@@ -354,7 +354,7 @@
         "auto save notice": "Game automatically saved: \"🍞\"",
         "lost connection to server": "Lost Connection to Server",
         "community servers": "Community Servers",
-        "custom server": "Custom Server",
+        "self hosted online server": "Self Hosted Online Server",
         "local area network": "Local Area Network",
         "hotseat multiplayer": "Hotseat Multiplayer",
         "deathmason description": "A nexus of dark magic; his capabilities are unknown.❕There is something familiar about him...",
@@ -740,7 +740,7 @@
         "keep card when discarding": "Keep card when discarding",
         "allow discarding": "Allow discarding",
         "languages": "Languages",
-        "support development": "Support Development",
+        "support development": "Support my work",
         "wizard type": "Wizard Type",
         "cardmason basics": "Cardmason Basics",
         "cardmason locking cards": "Cardmason Locking Cards",
@@ -758,7 +758,11 @@
         "you cannot create a new lobby while you are in an existing lobby": "You cannot create a new lobby while you are in an existing lobby",
         "removed from game": "Removed from game",
         "kick-player": "Kick",
-        "kick-conf": "Are you sure you want to remove 🍞 from the game?"
+        "kick-conf": "Are you sure you want to remove 🍞 from the game?",
+        "self hosted": "Self Hosted",
+        "local multiplayer": "Local Multiplayer",
+        "steam player to player": "Steam Player to Player",
+        "online multiplayer": "Online Multiplayer"
     },
     {
         "language": "Français",
@@ -1115,7 +1119,7 @@
         "auto save notice": "Jeu enregistré automatiquement: \"🍞\"",
         "lost connection to server": "Connexion perdue au serveur",
         "community servers": "Serveurs communautaires",
-        "custom server": "Serveur personnalisé",
+        "self hosted online server": "Serveur en ligne auto-hébergé",
         "local area network": "Réseau local",
         "hotseat multiplayer": "Multijoueur Hotseat",
         "deathmason description": "Un lien de magie noire; Ses capacités sont inconnues. Il y a quelque chose de familier à son sujet ...",
@@ -1519,7 +1523,11 @@
         "you cannot create a new lobby while you are in an existing lobby": "Vous ne pouvez pas créer un nouveau salon pendant que vous êtes dans un salon existant.",
         "removed from game": "Retiré du jeu",
         "kick-player": "Supprimer le joueur",
-        "kick-conf": "Es-tu sûr de vouloir enlever 🍞 du jeu ?"
+        "kick-conf": "Es-tu sûr de vouloir enlever 🍞 du jeu ?",
+        "self hosted": "Auto-hébergé",
+        "local multiplayer": "Multijoueur Local",
+        "steam player to player": "Connexion directe Steam",
+        "online multiplayer": "Multijoueur en ligne"
     },
     {
         "language": "italiano",
@@ -1876,7 +1884,7 @@
         "auto save notice": "Game salvato automaticamente: \"🍞\"",
         "lost connection to server": "Connessione persa al server",
         "community servers": "Server della comunità",
-        "custom server": "Server personalizzato",
+        "self hosted online server": "Server Online Auto-ospitato",
         "local area network": "Rete locale",
         "hotseat multiplayer": "Hotseat Multiplayer",
         "deathmason description": "Un nesso di magia oscura; Le sue capacità sono sconosciute. ❕ C'è qualcosa di familiare in lui ...",
@@ -2280,7 +2288,11 @@
         "you cannot create a new lobby while you are in an existing lobby": "Non puoi creare una nuova lobby mentre sei in una lobby esistente.",
         "removed from game": "Rimosso dal gioco",
         "kick-player": "Rimuovi Giocatore",
-        "kick-conf": "Sei sicuro di voler rimuovere 🍞 dal gioco?"
+        "kick-conf": "Sei sicuro di voler rimuovere 🍞 dal gioco?",
+        "self hosted": "Autonomamente Ospitato",
+        "local multiplayer": "Giocatore locale",
+        "steam player to player": "Connessione Diretta Steam",
+        "online multiplayer": "Multiplayer Online"
     },
     {
         "language": "Deutsche",
@@ -2637,7 +2649,7 @@
         "auto save notice": "Spiel automatisch gespeichert: \"🍞\"",
         "lost connection to server": "Verbindung zum Server verloren",
         "community servers": "Communityserver",
-        "custom server": "Customserver",
+        "self hosted online server": "Selbst gehosteter Online-Server",
         "local area network": "Privatnetzwerk",
         "hotseat multiplayer": "Hotseat Mehrspieler",
         "deathmason description": "Eine Verbindung aus dunkler Magie; seine Fähigkeiten sind unbekannt.❕ Er kommt mir irgendwie bekannt vor...",
@@ -3041,7 +3053,11 @@
         "you cannot create a new lobby while you are in an existing lobby": "Du kannst keine neue Lobby erstellen, während du dich in einer bestehenden Lobby befindest.",
         "removed from game": "Aus dem Spiel entfernt",
         "kick-player": "Spieler Entfernen",
-        "kick-conf": "Bist du dir sicher, dass du 🍞 aus dem Spiel entfernen möchtest?"
+        "kick-conf": "Bist du dir sicher, dass du 🍞 aus dem Spiel entfernen möchtest?",
+        "self hosted": "Selbst gehostet",
+        "local multiplayer": "Lokaler Mehrspielermodus",
+        "steam player to player": "Dampf Direktverbindung",
+        "online multiplayer": "Online-Mehrspieler"
     },
     {
         "language": "español",
@@ -3398,7 +3414,7 @@
         "auto save notice": "Juego guardado automáticamente: \"🍞\"",
         "lost connection to server": "Conexión perdida al servidor",
         "community servers": "Servidores comunitarios",
-        "custom server": "Servidor personalizado",
+        "self hosted online server": "Servidor en línea autoalojado",
         "local area network": "Red de área local",
         "hotseat multiplayer": "Multijugador de asiento caliente",
         "deathmason description": "Un nexo de magia oscura; Se desconocen sus capacidades. Hay algo familiar sobre él ...",
@@ -3802,7 +3818,11 @@
         "you cannot create a new lobby while you are in an existing lobby": "No puedes crear un nuevo vestíbulo mientras estás en un vestíbulo existente.",
         "removed from game": "Eliminado del juego",
         "kick-player": "Eliminar Jugador",
-        "kick-conf": "¿Estás seguro de que quieres eliminar 🍞 del juego?"
+        "kick-conf": "¿Estás seguro de que quieres eliminar 🍞 del juego?",
+        "self hosted": "Autohospedado",
+        "local multiplayer": "Multijugador local",
+        "steam player to player": "Conexión Directa de Steam",
+        "online multiplayer": "Multijugador en línea"
     },
     {
         "language": "日本",
@@ -4159,7 +4179,7 @@
         "auto save notice": "ゲームは自動的に保存されました：「🍞」",
         "lost connection to server": "サーバーへの接続が失われました",
         "community servers": "コミュニティサーバー",
-        "custom server": "カスタムサーバー",
+        "self hosted online server": "セルフホステッドオンラインサーバー",
         "local area network": "ローカルエリアネットワーク",
         "hotseat multiplayer": "ホットシートマルチプレイヤー",
         "deathmason description": "ダークマジックの結びつき。彼の能力は不明です。",
@@ -4563,7 +4583,11 @@
         "you cannot create a new lobby while you are in an existing lobby": "既存のロビーにいる間は、新しいロビーを作成することはできません。",
         "removed from game": "ゲームから削除されました",
         "kick-player": "プレイヤーを削除する",
-        "kick-conf": "本当にゲームから🍞を削除してもいいですか？"
+        "kick-conf": "本当にゲームから🍞を削除してもいいですか？",
+        "self hosted": "セルフホステッド",
+        "local multiplayer": "ローカルマルチプレイヤー",
+        "steam player to player": "スチームダイレクト接続",
+        "online multiplayer": "オンラインマルチプレイヤー"
     },
     {
         "language": "Português",
@@ -4920,7 +4944,7 @@
         "auto save notice": "Jogo salvo automaticamente: \"🍞\"",
         "lost connection to server": "Conexão perdida ao servidor",
         "community servers": "Servidores comunitários",
-        "custom server": "Servidor personalizado",
+        "self hosted online server": "Servidor Online Auto-Hospedado",
         "local area network": "Rede local",
         "hotseat multiplayer": "Hotseat Multiplayer",
         "deathmason description": "Um nexo de magia negra; Suas capacidades são desconhecidas. - há algo familiar nele ...",
@@ -5324,7 +5348,11 @@
         "you cannot create a new lobby while you are in an existing lobby": "Você não pode criar um novo lobby enquanto estiver em um lobby existente.",
         "removed from game": "Removido do jogo",
         "kick-player": "Remover Jogador",
-        "kick-conf": "Você tem certeza de que deseja remover o 🍞 do jogo?"
+        "kick-conf": "Você tem certeza de que deseja remover o 🍞 do jogo?",
+        "self hosted": "Auto-Hospedado",
+        "local multiplayer": "Multijogador Local",
+        "steam player to player": "Conexão Direta via Steam",
+        "online multiplayer": "Multijogador Online"
     },
     {
         "language": "عربى",
@@ -5681,7 +5709,7 @@
         "auto save notice": "تم حفظ اللعبة تلقائيًا: \"🍞\"",
         "lost connection to server": "الاتصال المفقود بالخادم",
         "community servers": "خوادم المجتمع",
-        "custom server": "خادم مخصص",
+        "self hosted online server": "خادم عبر الإنترنت مستضاف ذاتيًا",
         "local area network": "شبكة المنطقة المحلية",
         "hotseat multiplayer": "hotseat متعددة اللاعبين",
         "deathmason description": "رابطة السحر المظلم. قدراته غير معروفة. - هناك شيء مألوف عنه ...",
@@ -6085,7 +6113,11 @@
         "you cannot create a new lobby while you are in an existing lobby": "لا يمكنك إنشاء غرفة جديدة بينما أنت في غرفة موجودة بالفعل.",
         "removed from game": "تمت إزالته من اللعبة",
         "kick-player": "إزالة اللاعب",
-        "kick-conf": "هل أنت متأكد أنك تريد إزالة 🍞 من اللعبة؟"
+        "kick-conf": "هل أنت متأكد أنك تريد إزالة 🍞 من اللعبة؟",
+        "self hosted": "مستضاف ذاتيًا",
+        "local multiplayer": "اللعب المحلي المتعدد",
+        "steam player to player": "الاتصال المباشر بالبخار",
+        "online multiplayer": "العب اونلاين مع لاعبين آخرين"
     },
     {
         "language": "한국어",
@@ -6442,7 +6474,7 @@
         "auto save notice": "자동 저장된 게임: \"🍞\"",
         "lost connection to server": "서버 연결 손실",
         "community servers": "커뮤니티 서버",
-        "custom server": "사용자 정의 서버",
+        "self hosted online server": "자체 호스팅 온라인 서버",
         "local area network": "근거리 통신망",
         "hotseat multiplayer": "핫 세이트 멀티 플레이어",
         "deathmason description": "어두운 마법의 넥서스; 그의 능력은 알려지지 않았습니다.",
@@ -6846,7 +6878,11 @@
         "you cannot create a new lobby while you are in an existing lobby": "기존 로비에 있을 때는 새 로비를 생성할 수 없습니다.",
         "removed from game": "게임에서 제거됨",
         "kick-player": "플레이어 제거",
-        "kick-conf": "정말로 게임에서 🍞을(를) 제거하시겠습니까?"
+        "kick-conf": "정말로 게임에서 🍞을(를) 제거하시겠습니까?",
+        "self hosted": "자체 호스팅",
+        "local multiplayer": "로컬 멀티플레이어",
+        "steam player to player": "스팀 직접 연결",
+        "online multiplayer": "온라인 멀티플레이어"
     },
     {
         "language": "Русский",
@@ -7203,7 +7239,7 @@
         "auto save notice": "Игра автоматически сохраняется: \"🍞\"",
         "lost connection to server": "Потерянное соединение с сервером",
         "community servers": "Публичные сервера",
-        "custom server": "Пользовательский сервер",
+        "self hosted online server": "Самостоятельно хостимый онлайн-сервер",
         "local area network": "Локальная сеть",
         "hotseat multiplayer": "Мультиплеер на одном компьютере",
         "deathmason description": "Сама сущность темной магии. Его способности необъятны.❕Но есть в нем что-то родное...",
@@ -7607,7 +7643,11 @@
         "you cannot create a new lobby while you are in an existing lobby": "Вы не можете создать новую лобби, пока находитесь в существующей лобби.",
         "removed from game": "Убрано из игры",
         "kick-player": "Удалить игрока",
-        "kick-conf": "Вы уверены, что хотите удалить 🍞 из игры?"
+        "kick-conf": "Вы уверены, что хотите удалить 🍞 из игры?",
+        "self hosted": "Самостоятельно размещенный",
+        "local multiplayer": "Местный мультиплеер",
+        "steam player to player": "Паровая прямая связь",
+        "online multiplayer": "Онлайн Многопользовательский режим"
     },
     {
         "language": "中文(简)",
@@ -7964,7 +8004,7 @@
         "auto save notice": "游戏自动保存：“BD2023”",
         "lost connection to server": "失去与服务器的连接",
         "community servers": "社区服务器",
-        "custom server": "自定义服务器",
+        "self hosted online server": "自托管在线服务器",
         "local area network": "局域网",
         "hotseat multiplayer": "一台电脑上有很多玩家",
         "deathmason description": "黑魔法的联系；他的能力未知。",
@@ -8368,7 +8408,11 @@
         "you cannot create a new lobby while you are in an existing lobby": "您无法在已有的大厅中创建新大厅。",
         "removed from game": "已从游戏中移除",
         "kick-player": "移除玩家",
-        "kick-conf": "你确定要从游戏中移除🍞吗？"
+        "kick-conf": "你确定要从游戏中移除🍞吗？",
+        "self hosted": "自托管",
+        "local multiplayer": "本地多人游戏",
+        "steam player to player": "蒸汽直连",
+        "online multiplayer": "在线多人游戏"
     },
     {
         "language": "中文(繁)",
@@ -8725,7 +8769,7 @@
         "auto save notice": "遊戲自動保存：“BD2023”",
         "lost connection to server": "失去與服務器的連接",
         "community servers": "社區服務器",
-        "custom server": "自定義服務器",
+        "self hosted online server": "自我託管的在線伺服器",
         "local area network": "局域網",
         "hotseat multiplayer": "一台電腦上有很多玩家",
         "deathmason description": "黑魔法的聯繫；他的能力未知。",
@@ -9129,7 +9173,11 @@
         "you cannot create a new lobby while you are in an existing lobby": "在您已經在一個現有大廳時，無法創建新大廳。",
         "removed from game": "從遊戲中移除",
         "kick-player": "移除玩家",
-        "kick-conf": "你確定要將 🍞 從遊戲中移除嗎？"
+        "kick-conf": "你確定要將 🍞 從遊戲中移除嗎？",
+        "self hosted": "自我托管",
+        "local multiplayer": "本地多人遊戲",
+        "steam player to player": "蒸汽直接連接",
+        "online multiplayer": "線上多人遊戲"
     },
     {
         "language": "Polski",
@@ -9486,7 +9534,7 @@
         "auto save notice": "Gra automatycznie zapisana: „🍞”",
         "lost connection to server": "Utracono połączenie z serwerem",
         "community servers": "Serwery społeczności",
-        "custom server": "Serwer niestandardowy",
+        "self hosted online server": "Serwer internetowy hostowany samodzielnie",
         "local area network": "Sieć lokalna",
         "hotseat multiplayer": "Tryb wieloosobowy na jednym urządzeniu.",
         "deathmason description": "Źródło ciemnej magii; Jego możliwości są nieznane. ❕Jest w nim coś znajomego...",
@@ -9890,7 +9938,11 @@
         "you cannot create a new lobby while you are in an existing lobby": "Nie możesz stworzyć nowego lobby, gdy jesteś w istniejącym lobby.",
         "removed from game": "Usunięto z gry",
         "kick-player": "Usuń Gracza",
-        "kick-conf": "Czy na pewno chcesz usunąć 🍞 z gry?"
+        "kick-conf": "Czy na pewno chcesz usunąć 🍞 z gry?",
+        "self hosted": "Hostowany samodzielnie",
+        "local multiplayer": "Lokalny tryb wieloosobowy",
+        "steam player to player": "Bezpośrednie połączenie Steam",
+        "online multiplayer": "Tryb wieloosobowy online"
     },
     {
         "language": "Dutch",
@@ -10247,7 +10299,7 @@
         "auto save notice": "Game automatisch opgeslagen: \"🍞\"",
         "lost connection to server": "Verloren verbinding met server",
         "community servers": "Gemeenschapsservers",
-        "custom server": "Aangepaste server",
+        "self hosted online server": "Zelf gehoste online server",
         "local area network": "Local Area Network",
         "hotseat multiplayer": "Hotseat multiplayer",
         "deathmason description": "Een samenhang van donkere magie; Zijn mogelijkheden zijn onbekend. ❕ er is iets bekends over hem ...",
@@ -10651,7 +10703,11 @@
         "you cannot create a new lobby while you are in an existing lobby": "Je kunt geen nieuwe lobby maken terwijl je in een bestaande lobby bent.",
         "removed from game": "Verwijderd uit het spel",
         "kick-player": "Verwijder Speler",
-        "kick-conf": "Weet je zeker dat je 🍞 uit het spel wilt verwijderen?"
+        "kick-conf": "Weet je zeker dat je 🍞 uit het spel wilt verwijderen?",
+        "self hosted": "Zelfgehost",
+        "local multiplayer": "Lokaal Multiplayer",
+        "steam player to player": "Stoom Directe Verbinding",
+        "online multiplayer": "Online Multiplayer"
     },
     {
         "language": "Предреформенный русскій",
@@ -11008,7 +11064,7 @@
         "auto save notice": "Игра самодейственно сохраняется: \"🍞\"",
         "lost connection to server": "Утрачено соединеніе съ серверомъ",
         "community servers": "Общія серверы",
-        "custom server": "Уставной серверъ",
+        "self hosted online server": "",
         "local area network": "Мѣстная сеть",
         "hotseat multiplayer": "Многолюдная игра на единомъ вычислителѣ",
         "deathmason description": "Самая суть темной волшбы. Его способности необъятны. ❕Но есть въ немъ нѣчто родное...",
@@ -11412,6 +11468,10 @@
         "you cannot create a new lobby while you are in an existing lobby": "",
         "removed from game": "",
         "kick-player": "",
-        "kick-conf": ""
+        "kick-conf": "",
+        "self hosted": "",
+        "local multiplayer": "",
+        "steam player to player": "",
+        "online multiplayer": ""
     }
 ]
