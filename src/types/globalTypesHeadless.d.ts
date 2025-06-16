@@ -285,12 +285,13 @@ declare global {
     leaveLobby: () => void;
     mySteamId: () => Promise<string>;
     subscribeToLobbyChanges: (cb: (x: { lobby: bigint, making_change: bigint, member_state_change: 'Entered' | 'Left', user_changed: bigint }) => void) => void;
-    subscribeToLobbyJoinRequested: (cb: () => void) => void;
   }
   var p2pSend: (message: any, peerSteamId?: bigint) => void;
   var steamworks: undefined | {
     shiftTab: () => void;
     achievements: (value: number) => void;
+    subscribeToLobbyJoinRequested: (cb: () => void) => void;
+    subscribeToP2PMessages: (cb: (data: any) => void) => void;
   }
   // A target that controls what the cinematic camera is moving to
   var cinematicCameraTarget: Vec2 | undefined;
