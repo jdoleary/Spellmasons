@@ -514,7 +514,7 @@ export default class PiePeer {
     // Sends a data message.  This is the most common type of message
     // that is sent to clients
     sendData(payload: any, extras?: any) {
-        console.log('P2P sendData:', payload);
+        // console.log('P2P sendData:', payload);
         const message = {
             type: MessageType.Data,
             payload,
