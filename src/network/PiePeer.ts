@@ -50,8 +50,11 @@ if (globalThis.steamworks) {
             console.error('Unexpected, no globalThis.electronSettings, cannot p2pSend')
         }
     }
-    console.log('Subscribe to p2p messages beta');
-    // @ts-ignore
+    console.log('Subscribe to p2p messages beta 4');
+    globalThis.steamworks?.subscribeToLobbyJoinRequested(() => {
+        console.log('Lobby join requested, setting Pie to P2P mode');
+        globalThis.setPieToP2PMode(true);
+    })
     globalThis.steamworks?.subscribeToP2PMessages(data => {
         try {
 
@@ -62,6 +65,10 @@ if (globalThis.steamworks) {
                 } else {
                     setPieToP2PMode(true)
                 }
+            }
+            if (!(piePeerSingleton && piePeerSingleton.onData)) {
+                console.error('Failsafe, set pie to P2P mode last minute. This should not be necessary');
+                globalThis.setPieToP2PMode(true);
             }
             if (piePeerSingleton && piePeerSingleton.onData) {
                 piePeerSingleton.handleMessage(text);

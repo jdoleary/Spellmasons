@@ -233,6 +233,10 @@ ${explainUpdateText}
 
 let useP2P = false;
 globalThis.setPieToP2PMode = (active: boolean) => {
+  if (useP2P == active) {
+    console.debug(`setPieToP2PMode, do nothing already set to ${active}`);
+    return;
+  }
   useP2P = active;
   console.log('Setup: Switch network backend to', active ? 'P2P' : 'wsPie');
   setupPieAndUnderworld();

@@ -285,6 +285,7 @@ declare global {
     leaveLobby: () => void;
     mySteamId: () => Promise<string>;
     subscribeToLobbyChanges: (cb: (x: { lobby: bigint, making_change: bigint, member_state_change: 'Entered' | 'Left', user_changed: bigint }) => void) => void;
+    subscribeToLobbyJoinRequested: (cb: () => void) => void;
   }
   var p2pSend: (message: any, peerSteamId?: bigint) => void;
   var steamworks: undefined | {

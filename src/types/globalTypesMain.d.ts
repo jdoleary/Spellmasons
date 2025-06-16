@@ -232,6 +232,8 @@ declare global {
   var steamworks: undefined | {
     shiftTab: () => void;
     achievements: (value: number) => void;
+    subscribeToLobbyJoinRequested: (cb: () => void) => void;
+    subscribeToP2PMessages: (cb: (data: any) => void) => void;
   }
   // A target that controls what the cinematic camera is moving to
   var cinematicCameraTarget: Vec2 | undefined;
