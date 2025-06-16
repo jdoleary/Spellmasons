@@ -291,6 +291,7 @@ declare global {
     shiftTab: () => void;
     achievements: (value: number) => void;
     subscribeToLobbyJoinRequested: (cb: () => void) => void;
+    subscribeToLobbyDataUpdate: (cb: (arg: { lobby: string, member: string, success: string }) => void) => void;
     subscribeToP2PMessages: (cb: (data: any) => void) => void;
   }
   // A target that controls what the cinematic camera is moving to

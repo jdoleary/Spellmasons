@@ -62,6 +62,14 @@ if (globalThis.steamworks) {
         console.log('Lobby join requested, setting Pie to P2P mode');
         globalThis.setPieToP2PMode(true);
     })
+    globalThis.steamworks?.subscribeToLobbyDataUpdate(({ lobby, member, success }: { lobby: string, member: string, success: string }) => {
+        console.log('P2P Lobby data changed', lobby, member, success);
+        window.syncConnectedWithPieState?.();
+        if (success) {
+            window.setPieToP2PMode?.(true);
+            window.setMenu?.('MULTIPLAYER_SERVER_CHOOSER');
+        }
+    });
     globalThis.steamworks?.subscribeToP2PMessages(data => {
         try {
 
