@@ -30,12 +30,19 @@ export const MessageType = {
 
 // This will be different for every client
 let defaultIdForSolomode = uuidv4();
+function changeDefaultClientId(newClientId: string, logSource?: string) {
+    defaultIdForSolomode = newClientId;
+    storage.set(storage.STORAGE_PIE_CLIENTID_KEY, newClientId);
+    if (globalThis.pie) {
+        globalThis.pie.clientId = newClientId;
+    }
+    console.log(`${logSource ? logSource : ''} - Overridding default clientId and storing in local storage: ${newClientId}`);
+
+}
 
 if (globalThis.steamworks) {
     globalThis.electronSettings?.mySteamId().then(steamId => {
-        console.log('PiePeer: Overridding clientId with steamId and storing in local storage', steamId)
-        defaultIdForSolomode = steamId;
-        storage.set(storage.STORAGE_PIE_CLIENTID_KEY, steamId);
+        changeDefaultClientId(steamId, 'PiePeer: top level');
     });
     globalThis.p2pSend = (message: any, peerId?: bigint) => {
         if (globalThis.electronSettings) {
@@ -50,7 +57,7 @@ if (globalThis.steamworks) {
             console.error('Unexpected, no globalThis.electronSettings, cannot p2pSend')
         }
     }
-    console.log('Subscribe to p2p messages beta 4');
+    console.log('Subscribe to p2p messages beta 5');
     globalThis.steamworks?.subscribeToLobbyJoinRequested(() => {
         console.log('Lobby join requested, setting Pie to P2P mode');
         globalThis.setPieToP2PMode(true);
@@ -195,6 +202,7 @@ export default class PiePeer {
         // For PiePeer, update the globalThis.clientId because
         // there is no ServerAssignedData message
         globalThis.clientId = newId;
+        console.log('PiePeer: Setting globalThis.clientId = ', newId);
     }
     // a setTimeout id used to try to reconnect after accidental disconnection
     // with a built in falloff
@@ -217,9 +225,8 @@ export default class PiePeer {
         if (globalThis.steamworks) {
             globalThis.electronSettings?.mySteamId().then(steamId => {
                 if (steamId != this.clientId) {
-                    console.log('PiePeer: Overridding clientId with steamId in constructor', steamId)
-                    defaultIdForSolomode = steamId;
                     this.clientId = steamId;
+                    changeDefaultClientId(steamId, 'PiePeer: constructor');
                 }
             })
         }

@@ -217,6 +217,7 @@ ${explainUpdateText}
         globalThis.remoteLog(`using Stateful HostApp Pie server`);
     }
 
+    console.log('Setting clientId', o.clientId);
     globalThis.clientId = o.clientId;
   };
   pie.onData = d => onData(d, overworld);
@@ -267,6 +268,7 @@ export function setupPieAndUnderworld() {
     const previouslyStoredClientId = storage.get(storage.STORAGE_PIE_CLIENTID_KEY);
     if (previouslyStoredClientId) {
       pie.clientId = previouslyStoredClientId;
+      console.log('Setting previously stored clientId', pie.clientId);
     } else if (pie.clientId) {
       storage.set(storage.STORAGE_PIE_CLIENTID_KEY, pie.clientId);
     }
