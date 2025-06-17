@@ -22,6 +22,7 @@ import { cameraAutoFollow } from '../graphics/PixiUtils';
 import { allUnits } from './units';
 import { incrementPresentedRunesIndex } from '../jmath/RuneUtil';
 import floatingText from '../graphics/FloatingText';
+import { makeCorruptionParticles } from '../graphics/ParticleCollection';
 
 const elInGameLobby = document.getElementById('in-game-lobby') as (HTMLElement | undefined);
 elInGameLobby?.addEventListener('click', (e) => {
@@ -449,6 +450,10 @@ export function resetPlayerForSpawn(player: IPlayer, underworld: Underworld) {
   // the player unit's stamina would drain while they were picking a spawn point
   // because they still had a path set
   player.unit.path = undefined;
+
+  if (player.isCardmason) {
+    makeCorruptionParticles(player.unit, false, underworld);
+  }
 }
 
 export function ableToAct(player: IPlayer) {

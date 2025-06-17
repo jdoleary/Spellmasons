@@ -886,6 +886,7 @@ const cursedEmitterConfig = (maxParticles: number) => ({
 });
 
 // The bossmason's "cape"
+const CORRUPTION_PARTICLES_JID = 'corruptionParticles';
 export function makeCorruptionParticles(follow: IUnit, prediction: boolean, underworld: Underworld, resolver?: () => void) {
   if (prediction || globalThis.headless) {
     // Don't show if just a prediction
@@ -908,11 +909,18 @@ export function makeCorruptionParticles(follow: IUnit, prediction: boolean, unde
     const wrapped = wrappedEmitter(particleConfig, containerUnits, resolver);
     if (wrapped) {
       const { container, emitter } = wrapped;
-      underworld.particleFollowers.push({
-        displayObject: container,
-        emitter,
-        target: follow
-      })
+      // @ts-ignore: jid custom identifier
+      emitter.jid = CORRUPTION_PARTICLES_JID;
+      // @ts-ignore: jid custom identifier
+      if (!underworld.particleFollowers.find(x => x.target == follow && x.emitter && x.emitter.jid == CORRUPTION_PARTICLES_JID)) {
+        underworld.particleFollowers.push({
+          displayObject: container,
+          emitter,
+          target: follow
+        });
+      } else {
+        console.debug('Ignore adding corruption particles more than once');
+      }
     } else {
       console.warn('Failed to create corruption particle emitter');
     }
