@@ -346,8 +346,6 @@ export default class PiePeer {
                 log('"Disconnected" from soloMode');
                 return
             }
-            // TODO SteamP2P: disconnect from lobby
-
         }).then(() => {
             // Updates debug info to show that it is closed
             this._updateDebugInfo();
@@ -404,7 +402,6 @@ export default class PiePeer {
                 }
                 break;
             case MessageType.ServerAssignedData:
-                // TODO SteamP2P
                 if (globalThis.steamworks) {
                     globalThis.electronSettings?.mySteamId().then(steamId => {
                         if (steamId != this.clientId) {
