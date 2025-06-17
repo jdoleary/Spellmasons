@@ -43,6 +43,7 @@ export default function registerUndying() {
           castForFree: true,
         });
         for (let unit of targetedUnits) {
+          unit.health = Math.floor(unit.healthMax / 2);
           if (unit.unitType != UnitType.PLAYER_CONTROLLED) {
             // Add summoning sickeness to AI so they can't act after they are summoned
             Unit.addModifier(unit, summoningSicknessId, underworld, false);

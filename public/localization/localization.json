@@ -579,7 +579,7 @@
         "slime_description": "Creates a copy of itself every turn.",
         "target_immune": "Target Immune",
         "target_immune_description": "Unit resists targeting unless targeted directly.",
-        "undying_description": "Self ressurects on turn start.",
+        "undying_description": "Self ressurects with half health on turn start.",
         "summoningsickness": "Summoning Sickness",
         "summoning_sickness_description": "Unable to act",
         "damage_reduced": "Damage reduced by 🍞%",
