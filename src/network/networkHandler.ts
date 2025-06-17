@@ -546,6 +546,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         type: MESSAGE_TYPES.PLAYER_CONFIG,
         color: storage.get(storage.STORAGE_ID_PLAYER_COLOR),
         name: storage.get(storage.STORAGE_ID_PLAYER_NAME),
+        isCardmason: storage.get(storage.STORAGE_ID_IS_CARDMASON) === 'yes',
       });
       break;
     }
@@ -824,6 +825,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
               type: MESSAGE_TYPES.PLAYER_CONFIG,
               color: storage.get(storage.STORAGE_ID_PLAYER_COLOR),
               name: storage.get(storage.STORAGE_ID_PLAYER_NAME),
+              isCardmason: storage.get(storage.STORAGE_ID_IS_CARDMASON) === 'yes',
             });
           }
         }

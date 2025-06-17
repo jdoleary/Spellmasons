@@ -486,6 +486,7 @@ export default class PiePeer {
                             for (let m of members) {
                                 globalThis.peers.add(m.steamId64.toString());
                             }
+                            this.sendData({ type: MESSAGE_TYPES.GET_PLAYER_CONFIG });
                             peerHostBroadcastClientsPresenceChanged(this);
 
                         })
