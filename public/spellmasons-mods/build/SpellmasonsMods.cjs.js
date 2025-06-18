@@ -2299,11 +2299,11 @@ const spell$1 = {
     allowNonUnitTarget: true,
     effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
       const addedTargets = underworld.getPotentialTargets(prediction).filter((u) => Unit$1.isUnit(u) && u.unitSubType != UnitSubType.DOODAD && // Target players only
-        u.unitType == PLAYER_CONTROLLED && // Filter out caster Unit since they are naturPlayer
-        // the "closest" to themselves and if they want to target
-        // themselves they can by casting on themselves and wont
-        // need target Player to do it
-        u !== state.casterUnit && !state.targetedUnits.includes(u)).sort((a, b) => distance(state.casterPositionAtTimeOfCast, a) - distance(state.casterPositionAtTimeOfCast, b)).slice(0, targetsPerQuantity * quantity);
+      u.unitType == PLAYER_CONTROLLED && // Filter out caster Unit since they are naturPlayer
+      // the "closest" to themselves and if they want to target
+      // themselves they can by casting on themselves and wont
+      // need target Player to do it
+      u !== state.casterUnit && !state.targetedUnits.includes(u)).sort((a, b) => distance(state.casterPositionAtTimeOfCast, a) - distance(state.casterPositionAtTimeOfCast, b)).slice(0, targetsPerQuantity * quantity);
       if (addedTargets.length) {
         for (const target of addedTargets) {
           addTarget(target, state, underworld, prediction);
