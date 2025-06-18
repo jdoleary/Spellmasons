@@ -1,3 +1,30 @@
+## 1.59.1
+-Network: Enable Steam Lobbies for improved multiplayer
+
+-Balance: Restore "Undying" to Goru and modify Undying so it brings ressurrects with 50% health
+
+-Quality of Life: F12 now takes Screenshots!
+
+-Language: Pre-reform Russian
+
+    Thanks @nikitasss
+
+-Menu: Redesign menu appearance
+
+-fix: Remove redundant runPredictions which occurs in deselectCard() which is triggered on click
+
+-fix: Prediction forceMoves from bloat (or any onDeath) simlulating on the NEXT call to runPredictions.
+
+-fix: confirm discard hotkey label
+
+-fix: bone shrapnel only select corpses
+
+-fix: Overspend Rune upgrade bug
+
+    that resulted in negative SP
+
+    Thanks @BlackCobra22113 and others
+    
 ## 1.57.0
 Quality of Life:
 - UI: Add additional side spell holders
