@@ -416,6 +416,7 @@ function getTutorialStorageKey(key: string): string {
 
 }
 globalThis.resetTutorial = function resetTutorial() {
+  storage.remove(`BEAT_DIFFICULTY-tutorial`);
   for (let key of Object.keys(tutorialChecklist)) {
     storage.remove(getTutorialStorageKey(key));
   }
