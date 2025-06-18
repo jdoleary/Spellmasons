@@ -19,6 +19,7 @@ NEW for June:
 NEW for July:
 - Test cardmason sync on new multiplayer game
 - Test wizard picker large and small
+    - Make sure wizard picker works in hotseat
 - Rename cardmason as deathmason with clouds and everything "Play as the Deathmason!"
 
 --- Archived
