@@ -147,6 +147,9 @@ export function ensureAllClientsHaveAssociatedPlayers(overworld: Overworld, clie
     const wasConnected = player.clientConnected;
     const isConnected = clients.includes(player.clientId);
 
+    if (!isConnected) {
+      console.warn('Player not connected:', player.clientId, 'of', clients);
+    }
     Player.setClientConnected(player, isConnected, underworld);
     if (!wasConnected && isConnected) {
       clientsToSendGameState.push(player.clientId);
