@@ -1454,7 +1454,6 @@ export default class Underworld {
 
     // Remove all phase classes from body
     if (document && !globalThis.headless) {
-      // @ts-expect-error Property 'values' does not exist on type 'DOMTokenList'
       for (let phaseClass of document.body?.classList.values()) {
         if (phaseClass.includes('phase-')) {
           document.body?.classList.remove(phaseClass);
@@ -3353,7 +3352,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
     // Remove all phase classes from body
     if (!globalThis.headless) {
-      // @ts-expect-error Property 'values' does not exist on type 'DOMTokenList'
       for (let phaseClass of document.body?.classList.values()) {
         if (phaseClass.includes('phase-')) {
           document.body?.classList.remove(phaseClass);

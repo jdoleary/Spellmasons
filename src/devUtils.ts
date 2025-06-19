@@ -7,7 +7,7 @@ import * as Unit from './entity/Unit';
 import { UnitType } from './types/commonTypes';
 import * as Cards from './cards';
 import { syncInventory } from './graphics/ui/CardUI';
-import { addCardToHand, IPlayer } from './entity/Player';
+import { addCardToHand, IPlayer, isDeathmason } from './entity/Player';
 import { Overworld } from './Overworld';
 
 // Development helpers

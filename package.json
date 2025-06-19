@@ -37,6 +37,7 @@
     "@types/stats.js": "^0.17.0",
     "husky": "^7.0.4",
     "jest": "^30.0.0",
+    "jest-environment-jsdom": "^30.0.2",
     "prettier": "^2.0.5",
     "typescript": "^5.2.2",
     "vite": "^6.3.5"
