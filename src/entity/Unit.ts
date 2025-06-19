@@ -108,6 +108,7 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   // A unique id so that units can be identified
   // across the network
   id: number;
+  soulFragments: number;
   unitSourceId: string;
   // if this IUnit is a prediction copy, real is a reference to the real unit that it is a copy of
   real?: IUnit;
@@ -211,6 +212,7 @@ export function create(
       defaultImagePath,
       shaderUniforms: {},
       damage: 0,
+      soulFragments: 1,
       strength: 1,
       // default blood color
       bloodColor: bloodColorDefault,
@@ -514,7 +516,7 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
   // so the promise doesn't hang forever
   let loadedunit: IUnit = {
     // Load defaults for new props that old save files might not have
-    ...{ strength: 1 },
+    ...{ strength: 1, soulFragments: 1 },
     ...restUnit,
     summonedBy: (prediction ? underworld.unitsPrediction : underworld.units).find(u => u.id == summonedById),
     shaderUniforms: {},
