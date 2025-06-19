@@ -661,7 +661,8 @@ export function setWizardType(player: IPlayer, wizardType: WizardType | undefine
     wizardType = 'Spellmason';
   }
   if (globalThis.player == player) {
-    document.body.classList.toggle('cardmason', wizardType == 'Deathmason');
+    document.body.classList.toggle('wizardtype-deathmason', wizardType == 'Deathmason');
+    document.body.classList.toggle('wizardtype-goru', wizardType == 'Goru');
   }
   player.wizardType = wizardType;
   // Update the player image
@@ -680,7 +681,7 @@ export function setWizardType(player: IPlayer, wizardType: WizardType | undefine
   } else {
     delete player.unit.charges;
   }
-  // Update UI and prediction entities when player changes cardmason status
+  // Update UI and prediction entities when player changes wizardtype-deathmason status
   if (underworld) {
     CardUI.updateCardBadges(underworld);
     underworld.syncPredictionEntities();

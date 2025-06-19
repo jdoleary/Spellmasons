@@ -1,5 +1,5 @@
 import type { ICard, Modifiers } from ".";
-import { isDeathmason, type CardUsage, type IPlayer } from "../entity/Player";
+import { isDeathmason, isGoru, type CardUsage, type IPlayer } from "../entity/Player";
 import { Vec2 } from "../jmath/Vec";
 import { raceTimeout } from "../Promise";
 import * as Image from '../graphics/Image';
@@ -138,7 +138,11 @@ globalThis.calculateCostForSingleCard = calculateCostForSingleCard
 export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number = 0, caster?: IPlayer): CardCost {
     let cardCost: CardCost = { manaCost: 0, healthCost: 0, staminaCost: 0 };
     if (caster && isDeathmason(caster)) {
-        // No non-charge cost for cardmasons, only charges
+        // No non-charge cost for deathmasons, only charges
+        return cardCost;
+    }
+    if (caster && isGoru(caster)) {
+        // No non-charge cost for Goru, only soulFragment cost
         return cardCost;
     }
     cardCost.manaCost += card.manaCost;

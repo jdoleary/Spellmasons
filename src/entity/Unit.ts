@@ -57,7 +57,7 @@ import { resurrect_id } from '../cards/resurrect';
 import { doubledamageId } from '../modifierDoubleDamage';
 import { runeHardenedMinionsId } from '../modifierHardenedMinions';
 import { runeSharpTeethId } from '../modifierSharpTeeth';
-import { isDeathmason } from './Player';
+import { isDeathmason, isGoru } from './Player';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -1219,6 +1219,12 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
     const ratio = currentCharges / maxCharges;
     elManaBar3.style["width"] = `${100 * ratio}%`;
     elManaLabel.innerHTML = `${currentCharges}/${maxCharges}`;
+  } else if (isGoru(globalThis.player) && predictionPlayerUnit) {
+    elManaBar.style["width"] = `0%`;
+    elManaBar2.style["width"] = `0%`;
+    elManaBar3.style["width"] = `100%`;
+    const text = predictionPlayerUnit.soulFragments >= 0 ? `${predictionPlayerUnit.soulFragments} ${i18n('Soul Fragments')}` : `${predictionPlayerUnit.soulFragments} ${i18n('Soul Debt')}`
+    elManaLabel.innerHTML = text;
 
 
   } else {
@@ -1747,7 +1753,7 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
     flaggedForRemoval: u.flaggedForRemoval,
   });
 
-  // Remove charges if missing on Unit to sync cardmason state
+  // Remove charges if missing on Unit to sync wizardtype-deathmason state
   if (isNullOrUndef(u.charges)) {
     delete predictionUnit.charges;
   }
@@ -2040,7 +2046,7 @@ export function drawCharges(unit: IUnit, underworld: Underworld, count: number =
   }
   player.drawChargesSeed++;
   if (!isDeathmason(player)) {
-    console.warn('Aborting drawCharges for non-cardmason player');
+    console.warn('Aborting drawCharges for non-wizardtype-deathmason player');
     return;
   }
   let cards = getCardsFromIds(player.inventory);

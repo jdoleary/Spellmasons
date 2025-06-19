@@ -1149,6 +1149,15 @@ body.showUpgrades #inspector-tooltip {
       rgba(0, 0, 0, 0.0) 20px) fixed;
 }
 
+body.wizardtype-goru #mana .fill:nth-child(3) {
+  background-color: #b8d4df;
+}
+
+body.wizardtype-goru #mana .label {
+  /* color: #363636; */
+  color: #1F3842;
+}
+
 #mana .fill:nth-child(3) {
   background-color: #4e1172;
 }
@@ -1727,7 +1736,7 @@ body.open-inventory #inventory-container.bookmark-runes .card-inspect {
   display: none;
 }
 
-body.cardmason #discard-charges-icon {
+body.wizardtype-deathmason #discard-charges-icon {
   display: block;
 }
 
@@ -2971,12 +2980,12 @@ body.isPeerHost .openLobbyBtn {
   }
 }
 
-body.cardmason .stat-row[data-stat="Mana"] {
+body.wizardtype-deathmason .stat-row[data-stat="Mana"] {
   display: none;
 
 }
 
-body:not(.cardmason) .stat-row[data-stat="Max Cards"] {
+body:not(.wizardtype-deathmason) .stat-row[data-stat="Max Cards"] {
   display: none;
 
 }
@@ -3002,7 +3011,7 @@ body:not(.cardmason) .stat-row[data-stat="Max Cards"] {
 }
 
 /*Do NOT show lock in selected cards*/
-body.cardmason #selected-cards .card.is-discard-locked .lock-discard {
+body.wizardtype-deathmason #selected-cards .card.is-discard-locked .lock-discard {
   display: none;
 }
 
@@ -3019,13 +3028,13 @@ body.cardmason #selected-cards .card.is-discard-locked .lock-discard {
   z-index: 1;
 }
 
-body.cardmason .card-holder .card:hover .lock-discard {
+body.wizardtype-deathmason .card-holder .card:hover .lock-discard {
   display: block;
   opacity: 0.5;
 }
 
-/*Only ever show if player is cardmason*/
-body.cardmason .card.is-discard-locked .lock-discard {
+/*Only ever show if player is wizardtype-deathmason*/
+body.wizardtype-deathmason .card.is-discard-locked .lock-discard {
   display: block;
   opacity: 1.0;
 }
