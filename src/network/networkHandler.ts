@@ -33,7 +33,7 @@ import { runPredictions } from '../graphics/PlanningView';
 import seedrandom from 'seedrandom';
 import { getUniqueSeedString, SeedrandomState } from '../jmath/rand';
 import { setPlayerNameUI } from '../PlayerUtils';
-import { GameMode } from '../types/commonTypes';
+import { GameMode, WizardType } from '../types/commonTypes';
 import { getSpellThumbnailPath, recalcPositionForCards, renderRunesMenu } from '../graphics/ui/CardUI';
 import { isSinglePlayer } from './wsPieSetup';
 import { elEndTurnBtn } from '../HTMLElements';
@@ -546,7 +546,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         type: MESSAGE_TYPES.PLAYER_CONFIG,
         color: storage.get(storage.STORAGE_ID_PLAYER_COLOR),
         name: storage.get(storage.STORAGE_ID_PLAYER_NAME),
-        isCardmason: storage.get(storage.STORAGE_ID_IS_CARDMASON) === 'yes',
+        wizardType: storage.get(storage.STORAGE_ID_WIZARD_TYPE) || 'Spellmason',
       });
       break;
     }
@@ -766,7 +766,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         // computer
         break;
       }
-      const { color, colorMagic, name, isCardmason, lobbyReady } = payload;
+      const { color, colorMagic, name, wizardType, lobbyReady } = payload;
       if (fromPlayer) {
         if (exists(lobbyReady)) {
           fromPlayer.lobbyReady = lobbyReady;
@@ -789,9 +789,9 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         setPlayerNameUI(fromPlayer);
         Player.setPlayerRobeColor(fromPlayer, color, colorMagic);
         Player.syncLobby(underworld);
-        // Don't override isCardmason if it's not being set
-        if (exists(isCardmason)) {
-          Player.setCardmason(fromPlayer, isCardmason, overworld.underworld);
+        // Don't override wizardType if it's not being set
+        if (exists(wizardType)) {
+          Player.setWizardType(fromPlayer, wizardType, overworld.underworld);
         }
 
         // Improve joining games so that if there is an uncontrolled player with the same name, this client
@@ -825,7 +825,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
               type: MESSAGE_TYPES.PLAYER_CONFIG,
               color: storage.get(storage.STORAGE_ID_PLAYER_COLOR),
               name: storage.get(storage.STORAGE_ID_PLAYER_NAME),
-              isCardmason: storage.get(storage.STORAGE_ID_IS_CARDMASON) === 'yes',
+              wizardType: storage.get(storage.STORAGE_ID_WIZARD_TYPE) || 'Spellmason',
             });
           }
         }
@@ -1452,7 +1452,7 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
 }
 
 export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
-  globalThis.configPlayer = ({ color, colorMagic, name, isCardmason, lobbyReady }: { color?: number, colorMagic?: number, name?: string, isCardmason?: boolean, lobbyReady?: boolean }) => {
+  globalThis.configPlayer = ({ color, colorMagic, name, wizardType, lobbyReady }: { color?: number, colorMagic?: number, name?: string, wizardType?: WizardType, lobbyReady?: boolean }) => {
     if (exists(color)) {
       storage.set(storage.STORAGE_ID_PLAYER_COLOR, color);
     }
@@ -1464,18 +1464,18 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
       capped_name = capped_name.slice(0, 70);
       storage.set(storage.STORAGE_ID_PLAYER_NAME, capped_name || '');
     }
-    if (exists(isCardmason)) {
+    if (exists(wizardType)) {
       // Booleans should not be stored in localStorage as booleans because they are converted to
       // strings which is confusing as hell
-      storage.set(storage.STORAGE_ID_IS_CARDMASON, isCardmason ? 'yes' : 'no');
+      storage.set(storage.STORAGE_ID_WIZARD_TYPE, wizardType);
     }
-    const storedIsCardmason = (storage.get(storage.STORAGE_ID_IS_CARDMASON) == 'yes') || false;
+    const storedWizardType = storage.get(storage.STORAGE_ID_WIZARD_TYPE);
     if (overworld.underworld) {
       overworld.pie.sendData({
         type: MESSAGE_TYPES.PLAYER_CONFIG,
         color,
         colorMagic,
-        isCardmason: storedIsCardmason,
+        wizardType: storedWizardType || 'Spellmason',
         name: capped_name,
         lobbyReady
       });

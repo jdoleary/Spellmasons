@@ -86,7 +86,7 @@ export function setupDevGlobalFunctions(overworld: Overworld) {
                 if (card) {
                     if (!card.modName || globalThis.activeMods?.includes(card.modName)) {
                         addCardToHand(card, player, underworld);
-                        if (player.isCardmason && player.unit.charges) {
+                        if (isDeathmason(player) && player.unit.charges) {
                             player.unit.charges[cardId] = 100;
                         }
                     }

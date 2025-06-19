@@ -1,5 +1,5 @@
 import type { ICard, Modifiers } from ".";
-import { type CardUsage, type IPlayer } from "../entity/Player";
+import { isDeathmason, type CardUsage, type IPlayer } from "../entity/Player";
 import { Vec2 } from "../jmath/Vec";
 import { raceTimeout } from "../Promise";
 import * as Image from '../graphics/Image';
@@ -137,7 +137,7 @@ export function oneOffImage(coords: Vec2, imagePath: string, parent: Container |
 globalThis.calculateCostForSingleCard = calculateCostForSingleCard
 export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number = 0, caster?: IPlayer): CardCost {
     let cardCost: CardCost = { manaCost: 0, healthCost: 0, staminaCost: 0 };
-    if (caster && caster.isCardmason) {
+    if (caster && isDeathmason(caster)) {
         // No non-charge cost for cardmasons, only charges
         return cardCost;
     }

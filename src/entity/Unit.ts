@@ -57,6 +57,7 @@ import { resurrect_id } from '../cards/resurrect';
 import { doubledamageId } from '../modifierDoubleDamage';
 import { runeHardenedMinionsId } from '../modifierHardenedMinions';
 import { runeSharpTeethId } from '../modifierSharpTeeth';
+import { isDeathmason } from './Player';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -1208,7 +1209,7 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
 
 
   // Exception: Cardmason "manabar" becomes a bar that tracks the number of charges or cards the player has
-  if (globalThis.player.isCardmason && predictionPlayerUnit) {
+  if (isDeathmason(globalThis.player) && predictionPlayerUnit) {
     elManaBar.style["width"] = `0%`;
     elManaBar2.style["width"] = `0%`;
     const currentCharges = countCharges(predictionPlayerUnit)
@@ -2036,7 +2037,7 @@ export function drawCharges(unit: IUnit, underworld: Underworld, count: number =
     player.drawChargesSeed = 0;
   }
   player.drawChargesSeed++;
-  if (!player.isCardmason) {
+  if (!isDeathmason(player)) {
     console.warn('Aborting drawCharges for non-cardmason player');
     return;
   }

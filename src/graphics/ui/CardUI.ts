@@ -1193,7 +1193,7 @@ function createCardElement(content: Cards.ICard, underworld?: Underworld, fullSi
   element.appendChild(elCardBadgeHolder);
 
 
-  if (globalThis.player && globalThis.player.isCardmason) {
+  if (globalThis.player && Player.isDeathmason(globalThis.player)) {
     const elCardChargeBadge = document.createElement('div');
     elCardChargeBadge.classList.add('card-charge-badge', 'card-badge', 'card-badge-square');
     updateChargeBadge(elCardChargeBadge, globalThis.player.unit.charges?.[content.id] || 0, content);
@@ -1378,7 +1378,7 @@ export function updateCardBadges(underworld: Underworld) {
       if (card) {
         const sliceOfCardsOfSameIdUntilCurrent = selectedCards.slice(0, i).filter(c => c.id == card.id);
         const cost = calculateCostForSingleCard(card, (globalThis.player.cardUsageCounts[card.id] || 0) + sliceOfCardsOfSameIdUntilCurrent.length * card.expenseScaling, globalThis.player);
-        if (globalThis.player.isCardmason) {
+        if (Player.isDeathmason(globalThis.player)) {
           const elBadgesC = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"] .card-charge-badge`);
           const elBadgeC = Array.from(elBadgesC)[sliceOfCardsOfSameIdUntilCurrent.length];
           if (elBadgeC) {
@@ -1442,7 +1442,7 @@ export function updateCardBadges(underworld: Underworld) {
       const cost = calculateCostForSingleCard(card, (globalThis.player.cardUsageCounts[card.id] || 0) + selectedCardElementsOfSameId.length * card.expenseScaling, globalThis.player);
       const badgeRecord = badgesById[card.id];
       if (badgeRecord) {
-        if (globalThis.player.isCardmason) {
+        if (Player.isDeathmason(globalThis.player)) {
           for (let elBadgeCharge of badgeRecord.charge) {
             const charge = (globalThis.player.unit.charges?.[card.id]) || 0;
             const specificCardQueuedCount = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"] .card-charge-badge`).length;

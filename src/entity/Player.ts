@@ -7,7 +7,7 @@ import * as Upgrade from '../Upgrade';
 import * as CardUI from '../graphics/ui/CardUI';
 import * as Cards from '../cards';
 import * as config from '../config';
-import { CardCategory, Faction, UnitType } from '../types/commonTypes';
+import { CardCategory, Faction, UnitType, WizardType } from '../types/commonTypes';
 import { clearTooltipSelection } from '../graphics/PlanningView';
 import defaultPlayerUnit, { spellmasonUnitId } from './units/playerUnit';
 import { MESSAGE_TYPES } from '../types/MessageTypes';
@@ -53,7 +53,7 @@ export interface IPlayer {
   name: string;
   // color of robe
   color: number;
-  isCardmason?: boolean;
+  wizardType: WizardType;
   lockedDiscardCards: string[];
   // color of the player's magic
   colorMagic: number;
@@ -111,7 +111,7 @@ export function create(clientId: string, playerId: string, underworld: Underworl
   const player: IPlayer = {
     name: '',
     endedTurn: false,
-    isCardmason: false,
+    wizardType: 'Spellmason',
     lockedDiscardCards: [],
     clientId,
     playerId,
@@ -302,6 +302,8 @@ export function load(player: IPlayerSerialized, index: number, underworld: Under
     statPointsUnspent: 0,
     // @ts-ignore: Allow overwrite by spread for backwards compatibility
     lockedDiscardCards: [],
+    // @ts-ignore: Allow overwrite by spread for backwards compatibility
+    wizardType: 'Spellmason',
     ...player,
     unit: reassignedUnit,
   };
@@ -451,7 +453,7 @@ export function resetPlayerForSpawn(player: IPlayer, underworld: Underworld) {
   // because they still had a path set
   player.unit.path = undefined;
 
-  if (player.isCardmason) {
+  if (isDeathmason(player)) {
     makeCorruptionParticles(player.unit, false, underworld);
   }
 }
@@ -518,7 +520,7 @@ export function addCardToHand(card: Cards.ICard | undefined, player: IPlayer | u
       }
     }
     player.inventory.push(card.id);
-    if (player.isCardmason) {
+    if (isDeathmason(player)) {
       if (!player.unit.charges) {
         player.unit.charges = {};
       }
@@ -641,17 +643,15 @@ export function incrementPresentedRunesForPlayer(player: Pick<IPlayer, 'lockedRu
 
 }
 
-export function setCardmason(player: IPlayer, isCardmason: boolean, underworld?: Underworld) {
+export function setWizardType(player: IPlayer, wizardType: WizardType | undefined | null, underworld?: Underworld) {
+  if (isNullOrUndef(wizardType)) {
+    wizardType = 'Spellmason';
+  }
   if (globalThis.player == player) {
-    document.body.classList.toggle('cardmason', isCardmason);
+    document.body.classList.toggle('cardmason', wizardType == 'Deathmason');
   }
-  // isCardmason comes from localStorage where it is a string, this double check prevents a bug
-  if (typeof isCardmason === 'string') {
-    console.error('isCardmason must be a boolean');
-    isCardmason = isCardmason == 'yes';
-  }
-  player.isCardmason = isCardmason;
-  if (player.isCardmason) {
+  player.wizardType = wizardType;
+  if (isDeathmason(player)) {
     if (isNullOrUndef(player.unit.charges)) {
       player.unit.charges = {};
     }
@@ -695,7 +695,7 @@ export function toggleCardLockedForDiscard(player: IPlayer | undefined, cardId: 
 export function discardCards(player: IPlayer, underworld: Underworld, forceDiscardAll?: boolean) {
   // Discard all but locked cards
   const { unit } = player;
-  if (player.isCardmason) {
+  if (isDeathmason(player)) {
 
     if (isNullOrUndef(player.drawChargesSeed)) {
       player.drawChargesSeed = 0;
@@ -713,4 +713,10 @@ export function discardCards(player: IPlayer, underworld: Underworld, forceDisca
       }
     }
   }
+}
+export function isDeathmason(player?: IPlayer): boolean {
+  return !!player && player.wizardType == 'Deathmason';
+}
+export function isGoru(player: IPlayer): boolean {
+  return player.wizardType == 'Goru';
 }

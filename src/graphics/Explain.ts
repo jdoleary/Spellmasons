@@ -1,3 +1,4 @@
+import { isDeathmason } from '../entity/Player';
 import { allUnits } from '../entity/units';
 import { elTutorialChecklistInner } from '../HTMLElements';
 import * as storage from '../storage';
@@ -217,7 +218,7 @@ export function autoExplain() {
       }
     }
   }
-  if (globalThis.player && globalThis.player.isCardmason) {
+  if (globalThis.player && isDeathmason(globalThis.player)) {
     for (let e of autoExplainsCardmason) {
       if (!isAlreadyExplained(e)) {
         explain(e);

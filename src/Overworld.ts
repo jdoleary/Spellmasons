@@ -10,7 +10,7 @@ import * as Units from './entity/units';
 import * as CardUI from './graphics/ui/CardUI';
 import * as Player from './entity/Player';
 import * as Unit from './entity/Unit';
-import { Pie, UnitType } from './types/commonTypes';
+import { Pie, UnitType, WizardType } from './types/commonTypes';
 import { MESSAGE_TYPES } from './types/MessageTypes';
 import { addOverworldEventListeners } from "./views";
 import { calculateGameDifficulty } from "./Difficulty";
@@ -122,8 +122,7 @@ export function ensureAllClientsHaveAssociatedPlayers(overworld: Overworld, clie
         // Assign created player to globalThis.player if they are the primary client player
         if (i == 0) Player.updateGlobalRefToPlayerIfCurrentClient(player);
         if (globalThis.player == player) {
-          const isCardmason = storage.get(storage.STORAGE_ID_IS_CARDMASON) == 'yes';
-          Player.setCardmason(player, isCardmason, overworld.underworld);
+          Player.setWizardType(player, storage.get(storage.STORAGE_ID_WIZARD_TYPE) as WizardType | null, overworld.underworld);
         }
         player.lobbyReady = !!defaultLobbyReady;
         const nameFromServer = names.length && names[k];

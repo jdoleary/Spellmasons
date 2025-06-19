@@ -4117,7 +4117,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           spellCostTally.manaCost = 0;
         }
         // Refund charges if necessary 
-        if (effectState.shouldRefundLastSpell && effectState.casterPlayer && effectState.casterPlayer.isCardmason && effectState.casterPlayer.unit.charges) {
+        if (effectState.shouldRefundLastSpell && effectState.casterPlayer && Player.isDeathmason(effectState.casterPlayer) && effectState.casterPlayer.unit.charges) {
           effectState.casterPlayer.unit.charges[cardId] = (effectState.casterPlayer.unit.charges[cardId] || 0) + quantity;
         }
         // If refund, reset cardUsageCount
@@ -4403,7 +4403,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   // This array remains in the same order for a given player in a given game
   getShuffledRunesForPlayer(player?: Player.IPlayer): ({ key: string } & Cards.Modifiers)[] {
     let listOfRemainingRunesToChoose = Object.entries(Cards.allModifiers).flatMap(([key, modifier]) => {
-      if (player?.isCardmason && modifier.omitForCardmason) {
+      if (Player.isDeathmason(player) && modifier.omitForCardmason) {
         return [];
       }
       if (modifier._costPerUpgrade && !modifier.constant) {
