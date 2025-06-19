@@ -23,6 +23,8 @@ import { allUnits } from './units';
 import { incrementPresentedRunesIndex } from '../jmath/RuneUtil';
 import floatingText from '../graphics/FloatingText';
 import { makeCorruptionParticles } from '../graphics/ParticleCollection';
+import { visualPolymorphPlayerUnit } from '../cards/polymorph';
+import { GORU_UNIT_ID } from './units/goru';
 
 const elInGameLobby = document.getElementById('in-game-lobby') as (HTMLElement | undefined);
 elInGameLobby?.addEventListener('click', (e) => {
@@ -366,7 +368,20 @@ export function load(player: IPlayerSerialized, index: number, underworld: Under
   setPlayerRobeColor(playerLoaded, playerLoaded.color);
   setPlayerNameUI(playerLoaded);
   CardUI.tryShowStatPointsSpendable();
+  restoreWizardTypeVisuals(playerLoaded, underworld);
   return playerLoaded;
+}
+export function restoreWizardTypeVisuals(player: IPlayer, underworld: Underworld) {
+  // Restore visuals for wizard types
+  if (player.wizardType == 'Goru') {
+    if (allUnits[GORU_UNIT_ID]) {
+      visualPolymorphPlayerUnit(player.unit, allUnits[GORU_UNIT_ID])
+    }
+  }
+  if (isDeathmason(player)) {
+    makeCorruptionParticles(player.unit, false, underworld);
+  }
+
 }
 
 // Sets boolean and substring denoting if the player has a @websocketpie/client client associated with it
@@ -453,9 +468,7 @@ export function resetPlayerForSpawn(player: IPlayer, underworld: Underworld) {
   // because they still had a path set
   player.unit.path = undefined;
 
-  if (isDeathmason(player)) {
-    makeCorruptionParticles(player.unit, false, underworld);
-  }
+  restoreWizardTypeVisuals(player, underworld);
 }
 
 export function ableToAct(player: IPlayer) {
@@ -651,6 +664,15 @@ export function setWizardType(player: IPlayer, wizardType: WizardType | undefine
     document.body.classList.toggle('cardmason', wizardType == 'Deathmason');
   }
   player.wizardType = wizardType;
+  // Update the player image
+  const sourceUnit = wizardType == 'Goru' ? allUnits[GORU_UNIT_ID] : allUnits[spellmasonUnitId];
+  if (sourceUnit) {
+    visualPolymorphPlayerUnit(player.unit, sourceUnit)
+    Unit.returnToDefaultSprite(player.unit);
+  } else {
+    console.error('Attempted to change player units sprite but found no sourceUnit');
+  }
+
   if (isDeathmason(player)) {
     if (isNullOrUndef(player.unit.charges)) {
       player.unit.charges = {};

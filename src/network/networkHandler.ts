@@ -25,7 +25,7 @@ import pingSprite from '../graphics/Ping';
 import { clearLastNonMenuView, setView } from '../views';
 import { View } from '../View';
 import { autoExplain, explain, EXPLAIN_END_TURN, tutorialCompleteTask } from '../graphics/Explain';
-import { cacheBlood, cameraAutoFollow, getCameraCenterInGameSpace, getZoom, setCamera, startScreenshake } from '../graphics/PixiUtils';
+import { cacheBlood, cameraAutoFollow, getCameraCenterInGameSpace, getZoom, PixiSpriteOptions, setCamera, startScreenshake } from '../graphics/PixiUtils';
 import { ensureAllClientsHaveAssociatedPlayers, Overworld, recalculateGameDifficulty } from '../Overworld';
 import { playerCastAnimationColor, playerCastAnimationColorLighter, playerCastAnimationGlow } from '../graphics/ui/colors';
 import { lightenColor } from '../graphics/ui/colorUtil';
@@ -44,6 +44,9 @@ import Events from '../Events';
 import { mergeExcessPickups, mergeExcessUnits } from '../stability';
 import { distance, lerp } from '../jmath/math';
 import PiePeer from './PiePeer';
+import { GORU_ATTACK_IMAGE_PATH, GORU_DEFAULT_IMAGE_PATH, GORU_UNIT_ID } from '../entity/units/goru';
+import { visualPolymorphPlayerUnit } from '../cards/polymorph';
+import { spellmasonUnitId } from '../entity/units/playerUnit';
 
 export const NO_LOG_LIST = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING, MESSAGE_TYPES.MOVE_PLAYER, MESSAGE_TYPES.SET_PLAYER_POSITION];
 export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING, MESSAGE_TYPES.MOVE_PLAYER, MESSAGE_TYPES.SET_PLAYER_POSITION,
@@ -793,6 +796,14 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         if (exists(wizardType)) {
           Player.setWizardType(fromPlayer, wizardType, overworld.underworld);
         }
+        // Update the player image
+        const sourceUnit = wizardType == 'Goru' ? allUnits[GORU_UNIT_ID] : allUnits[spellmasonUnitId];
+        if (sourceUnit) {
+          visualPolymorphPlayerUnit(fromPlayer.unit, sourceUnit)
+          Unit.returnToDefaultSprite(fromPlayer.unit);
+        } else {
+          console.error('Attempted to change player units sprite but found no sourceUnit');
+        }
 
         // Improve joining games so that if there is an uncontrolled player with the same name, this client
         // takes over that player.  This allows clients to join saved games and reassume control of
@@ -1349,6 +1360,9 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
       screenShakeAmount = 20;
       animationKey = 'playerAttackMedium1';
     }
+    if (caster.wizardType == 'Goru') {
+      animationKey = GORU_ATTACK_IMAGE_PATH;
+    }
     await Player.setSpellmasonsToChannellingAnimationClose(caster);
     if (caster.colorMagic === null) {
       caster.colorMagic = caster.color !== colors.playerNoColor ? playerCastAnimationColor : caster.color;
@@ -1401,7 +1415,7 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
 
     const statsUnitDeadBeforeCast = underworld.enemiesKilled;
 
-    await Unit.playComboAnimation(caster.unit, animationKey, keyMoment, {
+    const animationOptions: PixiSpriteOptions | undefined = caster.wizardType == 'Goru' ? undefined : {
       animationSpeed: 0.2, loop: false, colorReplace: {
         colors: [
           [playerCastAnimationGlow, caster.colorMagic],
@@ -1410,7 +1424,9 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
         ],
         epsilon: 0.2
       }
-    });
+    };
+
+    await Unit.playComboAnimation(caster.unit, animationKey, keyMoment, animationOptions);
 
     // Record best spell stats
     const statsUnitsKilledFromCast = underworld.enemiesKilled - statsUnitDeadBeforeCast;

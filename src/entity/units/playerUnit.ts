@@ -13,6 +13,7 @@ import floatingText from '../../graphics/FloatingText';
 import { slashCardId } from '../../cards/slash';
 import { clone_id } from '../../cards/clone';
 import { ultra_clone_id } from '../../cards/clone2';
+import { GORU_ATTACK_IMAGE_PATH, GORU_DEFAULT_IMAGE_PATH } from './goru';
 
 export const spellmasonUnitId = 'Spellmason';
 const playerUnit: UnitSource = {

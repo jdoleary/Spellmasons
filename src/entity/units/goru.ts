@@ -27,11 +27,13 @@ const projectileColorReplace: { colors: [number, number][]; epsilon: number } = 
   epsilon: 0.2
 };
 export const GORU_UNIT_ID = 'Goru';
+export const GORU_DEFAULT_IMAGE_PATH = 'guruIdle';
+export const GORU_ATTACK_IMAGE_PATH = 'guruAttack';
 const unit: UnitSource = {
   id: GORU_UNIT_ID,
   info: {
     description: 'goru description',
-    image: 'guruIdle',
+    image: GORU_DEFAULT_IMAGE_PATH,
     subtype: UnitSubType.GORU_BOSS,
   },
   unitProps: {
@@ -52,9 +54,9 @@ const unit: UnitSource = {
     unavailableUntilLevelIndex: 9,
   },
   animations: {
-    idle: 'guruIdle',
+    idle: GORU_DEFAULT_IMAGE_PATH,
     hit: 'guruHit',
-    attack: 'guruAttack',
+    attack: GORU_ATTACK_IMAGE_PATH,
     die: 'guruDeath',
     walk: 'guruIdle',
   },
