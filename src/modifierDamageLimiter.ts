@@ -6,7 +6,7 @@ import floatingText from "./graphics/FloatingText";
 import Underworld from './Underworld';
 
 export const damagelimiterId = 'Damage Limiter';
-const limit = 30;
+const limit = 45;
 const limitPercentage = 0.03;
 const subspriteId = 'damage-limiter';
 function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld) {
