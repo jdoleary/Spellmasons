@@ -992,7 +992,7 @@ async function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: 
       }
 
       // Check for insufficient souls
-      if (predictionPlayerUnit.soulFragments) {
+      if (player.wizardType == 'Goru' && predictionPlayerUnit.soulFragments) {
         if (predictionPlayerUnit.soulFragments < 0) {
           floatingText({
             coords: underworld.getMousePos(),

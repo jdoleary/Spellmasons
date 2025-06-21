@@ -944,7 +944,7 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
                 style: { fill: errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
               });
 
-            } else if (exists(effectState.casterUnit.soulFragments)) {
+            } else if (effectState.casterPlayer?.wizardType == 'Goru' && exists(effectState.casterUnit.soulFragments)) {
               // Check for insufficient soul fragments
               floatingText({
                 coords: underworld.getMousePos(),
