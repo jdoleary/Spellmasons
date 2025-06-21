@@ -555,6 +555,13 @@ invisibly blocked, change with caution! */
   display: none;
 }
 
+.card-soul-badge {
+  background-image: url('/ui/badgeSoul.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  color: #1F3842;
+}
+
 .card-mana-badge {
   background-image: url('/ui/badgeMana.png');
   background-size: contain;

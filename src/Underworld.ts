@@ -859,6 +859,7 @@ export default class Underworld {
           }
         }
 
+        console.log('jtest moveDist', moveDist);
         if (!isNaN(moveDist)) {
           u.stamina -= moveDist;
         }
@@ -4043,7 +4044,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         const spellCostTally: CardCost = {
           manaCost: 0,
           healthCost: 0,
-          staminaCost: 0
+          staminaCost: 0,
+          soulFragmentCost: 0
         };
         let cardUsageCountPreCast = 0;
         if (!args.castForFree) {
@@ -4055,6 +4057,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
             spellCostTally.manaCost += singleCardCost.manaCost;
             spellCostTally.healthCost += singleCardCost.healthCost;
             spellCostTally.staminaCost += singleCardCost.staminaCost;
+            if (exists(spellCostTally.soulFragmentCost)) {
+              spellCostTally.soulFragmentCost += singleCardCost.soulFragmentCost || 0;
+            }
           }
           // Apply mana and health cost to caster
           // Note: it is important that this is done BEFORE a card is actually cast because
@@ -4113,6 +4118,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           effectState.casterUnit.mana += spellCostTally.manaCost;
           // Reset manacost since it was refunded
           spellCostTally.manaCost = 0;
+          effectState.casterUnit.soulFragments += spellCostTally.soulFragmentCost || 0;
+          spellCostTally.soulFragmentCost = 0;
         }
         // Refund charges if necessary 
         if (effectState.shouldRefundLastSpell && effectState.casterPlayer && Player.isDeathmason(effectState.casterPlayer) && effectState.casterPlayer.unit.charges) {

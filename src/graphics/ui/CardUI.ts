@@ -991,6 +991,18 @@ async function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: 
         }
       }
 
+      // Check for insufficient souls
+      if (predictionPlayerUnit.soulFragments) {
+        if (predictionPlayerUnit.soulFragments < 0) {
+          floatingText({
+            coords: underworld.getMousePos(),
+            text: 'Insufficient Soul Fragments',
+            style: { fill: colors.errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
+          });
+          deselectLastCard(underworld);
+        }
+      }
+
       if (alreadyDead && (lastCardCost?.healthCost || 0) > 0) {
         floatingText({
           coords: underworld.getMousePos(),
@@ -1193,7 +1205,14 @@ function createCardElement(content: Cards.ICard, underworld?: Underworld, fullSi
   element.appendChild(elCardBadgeHolder);
 
 
-  if (globalThis.player && Player.isDeathmason(globalThis.player)) {
+
+  if (globalThis.player && Player.isGoru(globalThis.player)) {
+    const elCardChargeBadge = document.createElement('div');
+    elCardChargeBadge.classList.add('card-soul-badge', 'card-badge');
+    const cost = calculateCostForSingleCard(content, 0, globalThis.player);
+    updateSoulBadge(elCardChargeBadge, cost.soulFragmentCost || 0, content);
+    elCardBadgeHolder.appendChild(elCardChargeBadge);
+  } else if (globalThis.player && Player.isDeathmason(globalThis.player)) {
     const elCardChargeBadge = document.createElement('div');
     elCardChargeBadge.classList.add('card-charge-badge', 'card-badge', 'card-badge-square');
     updateChargeBadge(elCardChargeBadge, globalThis.player.unit.charges?.[content.id] || 0, content);
@@ -1357,6 +1376,13 @@ function updateStaminaBadge(elBadge: Element | null, staminaCost: number = 0, ca
     console.warn("Err UI: Found card, but could not find associated badge element to update stamina cost");
   }
 }
+function updateSoulBadge(elBadge: Element | null, soulFragment: number = 0, card: Cards.ICard) {
+  if (elBadge) {
+    elBadge.innerHTML = soulFragment.toString();
+  } else {
+    console.warn("Err UI: Found card, but could not find associated badge element to update charges");
+  }
+}
 
 function updateChargeBadge(elBadge: Element | null, charges: number = 0, card: Cards.ICard) {
   if (elBadge) {
@@ -1403,6 +1429,11 @@ export function updateCardBadges(underworld: Underworld) {
           if (elBadgeS) {
             updateStaminaBadge(elBadgeS, cost.staminaCost, card);
           }
+          const elBadgesSoul = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"] .card-soul-badge`);
+          const elBadgeSoul = Array.from(elBadgesS)[sliceOfCardsOfSameIdUntilCurrent.length];
+          if (elBadgeSoul) {
+            updateSoulBadge(elBadgeSoul, cost.soulFragmentCost, card);
+          }
         }
       }
     }
@@ -1410,8 +1441,8 @@ export function updateCardBadges(underworld: Underworld) {
     const isInventoryOpen = document.body?.classList.contains(openInvClass);
     // If inventory is open get all cards (inventory will always include cards in toolbar), if it is not, only get cards that are in the toolbar
     const cards = Cards.getCardsFromIds(isInventoryOpen ? globalThis.player.inventory : globalThis.player.cardsInToolbar.filter(x => !!x));
-    const badgesById: { [cardId: string]: { mana: HTMLElement[], health: HTMLElement[], stamina: HTMLElement[], charge: HTMLElement[] } } = {}
-    function populateBadgesById(attr: 'mana' | 'health' | 'stamina' | 'charge') {
+    const badgesById: { [cardId: string]: { mana: HTMLElement[], health: HTMLElement[], stamina: HTMLElement[], charge: HTMLElement[], soul: HTMLElement[] } } = {}
+    function populateBadgesById(attr: 'mana' | 'health' | 'stamina' | 'charge' | 'soul') {
       Array.from(document.querySelectorAll(`.card-holder .card .card-${attr}-badge, #inventory-content .card .card-${attr}-badge`)).forEach((badge) => {
         const cardEl = badge.closest('.card') as (HTMLElement | undefined);
         if (cardEl) {
@@ -1424,6 +1455,7 @@ export function updateCardBadges(underworld: Underworld) {
                 health: [],
                 stamina: [],
                 charge: [],
+                soul: [],
               }
               badgesById[cardId] = badgeRecord;
             }
@@ -1437,6 +1469,7 @@ export function updateCardBadges(underworld: Underworld) {
     populateBadgesById('health');
     populateBadgesById('stamina');
     populateBadgesById('charge');
+    populateBadgesById('soul');
     for (let card of cards) {
       const selectedCardElementsOfSameId = selectedCards.filter(c => c.id == card.id);
       const cost = calculateCostForSingleCard(card, (globalThis.player.cardUsageCounts[card.id] || 0) + selectedCardElementsOfSameId.length * card.expenseScaling, globalThis.player);
@@ -1457,6 +1490,9 @@ export function updateCardBadges(underworld: Underworld) {
           }
           for (let elBadgeStamina of badgeRecord.stamina) {
             updateStaminaBadge(elBadgeStamina, cost.staminaCost, card);
+          }
+          for (let elBadgeSoul of badgeRecord.soul) {
+            updateStaminaBadge(elBadgeSoul, cost.soulFragmentCost, card);
           }
         }
       }

@@ -30,6 +30,7 @@ export interface CardCost {
     manaCost: number;
     healthCost: number;
     staminaCost: number;
+    soulFragmentCost?: number;
 }
 export function isRune(m?: Modifiers): boolean {
     return !!(m && (m._costPerUpgrade || m.keepBetweenLevels));
@@ -143,6 +144,7 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
     }
     if (caster && isGoru(caster)) {
         // No non-charge cost for Goru, only soulFragment cost
+        cardCost.soulFragmentCost = Math.max(1, Math.floor(card.manaCost / 10));
         return cardCost;
     }
     cardCost.manaCost += card.manaCost;

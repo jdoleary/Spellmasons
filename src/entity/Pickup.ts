@@ -38,7 +38,7 @@ export const MANA_POTION = 'Mana Potion';
 export const STAMINA_POTION = 'Stamina Potion';
 export const RECALL_POINT = 'Recall';
 const RED_PORTAL_DAMAGE = 30;
-type IPickupDescription = (pickup: IPickup) => Localizable;
+type IPickupDescription = (pickup: IPickup, underworld: Underworld) => Localizable;
 type IPickupEffect = ({ unit, player, pickup, prediction }: { unit?: IUnit; player?: Player.IPlayer, pickup: IPickup, underworld: Underworld, prediction: boolean }) => void;
 type IPickupInit = ({ pickup, underworld }: { pickup: IPickup, underworld: Underworld }) => void;
 type IPickupWillTrigger = ({ unit, player, pickup }: { unit?: IUnit; player?: Player.IPlayer, pickup: IPickup, underworld: Underworld }) => boolean;
@@ -185,7 +185,10 @@ export function create({ pos, pickupSource, idOverride, logSource }:
     // however if that changes in the future this should be refactored so
     // that there isn't a special case inside of Pickup.create
     assignEmitter(self, BLUE_PORTAL_JID, prediction, underworld);
+  } else if (name == PORTAL_PURPLE_NAME && !underworld.isLevelComplete()) {
+    assignEmitter(self, PORTAL_PURPLE_NAME, prediction, underworld);
   }
+
 
   if (turnsLeftToGrab) {
     self.turnsLeftToGrab = turnsLeftToGrab;
@@ -239,6 +242,19 @@ function assignEmitter(pickup: IPickup, emitterId: string, prediction: boolean, 
     }
   } else if (emitterId == BLUE_PORTAL_JID) {
     pickup.emitter = makeDeathmasonPortal(pickup, prediction, '#1a276e', '#5252fa');
+    if (pickup.image) {
+      if (pickup.emitter) {
+        Image.cleanup(pickup.image);
+      } else {
+        // Use tinted portal image as backup in case emitters are limited
+        // @ts-ignore: Special property to keep the tint of portals
+        pickup.image.sprite.keepTint = 0x5252fa;
+        // @ts-ignore: Special property to keep the tint of portals
+        pickup.image.sprite.tint = pickup.image.sprite.keepTint;
+      }
+    }
+  } else if (emitterId == PORTAL_PURPLE_NAME) {
+    pickup.emitter = makeDeathmasonPortal(pickup, prediction, '#236822', '#55fa52');
     if (pickup.image) {
       if (pickup.emitter) {
         Image.cleanup(pickup.image);
@@ -606,7 +622,7 @@ export const pickups: IPickupSource[] = [
     name: PORTAL_PURPLE_NAME,
     probability: 1,
     scale: 1,
-    description: (pickup) => 'explain portal',
+    description: (pickup, underworld) => !underworld.isLevelComplete() ? 'green_portal_desc' : 'explain portal',
     willTrigger: ({ unit, player, pickup, underworld }) => {
       return !!player;
     },

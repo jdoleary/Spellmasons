@@ -995,7 +995,7 @@ ${playerSpecificInfo}
         text += `\
 <h1>${i18n(globalThis.selectedPickup.name)}</h1>
 <hr/>
-${i18n(globalThis.selectedPickup.description(globalThis.selectedPickup))}
+${i18n(globalThis.selectedPickup.description(globalThis.selectedPickup, underworld))}
 <hr/>
       `;
       }
