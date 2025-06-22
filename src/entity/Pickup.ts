@@ -254,7 +254,7 @@ function assignEmitter(pickup: IPickup, emitterId: string, prediction: boolean, 
       }
     }
   } else if (emitterId == PORTAL_PURPLE_NAME) {
-    pickup.emitter = makeDeathmasonPortal(pickup, prediction, '#236822', '#55fa52');
+    pickup.emitter = makeDeathmasonPortal(pickup, prediction, '#6e6b1a', '#f0fa52');
     if (pickup.image) {
       if (pickup.emitter) {
         Image.cleanup(pickup.image);

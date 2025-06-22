@@ -18,6 +18,7 @@ NEW for July:
 - Test cardmason sync on new multiplayer game
 - Test wizard picker large and small
     - Make sure wizard picker works in hotseat
+- i18n:green_portal_desc
 
 --- Archived
 - Uncomment: commits: `gate: Temporarily disable Cardmason until update`
