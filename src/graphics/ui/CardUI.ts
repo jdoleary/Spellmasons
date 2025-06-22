@@ -183,7 +183,7 @@ export function setupCardUIEventListeners(overworld: Overworld) {
           centeredFloatingText(['cannot-discard'], 'red');
           return;
         }
-        const drawNew = Math.floor(currentChargesCount / 2);
+        const drawNew = Math.floor(currentChargesCount / config.DEATHMASON_DISCARD_DRAW_RATIO);
         Jprompt({
           text: ['confirm-discard', currentChargesCount.toString(), drawNew.toString()],
           yesText: 'Yes',
@@ -201,8 +201,11 @@ export function setupCardUIEventListeners(overworld: Overworld) {
 
           // Discard all current charges and draw some fraction of discarded charges
           if (globalThis.player) {
-            Player.discardCards(globalThis.player, overworld.underworld);
-            drawCharges(globalThis.player.unit, overworld.underworld, drawNew);
+            overworld.underworld.pie.sendData({
+              type: MESSAGE_TYPES.DEATHMASON_DISCARD_CARDS,
+              currentChargesCount,
+            });
+
           }
         });
       } else {

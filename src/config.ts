@@ -99,3 +99,4 @@ export const getSmartTargetsChunkSize = 50;
 export const spawnSize = 16;
 export const predictionGlowStrength = 4;
 export const SPACIAL_HASH_CELL_SIZE = 128;
+export const DEATHMASON_DISCARD_DRAW_RATIO = 2;

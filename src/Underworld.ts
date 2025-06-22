@@ -859,7 +859,6 @@ export default class Underworld {
           }
         }
 
-        console.log('jtest moveDist', moveDist);
         if (!isNaN(moveDist)) {
           u.stamina -= moveDist;
         }

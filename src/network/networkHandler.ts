@@ -318,6 +318,19 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         console.log('Ignoring INIT_GAME_STATE because underworld has already been initialized.');
       }
       break;
+    case MESSAGE_TYPES.DEATHMASON_DISCARD_CARDS: {
+      if (fromPlayer && overworld.underworld) {
+        const currentChargesCount = Unit.countCharges(fromPlayer.unit);
+        if (payload.currentChargesCount == currentChargesCount) {
+          Player.discardCards(fromPlayer, overworld.underworld);
+          const drawNew = Math.floor(currentChargesCount / config.DEATHMASON_DISCARD_DRAW_RATIO);
+          Unit.drawCharges(fromPlayer.unit, overworld.underworld, drawNew);
+        } else {
+          console.warn('Ignoring incorrect discard message')
+        }
+      }
+      break;
+    }
     case MESSAGE_TYPES.CHOOSE_UPGRADE:
       console.log('onData: CHOOSE_UPGRADE', `${fromClient}: ${payload?.upgrade?.title}`);
       if (fromPlayer) {
