@@ -7,7 +7,7 @@ import { chooseObjectWithProbability } from './jmath/rand';
 import { MESSAGE_TYPES } from './types/MessageTypes';
 import { IPlayer } from './entity/Player';
 import Underworld from './Underworld';
-import { CardCategory } from './types/commonTypes';
+import { CardCategory, WizardType } from './types/commonTypes';
 import { poisonCardId } from './cards/poison';
 import { bleedCardId } from './cards/bleed';
 import { drownCardId } from './cards/drown';
@@ -27,6 +27,7 @@ export interface IUpgrade {
   // This is used to dictate wether or not the modded upgrade is used
   modName?: string;
   type: 'card' | 'special' | 'mageType';
+  omitForWizardType?: WizardType[];
   cardCategory?: CardCategory;
   description: (player: IPlayer) => string;
   thumbnail: string;
@@ -96,6 +97,9 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, unde
       || [poisonCardId].includes(c.title)
     );
   }
+
+  // Omit cards that shouldn't be drawn by a given wizardType
+  upgradeList = upgradeList.filter(c => !(c.omitForWizardType && c.omitForWizardType.includes(player.wizardType)));
 
   // Exclude targeting spells so as to not break precision
   if (player.unit.modifiers[precisionId]) {

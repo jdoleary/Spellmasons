@@ -145,7 +145,7 @@ import { IUpgrade, upgradeCardsSource } from '../Upgrade';
 import { _getCardsFromIds, CardCost } from './cardUtils';
 import { addCardToHand } from '../entity/Player';
 import Underworld from '../Underworld';
-import { CardCategory, CardRarity, probabilityMap, UnitSubType, UnitType } from '../types/commonTypes';
+import { CardCategory, CardRarity, probabilityMap, UnitType, WizardType } from '../types/commonTypes';
 import { HasSpace } from '../entity/Type';
 import { Overworld } from '../Overworld';
 import { allUnits } from '../entity/units';
@@ -707,6 +707,7 @@ function cardToUpgrade(c: ICard, overworld: Overworld): IUpgrade {
     cardCategory: c.category,
     description: () => i18n(c.description).trim(),
     thumbnail,
+    omitForWizardType: c.omitForWizardType,
     effect: (player) => {
       if (!overworld.underworld) {
         console.error('Cannot add card to hand, underworld is undefined');
@@ -857,6 +858,7 @@ export interface ICard {
   // rare, but useful for spells like add radius so you can use them at the
   // end of your spell chain
   frontload?: boolean;
+  omitForWizardType: WizardType[];
 }
 
 export const allCards: { [cardId: string]: ICard } = {};

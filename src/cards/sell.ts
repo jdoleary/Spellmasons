@@ -23,6 +23,7 @@ const spell: Spell = {
     ignoreRange: true,
     animationPath: '',
     sfx: '',
+    omitForWizardType: ['Deathmason'],
     description: ['spell_sell'],
     effect: async (state, card, quantity, underworld, prediction) => {
       // Clear out the rest of the spell so it doesn't actually cast it
