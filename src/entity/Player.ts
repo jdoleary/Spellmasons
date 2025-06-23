@@ -262,12 +262,16 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
     if (player.wizardType == 'Goru') {
       Unit.addModifier(player.unit, undyingModifierId, underworld, false);
       player.unit.soulFragments = config.GORU_PLAYER_STARTING_SOUL_FRAGMENTS + underworld.levelIndex;
+      player.unit.mana = 0;
+      player.unit.manaMax = 0;
     }
     if (player.wizardType == 'Deathmason') {
       // Do not allow keeping locked cards between levels
       discardCards(player, underworld, true);
       // Refill cards
       Unit.refillCharges(player.unit, underworld);
+      player.unit.mana = 0;
+      player.unit.manaMax = 0;
     }
   }
   Unit.syncPlayerHealthManaUI(underworld);
