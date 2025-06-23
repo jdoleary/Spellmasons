@@ -858,7 +858,7 @@ export interface ICard {
   // rare, but useful for spells like add radius so you can use them at the
   // end of your spell chain
   frontload?: boolean;
-  omitForWizardType: WizardType[];
+  omitForWizardType?: WizardType[];
 }
 
 export const allCards: { [cardId: string]: ICard } = {};
