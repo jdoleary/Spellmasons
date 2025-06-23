@@ -4065,6 +4065,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           // the card may affect the caster's mana
           effectState.casterUnit.mana -= spellCostTally.manaCost;
           effectState.casterUnit.stamina -= spellCostTally.staminaCost;
+          if (spellCostTally.soulFragmentCost) {
+            effectState.casterUnit.soulFragments -= spellCostTally.soulFragmentCost;
+          }
           if (effectState.casterUnit.charges) {
             if (isNullOrUndef(effectState.casterUnit.charges[card.id])) {
               effectState.casterUnit.charges[card.id] = 0;
