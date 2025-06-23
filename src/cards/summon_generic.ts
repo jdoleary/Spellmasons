@@ -169,6 +169,7 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean, 
   return {
     card: {
       id,
+      soulFragmentCostOverride: unitSource?.spawnParams?.budgetCost || 1,
       category: CardCategory.Soul,
       sfx: 'summonDecoy',
       supportQuantity: true,

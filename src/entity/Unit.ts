@@ -213,7 +213,7 @@ export function create(
       defaultImagePath,
       shaderUniforms: {},
       damage: 0,
-      soulFragments: 1,
+      soulFragments: sourceUnit.spawnParams?.budgetCost || 1,
       strength: 1,
       // default blood color
       bloodColor: bloodColorDefault,

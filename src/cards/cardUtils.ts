@@ -144,7 +144,7 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
     }
     if (caster && isGoru(caster)) {
         // No non-charge cost for Goru, only soulFragment cost
-        cardCost.soulFragmentCost = Math.max(1, Math.floor(card.manaCost / 10));
+        cardCost.soulFragmentCost = card.soulFragmentCostOverride ? card.soulFragmentCostOverride : Math.max(1, Math.floor(card.manaCost / 10));
         return cardCost;
     }
     cardCost.manaCost += card.manaCost;

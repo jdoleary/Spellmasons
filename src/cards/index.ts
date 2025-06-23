@@ -859,6 +859,7 @@ export interface ICard {
   // end of your spell chain
   frontload?: boolean;
   omitForWizardType?: WizardType[];
+  soulFragmentCostOverride?: number;
 }
 
 export const allCards: { [cardId: string]: ICard } = {};
