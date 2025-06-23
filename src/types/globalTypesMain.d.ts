@@ -161,7 +161,7 @@ declare global {
   // Returns pie.isConnected()
   var isConnected: () => boolean;
   // Disconnects pie from server
-  var pieDisconnect: () => Promise<void>;
+  var pieDisconnect: (disconnectReason: string) => Promise<void>;
   var setDifficulty: undefined | ((gameMode: 'normal' | 'hard' | 'impossible') => void);
   var pieLeaveRoom: undefined | (() => void);
   var pieInhabitPlayer: undefined | ((asPlayerClientId: string) => void);
@@ -357,4 +357,5 @@ declare global {
   var peers: Set<string>;
   var kickPeer: (steamId: string, name?: string) => void | undefined;
   var peerHostBroadcastClientsPresenceChanged: (pie: PiePeer) => void;
+  var showToast: (message: string, params?: { duration: number }) => void;
 }

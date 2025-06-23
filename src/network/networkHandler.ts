@@ -502,7 +502,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         const todayDate = new Date().setHours(0, 0, 0, 0);
         globalThis.save?.(`${todayDate}-${backupSaveName}`, true).then(errMsg => {
           if (!errMsg) {
-            Jprompt({ text: ['auto save notice', backupSaveName], yesText: 'Okay', forceShow: true });
+            Jprompt({ text: `Disconnected\n\nLobby host disconnected due to: ${payload.disconnectReason}\n` + i18n(['auto save notice', backupSaveName]), yesText: 'Okay', forceShow: true });
           }
         });
         globalThis.exitCurrentGame?.();
@@ -1740,7 +1740,7 @@ Current game version: ${globalThis.SPELLMASONS_PACKAGE_VERSION}`,
     // Ensure the menu is open
     setView(View.Menu);
     intentionalDisconnect = true;
-    return typeGuardHostApp(overworld.pie) ? Promise.resolve() : overworld.pie.disconnect();
+    return typeGuardHostApp(overworld.pie) ? Promise.resolve() : overworld.pie.disconnect('Exited game from menu');
   }
 }
 export interface SaveFile {

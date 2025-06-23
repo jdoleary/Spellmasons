@@ -287,7 +287,7 @@ export default class PiePeer {
     }
     async connectSolo() {
         // Disconnect if currently connected so we can fake a singleplayer connection
-        await this.disconnect();
+        await this.disconnect('Left lobby to play singleplayer');
         this.soloMode = true;
         if (this.onConnectInfo) {
             this.onConnectInfo({
@@ -323,10 +323,17 @@ export default class PiePeer {
         // Try reconnect
         clearTimeout(this.reconnectTimeoutId);
     }
-    async disconnect(): Promise<void> {
+    async disconnect(disconnectReason: string): Promise<void> {
+        if (disconnectReason) {
+            globalThis.showToast(disconnectReason);
+            if (remoteLog) {
+                remoteLog(`Disconnect (PiePeer): ${disconnectReason}`);
+            }
+        }
         this.sendData({
             type: MESSAGE_TYPES.PEER_VOLUNTARY_DISCONNECT,
-            hostDisconnected: globalThis.isHost(this)
+            hostDisconnected: globalThis.isHost(this),
+            disconnectReason
         });
         globalThis.peers.clear();
         globalThis.peerLobbyId = '';
@@ -436,13 +443,14 @@ export default class PiePeer {
                 break;
             default:
                 log(message);
-                error(`Above message of type ${message.type} not recognized!`);
+                error(`Above message of type ${message.type
+                    } not recognized!`);
         }
     }
 
     joinRoom(roomInfo: Room, isHosting: boolean = false): Promise<any> {
         if (!globalThis.electronSettings) {
-            return Promise.reject('no electron Settings');
+            return Promise.reject('Steam not initialized');
         }
         // If in soloMode, you are always the host, if not in solomode, since this function is joinRoom,
         // you are not the host

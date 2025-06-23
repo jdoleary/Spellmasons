@@ -70,14 +70,17 @@ function connect_to_wsPie_server(wsUri: string | undefined, overworld: Overworld
         // from a live game, and if the player isn't ready either they haven't readied up in the first place or the
         // backup has already been made because below we set lobbyReady to false after a disconnect.
         if (globalThis.save && globalThis.player?.lobbyReady) {
-          console.error('Client disconnected unintentionally')
+          console.error('Client disconnected unintentionally');
+          if (remoteLog) {
+            remoteLog(`Disconnect (wsPie): Lost Connection`);
+          }
           const backupSaveName = `backup ${(overworld.pie as PieClient).currentRoomInfo?.name || ''}`;
           // Backups are unique to the current date and the save name
           // so multiple backups in the same day and same game name will overwrite each other
           const todayDate = new Date().setHours(0, 0, 0, 0);
           globalThis.save(`${todayDate}-${backupSaveName}`, true).then(errMsg => {
             if (!errMsg) {
-              Jprompt({ text: ['auto save notice', backupSaveName], yesText: 'Okay', forceShow: true });
+              Jprompt({ text: `Disconnected\n\nLost connection to Dedicated Server\n` + i18n(['auto save notice', backupSaveName]), yesText: 'Okay', forceShow: true });
             }
           });
         }
@@ -195,7 +198,7 @@ ${explainUpdateText}
 `, yesText: "Disconnect", forceShow: true
           }).then(() => {
             intentionalDisconnect = true;
-            pie.disconnect();
+            pie.disconnect('Cannot join, server and game versions are out of sync.');
             globalThis.syncConnectedWithPieState();
           });
         }

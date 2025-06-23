@@ -27,6 +27,8 @@ import PiePeer from './network/PiePeer';
 import { setView } from './views';
 import { View } from './View';
 import { test_spyPromises } from './promiseSpy';
+import { showToast } from './Toast';
+globalThis.showToast = showToast;
 
 // Get feature flags from spellmasons.com:
 fetch("https://www.spellmasons.com/serverList.json", {

@@ -416,4 +416,5 @@ declare global {
   var peerLobbyId: string;
   var peers: Set<string>;
   var peerHostBroadcastClientsPresenceChanged: (pie: PiePeer) => void;
+  var showToast: undefined | ((message: string, params?: { duration: number }) => void);
 }
