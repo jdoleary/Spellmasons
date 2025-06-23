@@ -185,8 +185,8 @@ export function create({ pos, pickupSource, idOverride, logSource }:
     // however if that changes in the future this should be refactored so
     // that there isn't a special case inside of Pickup.create
     assignEmitter(self, BLUE_PORTAL_JID, prediction, underworld);
-  } else if (name == PORTAL_PURPLE_NAME && !underworld.isLevelComplete()) {
-    assignEmitter(self, PORTAL_PURPLE_NAME, prediction, underworld);
+  } else if (name == PORTAL_YELLOW_NAME) {
+    assignEmitter(self, PORTAL_YELLOW_NAME, prediction, underworld);
   }
 
 
@@ -253,7 +253,7 @@ function assignEmitter(pickup: IPickup, emitterId: string, prediction: boolean, 
         pickup.image.sprite.tint = pickup.image.sprite.keepTint;
       }
     }
-  } else if (emitterId == PORTAL_PURPLE_NAME) {
+  } else if (emitterId == PORTAL_YELLOW_NAME) {
     pickup.emitter = makeDeathmasonPortal(pickup, prediction, '#6e6b1a', '#f0fa52');
     if (pickup.image) {
       if (pickup.emitter) {
@@ -482,6 +482,7 @@ const healthPotionRestoreAmount = 50;
 export const spike_damage = 30;
 export const PICKUP_SPIKES_NAME = 'Trap';
 export const PORTAL_PURPLE_NAME = 'Portal';
+export const PORTAL_YELLOW_NAME = 'Yellow Portal';
 export const pickups: IPickupSource[] = [
   {
     imagePath: 'trap',
@@ -620,9 +621,38 @@ export const pickups: IPickupSource[] = [
     animationSpeed: -0.5,
     playerOnly: true,
     name: PORTAL_PURPLE_NAME,
-    probability: 1,
+    probability: 0,
     scale: 1,
-    description: (pickup, underworld) => !underworld.isLevelComplete() ? 'green_portal_desc' : 'explain portal',
+    description: (pickup, underworld) => 'explain portal',
+    willTrigger: ({ unit, player, pickup, underworld }) => {
+      return !!player;
+    },
+    effect: ({ unit, player, underworld }) => {
+      // Only send the ENTER_PORTAL message from
+      // the client of the player that entered the portal
+      if (player && player == globalThis.player) {
+        playSFXKey('purplePortal');
+        underworld.pie.sendData({
+          type: MESSAGE_TYPES.ENTER_PORTAL
+        });
+        CardUI.clearSelectedCards(underworld);
+      }
+      // Move the player unit so they don't continue to trigger the pickup more than once
+      if (player && player.unit) {
+        player.unit.resolveDoneMoving(true);
+        player.unit.x = NaN;
+        player.unit.y = NaN;
+      }
+    },
+  },
+  {
+    imagePath: 'portal',
+    animationSpeed: -0.5,
+    playerOnly: true,
+    name: PORTAL_YELLOW_NAME,
+    probability: 10,
+    scale: 1,
+    description: (pickup, underworld) => 'yellow_portal_desc',
     willTrigger: ({ unit, player, pickup, underworld }) => {
       return !!player;
     },
