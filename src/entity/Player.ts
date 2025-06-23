@@ -592,6 +592,7 @@ export async function setSpellmasonsToChannellingAnimationClose(player: IPlayer)
 }
 export function setSpellmasonsToChannellingAnimation(player: IPlayer) {
   if (!player.unit.alive) return;
+  if (player.wizardType === 'Goru') return;
 
   const bookInAnimationPath = 'playerBookIn';
   new Promise<void>((resolve) => {
