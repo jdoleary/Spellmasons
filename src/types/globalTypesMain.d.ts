@@ -357,5 +357,4 @@ declare global {
   var peers: Set<string>;
   var kickPeer: (steamId: string, name?: string) => void | undefined;
   var peerHostBroadcastClientsPresenceChanged: (pie: PiePeer) => void;
-  var showToast: (message: string, params?: { duration: number }) => void;
 }

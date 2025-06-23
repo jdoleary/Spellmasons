@@ -14,6 +14,7 @@
 - Run `npm run headless-build-only` to check tsc errors which `npm run bun-headless` will not catch
 
 NEW for July:
+- Test disconnection string near backupSaveName jprompt
 - Test deathmason discard count on multiplayer (non host)
 - Test cardmason sync on new multiplayer game
 - Test wizard picker large and small

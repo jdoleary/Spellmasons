@@ -325,7 +325,7 @@ export default class PiePeer {
     }
     async disconnect(disconnectReason: string): Promise<void> {
         if (disconnectReason) {
-            globalThis.showToast(disconnectReason);
+            console.warn(disconnectReason);
             if (remoteLog) {
                 remoteLog(`Disconnect (PiePeer): ${disconnectReason}`);
             }
