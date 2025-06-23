@@ -177,6 +177,10 @@ function polymorphUnit(fromUnit: Unit.IUnit, underworld: Underworld, prediction:
 export function visualPolymorphPlayerUnit(targetUnit: Unit.IUnit, toSourceUnit: UnitSource) {
   // Only change vfx/sfx for player since when npc units polymorph they ACTUALLY change which unit they are
   if (targetUnit.unitType == UnitType.PLAYER_CONTROLLED) {
+    if (targetUnit.animations == toSourceUnit.animations) {
+      // short circuit, already the correct sprite
+      return;
+    }
     targetUnit.defaultImagePath = toSourceUnit.unitProps.defaultImagePath || targetUnit.defaultImagePath;
     targetUnit.animations = toSourceUnit.animations || targetUnit.animations;
     targetUnit.sfx = toSourceUnit.sfx || targetUnit.sfx;
