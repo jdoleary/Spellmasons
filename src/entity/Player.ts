@@ -25,6 +25,7 @@ import floatingText from '../graphics/FloatingText';
 import { makeCorruptionParticles } from '../graphics/ParticleCollection';
 import { visualPolymorphPlayerUnit } from '../cards/polymorph';
 import { GORU_UNIT_ID } from './units/goru';
+import { undyingModifierId } from '../modifierUndying';
 
 const elInGameLobby = document.getElementById('in-game-lobby') as (HTMLElement | undefined);
 elInGameLobby?.addEventListener('click', (e) => {
@@ -258,10 +259,15 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
   Unit.resetUnitStats(player.unit, underworld);
   // If in the beginning of a level set charges to full
   if (!player.isSpawned) {
-    // Do not allow keeping locked cards between levels
-    discardCards(player, underworld, true);
-    // Refill cards
-    Unit.refillCharges(player.unit, underworld);
+    if (player.wizardType == 'Goru') {
+      Unit.addModifier(player.unit, undyingModifierId, underworld, false);
+    }
+    if (player.wizardType == 'Deathmason') {
+      // Do not allow keeping locked cards between levels
+      discardCards(player, underworld, true);
+      // Refill cards
+      Unit.refillCharges(player.unit, underworld);
+    }
   }
   Unit.syncPlayerHealthManaUI(underworld);
 }

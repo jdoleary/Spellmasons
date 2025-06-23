@@ -579,7 +579,7 @@
         "slime_description": "Creates a copy of itself every turn.",
         "target_immune": "Target Immune",
         "target_immune_description": "Unit resists targeting unless targeted directly.",
-        "undying_description": "Self ressurects with half health on turn start.",
+        "undying_description": "Self ressurects with half health on turn start.  Requires at least 🍞 soul fragments to activate.",
         "summoningsickness": "Summoning Sickness",
         "summoning_sickness_description": "Unable to act",
         "damage_reduced": "Damage reduced by 🍞%",
@@ -768,7 +768,11 @@
         "host lobby": "Host Lobby",
         "exit lobby": "Exit Lobby",
         "play": "Play",
-        "deathmason": "Deathmason"
+        "deathmason": "Deathmason",
+        "soul fragments": "Soul Fragments",
+        "insufficient soul fragments": "Insufficient Soul Fragments",
+        "green_portal_desc": "Allows you to respawn at any location of your choice",
+        "undying failed": "Undying requires at least 🍞 soul fragments to activate."
     },
     {
         "language": "Français",
@@ -1350,7 +1354,7 @@
         "slime_description": "Crée une copie de lui-même à chaque tour.",
         "target_immune": "Cible Immunisée",
         "target_immune_description": "L'unité résiste au ciblage sauf si elle est ciblée directement.",
-        "undying_description": "Se ressuscite au début du tour.",
+        "undying_description": "Se ressuscite avec la moitié de la santé au début du tour. Nécessite au moins 🍞 fragments d'âme pour s'activer.",
         "summoningsickness": "Maladie d'invocation",
         "summoning_sickness_description": "Incapable d'agir",
         "damage_reduced": "Dommages réduits de 🍞%",
@@ -1539,7 +1543,11 @@
         "host lobby": "Créer un salon",
         "exit lobby": "Sortie du hall",
         "play": "Commencer le jeu",
-        "deathmason": "Maître de la Mort"
+        "deathmason": "Maître de la Mort",
+        "soul fragments": "Fragments d'âme",
+        "insufficient soul fragments": "Fragments d'âme insuffisants",
+        "green_portal_desc": "Vous permet de réapparaître à n'importe quel endroit de votre choix.",
+        "undying failed": "L'Immortel nécessite au moins 🍞 fragments d'âme pour s'activer."
     },
     {
         "language": "italiano",
@@ -2121,7 +2129,7 @@
         "slime_description": "Crea una copia di se stesso ad ogni turno.",
         "target_immune": "Immunità del bersaglio",
         "target_immune_description": "L'unità resiste al bersaglio a meno che non venga colpita direttamente.",
-        "undying_description": "Resuscita se stessa all'inizio del turno.",
+        "undying_description": "Si risuscita con metà salute all'inizio del turno. Richiede almeno 🍞 frammenti d'anima per attivarsi.",
         "summoningsickness": "Malattia di Evocazione",
         "summoning_sickness_description": "Impossibile agire",
         "damage_reduced": "Danno ridotto del 🍞%",
@@ -2310,7 +2318,11 @@
         "host lobby": "Crea un Lobby",
         "exit lobby": "Esci dalla lobby",
         "play": "Inizia Gioco",
-        "deathmason": "Mortelegionario"
+        "deathmason": "Mortelegionario",
+        "soul fragments": "Frammenti dell'anima",
+        "insufficient soul fragments": "Frammenti d'Anima Insufficienti",
+        "green_portal_desc": "Ti permette di rinascere in qualsiasi luogo a tua scelta.",
+        "undying failed": "L'Immortale richiede almeno 🍞 frammenti dell'anima per essere attivato."
     },
     {
         "language": "Deutsche",
@@ -2892,7 +2904,7 @@
         "slime_description": "Erstellt jede Runde eine Kopie von sich selbst.",
         "target_immune": "Ziel Immun",
         "target_immune_description": "Einheit widersteht der Zielverwendung, es sei denn, sie wird direkt anvisiert.",
-        "undying_description": "Erweckt sich zu Beginn der Runde selbst.",
+        "undying_description": "Erweckt sich zu Beginn der Runde mit halber Gesundheit selbst. Erfordert mindestens 🍞 Seelenfragmente zur Aktivierung.",
         "summoningsickness": "Beschwörungsfieber",
         "summoning_sickness_description": "Handlungsunfähig",
         "damage_reduced": "Schaden um 🍞% reduziert",
@@ -3081,7 +3093,11 @@
         "host lobby": "Lobby erstellen",
         "exit lobby": "Ausgangsbereich",
         "play": "Spiel starten",
-        "deathmason": "Todesmeister"
+        "deathmason": "Todesmeister",
+        "soul fragments": "Seelenfragmente",
+        "insufficient soul fragments": "Nicht ausreichende Seelenfragmente",
+        "green_portal_desc": "Ermöglicht es dir, an jedem Ort deiner Wahl wiederzubeleben.",
+        "undying failed": "Unsterblich erfordert mindestens 🍞 Seelenfragmente zur Aktivierung."
     },
     {
         "language": "español",
@@ -3663,7 +3679,7 @@
         "slime_description": "Crea una copia de sí mismo en cada turno.",
         "target_immune": "Objetivo Inmune",
         "target_immune_description": "La unidad resiste el enfoque a menos que sea seleccionada directamente.",
-        "undying_description": "Se resucita al inicio del turno.",
+        "undying_description": "Se resucita con la mitad de salud al comienzo del turno. Requiere al menos 🍞 fragmentos de alma para activarse.",
         "summoningsickness": "Enfermedad de Invocación",
         "summoning_sickness_description": "Incapaz de actuar",
         "damage_reduced": "Daño reducido en 🍞%.",
@@ -3852,7 +3868,11 @@
         "host lobby": "Crear un vestíbulo",
         "exit lobby": "Salida del vestíbulo",
         "play": "Iniciar Juego",
-        "deathmason": "Mason de la Muerte"
+        "deathmason": "Mason de la Muerte",
+        "soul fragments": "Fragmentos del Alma",
+        "insufficient soul fragments": "Fragmentos de alma insuficientes",
+        "green_portal_desc": "Te permite resurgir en cualquier lugar de tu elección.",
+        "undying failed": "Indestructible requiere al menos 🍞 fragmentos de alma para activarse."
     },
     {
         "language": "日本",
@@ -4434,7 +4454,7 @@
         "slime_description": "毎ターン自分自身のコピーを作成する。",
         "target_immune": "ターゲット免疫",
         "target_immune_description": "ユニットは直接ターゲットされない限り、攻撃を受け付けません。",
-        "undying_description": "ターン開始時に自己復活する。",
+        "undying_description": "ターン開始時に半分の健康で自己復活します。発動には少なくとも🍞のソウルフラグメントが必要です。",
         "summoningsickness": "召喚病",
         "summoning_sickness_description": "行動できない",
         "damage_reduced": "ダメージが🍞%減少しました。",
@@ -4623,7 +4643,11 @@
         "host lobby": "ロビーを作成する",
         "exit lobby": "ロビーを出る",
         "play": "ゲームスタート",
-        "deathmason": "死神の石工"
+        "deathmason": "死神の石工",
+        "soul fragments": "魂の断片",
+        "insufficient soul fragments": "ソウルフラグメントが不足しています",
+        "green_portal_desc": "好きな場所でリスポーンできるようにします。",
+        "undying failed": "不死は発動するために少なくとも🍞の魂の断片を必要とします。"
     },
     {
         "language": "Português",
@@ -5205,7 +5229,7 @@
         "slime_description": "Cria uma cópia de si mesmo a cada turno.",
         "target_immune": "Alvo Imune",
         "target_immune_description": "A unidade resiste a ser alvo a menos que seja direcionada diretamente.",
-        "undying_description": "Ressurge a si mesmo no início do turno.",
+        "undying_description": "Ressuscita-se com metade da saúde no início da rodada. Requer pelo menos 🍞 fragmentos de alma para ativar.",
         "summoningsickness": "Doença de Invocação",
         "summoning_sickness_description": "Incapaz de agir",
         "damage_reduced": "Dano reduzido em 🍞%",
@@ -5394,7 +5418,11 @@
         "host lobby": "Criar um Salão",
         "exit lobby": "Sair do Lobby",
         "play": "Iniciar Jogo",
-        "deathmason": "Mestre da Morte"
+        "deathmason": "Mestre da Morte",
+        "soul fragments": "Fragmentos de Alma",
+        "insufficient soul fragments": "Fragmentos de Alma Insuficientes",
+        "green_portal_desc": "Permite que você renasça em qualquer local de sua escolha.",
+        "undying failed": "Indomável requer pelo menos 🍞 fragmentos de alma para ativar."
     },
     {
         "language": "عربى",
@@ -5976,7 +6004,7 @@
         "slime_description": "يخلق نسخة من نفسه في كل دور.",
         "target_immune": "مقاومة الاختيار",
         "target_immune_description": "الوحدة تقاوم الاستهداف ما لم يتم استهدافها مباشرة.",
-        "undying_description": "يعيد إحياء الذات عند بدء الدور.",
+        "undying_description": "يستعيد حياته بنفسه بنصف صحتها عند بدء الدور. يتطلب على الأقل 🍞 شظية روح لتفعيلها.",
         "summoningsickness": "مرض الاستدعاء",
         "summoning_sickness_description": "غير قادر على الفعل",
         "damage_reduced": "تم تقليل الضرر بنسبة 🍞%",
@@ -6165,7 +6193,11 @@
         "host lobby": "إنشاء غرفة انتظار",
         "exit lobby": "خروج من اللوبي",
         "play": "ابدأ اللعبة",
-        "deathmason": "موت الحرفي"
+        "deathmason": "موت الحرفي",
+        "soul fragments": "قطع الروح",
+        "insufficient soul fragments": "قطع الروح غير كافية",
+        "green_portal_desc": "يتيح لك إعادة الظهور في أي مكان تختاره",
+        "undying failed": "يتطلب الخلود ما لا يقل عن 🍞 شظية روح لتفعيله."
     },
     {
         "language": "한국어",
@@ -6747,7 +6779,7 @@
         "slime_description": "매 턴마다 자신의 복제품을 생성합니다.",
         "target_immune": "대상 면역",
         "target_immune_description": "유닛은 직접 지정되지 않는 한 타겟팅을 저항합니다.",
-        "undying_description": "턴 시작 시 자가 부활합니다.",
+        "undying_description": "턴 시작 시 반의 체력으로 자가 부활. 활성화하려면 최소 🍞 영혼 조각이 필요합니다.",
         "summoningsickness": "소환 질병",
         "summoning_sickness_description": "행동할 수 없음",
         "damage_reduced": "피해가 🍞% 감소했습니다.",
@@ -6936,7 +6968,11 @@
         "host lobby": "로비 만들기",
         "exit lobby": "로비 나가기",
         "play": "게임 시작",
-        "deathmason": "죽음의 제사장"
+        "deathmason": "죽음의 제사장",
+        "soul fragments": "영혼 조각",
+        "insufficient soul fragments": "부족한 영혼 조각",
+        "green_portal_desc": "선택한 위치에서 어떻게든 다시 태어날 수 있게 해줍니다.",
+        "undying failed": "언다잉을 활성화하려면 최소 🍞개의 영혼 조각이 필요합니다."
     },
     {
         "language": "Русский",
@@ -7518,7 +7554,7 @@
         "slime_description": "Создает копию себя каждый ход.",
         "target_immune": "Цель иммунна",
         "target_immune_description": "Юнит противостоит атакам, если на него не нацелиться напрямую.",
-        "undying_description": "Воскрешается в начале хода.",
+        "undying_description": "Самовоскрешение с половиной здоровья в начале хода. Для активации требуется как минимум 🍞 фрагментов души.",
         "summoningsickness": "Сломанное Заклинание",
         "summoning_sickness_description": "Не в состоянии действовать",
         "damage_reduced": "Урон уменьшен на 🍞%",
@@ -7707,7 +7743,11 @@
         "host lobby": "Создать лобби",
         "exit lobby": "Выход из лобби",
         "play": "Начать игру",
-        "deathmason": "Смертный следопыт"
+        "deathmason": "Смертный следопыт",
+        "soul fragments": "Фрагменты души",
+        "insufficient soul fragments": "Недостаточно фрагментов души",
+        "green_portal_desc": "Позволяет возродиться в любом месте на ваш выбор.",
+        "undying failed": "Безсмертие требует не менее 🍞 фрагментов души для активации."
     },
     {
         "language": "中文(简)",
@@ -8289,7 +8329,7 @@
         "slime_description": "每回合创造一个自己的拷贝。",
         "target_immune": "目标免疫",
         "target_immune_description": "单位抵抗被选择，除非被直接目标锁定。",
-        "undying_description": "在回合开始时自我复活。",
+        "undying_description": "在回合开始时以半生命自我复活。需要至少🍞个灵魂碎片才能激活。",
         "summoningsickness": "召唤病",
         "summoning_sickness_description": "无法行动",
         "damage_reduced": "伤害减少 🍞%",
@@ -8478,7 +8518,11 @@
         "host lobby": "创建大厅",
         "exit lobby": "退出大堂",
         "play": "开始游戏",
-        "deathmason": "死者之铸"
+        "deathmason": "死者之铸",
+        "soul fragments": "灵魂碎片",
+        "insufficient soul fragments": "灵魂碎片不足",
+        "green_portal_desc": "允许你在任何你选择的位置重新生成",
+        "undying failed": "不死术需要至少🍞个灵魂碎片才能激活。"
     },
     {
         "language": "中文(繁)",
@@ -9060,7 +9104,7 @@
         "slime_description": "每回合創造一個自己的複製體。",
         "target_immune": "目標免疫",
         "target_immune_description": "單位抵抗被鎖定，除非被直接鎖定。",
-        "undying_description": "回合開始時自我復活。",
+        "undying_description": "每回合開始時以半血自我復活。激活需要至少 🍞 個靈魂碎片。",
         "summoningsickness": "召喚病症",
         "summoning_sickness_description": "無法行動",
         "damage_reduced": "傷害降低了 🍞%",
@@ -9249,7 +9293,11 @@
         "host lobby": "創建大廳",
         "exit lobby": "退出大廳",
         "play": "開始遊戲",
-        "deathmason": "死靈牧師"
+        "deathmason": "死靈牧師",
+        "soul fragments": "靈魂碎片",
+        "insufficient soul fragments": "靈魂碎片不足",
+        "green_portal_desc": "允許你在任何你選擇的位置重生",
+        "undying failed": "不滅需要至少🍞個靈魂碎片才能啟用。"
     },
     {
         "language": "Polski",
@@ -9831,7 +9879,7 @@
         "slime_description": "Tworzy kopię samego siebie co turę.",
         "target_immune": "Opór selekcji",
         "target_immune_description": "Jednostka opiera się celowaniu, chyba że zostanie celowana bezpośrednio.",
-        "undying_description": "Samozmartwychwstanie na początku tury.",
+        "undying_description": "Ożywia się samodzielnie z połową zdrowia na początku tury. Wymaga przynajmniej 🍞 fragmentów duszy do aktywacji.",
         "summoningsickness": "Choroba Przywołania",
         "summoning_sickness_description": "Nie mogący działać",
         "damage_reduced": "Zadawane obrażenia zmniejszone o 🍞%",
@@ -10020,7 +10068,11 @@
         "host lobby": "Stwórz Lobby",
         "exit lobby": "Wyjście z holu",
         "play": "Zacznij Grę",
-        "deathmason": "Mistrz Śmierci"
+        "deathmason": "Mistrz Śmierci",
+        "soul fragments": "Fragmenty Duszy",
+        "insufficient soul fragments": "Niewystarczające fragmenty duszy",
+        "green_portal_desc": "Pozwala na odrodzenie się w dowolnym miejscu według własnego wyboru.",
+        "undying failed": "Nieumarli potrzebują co najmniej 🍞 fragmentów duszy, aby się aktywować."
     },
     {
         "language": "Dutch",
@@ -10602,7 +10654,7 @@
         "slime_description": "maakt elke beurt een kopie van zichzelf.",
         "target_immune": "Doel Immuun",
         "target_immune_description": "Eenheid weerstaat targeting tenzij deze direct wordt gericht.",
-        "undying_description": "Zelf herleeft aan het begin van de beurt.",
+        "undying_description": "Zelfwekken met de helft gezondheid aan het begin van de beurt. Vereist minimaal 🍞 zielfragmenten om te activeren.",
         "summoningsickness": "Ziekte oproepen",
         "summoning_sickness_description": "Niet in staat om te handelen",
         "damage_reduced": "Schade verminderd met 🍞%",
@@ -10791,7 +10843,11 @@
         "host lobby": "Creëer een Lobby",
         "exit lobby": "Verlaat Lobby",
         "play": "Start Spel",
-        "deathmason": "Doodsmaker"
+        "deathmason": "Doodsmaker",
+        "soul fragments": "Zielfragmenten",
+        "insufficient soul fragments": "Onvoldoende Zielfragmenten",
+        "green_portal_desc": "Stelt je in staat om opnieuw te verschijnen op een locatie naar keuze.",
+        "undying failed": "Onsterfelijk vereist ten minste 🍞 zielfragmenten om te activeren."
     },
     {
         "language": "Предреформенный русскій",
@@ -11562,6 +11618,10 @@
         "host lobby": "",
         "exit lobby": "",
         "play": "",
-        "deathmason": ""
+        "deathmason": "",
+        "soul fragments": "",
+        "insufficient soul fragments": "",
+        "green_portal_desc": "",
+        "undying failed": ""
     }
 ]
