@@ -4067,6 +4067,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           effectState.casterUnit.stamina -= spellCostTally.staminaCost;
           if (spellCostTally.soulFragmentCost) {
             effectState.casterUnit.soulFragments -= spellCostTally.soulFragmentCost;
+            if (effectState.casterUnit.soulFragments < 0) {
+              const soulDebtProportionHealthCost = 0.25;
+              spellCostTally.healthCost = Math.abs(effectState.casterUnit.soulFragments) * soulDebtProportionHealthCost * effectState.casterUnit.healthMax;
+            }
           }
           if (effectState.casterUnit.charges) {
             if (isNullOrUndef(effectState.casterUnit.charges[card.id])) {

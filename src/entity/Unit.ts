@@ -58,6 +58,7 @@ import { doubledamageId } from '../modifierDoubleDamage';
 import { runeHardenedMinionsId } from '../modifierHardenedMinions';
 import { runeSharpTeethId } from '../modifierSharpTeeth';
 import { isDeathmason, isGoru } from './Player';
+import { makeManaTrail } from '../graphics/Particles';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -876,6 +877,46 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean, so
   unit.resolveDoneMoving(false);
   // Clear unit path to prevent further movement in case of ressurect or similar
   unit.path = undefined;
+
+  // Souls are split between player goru's.  Nearest get's first pick of odd soul number
+  const playerGoruUnits = underworld.players.filter(x => x.unit.alive && x.wizardType == 'Goru' && x.clientConnected).map(x => x.unit);
+  const collectedSoulFragments = unit.soulFragments;
+  unit.soulFragments = 0;
+  // If a goru killed the unit that goru get's all the souls
+  const colorStart = '#d9fff9';
+  const colorEnd = '#566d70';
+  if (sourceUnit && playerGoruUnits.includes(sourceUnit)) {
+    if (prediction) {
+      if (sourceUnit.predictionCopy) {
+        sourceUnit.predictionCopy.soulFragments += collectedSoulFragments;
+      }
+    } else {
+      sourceUnit.soulFragments += collectedSoulFragments;
+    }
+    if (!prediction) {
+      for (let i = 0; i < collectedSoulFragments; i++) {
+        makeManaTrail(unit, sourceUnit, underworld, colorStart, colorEnd, collectedSoulFragments).then(() => {
+          if (i == 0) {
+            floatingText({ coords: sourceUnit, text: `+ ${collectedSoulFragments} ${i18n('soul fragments')}` });
+          }
+        })
+      }
+    }
+  } else {
+    // If not, distribute souls among gorus
+    for (let i = 0; i < collectedSoulFragments; i++) {
+      for (let goru of playerGoruUnits) {
+        if (prediction && goru.predictionCopy) {
+          goru.predictionCopy.soulFragments++;
+        } else {
+          goru.soulFragments++;
+        }
+        if (!prediction) {
+          makeManaTrail(unit, goru, underworld, colorStart, colorEnd, collectedSoulFragments);
+        }
+      }
+    }
+  }
 
   const events = [...unit.events];
   const overriddenSourceUnit = sourceUnit?.summonedBy || sourceUnit;
