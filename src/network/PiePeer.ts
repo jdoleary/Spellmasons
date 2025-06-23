@@ -346,17 +346,11 @@ export default class PiePeer {
         // If disconnect is invoked while a connect() is already in progress this will
         // prevent it from trying to reconnect again after it fails
         this.cancelNextReconnectAttempt = true;
-        return new Promise<void>(resolve => {
-            if (this.soloMode) {
-                this.soloMode = false;
-                resolve();
-                log('"Disconnected" from soloMode');
-                return
-            }
-        }).then(() => {
-            // Updates debug info to show that it is closed
-            this._updateDebugInfo();
-        });
+        if (this.soloMode) {
+            this.soloMode = false;
+            log('"Disconnected" from soloMode');
+        }
+        this._updateDebugInfo();
 
     }
     handleMessage(message: any) {
