@@ -94,6 +94,8 @@ export function setView(v: View) {
   elUpgradePicker.classList.remove('active');
   switch (v) {
     case View.Menu:
+      // Any time the game sets the View to Menu, if it isn't already, it should always go to the PLAY route
+      globalThis.setMenu?.('PLAY');
       animateMenu();
       elMenu.classList.remove('hidden');
       if (globalThis.updateInGameMenuStatus) {
