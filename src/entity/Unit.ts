@@ -898,10 +898,8 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean, so
       if (!prediction) {
         for (let i = 0; i < collectedSoulFragments; i++) {
           makeManaTrail(unit, sourceUnit, underworld, colorStart, colorEnd, collectedSoulFragments).then(() => {
-            if (i == 0) {
-              floatingText({ coords: sourceUnit, text: `+ ${collectedSoulFragments} ${i18n('soul fragments')}` });
-            }
-          })
+            floatingText({ coords: sourceUnit, text: `+ 1 ${i18n('soul fragments')}`, aggregateMatcher: /\d+/ });
+          });
         }
       }
     } else {

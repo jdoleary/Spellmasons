@@ -28,6 +28,7 @@ interface FloatingTextInsructions {
   valpha?: number;
   aalpha?: number;
   prediction?: boolean;
+  aggregateMatcher?: RegExp;
 }
 // If too many instances of floatingText with the same text occur too
 // quickly, just render one in their place
@@ -44,6 +45,7 @@ export default function floatingText({
   valpha = -0.2,
   aalpha = 0.003,
   prediction,
+  aggregateMatcher,
 }: FloatingTextInsructions): Promise<void> {
   if (!(globalThis.pixi && app && container) || prediction) {
     return Promise.resolve();
@@ -67,11 +69,21 @@ export default function floatingText({
     }
   }
   optim.count++;
-  const doOptimize = optim.count > optimizeThreshold;
-  if (doOptimize) {
+  const doOptimize = aggregateMatcher || optim.count > optimizeThreshold;
+  if (aggregateMatcher) {
     if (optim.canon) {
-      optim.canon.text = optim.canon.text.replace(/(x\d+)$/, `x${optim.count}`);
+      optim.canon.text = optim.canon.text.replace(aggregateMatcher, `${optim.count}`);
       return Promise.resolve();
+    }
+  } else {
+    // Default optimize:
+    // Default optimize is like aggregateMatcher but activates as a necessity to preserve framerate, while aggregateMatcher will always activate
+    // if there's more than one
+    if (doOptimize) {
+      if (optim.canon) {
+        optim.canon.text = optim.canon.text.replace(/(x\d+)$/, `x${optim.count}`);
+        return Promise.resolve();
+      }
     }
   }
   // End Optimize
@@ -96,7 +108,9 @@ export default function floatingText({
     // @ts-ignore: A special flag to show that an instance of a pixitext
     // is an aggregate counter
     optim.canon.isCanon = true;
-    optim.canon.text = optim.canon.text + ` x${optim.count}`;
+    if (!aggregateMatcher) {
+      optim.canon.text = optim.canon.text + ` x${optim.count}`;
+    }
     coords = clone(globalThis.player.unit);
     // Offset multiple canons so they don't overlap
     const numberOfExistingCanons = Object.values(optimizer).filter(x => x.canon).length;
