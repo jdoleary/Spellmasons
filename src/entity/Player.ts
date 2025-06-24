@@ -260,7 +260,11 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
   // If in the beginning of a level set charges to full
   if (!player.isSpawned) {
     if (player.wizardType == 'Goru') {
-      Unit.addModifier(player.unit, undyingModifierId, underworld, false);
+      // Player goru only gets undying once
+      if (underworld.levelIndex <= 0) {
+        Unit.addModifier(player.unit, undyingModifierId, underworld, false);
+      }
+
       player.unit.soulFragments = config.GORU_PLAYER_STARTING_SOUL_FRAGMENTS + underworld.levelIndex;
       player.unit.mana = 0;
       player.unit.manaMax = 0;
