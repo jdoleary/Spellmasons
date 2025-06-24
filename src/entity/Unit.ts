@@ -1666,6 +1666,7 @@ export function makeMiniboss(unit: IUnit, underworld: Underworld) {
   unit.manaPerTurn *= config.UNIT_MINIBOSS_MANA_MULTIPLIER;
   unit.manaCostToCast *= config.UNIT_MINIBOSS_MANA_MULTIPLIER;
   unit.strength *= 7;
+  unit.soulFragments = Math.round(unit.soulFragments * 1.5);
   Image.setScaleFromModifiers(unit.image, unit.strength);
   const crown = Image.addSubSprite(unit.image, 'crown');
   // Exception: Ancients are short so their crown
