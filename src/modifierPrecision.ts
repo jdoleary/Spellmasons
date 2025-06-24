@@ -10,7 +10,7 @@ export default function registerPrecision() {
     description: 'rune_precision',
     _costPerUpgrade: 150,
     maxUpgradeCount: 1,
-    omitForCardmason: true,
+    omitForWizardType: ['Deathmason', 'Goru'],
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, precisionId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         // exception: logic is in cardUtils.ts

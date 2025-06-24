@@ -10,7 +10,7 @@ export default function registerEndlessQuiver() {
     description: ('rune_endless_quiver'),
     _costPerUpgrade: 200,
     maxUpgradeCount: 1,
-    omitForCardmason: true,
+    omitForWizardType: ['Deathmason', 'Goru'],
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, endlessQuiverId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         // 
