@@ -77,7 +77,7 @@ import { ensureAllClientsHaveAssociatedPlayers, Overworld, recalculateGameDiffic
 import { Emitter } from 'jdoleary-fork-pixi-particle-emitter';
 import { golem_unit_id } from './entity/units/golem';
 import deathmason, { ORIGINAL_DEATHMASON_DEATH, bossmasonUnitId, summonUnitAtPickup } from './entity/units/deathmason';
-import goru, { GORU_UNIT_ID, tryCollectSouls } from './entity/units/goru';
+import goru, { GORU_UNIT_ID, getSoulDebtHealthCost, tryCollectSouls } from './entity/units/goru';
 import { hexToString } from './graphics/ui/colorUtil';
 import { isModActive } from './registerMod';
 import { summoningSicknessId } from './modifierSummoningSickness';
@@ -4046,6 +4046,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           staminaCost: 0,
           soulFragmentCost: 0
         };
+        let soulDebtHealthCost = 0;
         let cardUsageCountPreCast = 0;
         if (!args.castForFree) {
           // This happens after the spell is cast so that fizzle spells can be refunded
@@ -4067,10 +4068,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           effectState.casterUnit.stamina -= spellCostTally.staminaCost;
           if (spellCostTally.soulFragmentCost) {
             effectState.casterUnit.soulFragments -= spellCostTally.soulFragmentCost;
-            if (effectState.casterUnit.soulFragments < 0) {
-              const soulDebtProportionHealthCost = 0.25;
-              spellCostTally.healthCost = Math.abs(effectState.casterUnit.soulFragments) * soulDebtProportionHealthCost * effectState.casterUnit.healthMax;
-            }
+            soulDebtHealthCost = getSoulDebtHealthCost(effectState.casterPlayer, prediction);
+            console.log('jtest ', effectState.casterPlayer, prediction, soulDebtHealthCost, spellCostTally.healthCost);
+            spellCostTally.healthCost += soulDebtHealthCost;
           }
           if (effectState.casterUnit.charges) {
             if (isNullOrUndef(effectState.casterUnit.charges[card.id])) {
@@ -4154,6 +4154,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
               sourceUnit: undefined,
               fromVec2: effectState.casterUnit
             }, this, prediction);
+          }
+          if (soulDebtHealthCost && !prediction) {
+            floatingText({ coords: effectState.casterUnit, text: ['Soul Debt floating text', Math.abs(soulDebtHealthCost).toString()], style: { fill: 0xf00 } });
           }
         }
         //// end INCUR HEALTH COST ////

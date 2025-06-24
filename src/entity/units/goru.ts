@@ -457,3 +457,29 @@ export function tryCollectSouls(player: IPlayer, underworld: Underworld, predict
   });
 
 }
+export function getSoulDebtHealthCost(player: IPlayer | undefined, prediction: boolean): number {
+  if (!player) {
+    return 0;
+  }
+  const unit = prediction ? player.unit.predictionCopy : player.unit;
+  if (!unit) {
+    console.error('getSoulDebtHealthCost: unexpected, player missing unit ref');
+    return 0;
+  }
+  // triggerSoulDebt must only be invoked on...
+  if (
+    !(
+      // ...player of wizardType Goru
+      player.wizardType === 'Goru'
+      // ... player is in soul debt
+      && unit.soulFragments < 0
+    )
+  ) {
+    return 0;
+  }
+  if (unit.soulFragments < 0) {
+    return Math.abs(unit.soulFragments) * config.GORU_SOUL_DEBT_PROPORTION_HEALTH_COST * unit.healthMax;
+  }
+  return 0;
+
+}

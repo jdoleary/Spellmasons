@@ -1226,7 +1226,10 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
     elManaBar.style["width"] = `0%`;
     elManaBar2.style["width"] = `0%`;
     elManaBar3.style["width"] = `100%`;
-    const text = predictionPlayerUnit.soulFragments >= 0 ? `${predictionPlayerUnit.soulFragments} ${i18n('Soul Fragments')}` : `${predictionPlayerUnit.soulFragments} ${i18n('Soul Debt')}`
+    const inSoulDebt = predictionPlayerUnit.soulFragments < 0
+    const text = inSoulDebt ? `${predictionPlayerUnit.soulFragments} ${i18n('Soul Debt')}` : `${predictionPlayerUnit.soulFragments} ${i18n('Soul Fragments')}`;
+    elManaLabel.dataset.soulFragments = predictionPlayerUnit.soulFragments.toString();
+    elManaLabel.classList.toggle('souldebt', inSoulDebt)
     elManaLabel.innerHTML = text;
 
 

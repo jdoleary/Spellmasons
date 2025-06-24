@@ -771,8 +771,12 @@
         "deathmason": "Deathmason",
         "soul fragments": "Soul Fragments",
         "insufficient soul fragments": "Insufficient Soul Fragments",
-        "green_portal_desc": "Allows you to respawn at any location of your choice",
-        "undying failed": "Undying requires at least 🍞 soul fragments to activate."
+        "yellow_portal_desc": "Allows you to respawn at any location of your choice",
+        "undying failed": "Undying requires at least 🍞 soul fragments to activate.",
+        "yellow portal": "Yellow Portal",
+        "soul collection radius": "Soul Collection Radius",
+        "soul debt floating text": "-🍞 health from Soul Debt",
+        "soul debt": "Soul Debt"
     },
     {
         "language": "Français",
@@ -1546,8 +1550,12 @@
         "deathmason": "Maître de la Mort",
         "soul fragments": "Fragments d'âme",
         "insufficient soul fragments": "Fragments d'âme insuffisants",
-        "green_portal_desc": "Vous permet de réapparaître à n'importe quel endroit de votre choix.",
-        "undying failed": "L'Immortel nécessite au moins 🍞 fragments d'âme pour s'activer."
+        "yellow_portal_desc": "Vous permet de réapparaître à n'importe quel endroit de votre choix.",
+        "undying failed": "L'Immortel nécessite au moins 🍞 fragments d'âme pour s'activer.",
+        "yellow portal": "",
+        "soul collection radius": "",
+        "soul debt floating text": "",
+        "soul debt": ""
     },
     {
         "language": "italiano",
@@ -2321,8 +2329,12 @@
         "deathmason": "Mortelegionario",
         "soul fragments": "Frammenti dell'anima",
         "insufficient soul fragments": "Frammenti d'Anima Insufficienti",
-        "green_portal_desc": "Ti permette di rinascere in qualsiasi luogo a tua scelta.",
-        "undying failed": "L'Immortale richiede almeno 🍞 frammenti dell'anima per essere attivato."
+        "yellow_portal_desc": "Ti permette di rinascere in qualsiasi luogo a tua scelta.",
+        "undying failed": "L'Immortale richiede almeno 🍞 frammenti dell'anima per essere attivato.",
+        "yellow portal": "",
+        "soul collection radius": "",
+        "soul debt floating text": "",
+        "soul debt": ""
     },
     {
         "language": "Deutsche",
@@ -3096,8 +3108,12 @@
         "deathmason": "Todesmeister",
         "soul fragments": "Seelenfragmente",
         "insufficient soul fragments": "Nicht ausreichende Seelenfragmente",
-        "green_portal_desc": "Ermöglicht es dir, an jedem Ort deiner Wahl wiederzubeleben.",
-        "undying failed": "Unsterblich erfordert mindestens 🍞 Seelenfragmente zur Aktivierung."
+        "yellow_portal_desc": "Ermöglicht es dir, an jedem Ort deiner Wahl wiederzubeleben.",
+        "undying failed": "Unsterblich erfordert mindestens 🍞 Seelenfragmente zur Aktivierung.",
+        "yellow portal": "",
+        "soul collection radius": "",
+        "soul debt floating text": "",
+        "soul debt": ""
     },
     {
         "language": "español",
@@ -3871,8 +3887,12 @@
         "deathmason": "Mason de la Muerte",
         "soul fragments": "Fragmentos del Alma",
         "insufficient soul fragments": "Fragmentos de alma insuficientes",
-        "green_portal_desc": "Te permite resurgir en cualquier lugar de tu elección.",
-        "undying failed": "Indestructible requiere al menos 🍞 fragmentos de alma para activarse."
+        "yellow_portal_desc": "Te permite resurgir en cualquier lugar de tu elección.",
+        "undying failed": "Indestructible requiere al menos 🍞 fragmentos de alma para activarse.",
+        "yellow portal": "",
+        "soul collection radius": "",
+        "soul debt floating text": "",
+        "soul debt": ""
     },
     {
         "language": "日本",
@@ -4646,8 +4666,12 @@
         "deathmason": "死神の石工",
         "soul fragments": "魂の断片",
         "insufficient soul fragments": "ソウルフラグメントが不足しています",
-        "green_portal_desc": "好きな場所でリスポーンできるようにします。",
-        "undying failed": "不死は発動するために少なくとも🍞の魂の断片を必要とします。"
+        "yellow_portal_desc": "好きな場所でリスポーンできるようにします。",
+        "undying failed": "不死は発動するために少なくとも🍞の魂の断片を必要とします。",
+        "yellow portal": "",
+        "soul collection radius": "",
+        "soul debt floating text": "",
+        "soul debt": ""
     },
     {
         "language": "Português",
@@ -5421,8 +5445,12 @@
         "deathmason": "Mestre da Morte",
         "soul fragments": "Fragmentos de Alma",
         "insufficient soul fragments": "Fragmentos de Alma Insuficientes",
-        "green_portal_desc": "Permite que você renasça em qualquer local de sua escolha.",
-        "undying failed": "Indomável requer pelo menos 🍞 fragmentos de alma para ativar."
+        "yellow_portal_desc": "Permite que você renasça em qualquer local de sua escolha.",
+        "undying failed": "Indomável requer pelo menos 🍞 fragmentos de alma para ativar.",
+        "yellow portal": "",
+        "soul collection radius": "",
+        "soul debt floating text": "",
+        "soul debt": ""
     },
     {
         "language": "عربى",
@@ -6196,8 +6224,12 @@
         "deathmason": "موت الحرفي",
         "soul fragments": "قطع الروح",
         "insufficient soul fragments": "قطع الروح غير كافية",
-        "green_portal_desc": "يتيح لك إعادة الظهور في أي مكان تختاره",
-        "undying failed": "يتطلب الخلود ما لا يقل عن 🍞 شظية روح لتفعيله."
+        "yellow_portal_desc": "يتيح لك إعادة الظهور في أي مكان تختاره",
+        "undying failed": "يتطلب الخلود ما لا يقل عن 🍞 شظية روح لتفعيله.",
+        "yellow portal": "",
+        "soul collection radius": "",
+        "soul debt floating text": "",
+        "soul debt": ""
     },
     {
         "language": "한국어",
@@ -6971,8 +7003,12 @@
         "deathmason": "죽음의 제사장",
         "soul fragments": "영혼 조각",
         "insufficient soul fragments": "부족한 영혼 조각",
-        "green_portal_desc": "선택한 위치에서 어떻게든 다시 태어날 수 있게 해줍니다.",
-        "undying failed": "언다잉을 활성화하려면 최소 🍞개의 영혼 조각이 필요합니다."
+        "yellow_portal_desc": "선택한 위치에서 어떻게든 다시 태어날 수 있게 해줍니다.",
+        "undying failed": "언다잉을 활성화하려면 최소 🍞개의 영혼 조각이 필요합니다.",
+        "yellow portal": "",
+        "soul collection radius": "",
+        "soul debt floating text": "",
+        "soul debt": ""
     },
     {
         "language": "Русский",
@@ -7746,8 +7782,12 @@
         "deathmason": "Смертный следопыт",
         "soul fragments": "Фрагменты души",
         "insufficient soul fragments": "Недостаточно фрагментов души",
-        "green_portal_desc": "Позволяет возродиться в любом месте на ваш выбор.",
-        "undying failed": "Безсмертие требует не менее 🍞 фрагментов души для активации."
+        "yellow_portal_desc": "Позволяет возродиться в любом месте на ваш выбор.",
+        "undying failed": "Безсмертие требует не менее 🍞 фрагментов души для активации.",
+        "yellow portal": "",
+        "soul collection radius": "",
+        "soul debt floating text": "",
+        "soul debt": ""
     },
     {
         "language": "中文(简)",
@@ -8521,8 +8561,12 @@
         "deathmason": "死者之铸",
         "soul fragments": "灵魂碎片",
         "insufficient soul fragments": "灵魂碎片不足",
-        "green_portal_desc": "允许你在任何你选择的位置重新生成",
-        "undying failed": "不死术需要至少🍞个灵魂碎片才能激活。"
+        "yellow_portal_desc": "允许你在任何你选择的位置重新生成",
+        "undying failed": "不死术需要至少🍞个灵魂碎片才能激活。",
+        "yellow portal": "",
+        "soul collection radius": "",
+        "soul debt floating text": "",
+        "soul debt": ""
     },
     {
         "language": "中文(繁)",
@@ -9296,8 +9340,12 @@
         "deathmason": "死靈牧師",
         "soul fragments": "靈魂碎片",
         "insufficient soul fragments": "靈魂碎片不足",
-        "green_portal_desc": "允許你在任何你選擇的位置重生",
-        "undying failed": "不滅需要至少🍞個靈魂碎片才能啟用。"
+        "yellow_portal_desc": "允許你在任何你選擇的位置重生",
+        "undying failed": "不滅需要至少🍞個靈魂碎片才能啟用。",
+        "yellow portal": "",
+        "soul collection radius": "",
+        "soul debt floating text": "",
+        "soul debt": ""
     },
     {
         "language": "Polski",
@@ -10071,8 +10119,12 @@
         "deathmason": "Mistrz Śmierci",
         "soul fragments": "Fragmenty Duszy",
         "insufficient soul fragments": "Niewystarczające fragmenty duszy",
-        "green_portal_desc": "Pozwala na odrodzenie się w dowolnym miejscu według własnego wyboru.",
-        "undying failed": "Nieumarli potrzebują co najmniej 🍞 fragmentów duszy, aby się aktywować."
+        "yellow_portal_desc": "Pozwala na odrodzenie się w dowolnym miejscu według własnego wyboru.",
+        "undying failed": "Nieumarli potrzebują co najmniej 🍞 fragmentów duszy, aby się aktywować.",
+        "yellow portal": "",
+        "soul collection radius": "",
+        "soul debt floating text": "",
+        "soul debt": ""
     },
     {
         "language": "Dutch",
@@ -10846,8 +10898,12 @@
         "deathmason": "Doodsmaker",
         "soul fragments": "Zielfragmenten",
         "insufficient soul fragments": "Onvoldoende Zielfragmenten",
-        "green_portal_desc": "Stelt je in staat om opnieuw te verschijnen op een locatie naar keuze.",
-        "undying failed": "Onsterfelijk vereist ten minste 🍞 zielfragmenten om te activeren."
+        "yellow_portal_desc": "Stelt je in staat om opnieuw te verschijnen op een locatie naar keuze.",
+        "undying failed": "Onsterfelijk vereist ten minste 🍞 zielfragmenten om te activeren.",
+        "yellow portal": "",
+        "soul collection radius": "",
+        "soul debt floating text": "",
+        "soul debt": ""
     },
     {
         "language": "Предреформенный русскій",
@@ -11621,7 +11677,11 @@
         "deathmason": "",
         "soul fragments": "",
         "insufficient soul fragments": "",
-        "green_portal_desc": "",
-        "undying failed": ""
+        "yellow_portal_desc": "",
+        "undying failed": "",
+        "yellow portal": "",
+        "soul collection radius": "",
+        "soul debt floating text": "",
+        "soul debt": ""
     }
 ]
