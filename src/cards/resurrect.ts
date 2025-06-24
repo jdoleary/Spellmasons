@@ -8,6 +8,7 @@ import { resurrect_weak_id } from './resurrect_weak';
 import type Underworld from '../Underworld';
 import { getOrInitModifier } from './util';
 import { GlowFilter } from '@pixi/filter-glow';
+import { removeFloatingParticlesFor } from '../graphics/Particles';
 
 export const resurrect_id = 'resurrect';
 export const thumbnail = 'spellIconResurrect2.png';
@@ -87,6 +88,9 @@ export function resurrectWithAnimation(unit: Unit.IUnit, summoner: Unit.IUnit, f
     // @ts-ignore Something is wrong with PIXI's filter types
     unit.image.sprite.filters.push(colorOverlayFilter, glowFilter)
   }
+  // Remove floating souls when unit is resurrected
+  removeFloatingParticlesFor(unit);
+
   if (!prediction) {
     playSFXKey('resurrect');
   }
