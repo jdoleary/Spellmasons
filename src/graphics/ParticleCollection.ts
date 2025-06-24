@@ -1174,6 +1174,7 @@ export function makePrimedCorpseParticles(follow: IUnit, underworld: Underworld,
   }
 }
 
+export const emitterStopFrequency = 15000;
 // Turns up frequency so that it "stops" spawning new particles
 // (at lease for a long time), then destroy and cleanup the emitter
 export function stopAndDestroyForeverEmitter(emitter?: particles.Emitter) {
@@ -1185,7 +1186,7 @@ export function stopAndDestroyForeverEmitter(emitter?: particles.Emitter) {
   // than once (and that the timeout isn't set more than once)
   emitter.flaggedForRemoval = true;
 
-  const timeout = 15000;
+  const timeout = emitterStopFrequency;
   emitter.frequency = timeout;
   setTimeout(() => {
     emitter.cleanup();

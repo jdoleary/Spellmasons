@@ -6,7 +6,7 @@ import { raceTimeout } from '../Promise';
 import { BloodParticle, graphicsBloodSmear, tickParticle } from './PixiUtils';
 import type Underworld from '../Underworld';
 import { Container, ParticleContainer } from 'pixi.js';
-import { stopAndDestroyForeverEmitter } from './ParticleCollection';
+import { emitterStopFrequency, stopAndDestroyForeverEmitter } from './ParticleCollection';
 import { JEmitter } from '../types/commonTypes';
 import { distance } from '../jmath/math';
 
@@ -327,7 +327,7 @@ export function updateParticles(delta: number, bloods: BloodParticle[], seedrand
             stopAndDestroyForeverEmitter(t.emitter);
             // resolve trail as soon as it reaches it's target
             t.resolver();
-            if (t.emitter.particleCount == 0) {
+            if (t.emitter.frequency == emitterStopFrequency && t.emitter.particleCount == 0) {
                 cleanUpTrail(t);
             }
         }
@@ -337,7 +337,7 @@ export function updateParticles(delta: number, bloods: BloodParticle[], seedrand
         if (!p.emitter.destroyed) {
             p.emitter.updateOwnerPos(p.position.x, p.position.y);
         }
-        if (p.emitter.particleCount == 0) {
+        if (p.emitter.frequency == emitterStopFrequency && p.emitter.particleCount == 0) {
             cleanUpFloatingParticle(p);
         }
     }
