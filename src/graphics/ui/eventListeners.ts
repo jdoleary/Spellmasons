@@ -951,7 +951,7 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
               // Check for insufficient soul fragments
               floatingText({
                 coords: underworld.getMousePos(),
-                text: 'Insufficient Soul Fragments',
+                text: 'Insufficient Health',
                 style: { fill: errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
               });
             } else if (effectState.casterUnit.charges && Object.entries(effectState.casterUnit.charges).some(([cardId, charges]) => charges < 0)) {
