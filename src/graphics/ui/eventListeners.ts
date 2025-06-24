@@ -555,7 +555,7 @@ export function useMousePosition(underworld: Underworld, e?: MouseEvent) {
             // and won't path in an unexpected direction to attempt to get to the final destination.
             const intersection = closestLineSegmentIntersection({ p1: globalThis.player.unit, p2: mouseTarget }, underworld.walls) || mouseTarget;
             Unit._moveTowards(globalThis.player.unit, intersection, underworld);
-            tryCollectSouls(globalThis.player, underworld);
+            tryCollectSouls(globalThis.player, underworld, false);
 
             // Trigger mouse move so that predictions will run when the position of your own player changes since
             // this could change prediction results

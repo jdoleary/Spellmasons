@@ -287,7 +287,7 @@ export function setupPieAndUnderworld() {
     addHandlers(pie, overworld);
     globalThis.connect_to_wsPie_server = wsUri => connect_to_wsPie_server(wsUri, overworld);
     globalThis.isConnected = pie.isConnected.bind(pie);
-    globalThis.pieDisconnect = pie.disconnect.bind(pie);
+    globalThis.pieDisconnect = async (disconnectReason: string): Promise<void> => pie instanceof PiePeer ? pie.disconnect(disconnectReason) : pie.disconnect();
     globalThis.setDifficulty = (gameMode: 'normal' | 'hard' | 'impossible') => pie.sendData({ type: MESSAGE_TYPES.SET_GAME_MODE, gameMode });
     globalThis.saveActiveMods = (activeMods: string[]) => {
       // Ensure activeMods is never undefined

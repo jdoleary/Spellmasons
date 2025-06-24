@@ -216,7 +216,7 @@ declare global {
   // Returns pie.isConnected()
   var isConnected: undefined | (() => boolean);
   // Disconnects pie from server
-  var pieDisconnect: undefined | (() => Promise<void>);
+  var pieDisconnect: undefined | ((disconnectReason: string) => Promise<void>);
   var setDifficulty: undefined | ((gameMode: 'normal' | 'hard' | 'impossible') => void);
   var pieLeaveRoom: undefined | (() => void);
   var pieInhabitPlayer: undefined | ((asPlayerClientId: string) => void);
