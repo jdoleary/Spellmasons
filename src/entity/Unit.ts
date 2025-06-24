@@ -58,6 +58,7 @@ import { doubledamageId } from '../modifierDoubleDamage';
 import { runeHardenedMinionsId } from '../modifierHardenedMinions';
 import { runeSharpTeethId } from '../modifierSharpTeeth';
 import { isDeathmason, isGoru } from './Player';
+import { createFloatingParticleSystem } from '../graphics/Particles';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -969,6 +970,10 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean, so
   if (unit.originalLife && unit.faction == Faction.ENEMY) {
     // Reset kill switch since the allies are making progress
     underworld.allyNPCAttemptWinKillSwitch = 0;
+  }
+  if (!prediction && globalThis.player?.wizardType === 'Goru' && unit.soulFragments > 0) {
+    //Show uncollected souls:
+    createFloatingParticleSystem(unit, unit.soulFragments);
   }
   // Once a unit dies it is no longer on it's originalLife
   unit.originalLife = false;

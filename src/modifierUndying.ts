@@ -32,7 +32,6 @@ export default function registerUndying() {
               style: { fill: 'white', ...config.PIXI_TEXT_DROP_SHADOW }
             });
           } else {
-            console.log('jtest', unit);
             floatingText({
               coords: unit,
               text: i18n([`Undying Failed`, REQUIRED_SOULS_TO_ACTIVATE.toString()]),

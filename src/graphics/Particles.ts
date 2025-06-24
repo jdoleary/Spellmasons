@@ -1,7 +1,7 @@
 import * as particles from 'jdoleary-fork-pixi-particle-emitter'
 import * as Vec from '../jmath/Vec';
 import { Vec2 } from '../jmath/Vec';
-import { prng, randFloat } from '../jmath/rand';
+import { prng, randFloat, randInt } from '../jmath/rand';
 import { raceTimeout } from '../Promise';
 import { BloodParticle, graphicsBloodSmear, tickParticle } from './PixiUtils';
 import type Underworld from '../Underworld';
@@ -120,6 +120,7 @@ function createCurveTowardsFunction(start: Vec2, end: Vec2, control: Vec2): (t: 
     }
 }
 const trails: Trail[] = [];
+const floatingParticles: FloatingParticle[] = [];
 export function addTrail(position: Vec2, target: Vec2, underworld: Underworld, config: particles.EmitterConfigV3): Promise<void> {
     if (!containerParticles) {
         return Promise.resolve();
@@ -231,7 +232,6 @@ function spawnTrail(position: Vec2, target: Vec2, maxVelocity: number = 10): { p
     };
 }
 
-// Example usage:
 function updateTrail(trail: Trail, deltaTime: number = 1): void {
     // Update velocity to seek target
     _updateTrailVelocity(trail, 20, 0.05);
@@ -330,6 +330,15 @@ export function updateParticles(delta: number, bloods: BloodParticle[], seedrand
             if (t.emitter.particleCount == 0) {
                 cleanUpTrail(t);
             }
+        }
+    }
+    for (let p of floatingParticles) {
+        updateFloatingParticleComplex(p, delta);
+        if (!p.emitter.destroyed) {
+            p.emitter.updateOwnerPos(p.position.x, p.position.y);
+        }
+        if (p.emitter.particleCount == 0) {
+            cleanUpFloatingParticle(p);
         }
     }
     // "graphics" particles
@@ -555,4 +564,163 @@ export function cleanUpEmitters(onlyTurnScopedEmitters: boolean) {
         });
     }
 
+}
+
+
+interface FloatingParticle {
+    position: Vec2;
+    velocity: Vec2;
+    center: Vec2;
+    time: number;
+    floatSpeed: number;
+    swirlSpeed: number;
+    floatAmplitude: number;
+    swirlRadius: number;
+    emitter: particles.Emitter;
+}
+
+
+function createFloatingParticle(
+    center: Vec2,
+    floatSpeed: number = 1,
+    swirlSpeed: number = 2,
+    floatAmplitude: number = 20,
+    swirlRadius: number = 15
+): FloatingParticle | undefined {
+    if (!containerParticles) {
+        return;
+    }
+    if (globalThis.emitters && exists(globalThis.limitParticleEmitters) && globalThis.limitParticleEmitters !== -1 && globalThis.emitters?.length >= globalThis.limitParticleEmitters) {
+        return;
+    }
+    const texture = createParticleTexture();
+    if (!texture) {
+        return;
+    }
+    const { maxParticles, ratioToDefault } = calculateMaxParticles(90, floatingParticles.length);
+    const colorStart = '#d9fff9';
+    const colorEnd = '#566d70';
+    const config = particles.upgradeConfig({
+        autoUpdate: true,
+        alpha: {
+            start: 1,
+            end: 0
+        },
+        scale: {
+            start: 0.4,
+            end: 0.2,
+            minimumScaleMultiplier: 1
+        },
+        color: {
+            start: colorStart,
+            end: colorEnd,
+        },
+        speed: {
+            start: 0,
+            end: 0,
+            minimumSpeedMultiplier: 1
+        },
+        acceleration: {
+            x: 0,
+            y: 0
+        },
+        maxSpeed: 0,
+        startRotation: {
+            min: 0,
+            max: 360
+        },
+        noRotation: true,
+        rotationSpeed: {
+            min: 0,
+            max: 0
+        },
+        lifetime: {
+            min: 0.8 * ratioToDefault,
+            max: 0.8 * ratioToDefault
+        },
+        blendMode: "normal",
+        frequency: 0.011,
+        emitterLifetime: -1,
+        maxParticles,
+        pos: {
+            x: 0,
+            y: 0
+        },
+        addAtBack: false,
+        spawnType: "point"
+    }, [texture]);
+    const emitter: JEmitter = new particles.Emitter(containerParticles, config);
+    emitter.cleanAfterTurn = true;
+    globalThis.emitters?.push(emitter);
+    emitter.updateOwnerPos(center.x, center.y);
+    return {
+        position: { x: center.x, y: center.y },
+        velocity: { x: 0, y: 0 },
+        center: center,
+        time: Math.random() * Math.PI * 2, // Random starting phase
+        floatSpeed,
+        swirlSpeed,
+        floatAmplitude,
+        swirlRadius,
+        emitter
+    };
+}
+
+// Variant that uses sine waves with different frequencies for more complex motion
+function updateFloatingParticleComplex(particle: FloatingParticle, deltaTime: number = 0.016): void {
+    particle.time += deltaTime;
+
+    // Multiple sine waves for more organic motion
+    const swirl1 = Math.cos(particle.time * particle.swirlSpeed) * particle.swirlRadius;
+    const swirl2 = Math.sin(particle.time * particle.swirlSpeed * 1.3) * (particle.swirlRadius * 0.5);
+
+    const float1 = Math.sin(particle.time * particle.floatSpeed) * particle.floatAmplitude;
+    const float2 = Math.cos(particle.time * particle.floatSpeed * 0.7) * (particle.floatAmplitude * 0.3);
+
+    // Combine motions
+    const targetX = particle.center.x + swirl1 + swirl2;
+    const targetY = particle.center.y + float1 + float2;
+
+    // Smooth interpolation
+    const smoothing = 0.08;
+    particle.velocity.x = (targetX - particle.position.x) * smoothing;
+    particle.velocity.y = (targetY - particle.position.y) * smoothing;
+
+    particle.position.x += particle.velocity.x;
+    particle.position.y += particle.velocity.y;
+}
+
+export function removeFloatingParticlesFor(target: Vec2): Vec2[] {
+    const positions = [];
+    for (let p of floatingParticles) {
+        if (p.center == target) {
+            positions.push(p.position);
+            stopAndDestroyForeverEmitter(p.emitter);
+        }
+    }
+    return positions;
+}
+// Create multiple floating particles with slight variations
+export function createFloatingParticleSystem(center: Vec2, count: number = 1) {
+
+    const magnitude = Math.min(4, Math.max(1, Math.floor(count / 2)));
+    for (let i = 0; i < count; i++) {
+        // Add some randomness to each particle's properties
+        const floatSpeed = randFloat(0.007, 0.012) / magnitude;//0.005;//0.8 + Math.random() * 0.6; // 0.8 - 1.4
+        const swirlSpeed = randFloat(0.007, 0.012) / magnitude;//0.005;//1.5 + Math.random() * 1.0; // 1.5 - 2.5
+        const floatAmplitude = randInt(4, 8) * magnitude;//15 + Math.random() * 10; // 15 - 25
+        const swirlRadius = randInt(2, 4) * magnitude;//10 + Math.random() * 10; // 10 - 20
+
+        const particle = createFloatingParticle(center, floatSpeed, swirlSpeed, floatAmplitude, swirlRadius);
+        if (particle)
+            floatingParticles.push(particle);
+    }
+
+}
+export function cleanUpFloatingParticle(p: FloatingParticle) {
+    p.emitter.destroy();
+    const i = floatingParticles.indexOf(p);
+    if (i !== -1) {
+        floatingParticles.splice(i, 1)
+    }
 }

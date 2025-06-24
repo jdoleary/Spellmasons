@@ -47,7 +47,7 @@ import PiePeer from './PiePeer';
 import { GORU_ATTACK_IMAGE_PATH, GORU_DEFAULT_IMAGE_PATH, GORU_UNIT_ID } from '../entity/units/goru';
 import { visualPolymorphPlayerUnit } from '../cards/polymorph';
 import { spellmasonUnitId } from '../entity/units/playerUnit';
-import { makeManaTrail } from '../graphics/Particles';
+import { makeManaTrail, removeFloatingParticlesFor } from '../graphics/Particles';
 import { test_ignorePromiseSpy } from '../promiseSpy';
 
 export const NO_LOG_LIST = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING, MESSAGE_TYPES.MOVE_PLAYER, MESSAGE_TYPES.SET_PLAYER_POSITION];
@@ -340,13 +340,15 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         if (victim.soulFragments != soulFragments) {
           console.error('COLLECT_SOULS desync soulFragments count');
         }
+
+        const soulPositions = removeFloatingParticlesFor(victim);
         victim.soulFragments = 0;
         // If a goru killed the unit that goru get's all the souls
         const colorStart = '#d9fff9';
         const colorEnd = '#566d70';
         fromPlayer.unit.soulFragments += soulFragments;
         for (let i = 0; i < soulFragments; i++) {
-          const promise = makeManaTrail(victim, fromPlayer.unit, underworld, colorStart, colorEnd, soulFragments).then(() => {
+          const promise = makeManaTrail(soulPositions[i] || victim, fromPlayer.unit, underworld, colorStart, colorEnd, soulFragments).then(() => {
             playSFXKey('soulget');
             floatingText({ coords: fromPlayer.unit, text: `+ 1 ${i18n('soul fragments')}`, aggregateMatcher: /\d+/ });
           });
