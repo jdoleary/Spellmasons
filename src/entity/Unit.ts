@@ -594,6 +594,11 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
     loadedunit.stamina = loadedunit.staminaMax || config.UNIT_BASE_STAMINA;
   }
   Image.setScaleFromModifiers(loadedunit.image, loadedunit.strength);
+  // Recreate floating souls on dead units on load
+  if (!loadedunit.alive && !prediction && globalThis.player?.wizardType === 'Goru' && loadedunit.soulFragments > 0) {
+    //Show uncollected souls:
+    createFloatingParticleSystem(loadedunit, loadedunit.soulFragments);
+  }
 
   // Special edge case protection
   if (loadedunit.unitType === UnitType.PLAYER_CONTROLLED && loadedunit.faction === Faction.ENEMY) {
