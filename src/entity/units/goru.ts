@@ -21,6 +21,10 @@ import { oneOffImage } from '../../cards/cardUtils';
 import { containerUnits } from '../../graphics/PixiUtils';
 import { BLOOD_GOLEM_ID } from './bloodGolem';
 import { BLOOD_ARCHER_ID } from './blood_archer';
+import { IPlayer } from '../Player';
+import floatingText from '../../graphics/FloatingText';
+import { test_ignorePromiseSpy } from '../../promiseSpy';
+import { MESSAGE_TYPES } from '../../types/MessageTypes';
 
 const projectileColorReplace: { colors: [number, number][]; epsilon: number } = {
   colors: [[0x899da2, 0xffffff], [0x758d92, 0xf1f1f1]],
@@ -419,3 +423,37 @@ const unit: UnitSource = {
   }
 }
 export default unit;
+
+export function tryCollectSoul(player: IPlayer, u: Unit.IUnit, underworld: Underworld, prediction: boolean) {
+  // tryCollectSoul must only be invoked on...
+  if (
+    !(
+      !prediction
+      // ...self player (so that the soul collection can be networked)
+      && player == globalThis.player
+      // ...player of wizardType Goru
+      && player.wizardType === 'Goru'
+      // ...not own unit (can't collect own souls)
+      && u !== player.unit
+      // dead units
+      && !u.alive
+      && u.soulFragments > 0
+    )
+  ) {
+    return;
+  }
+  if (math.distance(u, player.unit) <= config.GORU_SOUL_COLLECT_RADIUS) {
+    underworld.pie.sendData({
+      type: MESSAGE_TYPES.COLLECT_SOULS,
+      victim: u,
+      soulFragments: u.soulFragments,
+    })
+
+  }
+}
+export function tryCollectSouls(player: IPlayer, underworld: Underworld, prediction: boolean) {
+  underworld.units.forEach(u => {
+    tryCollectSoul(player, u, underworld, prediction);
+  });
+
+}

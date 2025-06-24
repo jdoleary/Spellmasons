@@ -143,6 +143,11 @@ export const sfx: { [key: string]: string[] } = {
   scroll_disappear: ['./sound/sfx/RPG3_FireMagicFlameThrower_P3_End01.mp3'],
   shield: ['./sound/sfx/shield.mp3'],
   shove: ['./sound/sfx/RPG3_GenericPunch_Impact04Crit.mp3'],
+  soulget: [
+    './sound/sfx/soulget1.mp3',
+    './sound/sfx/soulget2.mp3',
+    './sound/sfx/soulget3.mp3',
+  ],
   spawnPotion: ['./sound/sfx/Glug.mp3'],
   summonDecoy: ['./sound/sfx/summon-decoy.mp3'],
   summonerDeath: [

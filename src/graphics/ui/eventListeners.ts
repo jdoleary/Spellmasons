@@ -46,6 +46,7 @@ import { distance } from '../../jmath/math';
 import { glow } from '../../jmath/YTShorts';
 import { sellCardId } from '../../cards/sell';
 import { isRune } from '../../cards/cardUtils';
+import { tryCollectSouls } from '../../entity/units/goru';
 
 export const keyDown = {
   showWalkRope: false,
@@ -554,6 +555,7 @@ export function useMousePosition(underworld: Underworld, e?: MouseEvent) {
             // and won't path in an unexpected direction to attempt to get to the final destination.
             const intersection = closestLineSegmentIntersection({ p1: globalThis.player.unit, p2: mouseTarget }, underworld.walls) || mouseTarget;
             Unit._moveTowards(globalThis.player.unit, intersection, underworld);
+            tryCollectSouls(globalThis.player, underworld);
 
             // Trigger mouse move so that predictions will run when the position of your own player changes since
             // this could change prediction results

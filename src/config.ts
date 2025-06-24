@@ -101,3 +101,4 @@ export const predictionGlowStrength = 4;
 export const SPACIAL_HASH_CELL_SIZE = 128;
 export const DEATHMASON_DISCARD_DRAW_RATIO = 2;
 export const GORU_PLAYER_STARTING_SOUL_FRAGMENTS = 2;
+export const GORU_SOUL_COLLECT_RADIUS = 100;

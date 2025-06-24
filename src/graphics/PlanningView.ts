@@ -843,7 +843,8 @@ export function drawUICircle(graphics: PIXI.Graphics, target: Vec2, radius: numb
     labelText.x = labelPosition.x;
     labelText.y = labelPosition.y;
   }
-} export function drawUICircleFill(graphics: PIXI.Graphics, target: Vec2, radius: number, color: number, text?: string) {
+}
+export function drawUICircleFill(graphics: PIXI.Graphics, target: Vec2, radius: number, color: number, text?: string) {
   graphics.lineStyle(1, 0x000000, 0.0);
   graphics.beginFill(color, 1.0);
   graphics.drawCircle(target.x, target.y, radius);

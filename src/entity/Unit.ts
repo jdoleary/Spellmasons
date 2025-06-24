@@ -42,7 +42,7 @@ import { healSfx, oneOffHealAnimation } from '../effects/heal';
 import { soulShardOwnerModifierId } from '../modifierSoulShardOwner';
 import { getAllShardBearers } from '../cards/soul_shard';
 import { darkTideId } from '../cards/dark_tide';
-import { GORU_UNIT_ID } from './units/goru';
+import { GORU_UNIT_ID, tryCollectSoul } from './units/goru';
 import { undyingModifierId } from '../modifierUndying';
 import { primedCorpseId } from '../modifierPrimedCorpse';
 import { chooseObjectWithProbability, getUniqueSeedStringPerLevel, randInt } from '../jmath/rand';
@@ -58,7 +58,6 @@ import { doubledamageId } from '../modifierDoubleDamage';
 import { runeHardenedMinionsId } from '../modifierHardenedMinions';
 import { runeSharpTeethId } from '../modifierSharpTeeth';
 import { isDeathmason, isGoru } from './Player';
-import { makeManaTrail } from '../graphics/Particles';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -877,46 +876,8 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean, so
   unit.resolveDoneMoving(false);
   // Clear unit path to prevent further movement in case of ressurect or similar
   unit.path = undefined;
-
-  const doCollectSouls = unit.faction == Faction.ENEMY;
-  if (doCollectSouls) {
-    // Souls are split between player goru's.  Nearest get's first pick of odd soul number
-    const playerGoruUnits = underworld.players.filter(x => x.unit.alive && x.wizardType == 'Goru' && x.clientConnected).map(x => x.unit);
-    const collectedSoulFragments = unit.soulFragments;
-    unit.soulFragments = 0;
-    // If a goru killed the unit that goru get's all the souls
-    const colorStart = '#d9fff9';
-    const colorEnd = '#566d70';
-    if (sourceUnit && playerGoruUnits.includes(sourceUnit)) {
-      if (prediction) {
-        if (sourceUnit.predictionCopy) {
-          sourceUnit.predictionCopy.soulFragments += collectedSoulFragments;
-        }
-      } else {
-        sourceUnit.soulFragments += collectedSoulFragments;
-      }
-      if (!prediction) {
-        for (let i = 0; i < collectedSoulFragments; i++) {
-          makeManaTrail(unit, sourceUnit, underworld, colorStart, colorEnd, collectedSoulFragments).then(() => {
-            floatingText({ coords: sourceUnit, text: `+ 1 ${i18n('soul fragments')}`, aggregateMatcher: /\d+/ });
-          });
-        }
-      }
-    } else {
-      // If not, distribute souls among gorus
-      for (let i = 0; i < collectedSoulFragments; i++) {
-        for (let goru of playerGoruUnits) {
-          if (prediction && goru.predictionCopy) {
-            goru.predictionCopy.soulFragments++;
-          } else {
-            goru.soulFragments++;
-          }
-          if (!prediction) {
-            makeManaTrail(unit, goru, underworld, colorStart, colorEnd, collectedSoulFragments);
-          }
-        }
-      }
-    }
+  if (globalThis.player) {
+    tryCollectSoul(globalThis.player, unit, underworld, prediction);
   }
 
   const events = [...unit.events];
@@ -1970,6 +1931,10 @@ export function drawSelectedGraphics(unit: IUnit, prediction: boolean = false, u
       // }
     } else {
       if (unit.attackRange > 0) {
+        if (globalThis.player && globalThis.player.unit == unit && globalThis.player.wizardType === 'Goru') {
+          drawUICircle(globalThis.selectedUnitGraphics, coordinates, config.GORU_SOUL_COLLECT_RADIUS, 0xd9fff9, 'Soul Collection Radius');
+
+        }
         // TODO - Unused outOfRangeGrey below, consider for AI refactor
         // https://github.com/jdoleary/Spellmasons/issues/388
         const rangeCircleColor = false

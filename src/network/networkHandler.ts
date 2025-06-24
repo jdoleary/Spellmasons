@@ -47,6 +47,8 @@ import PiePeer from './PiePeer';
 import { GORU_ATTACK_IMAGE_PATH, GORU_DEFAULT_IMAGE_PATH, GORU_UNIT_ID } from '../entity/units/goru';
 import { visualPolymorphPlayerUnit } from '../cards/polymorph';
 import { spellmasonUnitId } from '../entity/units/playerUnit';
+import { makeManaTrail } from '../graphics/Particles';
+import { test_ignorePromiseSpy } from '../promiseSpy';
 
 export const NO_LOG_LIST = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING, MESSAGE_TYPES.MOVE_PLAYER, MESSAGE_TYPES.SET_PLAYER_POSITION];
 export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING, MESSAGE_TYPES.MOVE_PLAYER, MESSAGE_TYPES.SET_PLAYER_POSITION,
@@ -331,6 +333,28 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       }
       break;
     }
+    case MESSAGE_TYPES.COLLECT_SOULS:
+      if (fromPlayer) {
+
+        const { victim, soulFragments } = payload;
+        if (victim.soulFragments != soulFragments) {
+          console.error('COLLECT_SOULS desync soulFragments count');
+        }
+        victim.soulFragments = 0;
+        // If a goru killed the unit that goru get's all the souls
+        const colorStart = '#d9fff9';
+        const colorEnd = '#566d70';
+        fromPlayer.unit.soulFragments += soulFragments;
+        for (let i = 0; i < soulFragments; i++) {
+          const promise = makeManaTrail(victim, fromPlayer.unit, underworld, colorStart, colorEnd, soulFragments).then(() => {
+            playSFXKey('soulget');
+            floatingText({ coords: fromPlayer.unit, text: `+ 1 ${i18n('soul fragments')}`, aggregateMatcher: /\d+/ });
+          });
+          test_ignorePromiseSpy(promise);
+        }
+      }
+
+      break;
     case MESSAGE_TYPES.CHOOSE_UPGRADE:
       console.log('onData: CHOOSE_UPGRADE', `${fromClient}: ${payload?.upgrade?.title}`);
       if (fromPlayer) {

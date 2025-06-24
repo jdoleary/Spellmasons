@@ -77,7 +77,7 @@ import { ensureAllClientsHaveAssociatedPlayers, Overworld, recalculateGameDiffic
 import { Emitter } from 'jdoleary-fork-pixi-particle-emitter';
 import { golem_unit_id } from './entity/units/golem';
 import deathmason, { ORIGINAL_DEATHMASON_DEATH, bossmasonUnitId, summonUnitAtPickup } from './entity/units/deathmason';
-import goru, { GORU_UNIT_ID } from './entity/units/goru';
+import goru, { GORU_UNIT_ID, tryCollectSouls } from './entity/units/goru';
 import { hexToString } from './graphics/ui/colorUtil';
 import { isModActive } from './registerMod';
 import { summoningSicknessId } from './modifierSummoningSickness';
@@ -4186,6 +4186,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // Update card badges after casting
     if (!prediction) {
       CardUI.updateCardBadges(this);
+    }
+    // Spell may have pulled a soul-having corpse toward a goru player
+    if (casterPlayer) {
+      tryCollectSouls(casterPlayer, this, prediction);
     }
     return effectState;
   }
