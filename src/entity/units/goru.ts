@@ -445,7 +445,7 @@ export function tryCollectSoul(player: IPlayer, u: Unit.IUnit, underworld: Under
   if (math.distance(u, player.unit) <= config.GORU_SOUL_COLLECT_RADIUS) {
     underworld.pie.sendData({
       type: MESSAGE_TYPES.COLLECT_SOULS,
-      victim: u,
+      victim_unit_id: u.id,
       soulFragments: u.soulFragments,
     })
 

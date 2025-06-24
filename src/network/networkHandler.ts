@@ -336,7 +336,13 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
     case MESSAGE_TYPES.COLLECT_SOULS:
       if (fromPlayer) {
 
-        const { victim, soulFragments } = payload;
+        const { victim_unit_id, soulFragments } = payload;
+        const victim = underworld.units.find(u => u.id == victim_unit_id);
+        if (!victim) {
+          console.warn('Missing unit id: ' + victim_unit_id);
+          console.error('attempted to collect souls but could not find unit by id');
+          return;
+        }
         if (victim.soulFragments != soulFragments) {
           console.error('COLLECT_SOULS desync soulFragments count');
         }
