@@ -4069,7 +4069,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           if (spellCostTally.soulFragmentCost) {
             effectState.casterUnit.soulFragments -= spellCostTally.soulFragmentCost;
             soulDebtHealthCost = getSoulDebtHealthCost(effectState.casterPlayer, prediction);
-            console.log('jtest ', effectState.casterPlayer, prediction, soulDebtHealthCost, spellCostTally.healthCost);
             spellCostTally.healthCost += soulDebtHealthCost;
           }
           if (effectState.casterUnit.charges) {

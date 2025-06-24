@@ -8,6 +8,7 @@ import type Underworld from '../Underworld';
 import { Container, ParticleContainer } from 'pixi.js';
 import { stopAndDestroyForeverEmitter } from './ParticleCollection';
 import { JEmitter } from '../types/commonTypes';
+import { distance } from '../jmath/math';
 
 export const containerParticles = !globalThis.pixi ? undefined : new globalThis.pixi.ParticleContainer(5000, {
     scale: true,
@@ -92,10 +93,9 @@ export function simpleEmitter(position: Vec2, config: particles.EmitterConfigV3,
 
 }
 interface Trail {
-    // lerp: 0.0 to 1.0; once lerp reaches 1.0 the angleRad will be set to the targetRadAngle
-    lerp: number;
     position: Vec2,
-    moveFn: (lerpValue: number) => Vec2;
+    velocity: Vec2,
+    target: Vec2,
     emitter: particles.Emitter;
     resolver: () => void;
 }
@@ -133,8 +133,7 @@ export function addTrail(position: Vec2, target: Vec2, underworld: Underworld, c
     emitter.updateOwnerPos(position.x, position.y);
     // 3000 is an arbitrary timeout for now
     return raceTimeout(3000, 'trail', new Promise<void>((resolve) => {
-        const control = Vec.jitter(position, 300);
-        trails.push({ lerp: 0, position, moveFn: createCurveTowardsFunction(position, target, control), emitter, resolver: resolve });
+        trails.push({ emitter, resolver: resolve, ...spawnTrail(position, target, 10) })
     }));
 }
 
@@ -145,6 +144,101 @@ export function cleanUpTrail(trail: Trail) {
     if (i !== -1) {
         trails.splice(i, 1)
     }
+}
+
+
+function _updateTrailVelocity(trail: Trail, maxSpeed: number = 5, acceleration: number = 0.1): void {
+    // Calculate direction vector from position to target
+    const dx = trail.target.x - trail.position.x;
+    const dy = trail.target.y - trail.position.y;
+
+    // Calculate distance to target
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    // If we're very close to target, set velocity to zero to prevent overshooting
+    if (distance < 0.1) {
+        trail.velocity.x = 0;
+        trail.velocity.y = 0;
+        return;
+    }
+
+    // Normalize direction vector
+    const dirX = dx / distance;
+    const dirY = dy / distance;
+
+    // Calculate desired velocity (pointing toward target)
+    const desiredVelX = dirX * maxSpeed;
+    const desiredVelY = dirY * maxSpeed;
+
+    // Apply steering force (gradual acceleration toward desired velocity)
+    const steerX = (desiredVelX - trail.velocity.x) * acceleration;
+    const steerY = (desiredVelY - trail.velocity.y) * acceleration;
+
+    // Update velocity
+    trail.velocity.x += steerX;
+    trail.velocity.y += steerY;
+
+    // Limit velocity to prevent overshooting on next frame
+    const currentSpeed = Math.sqrt(trail.velocity.x * trail.velocity.x + trail.velocity.y * trail.velocity.y);
+
+    // If the velocity would take us past the target, clamp it
+    if (currentSpeed > distance) {
+        const scale = distance / currentSpeed;
+        trail.velocity.x *= scale;
+        trail.velocity.y *= scale;
+    }
+}
+
+function spawnTrail(position: Vec2, target: Vec2, maxVelocity: number = 10): { position: Vec2, velocity: Vec2, target: Vec2 } {
+    // Generate random direction
+    const randomAngle = Math.random() * 2 * Math.PI;
+    const randomDirX = Math.cos(randomAngle);
+    const randomDirY = Math.sin(randomAngle);
+
+    // Calculate direction to target
+    const dx = target.x - position.x;
+    const dy = target.y - position.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    // Normalize target direction (handle case where position equals target)
+    const targetDirX = distance > 0 ? dx / distance : 0;
+    const targetDirY = distance > 0 ? dy / distance : 0;
+
+    // Calculate dot product (how aligned the random direction is with target direction)
+    // Dot product ranges from -1 (opposite) to 1 (same direction)
+    const dotProduct = randomDirX * targetDirX + randomDirY * targetDirY;
+
+    // Convert dot product to alignment factor
+    // When dot = 1 (pointing toward target): alignment = 1
+    // When dot = -1 (pointing away from target): alignment = 0
+    // When dot = 0 (perpendicular): alignment = 0.5
+    const alignment = (dotProduct + 1) / 2;
+
+    // Inverse relationship: more aligned = less velocity magnitude
+    // alignment = 1 -> velocityScale = 0.1 (very slow)
+    // alignment = 0 -> velocityScale = 1.0 (full speed)
+    const velocityScale = 1 - (alignment * 0.9); // Keep minimum of 0.1
+
+    const velocityMagnitude = maxVelocity * velocityScale;
+
+    return {
+        position: { x: position.x, y: position.y },
+        velocity: {
+            x: randomDirX * velocityMagnitude,
+            y: randomDirY * velocityMagnitude
+        },
+        target,
+    };
+}
+
+// Example usage:
+function updateTrail(trail: Trail, deltaTime: number = 1): void {
+    // Update velocity to seek target
+    _updateTrailVelocity(trail, 20, 0.05);
+
+    // Update position based on velocity
+    trail.position.x += trail.velocity.x * deltaTime;
+    trail.position.y += trail.velocity.y * deltaTime;
 }
 export function calculateMaxParticles(defaultMaxParticles: number, totalNumberOfTrails?: number): { maxParticles: number, ratioToDefault: number } {
     // Optimization, regularly there are 90 total particles,
@@ -224,15 +318,12 @@ export function makeManaTrail(start: Vec2, target: Vec2, underworld: Underworld,
 export function updateParticles(delta: number, bloods: BloodParticle[], seedrandom: prng, underworld: Underworld) {
 
     // Emitters:
-    const lerpSpeed = 0.02;
     for (let t of trails) {
-        if (t.lerp <= 1.0) {
-            t.position = t.moveFn(t.lerp)
-            t.lerp += lerpSpeed;
-            if (!t.emitter.destroyed) {
-                t.emitter.updateOwnerPos(t.position.x, t.position.y);
-            }
-        } else {
+        updateTrail(t, 1);
+        if (!t.emitter.destroyed) {
+            t.emitter.updateOwnerPos(t.position.x, t.position.y);
+        }
+        if (distance(t.position, t.target) < 15) {
             stopAndDestroyForeverEmitter(t.emitter);
             // resolve trail as soon as it reaches it's target
             t.resolver();
