@@ -650,7 +650,6 @@ function createFloatingParticle(
         spawnType: "point"
     }, [texture]);
     const emitter: JEmitter = new particles.Emitter(containerParticles, config);
-    emitter.cleanAfterTurn = true;
     globalThis.emitters?.push(emitter);
     emitter.updateOwnerPos(center.x, center.y);
     return {
