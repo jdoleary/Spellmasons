@@ -146,6 +146,10 @@ body.recording-shorts #upgrade-picker-content {
   max-height: 28%;
 }
 
+body.recording-shorts #caution-box-text {
+  display: none;
+}
+
 #upgrade-picker-label {
   text-align: center;
   color: white;
