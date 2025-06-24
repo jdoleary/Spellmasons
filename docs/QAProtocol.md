@@ -20,6 +20,7 @@ NEW for July:
 - Test wizard picker large and small
     - Make sure wizard picker works in hotseat
 - i18n:green_portal_desc
+- check soul quantity when loading
 
 --- Archived
 - Uncomment: commits: `gate: Temporarily disable Cardmason until update`

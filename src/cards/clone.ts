@@ -99,6 +99,10 @@ export function cloneEffect(addClonesToTargetArray: boolean): EffectFn {
 export function doCloneUnit(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, summoner: Unit.IUnit, spawnLocation: Vec2 | undefined): Unit.IUnit | undefined {
   if (spawnLocation) {
     const clone = Unit.load(Unit.serialize(unit), underworld, prediction);
+    if (unit.soulFragments >= 2) {
+      unit.soulFragments -= 1
+      clone.soulFragments = 1;
+    }
     clone.summonedBy = summoner;
     if (!prediction) {
       // Change id of the clone so that it doesn't share the same

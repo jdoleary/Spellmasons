@@ -144,6 +144,11 @@ export function doSplit(target: Vec2 | undefined, summoner: Unit.IUnit, underwor
       const validSpawnCoords = underworld.DEPRECIATED_findValidSpawnInRadius(target, prediction, { allowLiquid: target.inLiquid });
       if (validSpawnCoords) {
         const clone = Unit.load(Unit.serialize(target), underworld, prediction);
+        if (target.soulFragments >= 2) {
+          const halfSouls = Math.floor(target.soulFragments / 2);
+          target.soulFragments -= halfSouls;
+          clone.soulFragments = halfSouls;
+        }
         clone.summonedBy = summoner;
         if (!prediction) {
           // Change id of the clone so that it doesn't share the same
