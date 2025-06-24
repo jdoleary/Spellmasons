@@ -478,7 +478,7 @@ export function getSoulDebtHealthCost(player: IPlayer | undefined, prediction: b
     return 0;
   }
   if (unit.soulFragments < 0) {
-    return Math.abs(unit.soulFragments) * config.GORU_SOUL_DEBT_PROPORTION_HEALTH_COST * unit.healthMax;
+    return Math.round(Math.abs(unit.soulFragments) * config.GORU_SOUL_DEBT_PROPORTION_HEALTH_COST * unit.healthMax);
   }
   return 0;
 
