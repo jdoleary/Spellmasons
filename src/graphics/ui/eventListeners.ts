@@ -5,6 +5,7 @@ import * as Unit from '../../entity/Unit';
 import * as Pickup from '../../entity/Pickup';
 import * as Player from '../../entity/Player';
 import * as Chat from './Chat';
+import * as storage from "../../storage";
 import floatingText, { centeredFloatingText } from '../FloatingText';
 import {
   clearSpellEffectProjection,
@@ -1263,6 +1264,14 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       action: () => {
         // Hides a portion of the UI but not all of it for recording or screenshots
         document.body?.classList.toggle(CLASS_HIDE_CARD_HOLDERS);
+      },
+      supportInMultiplayer: false,
+      domQueryContainer: '#menu-self',
+    },
+    {
+      label: 'Unlock Deathmason and Goru',
+      action: () => {
+        storage.set('BEAT_DIFFICULTY-normal', true);
       },
       supportInMultiplayer: false,
       domQueryContainer: '#menu-self',
