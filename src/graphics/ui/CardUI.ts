@@ -662,7 +662,7 @@ export function renderRunesMenu(underworld: Underworld) {
             }
             // If going to max, show maxed in green
             if (newQuantity >= maxRuneQuantity) {
-              elRuneName.innerHTML = `${i18n(stat) || ''} ${SPACER} <span>${quantityWithUnit(playerRuneQuantity, modifier.unitOfMeasure)}</span> <span style="color:green"> → ${i18n('Max')} </span>`;
+              elRuneName.innerHTML = `${i18n(stat) || ''} ${SPACER} <span>${quantityWithUnit(playerRuneQuantity, modifier.unitOfMeasure)}</span> <span style="color:green"> → + ${quantityWithUnit(modifier.quantityPerUpgrade || 1, modifier.unitOfMeasure)} (${i18n('Max')}) </span>`;
               return;
             }
           }
