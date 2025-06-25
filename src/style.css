@@ -3043,7 +3043,7 @@ body.wizardtype-deathmason #selected-cards .card.is-discard-locked .lock-discard
   z-index: 1;
 }
 
-body.wizardtype-deathmason .card-holder .card:hover .lock-discard {
+body.wizardtype-deathmason .card-holder .card:not(.card.is-discard-locked):hover .lock-discard {
   display: block;
   opacity: 0.5;
 }
