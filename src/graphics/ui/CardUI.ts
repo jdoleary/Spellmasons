@@ -176,16 +176,15 @@ export function setupCardUIEventListeners(overworld: Overworld) {
     elDiscardAll?.addEventListener('click', (e) => {
       e.stopPropagation();
       if (overworld.underworld && globalThis.player?.unit) {
-        const { unit } = globalThis.player;
-        const currentChargesCount = countCharges(unit);
-        if (currentChargesCount <= 0) {
+        const countDiscard = Player.discardCards(globalThis.player, overworld.underworld, { dryRun: true });
+        if (countDiscard <= 0) {
           playSFXKey('deny');
           centeredFloatingText(['cannot-discard'], 'red');
           return;
         }
-        const drawNew = Math.floor(currentChargesCount / config.DEATHMASON_DISCARD_DRAW_RATIO);
+        const drawNew = Math.floor(countDiscard / config.DEATHMASON_DISCARD_DRAW_RATIO);
         Jprompt({
-          text: ['confirm-discard', currentChargesCount.toString(), drawNew.toString()],
+          text: ['confirm-discard', countDiscard.toString(), drawNew.toString()],
           yesText: 'Yes',
           yesKey: 'Space',
           yesKeyText: 'Space',
@@ -203,7 +202,7 @@ export function setupCardUIEventListeners(overworld: Overworld) {
           if (globalThis.player) {
             overworld.underworld.pie.sendData({
               type: MESSAGE_TYPES.DEATHMASON_DISCARD_CARDS,
-              currentChargesCount,
+              countDiscard,
             });
 
           }

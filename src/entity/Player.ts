@@ -271,7 +271,7 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
     }
     if (player.wizardType == 'Deathmason') {
       // Do not allow keeping locked cards between levels
-      discardCards(player, underworld, true);
+      discardCards(player, underworld, { forceDiscardAll: true });
       // Refill cards
       Unit.refillCharges(player.unit, underworld);
       player.unit.mana = 0;
@@ -731,9 +731,13 @@ export function toggleCardLockedForDiscard(player: IPlayer | undefined, cardId: 
   });
   syncLockedCardsAndCSS(globalThis.player);
 }
-export function discardCards(player: IPlayer, underworld: Underworld, forceDiscardAll?: boolean) {
+
+// forceDiscardAll overrides the locking which is used to make the player discard all their cards at the end of a level
+// dryRun doesn't actually discard the cards but returns the number of cards that would be discarded
+export function discardCards(player: IPlayer, underworld: Underworld, { forceDiscardAll, dryRun }: { forceDiscardAll?: boolean, dryRun?: boolean }): number {
   // Discard all but locked cards
   const { unit } = player;
+  let countDiscard = 0;
   if (isDeathmason(player)) {
 
     if (isNullOrUndef(player.drawChargesSeed)) {
@@ -743,15 +747,19 @@ export function discardCards(player: IPlayer, underworld: Underworld, forceDisca
     // Discard all non-locked cards
     if (unit.charges) {
       for (let chargeKey of Object.keys(unit.charges || {}).filter(key => forceDiscardAll || !player.lockedDiscardCards.includes(key))) {
-        delete unit.charges[chargeKey]
+        countDiscard += unit.charges[chargeKey] || 0;
+        if (!dryRun) {
+          delete unit.charges[chargeKey];
+        }
       }
-      if (globalThis.player && unit == globalThis.player.unit) {
+      if (!dryRun && globalThis.player && unit == globalThis.player.unit) {
         CardUI.updateCardBadges(underworld);
         underworld.syncPlayerPredictionUnitOnly();
         Unit.syncPlayerHealthManaUI(underworld);
       }
     }
   }
+  return countDiscard;
 }
 export function isDeathmason(player?: IPlayer): boolean {
   return !!player && player.wizardType == 'Deathmason';

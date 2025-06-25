@@ -322,10 +322,10 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       break;
     case MESSAGE_TYPES.DEATHMASON_DISCARD_CARDS: {
       if (fromPlayer && overworld.underworld) {
-        const currentChargesCount = Unit.countCharges(fromPlayer.unit);
-        if (payload.currentChargesCount == currentChargesCount) {
-          Player.discardCards(fromPlayer, overworld.underworld);
-          const drawNew = Math.floor(currentChargesCount / config.DEATHMASON_DISCARD_DRAW_RATIO);
+        const countDiscard = Player.discardCards(fromPlayer, overworld.underworld, { dryRun: true });
+        if (payload.countDiscard == countDiscard) {
+          Player.discardCards(fromPlayer, overworld.underworld, {});
+          const drawNew = Math.floor(countDiscard / config.DEATHMASON_DISCARD_DRAW_RATIO);
           Unit.drawCharges(fromPlayer.unit, overworld.underworld, drawNew);
         } else {
           console.warn('Ignoring incorrect discard message')
