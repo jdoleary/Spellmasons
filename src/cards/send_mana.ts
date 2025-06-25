@@ -22,6 +22,7 @@ const spell: Spell = {
     thumbnail: 'spellIconSendMana.png',
     animationPath: 'potionPickup',
     description: ['spell_send_mana', amount.toString()],
+    omitForWizardType: ['Deathmason', 'Goru'],
     effect: async (state, card, quantity, underworld, prediction) => {
       const targets = state.targetedUnits.filter(u => u.alive);
       let promises = [];
