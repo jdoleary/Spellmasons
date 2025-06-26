@@ -1511,7 +1511,13 @@ export function updateCardBadges(underworld: Underworld, skipAnimation?: boolean
           }
         }
       }
-      const outOfCharges = globalThis.player.unit.predictionCopy?.charges && (isNullOrUndef(globalThis.player.unit.predictionCopy.charges[card.id]) || globalThis.player.unit.predictionCopy.charges[card.id] == 0);
+      // Determining 'outOfCharges' is complex. If the player has a spell queued, we need to use the predictionCopy's charges so that
+      // they can see if they have no more to add to their queue; however, if they are NOT casting, we need to check the current player
+      // since the amount of charges they _will_ have is exactly what they _currently_ have.  Syncing predictioncopy is not an option because
+      // there are many places that call updateChargeBadges and creating a sync at that time can disrupt other calculations that rely on the
+      // predictionCopy being stable since the last sync.
+      const chargeHolder = areAnyCardsSelected() ? globalThis.player.unit.predictionCopy : globalThis.player.unit;
+      const outOfCharges = chargeHolder?.charges && (isNullOrUndef(chargeHolder.charges[card.id]) || chargeHolder.charges[card.id] == 0);
       const matchingElements = document.querySelectorAll(`.card-holder .card[data-card-id="${card.id}"]`);
       if (outOfCharges)
         matchingElements.forEach(el => el.classList.add('out-of-charges'));
