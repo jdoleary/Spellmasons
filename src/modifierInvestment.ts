@@ -9,7 +9,7 @@ export default function registerInvestment() {
   registerModifiers(investmentId, {
     description: ['rune_investment'],
     unitOfMeasure: '%',
-    _costPerUpgrade: 30,
+    _costPerUpgrade: 80,
     quantityPerUpgrade: 5,
     maxUpgradeCount: 5,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
