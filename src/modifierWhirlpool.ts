@@ -11,6 +11,7 @@ export default function registerWhirlpool() {
   registerModifiers(whirlpoolId, {
     description: 'rune_whirlpool',
     _costPerUpgrade: 120,
+    unitOfMeasure: 'Units',
     quantityPerUpgrade: 1,
     maxUpgradeCount: 3,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
