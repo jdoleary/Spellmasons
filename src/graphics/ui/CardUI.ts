@@ -983,7 +983,7 @@ async function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: 
 
       // Check for insufficient charges
       if (predictionPlayerUnit.charges) {
-        if (Object.entries(predictionPlayerUnit.charges).some(([cardId, charges]) => charges < 0)) {
+        if (Object.entries(predictionPlayerUnit.charges).some(([id, charges]) => cardId == id && charges < 0)) {
           floatingText({
             coords: underworld.getMousePos(),
             text: 'Insufficient Cards',

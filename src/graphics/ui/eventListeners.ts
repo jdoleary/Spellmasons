@@ -955,7 +955,7 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
                 text: 'Insufficient Health',
                 style: { fill: errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
               });
-            } else if (effectState.casterUnit.charges && Object.entries(effectState.casterUnit.charges).some(([cardId, charges]) => charges < 0)) {
+            } else if (effectState.casterUnit.charges && Object.entries(effectState.casterUnit.charges).some(([cardId, charges]) => effectState.cardIds.includes(cardId) && charges < 0)) {
               // Check for insufficient charges
               floatingText({
                 coords: underworld.getMousePos(),
