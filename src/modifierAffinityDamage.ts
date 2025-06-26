@@ -12,6 +12,7 @@ export default function registerDamageAffinity() {
     _costPerUpgrade: 60,
     quantityPerUpgrade: 10,
     maxUpgradeCount: 5,
+    omitForWizardType: ['Deathmason', 'Goru'],
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, affinityDamageId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         //
