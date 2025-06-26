@@ -2,6 +2,7 @@ import type * as PIXI from 'pixi.js';
 import { OutlineFilter } from '@pixi/filter-outline';
 import * as config from '../config';
 import * as Image from '../graphics/Image';
+import * as Player from '../entity/Player';
 import * as math from '../jmath/math';
 import { distance } from '../jmath/math';
 import { containerCorpses, containerUnits, PixiSpriteOptions, startBloodParticleSplatter, updateNameText } from '../graphics/PixiUtils';
@@ -1562,6 +1563,12 @@ export async function startTurnForUnits(units: IUnit[], underworld: Underworld, 
     unit.mana = Math.max(unit.manaMax, unit.mana);
     // Draw new charges
     if (unit.charges) {
+      // Discard cards for Deathmason now that it is a new turn
+      const unitsPlayer = underworld.players.find(p => p.unit == unit);
+      if (unitsPlayer) {
+        // At the beginning of a turn, discard all cards and draw anew
+        Player.discardCards(unitsPlayer, underworld, {});
+      }
       // Draw up to max charges
       refillCharges(unit, underworld);
     }

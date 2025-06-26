@@ -3213,7 +3213,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // Ensure players can only end the turn when it IS their turn
     if (this.turn_phase == turn_phase.PlayerTurns) {
       player.endedTurn = true;
-      Player.discardCards(player, this, {});
 
       console.log('[GAME] Turn Phase\nPlayer ended turn: ', player);
       this.syncTurnMessage();

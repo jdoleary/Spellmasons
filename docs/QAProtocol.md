@@ -21,6 +21,8 @@ NEW for July:
     - Make sure wizard picker works in hotseat
 - i18n:green_portal_desc
 - check soul quantity when loading
+- deathmason locked discard cards persists on client between turn phases
+- Test that deathmason doesn't discard entire hand until beginning of next turn
 
 --- Archived
 - Uncomment: commits: `gate: Temporarily disable Cardmason until update`
