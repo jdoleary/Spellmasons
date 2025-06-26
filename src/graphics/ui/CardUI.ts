@@ -911,7 +911,7 @@ async function deselectCard(cardId: string, element: HTMLElement, underworld: Un
     );
   }
   await runPredictions(underworld);
-  updateCardBadges(underworld);
+  updateCardBadges(underworld, true);
 
 }
 // Moves a card element to selected-cards div
@@ -952,7 +952,6 @@ async function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: 
       clone.classList.add('requires-following-card')
     }
     manageSelectedCardsParentVisibility();
-    updateCardBadges(underworld);
     const predictionPlayerUnit = underworld.unitsPrediction.find(u => u.id == globalThis.player?.unit.id);
     const alreadyDead = predictionPlayerUnit && !predictionPlayerUnit.alive;
     if (underworld) {
@@ -960,6 +959,7 @@ async function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: 
       // so that we can check in the next block if there is insufficient health or mana to cast it.
       await runPredictions(underworld, true);
     }
+    updateCardBadges(underworld);
 
     if (predictionPlayerUnit) {
       const lastCardCost = card && calculateCostForSingleCard(card, 0, player);
@@ -1219,7 +1219,7 @@ function createCardElement(content: Cards.ICard, underworld?: Underworld, fullSi
   } else if (globalThis.player && Player.isDeathmason(globalThis.player)) {
     const elCardChargeBadge = document.createElement('div');
     elCardChargeBadge.classList.add('card-charge-badge', 'card-badge', 'card-badge-square');
-    updateChargeBadge(elCardChargeBadge, globalThis.player.unit.charges?.[content.id] || 0, content);
+    updateChargeBadge(elCardChargeBadge, globalThis.player.unit.charges?.[content.id] || 0);
     elCardBadgeHolder.appendChild(elCardChargeBadge);
   } else {
     const elCardManaBadge = document.createElement('div');
@@ -1388,11 +1388,11 @@ function updateSoulBadge(elBadge: Element | null, soulFragment: number = 0, card
   }
 }
 
-function updateChargeBadge(elBadge: Element | null, charges: number = 0, card: Cards.ICard) {
+function updateChargeBadge(elBadge: Element | null, charges: number = 0, skipAnimation?: boolean) {
   if (elBadge) {
     const currentCharges = parseInt(elBadge.innerHTML);
     // Animate gained charges
-    if (!isNaN(currentCharges) && charges > currentCharges) {
+    if (!skipAnimation && !isNaN(currentCharges) && charges > currentCharges) {
       createFloatingNumber(elBadge as HTMLElement, `+ ${charges - currentCharges}`);
       animateKeyPress(elBadge as HTMLElement);
     }
@@ -1404,7 +1404,7 @@ function updateChargeBadge(elBadge: Element | null, charges: number = 0, card: C
 
 // Updates the UI mana badge for cards in hand.  To be invoked whenever a player's
 // cardUsageCounts object is modified in order to sync the UI
-export function updateCardBadges(underworld: Underworld) {
+export function updateCardBadges(underworld: Underworld, skipAnimation?: boolean) {
   if (globalThis.headless) { return; }
   if (globalThis.player) {
     // Update selected cards
@@ -1420,7 +1420,7 @@ export function updateCardBadges(underworld: Underworld) {
           if (elBadgeC) {
             const cardCharges = globalThis.player.unit.charges?.[card.id]
             if (exists(cardCharges)) {
-              updateChargeBadge(elBadgeC, cardCharges - sliceOfCardsOfSameIdUntilCurrent.length, card);
+              updateChargeBadge(elBadgeC, cardCharges - sliceOfCardsOfSameIdUntilCurrent.length, skipAnimation);
             }
           }
         } else {
@@ -1489,7 +1489,7 @@ export function updateCardBadges(underworld: Underworld) {
           for (let elBadgeCharge of badgeRecord.charge) {
             const charge = (globalThis.player.unit.charges?.[card.id]) || 0;
             const specificCardQueuedCount = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"] .card-charge-badge`).length;
-            updateChargeBadge(elBadgeCharge, charge - specificCardQueuedCount, card);
+            updateChargeBadge(elBadgeCharge, charge - specificCardQueuedCount, skipAnimation);
           }
         } else {
           for (let elBadge of badgeRecord.mana) {
@@ -1506,8 +1506,8 @@ export function updateCardBadges(underworld: Underworld) {
           }
         }
       }
-      const outOfCharges = globalThis.player.unit.charges && (globalThis.player.unit.charges[card.id] === undefined || globalThis.player.unit.charges[card.id] == 0);
-      const matchingElements = document.querySelectorAll(`.card[data-card-id="${card.id}"]`);
+      const outOfCharges = globalThis.player.unit.predictionCopy?.charges && (isNullOrUndef(globalThis.player.unit.predictionCopy.charges[card.id]) || globalThis.player.unit.predictionCopy.charges[card.id] == 0);
+      const matchingElements = document.querySelectorAll(`.card-holder .card[data-card-id="${card.id}"]`);
       if (outOfCharges)
         matchingElements.forEach(el => el.classList.add('out-of-charges'));
       else
