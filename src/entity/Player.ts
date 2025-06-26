@@ -139,8 +139,8 @@ export function create(clientId: string, playerId: string, underworld: Underworl
     ),
     awaitingSpawn: false,
     isSpawned: false,
-    // *3 for all card containers including floating card containers
-    cardsInToolbar: Array(config.NUMBER_OF_TOOLBAR_SLOTS * 3).fill(''),
+    // *5 for all card containers including floating card containers
+    cardsInToolbar: Array(config.NUMBER_OF_TOOLBAR_SLOTS * 5).fill(''),
     inventory: [],
     freeSpells: [],
     disabledCards: [],
@@ -563,7 +563,7 @@ export function addCardToHand(card: Cards.ICard | undefined, player: IPlayer | u
     if (!didReplace) {
       const emptySlotIndex = player.cardsInToolbar.indexOf('');
       // Add the spell to the toolbar
-      if (emptySlotIndex !== -1 && emptySlotIndex < 9) {
+      if (emptySlotIndex !== -1) {
         player.cardsInToolbar[emptySlotIndex] = card.id;
       }
     }
