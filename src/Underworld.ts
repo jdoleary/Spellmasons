@@ -1079,6 +1079,10 @@ export default class Underworld {
         stopAndDestroyForeverEmitter(emitter);
       } else if (Unit.isUnit(target) && ((!target.alive && !keepOnDeath) || target.flaggedForRemoval)) {
         stopAndDestroyForeverEmitter(emitter);
+      } else if (Pickup.isPickup(target) && (target.flaggedForRemoval)) {
+        stopAndDestroyForeverEmitter(emitter);
+      } else if (isNaN(target.x) || isNaN(target.y)) {
+        stopAndDestroyForeverEmitter(emitter);
       } else if (emitter && !emitter.destroyed) {
 
         // @ts-ignore: ySortPositionOverride is a custom property that I've added that was made
