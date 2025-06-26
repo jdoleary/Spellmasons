@@ -364,7 +364,9 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         for (let i = 0; i < soulFragments; i++) {
           const promise = makeManaTrail(soulPositions[i] || victim, fromPlayer.unit, underworld, colorStart, colorEnd, soulFragments).then(() => {
             playSFXKey('soulget');
-            floatingText({ coords: fromPlayer.unit, text: `+ 1 ${i18n('soul fragments')}`, aggregateMatcher: /\d+/ });
+            if (player == fromPlayer) {
+              floatingText({ coords: fromPlayer.unit, text: `+ 1 ${i18n('soul fragments')}`, aggregateMatcher: /\d+/ });
+            }
           });
           test_ignorePromiseSpy(promise);
         }

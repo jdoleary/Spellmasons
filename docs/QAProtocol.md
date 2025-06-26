@@ -23,6 +23,7 @@ NEW for July:
 - check soul quantity when loading
 - deathmason locked discard cards persists on client between turn phases
 - Test that deathmason doesn't discard entire hand until beginning of next turn
+- Test the "+ soul fragments" floating text doesn't show up on other player's screens above their own player
 
 --- Archived
 - Uncomment: commits: `gate: Temporarily disable Cardmason until update`
