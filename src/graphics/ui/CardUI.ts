@@ -186,8 +186,8 @@ export function setupCardUIEventListeners(overworld: Overworld) {
         Jprompt({
           text: ['confirm-discard', countDiscard.toString(), drawNew.toString()],
           yesText: 'Yes',
-          yesKey: 'Space',
-          yesKeyText: 'Space',
+          yesKey: 'Enter',
+          yesKeyText: 'Enter',
           noBtnText: 'Cancel',
           noBtnKey: 'Escape',
         }).then(confirm => {
