@@ -32,6 +32,7 @@ globalThis.savePrefix = 'spellmasons-save-';
 globalThis.quicksaveKey = 'quicksave';
 globalThis.peerLobbyId = '';
 globalThis.peers = new Set<string>();
+globalThis.lastSeenStatpointsUnspent = 0;
 // Never commit this to true.  To make a demo build, you should
 // toggle this to true, make the build and toggle it back off
 globalThis.isDemo = false;

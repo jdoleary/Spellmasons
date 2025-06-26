@@ -383,7 +383,6 @@ declare global {
   var spellCasting: boolean | undefined;
   var _queueLastPredictionMousePos: Vec2 | undefined;
   var lastPredictionMousePos: Vec2 | undefined;
-  var cheapestAvailableRune: number | undefined;
   // Set to a string to stop promises from being tracked
   // the string should be a label explaining why tracking has stopped
   // This is used in simpleEmitter for example, because I don't
@@ -416,4 +415,5 @@ declare global {
   var peerLobbyId: string;
   var peers: Set<string>;
   var peerHostBroadcastClientsPresenceChanged: (pie: PiePeer) => void;
+  var lastSeenStatpointsUnspent: number | undefined;
 }

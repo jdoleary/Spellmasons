@@ -61,12 +61,12 @@ export const elDiscardAll = document.getElementById('discard-charges-icon') as H
 const elBookmarkRunes = document.getElementById('bookmark-runes')
 export function tryShowStatPointsSpendable() {
   // Only show glow if player can afford a rune upgrade
-  const hasStatPointsToSpend = globalThis.player && globalThis.player.statPointsUnspent > 0 && globalThis.player.statPointsUnspent >= (globalThis.cheapestAvailableRune || 1);
+  const showNewStatPointsToSpend = globalThis.player && globalThis.player.statPointsUnspent > 0 && globalThis.player.statPointsUnspent > (globalThis.lastSeenStatpointsUnspent || 0);
   if (elInvButton) {
-    elInvButton.classList.toggle('goldGlow', hasStatPointsToSpend);
+    elInvButton.classList.toggle('goldGlow', showNewStatPointsToSpend);
   }
   if (elBookmarkRunes) {
-    elBookmarkRunes.classList.toggle('goldGlow', hasStatPointsToSpend);
+    elBookmarkRunes.classList.toggle('goldGlow', showNewStatPointsToSpend);
   }
 }
 // Where the non-selected cards are displayed
@@ -583,16 +583,8 @@ export function renderRunesMenu(underworld: Underworld) {
   const shuffledRunes = underworld.getShuffledRunesForPlayer(globalThis.player);
   const chosenRunes = presentRunes(shuffledRunes, config.RUNES_PER_LEVEL, globalThis.player?.runePresentedIndex || 0, globalThis.player.lockedRunes);
 
-  globalThis.cheapestAvailableRune = chosenRunes.reduce<number>((cheapest, current) => {
-    const modifier = Cards.allModifiers[current]
-    const modifierCost = modifier && Cards.calcluateModifierCostPerUpgrade(modifier, underworld, globalThis.player)
-    if (exists(modifierCost) && modifierCost < cheapest) {
-      return modifierCost;
-    } else {
-      return cheapest;
-    }
-  }, Infinity);
   const statPoints = globalThis.player.statPointsUnspent;
+  globalThis.lastSeenStatpointsUnspent = statPoints;
   const elStatUpgradeRow = (modifierKey: string, index: number, constant?: boolean) => {
     if (!globalThis.player) {
       return '';
@@ -806,6 +798,8 @@ export function toggleInventory(toolbarIndex: number | undefined, forceState: bo
       type: MESSAGE_TYPES.VIEWING_INVENTORY,
       isOpen: false,
     });
+    // Toggle off glow once stat points are seen
+    tryShowStatPointsSpendable();
   }
 }
 const ACTIVE_TOOLBAR_ELEMENT_CLASSNAME = 'active-toolbar-element'

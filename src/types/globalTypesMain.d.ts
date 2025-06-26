@@ -319,7 +319,6 @@ declare global {
   var spellCasting: boolean | undefined;
   var _queueLastPredictionMousePos: Vec2 | undefined;
   var lastPredictionMousePos: Vec2 | undefined;
-  var cheapestAvailableRune: number | undefined;
   // Set to a string to stop promises from being tracked
   // the string should be a label explaining why tracking has stopped
   // This is used in simpleEmitter for example, because I don't
@@ -357,4 +356,6 @@ declare global {
   var peers: Set<string>;
   var kickPeer: (steamId: string, name?: string) => void | undefined;
   var peerHostBroadcastClientsPresenceChanged: (pie: PiePeer) => void;
+  // Used to determine when to show glowing inventory to suggest that player has new stat points to spend
+  var lastSeenStatpointsUnspent: number | undefined;
 }

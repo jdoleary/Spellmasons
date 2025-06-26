@@ -20,7 +20,7 @@ import {
 import { sendChatHandler } from './graphics/ui/Chat';
 import { Overworld } from './Overworld';
 import { View } from './View';
-import { getSelectedCardIds, renderBattleLog, renderRunesMenu } from './graphics/ui/CardUI';
+import { getSelectedCardIds, renderBattleLog, renderRunesMenu, tryShowStatPointsSpendable } from './graphics/ui/CardUI';
 import Underworld from './Underworld';
 import { distance, similarTriangles } from './jmath/math';
 import { jitter } from './jmath/Vec';
@@ -372,6 +372,8 @@ export function chooseBookmark(bookmark: string, forceActive?: true | undefined,
   if (bookmark == 'bookmark-runes') {
     if (underworld) {
       renderRunesMenu(underworld);
+      // Toggle off glow once stat points are seen
+      tryShowStatPointsSpendable();
     } else {
       console.error('Attempted to render runes menu but underworld is undefined');
     }
