@@ -424,7 +424,7 @@ export function syncLobby(underworld: Underworld) {
       } else if (!p.unit.alive) {
         status = i18n('Dead');
       } else if (p.endedTurn && underworld.turn_phase == turn_phase.PlayerTurns) {
-        status = i18n('Ready for next turn');
+        status = '✅ ' + i18n('Ready for next turn');
       }
       return { name: p.name || p.playerId, clientId: p.clientId, clientConnected: p.clientConnected, status, color: colors.convertToHashColor(p.color || 0xffffff), ready: p.lobbyReady ? i18n('Ready') : i18n('Not Ready') };
     });
