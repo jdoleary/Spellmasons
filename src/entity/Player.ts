@@ -344,6 +344,8 @@ export function load(player: IPlayerSerialized, index: number, underworld: Under
       playerLoaded.reroll = globalThis.player.reroll;
       playerLoaded.statPointsUnspent = globalThis.player.statPointsUnspent;
       playerLoaded.lockedDiscardCards = globalThis.player.lockedDiscardCards;
+      // TODO load wizard tye here
+
     }
   }
   // Backwards compatibility after property name change
@@ -390,13 +392,24 @@ export function load(player: IPlayerSerialized, index: number, underworld: Under
 }
 export function restoreWizardTypeVisuals(player: IPlayer, underworld: Underworld) {
   // Restore visuals for wizard types
-  if (player.wizardType == 'Goru') {
-    if (allUnits[GORU_UNIT_ID]) {
-      visualPolymorphPlayerUnit(player.unit, allUnits[GORU_UNIT_ID])
-    }
+  const sourceUnit = player.wizardType == 'Goru' ? allUnits[GORU_UNIT_ID] : allUnits[spellmasonUnitId];
+  if (sourceUnit) {
+    visualPolymorphPlayerUnit(player.unit, sourceUnit)
+    Unit.returnToDefaultSprite(player.unit);
+  } else {
+    console.error('Attempted to change player units sprite but found no sourceUnit');
   }
   if (isDeathmason(player)) {
     makeCorruptionParticles(player.unit, false, underworld);
+  }
+  if (globalThis.player == player) {
+    document.body.classList.toggle('wizardtype-deathmason', player.wizardType == 'Deathmason');
+    document.body.classList.toggle('wizardtype-goru', player.wizardType == 'Goru');
+    // Update UI and prediction entities when player changes wizardtype-deathmason status
+    if (underworld) {
+      CardUI.updateCardBadges(underworld);
+      underworld.syncPredictionEntities();
+    }
   }
 
 }
@@ -674,23 +687,13 @@ export function incrementPresentedRunesForPlayer(player: Pick<IPlayer, 'lockedRu
 
 }
 
+// Note: setWizardType is for data state changes.  Any visual changes should happen in restoreWizardTypeVisuals
+// since it is called in more places to syncronize in the even of a Load, for example.
 export function setWizardType(player: IPlayer, wizardType: WizardType | undefined | null, underworld?: Underworld) {
   if (isNullOrUndef(wizardType)) {
     wizardType = 'Spellmason';
   }
-  if (globalThis.player == player) {
-    document.body.classList.toggle('wizardtype-deathmason', wizardType == 'Deathmason');
-    document.body.classList.toggle('wizardtype-goru', wizardType == 'Goru');
-  }
   player.wizardType = wizardType;
-  // Update the player image
-  const sourceUnit = wizardType == 'Goru' ? allUnits[GORU_UNIT_ID] : allUnits[spellmasonUnitId];
-  if (sourceUnit) {
-    visualPolymorphPlayerUnit(player.unit, sourceUnit)
-    Unit.returnToDefaultSprite(player.unit);
-  } else {
-    console.error('Attempted to change player units sprite but found no sourceUnit');
-  }
 
   if (isDeathmason(player)) {
     if (isNullOrUndef(player.unit.charges)) {
@@ -699,10 +702,8 @@ export function setWizardType(player: IPlayer, wizardType: WizardType | undefine
   } else {
     delete player.unit.charges;
   }
-  // Update UI and prediction entities when player changes wizardtype-deathmason status
   if (underworld) {
-    CardUI.updateCardBadges(underworld);
-    underworld.syncPredictionEntities();
+    restoreWizardTypeVisuals(player, underworld);
   }
 }
 const IS_DISCARD_LOCKED_CLASSNAME = 'is-discard-locked';
