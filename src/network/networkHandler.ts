@@ -333,6 +333,14 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       }
       break;
     }
+    case MESSAGE_TYPES.DEATHMASON_LOCK_DISCARD_CARDS:
+      // This is only to sync with a client sending their state to the host.
+      // No need to update your own or you may clobber more recent changes
+      if (fromPlayer && fromPlayer !== globalThis.player) {
+        const { lockedDiscardCards } = payload;
+        fromPlayer.lockedDiscardCards = lockedDiscardCards;
+      }
+      break;
     case MESSAGE_TYPES.COLLECT_SOULS:
       if (fromPlayer) {
 

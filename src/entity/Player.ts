@@ -343,6 +343,7 @@ export function load(player: IPlayerSerialized, index: number, underworld: Under
       playerLoaded.upgradesLeftToChoose = globalThis.player.upgradesLeftToChoose;
       playerLoaded.reroll = globalThis.player.reroll;
       playerLoaded.statPointsUnspent = globalThis.player.statPointsUnspent;
+      playerLoaded.lockedDiscardCards = globalThis.player.lockedDiscardCards;
     }
   }
   // Backwards compatibility after property name change
@@ -725,6 +726,11 @@ export function toggleCardLockedForDiscard(player: IPlayer | undefined, cardId: 
   } else {
     player.lockedDiscardCards = player.lockedDiscardCards.filter(x => x != cardId);
   }
+  // Send to host for persistance in saved games
+  underworld.pie.sendData({
+    type: MESSAGE_TYPES.DEATHMASON_LOCK_DISCARD_CARDS,
+    lockedDiscardCards: player.lockedDiscardCards,
+  });
   floatingText({
     coords: underworld.getMousePos(),
     text: doLock ? "Keep card when discarding" : "Allow discarding",
