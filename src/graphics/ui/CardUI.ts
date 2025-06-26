@@ -1043,7 +1043,10 @@ export function getSelectedCards(): Cards.ICard[] {
   return Cards.getCardsFromIds(cardIds);
 }
 
-export function clearSelectedCards(underworld: Underworld) {
+// skipUpdateCardBadges: Sometimes cards are cleared because they are cast, in which case we
+// DON'T want to sync card badges because it will restore card info that's about to be set back
+// to match the prediction info after casting
+export function clearSelectedCards(underworld: Underworld, skipUpdateCardBadges?: boolean) {
   if (globalThis.headless) { return; }
   // Deselect all selected cards
   cardsSelected = []
@@ -1060,7 +1063,9 @@ export function clearSelectedCards(underworld: Underworld) {
   // Now that there are no more selected cards, update the spell effect projection
   clearSpellEffectProjection(underworld);
   // Now that selected cards are cleared, update mana badges
-  updateCardBadges(underworld);
+  if (!skipUpdateCardBadges) {
+    updateCardBadges(underworld);
+  }
   tutorialCompleteTask('clearWholeSpell');
 
 }

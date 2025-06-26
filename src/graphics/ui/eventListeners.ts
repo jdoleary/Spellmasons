@@ -973,7 +973,7 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
                 initialTargetedUnitId: effectState.initialTargetedUnitId,
                 initialTargetedPickupId: effectState.initialTargetedPickupId,
               });
-              CardUI.clearSelectedCards(underworld);
+              CardUI.clearSelectedCards(underworld, true);
               // Now that the cast has begun, clear the prediction tint so it doesn't color the targeted units anymore
               clearTints(underworld);
             }
