@@ -365,6 +365,10 @@ export function adjustUnitPropsDueToDifficulty(stats: DifficultyAdjustedUnitStat
 
 // sets all the properties that depend on difficulty
 export function adjustUnitDifficulty(unit: IUnit, oldDifficulty: number, newDifficulty: number) {
+  if (unit.faction == Faction.ALLY) {
+    // Difficulty only affects enemy units
+    return;
+  }
   // Don't let difficulty be 0 which can occur on 0 player multiplayer games
   // which would initialize all units to 0 health
   if (oldDifficulty == 0) {
