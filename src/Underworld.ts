@@ -1081,7 +1081,9 @@ export default class Underworld {
         stopAndDestroyForeverEmitter(emitter);
       } else if (Pickup.isPickup(target) && (target.flaggedForRemoval)) {
         stopAndDestroyForeverEmitter(emitter);
-      } else if (isNaN(target.x) || isNaN(target.y)) {
+      } else if (!(Unit.isUnit(target) && target.unitType == UnitType.PLAYER_CONTROLLED) && (isNaN(target.x) || isNaN(target.y))) {
+        // If not a player controlled unit with NaN position, destroy
+        // (Player controlled units have a NaN position temporarily before they choose a spawn and we want to keep the emitter in this case)
         stopAndDestroyForeverEmitter(emitter);
       } else if (emitter && !emitter.destroyed) {
 

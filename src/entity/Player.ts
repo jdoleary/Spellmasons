@@ -22,7 +22,7 @@ import { cameraAutoFollow } from '../graphics/PixiUtils';
 import { allUnits } from './units';
 import { incrementPresentedRunesIndex } from '../jmath/RuneUtil';
 import floatingText from '../graphics/FloatingText';
-import { makeCorruptionParticles } from '../graphics/ParticleCollection';
+import { CORRUPTION_PARTICLES_JID, makeCorruptionParticles, stopAndDestroyForeverEmitter } from '../graphics/ParticleCollection';
 import { visualPolymorphPlayerUnit } from '../cards/polymorph';
 import { GORU_UNIT_ID } from './units/goru';
 import { undyingModifierId } from '../modifierUndying';
@@ -401,6 +401,13 @@ export function restoreWizardTypeVisuals(player: IPlayer, underworld: Underworld
   }
   if (isDeathmason(player)) {
     makeCorruptionParticles(player.unit, false, underworld);
+  } else {
+    // @ts-ignore: jid custom identifier
+    const corruptionParticles = underworld.particleFollowers.find(pf => pf.target == player.unit && pf.emitter.jid === CORRUPTION_PARTICLES_JID);
+    // Remote corruptionParticles from player unit that shouldn't have it
+    if (corruptionParticles) {
+      stopAndDestroyForeverEmitter(corruptionParticles.emitter);
+    }
   }
   if (globalThis.player == player) {
     document.body.classList.toggle('wizardtype-deathmason', player.wizardType == 'Deathmason');
