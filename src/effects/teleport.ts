@@ -7,6 +7,7 @@ import * as Obstacle from '../entity/Obstacle';
 import { skyBeam } from '../VisualEffects';
 import * as colors from '../graphics/ui/colors';
 import Events from "../Events";
+import { tryCollectSouls } from "../entity/units/goru";
 
 // sourceUnit is the unit that caused 'object' to teleport
 export function teleport(object: HasSpace, newLocation: Vec2, underworld: Underworld, prediction: boolean, usePredictionLines?: boolean, sourceUnit?: Unit.IUnit) {
@@ -43,6 +44,10 @@ export function teleport(object: HasSpace, newLocation: Vec2, underworld: Underw
   } else {
     object.x = newLocation.x;
     object.y = newLocation.y;
+  }
+  const teleportingPlayer = underworld.players.find(p => p.unit == object)
+  if (teleportingPlayer) {
+    tryCollectSouls(teleportingPlayer, underworld, prediction);
   }
 
   if (!prediction) {
