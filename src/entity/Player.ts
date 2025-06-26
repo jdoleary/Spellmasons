@@ -177,6 +177,7 @@ export function create(clientId: string, playerId: string, underworld: Underworl
   player.unit.healthMax = PLAYER_BASE_HEALTH;
 
   underworld.players.push(player);
+  restoreWizardTypeVisuals(player, underworld);
   underworld.queueGameLoop();
   return player;
 }

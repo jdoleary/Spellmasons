@@ -1074,7 +1074,10 @@ export default class Underworld {
     this.particleFollowers = this.particleFollowers.filter(pf => pf.emitter && !pf.emitter.destroyed);
     // Now that units have moved update any particle emitters that are following them:
     for (let { displayObject, emitter, target, keepOnDeath } of this.particleFollowers) {
-      if (Unit.isUnit(target) && ((!target.alive && !keepOnDeath) || target.flaggedForRemoval)) {
+      if (isNullOrUndef(target)) {
+        console.warn('Emitter destroyed because target is undefined');
+        stopAndDestroyForeverEmitter(emitter);
+      } else if (Unit.isUnit(target) && ((!target.alive && !keepOnDeath) || target.flaggedForRemoval)) {
         stopAndDestroyForeverEmitter(emitter);
       } else if (emitter && !emitter.destroyed) {
 
