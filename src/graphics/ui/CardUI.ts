@@ -1390,6 +1390,12 @@ function updateSoulBadge(elBadge: Element | null, soulFragment: number = 0, card
 
 function updateChargeBadge(elBadge: Element | null, charges: number = 0, card: Cards.ICard) {
   if (elBadge) {
+    const currentCharges = parseInt(elBadge.innerHTML);
+    // Animate gained charges
+    if (!isNaN(currentCharges) && charges > currentCharges) {
+      createFloatingNumber(elBadge as HTMLElement, `+ ${charges - currentCharges}`);
+      animateKeyPress(elBadge as HTMLElement);
+    }
     elBadge.innerHTML = charges.toString();
   } else {
     console.warn("Err UI: Found card, but could not find associated badge element to update charges");
@@ -1600,3 +1606,83 @@ export function animateDrawCard(card: Cards.ICard, underworld: Underworld) {
   }
 
 }
+export function animateKeyPress(element: HTMLElement) {
+  // Store original transform
+  const originalTransform = element.style.transform;
+
+  // Fast down movement
+  element.style.transition = 'transform 0.04s ease-out';
+  element.style.transform = 'translateY(4px)';
+
+  // Slow back up movement
+  setTimeout(() => {
+    element.style.transition = 'transform 0.3s ease-out';
+    element.style.transform = originalTransform;
+  }, 40);
+}
+export function createFloatingNumber(parentElement: HTMLElement, number: string, options = {}) {
+  // Default options
+  const defaults = {
+    duration: 700,
+    distance: 20,
+  };
+
+  const config = { ...defaults, ...options };
+
+  // Create the number element
+  const numberEl = document.createElement('div');
+  numberEl.textContent = number;
+
+  // Set initial styles
+  numberEl.style.cssText = `
+    position: fixed;
+    color: white;
+    pointer-events: none;
+    user-select: none;
+    z-index: 1000;
+    transition: all ${config.duration}ms ease-out;
+    opacity: 1;
+    transform: translateY(0px);
+    text-shadow: 2px 2px 2px #000;
+  `;
+  // Get parent's position relative to the document
+  const rect = parentElement.getBoundingClientRect();
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+
+  // Position the element at the parent's location
+  numberEl.style.left = (rect.left + scrollLeft) + 'px';
+  numberEl.style.top = (rect.top + scrollTop) + 'px';
+
+  // Add to document body
+  document.body.appendChild(numberEl);
+
+  requestAnimationFrame(() => {
+    numberEl.style.transform = `translateY(-${config.distance}px)`;
+  });
+  // Trigger animation on next frame
+  setTimeout(() => {
+    // numberEl.style.opacity = '0';
+  }, config.duration);
+
+  // Remove element after animation
+  setTimeout(() => {
+    if (numberEl.parentNode) {
+      document.body.removeChild(numberEl);
+    }
+  }, 2 * config.duration);
+
+  return numberEl;
+}
+
+// Example usage:
+// const container = document.getElementById('myContainer');
+// createFloatingNumber(container, '+100');
+//
+// With custom options:
+// createFloatingNumber(container, '+250', {
+//   duration: 1500,
+//   distance: 80,
+//   fontSize: '18px',
+//   color: '#00ff00'
+// });
