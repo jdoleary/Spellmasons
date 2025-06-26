@@ -555,6 +555,14 @@ export function renderBattleLog(underworld: Underworld) {
   
   `;
 }
+// True if rune upgrade is maxed otu
+export function isRuneMaxed(runeModifierId: string, player: Player.IPlayer): boolean {
+  const playerModifier = player.unit.modifiers[runeModifierId];
+  const modifier = Cards.allModifiers[runeModifierId]
+  return !!(playerModifier && modifier
+    && Cards.getMaxRuneQuantity(modifier) == playerModifier.quantity);
+
+}
 export function renderRunesMenu(underworld: Underworld) {
   if (!elRunes) {
     console.error('No elRunes for showing rune upgrades');

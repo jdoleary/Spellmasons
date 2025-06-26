@@ -3470,11 +3470,19 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
     player.statPointsUnspent = payload.newSP;
 
+
     if (isCurrentPlayer) {
       playSFXKey('levelUp');
     }
 
     Unit.addModifier(player.unit, runeModifierId, this, false, modifier.quantityPerUpgrade || 1);
+    // QoL: Unlock rune when maxed out so it won't stick around
+    if (CardUI.isRuneMaxed(runeModifierId, player)) {
+      player.lockedRunes = player.lockedRunes.filter(lr => lr.key != runeModifierId);
+      if (isCurrentPlayer) {
+        CardUI.renderRunesMenu(this);
+      }
+    }
     if (isCurrentPlayer) {
       // Clear special showWalkRope for attackRange hover
       keyDown.showWalkRope = false;
