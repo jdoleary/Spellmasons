@@ -2090,6 +2090,10 @@ export function drawCharges(unit: IUnit, underworld: Underworld, count: number =
   const cardsWithManaBasedProbability = cardmasonCardProbabilities(cards);
   // Debug probabilities
   // console.table(cardsWithManaBasedProbability.map(c => ({ id: c.id, p: c.probability, c: c.cost })).sort((a, b) => a.p - b.p));
+
+  const TOTAL_ANIMATION_TIME = 2000; // Fixed total duration in milliseconds
+  const delayBetweenAnimations = count > 1 ? TOTAL_ANIMATION_TIME / (count - 1) : 0;
+
   for (let i = 0; i < count; i++) {
     const alteredCard = chooseObjectWithProbability(cardsWithManaBasedProbability, random);
     // Add a charge
@@ -2099,7 +2103,7 @@ export function drawCharges(unit: IUnit, underworld: Underworld, count: number =
         setTimeout(() => {
           playSFXKey('cardDraw');
           CardUI.animateDrawCard(alteredCard.card, underworld);
-        }, i * (500 / math.lerp(1, 3, Math.max(count / 15, 1))));
+        }, i * delayBetweenAnimations);
       }
     }
   }
