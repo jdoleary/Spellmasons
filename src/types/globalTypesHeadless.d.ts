@@ -307,7 +307,7 @@ declare global {
   var Jprompt: (prompt: PromptArgs) => Promise<boolean>;
   var JtextPrompt: (prompt: PromptArgs) => Promise<string>;
   // Updates the server connection state in the menu
-  var syncConnectedWithPieState: () => void;
+  var syncConnectedWithPieState: (expectConnected: boolean) => void;
   var currentPredictionId: number | undefined;
   var isDemo: boolean;
   // emitters in a list to allow for clean up

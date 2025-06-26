@@ -64,7 +64,7 @@ if (globalThis.steamworks) {
     })
     globalThis.steamworks?.subscribeToLobbyDataUpdate(({ lobby, member, success }: { lobby: string, member: string, success: string }) => {
         console.log('P2P Lobby data changed', lobby, member, success);
-        window.syncConnectedWithPieState?.();
+        window.syncConnectedWithPieState?.(true);
         if (success) {
             window.setPieToP2PMode?.(true);
             window.setMenu?.('MULTIPLAYER_SERVER_CHOOSER');
@@ -474,6 +474,7 @@ export default class PiePeer {
                     return Promise.reject('You cannot create a new lobby while you are in an existing lobby');
                 }
                 globalThis.peerLobbyId = uuidv4();
+                globalThis.syncConnectedWithPieState(true);
 
                 if (!didSubscribeToLobbyChanges) {
                     didSubscribeToLobbyChanges = true;

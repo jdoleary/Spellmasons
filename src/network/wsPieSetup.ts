@@ -199,7 +199,7 @@ ${explainUpdateText}
           }).then(() => {
             intentionalDisconnect = true;
             pie.disconnect('Cannot join, server and game versions are out of sync.');
-            globalThis.syncConnectedWithPieState();
+            globalThis.syncConnectedWithPieState(false);
           });
         }
       } else {
