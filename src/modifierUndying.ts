@@ -36,8 +36,8 @@ export default function registerUndying() {
               coords: unit,
               text: i18n([`Undying Failed`, REQUIRED_SOULS_TO_ACTIVATE.toString()]),
               style: { fill: 'red', ...config.PIXI_TEXT_DROP_SHADOW },
-              valpha: -2,
-              aalpha: 0.00003
+              valpha: -0.4,
+              aalpha: 0.003
             });
             // Remove modifier so it doesn't trigger over and over
             Unit.removeModifier(unit, undyingModifierId, underworld);
