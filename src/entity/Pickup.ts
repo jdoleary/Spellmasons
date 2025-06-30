@@ -717,13 +717,14 @@ export const pickups: IPickupSource[] = [
     effect: ({ unit, pickup, player, underworld, prediction }) => {
       if (unit) {
         if (player && Player.isGoru(player)) {
-          unit.soulFragments += 1;
+          const amount = pickup.power || 1;
+          unit.soulFragments += amount;
           if (!prediction) {
-            floatingText({ coords: unit, text: `+1 ${i18n([`soul fragments`])}`, style: { fill: 'white', ...config.PIXI_TEXT_DROP_SHADOW } });
+            floatingText({ coords: unit, text: `+${amount} ${i18n([`soul fragments`])}`, style: { fill: 'white', ...config.PIXI_TEXT_DROP_SHADOW } });
             playSFXKey('potionPickupMana');
           }
         } else if (unit.charges) {
-          drawCharges(unit, underworld, 1);
+          drawCharges(unit, underworld, pickup.power || 1);
           if (!prediction) {
             floatingText({ coords: unit, text: i18n([`Draw Card`]), style: { fill: 'blue', ...config.PIXI_TEXT_DROP_SHADOW } });
             playSFXKey('potionPickupMana');
