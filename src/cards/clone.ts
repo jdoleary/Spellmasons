@@ -100,8 +100,10 @@ export function doCloneUnit(unit: Unit.IUnit, underworld: Underworld, prediction
   if (spawnLocation) {
     const clone = Unit.load(Unit.serialize(unit), underworld, prediction);
     if (unit.soulFragments >= 2) {
-      unit.soulFragments -= 1
+      unit.soulFragments -= 1;
       clone.soulFragments = 1;
+    } else {
+      clone.soulFragments = 0;
     }
     clone.summonedBy = summoner;
     if (!prediction) {

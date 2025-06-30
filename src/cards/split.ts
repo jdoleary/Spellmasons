@@ -148,6 +148,8 @@ export function doSplit(target: Vec2 | undefined, summoner: Unit.IUnit, underwor
           const halfSouls = Math.floor(target.soulFragments / 2);
           target.soulFragments -= halfSouls;
           clone.soulFragments = halfSouls;
+        } else {
+          clone.soulFragments = 0;
         }
         clone.summonedBy = summoner;
         if (!prediction) {

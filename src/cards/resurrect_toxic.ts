@@ -19,6 +19,7 @@ const spell: Spell = {
     supportQuantity: true,
     manaCost: 90,
     healthCost: 0,
+    soulFragmentCostOverride: 4,
     expenseScaling: 4,
     probability: probabilityMap[CardRarity.RARE],
     onlySelectDeadUnits: true,
