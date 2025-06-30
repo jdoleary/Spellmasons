@@ -776,7 +776,8 @@
         "yellow portal": "Yellow Portal",
         "soul collection radius": "Soul Collection Radius",
         "soul debt floating text": "-🍞 health from Soul Debt",
-        "soul debt": "Soul Debt"
+        "soul debt": "Soul Debt",
+        "disabled for": "Disabled for 🍞"
     },
     {
         "language": "Français",
@@ -1552,10 +1553,11 @@
         "insufficient soul fragments": "Fragments d'âme insuffisants",
         "yellow_portal_desc": "Vous permet de réapparaître à n'importe quel endroit de votre choix.",
         "undying failed": "L'Immortel nécessite au moins 🍞 fragments d'âme pour s'activer.",
-        "yellow portal": "",
-        "soul collection radius": "",
-        "soul debt floating text": "",
-        "soul debt": ""
+        "yellow portal": "Portail Jaune",
+        "soul collection radius": "Rayon de collecte d'âmes",
+        "soul debt floating text": "-🍞 santé provenant de la Dette de l'Âme",
+        "soul debt": "Dette d'âme",
+        "disabled for": "Désactivé pour 🍞"
     },
     {
         "language": "italiano",
@@ -2331,10 +2333,11 @@
         "insufficient soul fragments": "Frammenti d'Anima Insufficienti",
         "yellow_portal_desc": "Ti permette di rinascere in qualsiasi luogo a tua scelta.",
         "undying failed": "L'Immortale richiede almeno 🍞 frammenti dell'anima per essere attivato.",
-        "yellow portal": "",
-        "soul collection radius": "",
-        "soul debt floating text": "",
-        "soul debt": ""
+        "yellow portal": "Portale Giallo",
+        "soul collection radius": "Raggio di Raccolta dell'Anima",
+        "soul debt floating text": "-🍞 salute da Debito dell'Anima",
+        "soul debt": "Debito dell'anima",
+        "disabled for": "Disabilitato per 🍞"
     },
     {
         "language": "Deutsche",
@@ -3110,10 +3113,11 @@
         "insufficient soul fragments": "Nicht ausreichende Seelenfragmente",
         "yellow_portal_desc": "Ermöglicht es dir, an jedem Ort deiner Wahl wiederzubeleben.",
         "undying failed": "Unsterblich erfordert mindestens 🍞 Seelenfragmente zur Aktivierung.",
-        "yellow portal": "",
-        "soul collection radius": "",
-        "soul debt floating text": "",
-        "soul debt": ""
+        "yellow portal": "Gelber Portal",
+        "soul collection radius": "Seelen Sammelradius",
+        "soul debt floating text": "-🍞 Gesundheit von Seelenverschuldung",
+        "soul debt": "Seelenverpflichtung",
+        "disabled for": "Für 🍞 deaktiviert"
     },
     {
         "language": "español",
@@ -3889,10 +3893,11 @@
         "insufficient soul fragments": "Fragmentos de alma insuficientes",
         "yellow_portal_desc": "Te permite resurgir en cualquier lugar de tu elección.",
         "undying failed": "Indestructible requiere al menos 🍞 fragmentos de alma para activarse.",
-        "yellow portal": "",
-        "soul collection radius": "",
-        "soul debt floating text": "",
-        "soul debt": ""
+        "yellow portal": "Portal Amarillo",
+        "soul collection radius": "Radio de Colección de Almas",
+        "soul debt floating text": "-🍞 salud de Deuda del Alma",
+        "soul debt": "Deuda de Alma",
+        "disabled for": "Deshabilitado para 🍞"
     },
     {
         "language": "日本",
@@ -4668,10 +4673,11 @@
         "insufficient soul fragments": "ソウルフラグメントが不足しています",
         "yellow_portal_desc": "好きな場所でリスポーンできるようにします。",
         "undying failed": "不死は発動するために少なくとも🍞の魂の断片を必要とします。",
-        "yellow portal": "",
-        "soul collection radius": "",
-        "soul debt floating text": "",
-        "soul debt": ""
+        "yellow portal": "黄色のポータル",
+        "soul collection radius": "ソウル収集半径",
+        "soul debt floating text": "-🍞 魂の借金からの健康",
+        "soul debt": "魂の負債",
+        "disabled for": "🍞のために無効化しました"
     },
     {
         "language": "Português",
@@ -5447,10 +5453,11 @@
         "insufficient soul fragments": "Fragmentos de Alma Insuficientes",
         "yellow_portal_desc": "Permite que você renasça em qualquer local de sua escolha.",
         "undying failed": "Indomável requer pelo menos 🍞 fragmentos de alma para ativar.",
-        "yellow portal": "",
-        "soul collection radius": "",
-        "soul debt floating text": "",
-        "soul debt": ""
+        "yellow portal": "Portal Amarelo",
+        "soul collection radius": "Raio de Coleta de Almas",
+        "soul debt floating text": "-🍞 saúde da Dívida de Alma",
+        "soul debt": "Dívida da Alma",
+        "disabled for": "Desativado para 🍞"
     },
     {
         "language": "عربى",
@@ -6226,10 +6233,11 @@
         "insufficient soul fragments": "قطع الروح غير كافية",
         "yellow_portal_desc": "يتيح لك إعادة الظهور في أي مكان تختاره",
         "undying failed": "يتطلب الخلود ما لا يقل عن 🍞 شظية روح لتفعيله.",
-        "yellow portal": "",
-        "soul collection radius": "",
-        "soul debt floating text": "",
-        "soul debt": ""
+        "yellow portal": "البوابة الصفراء",
+        "soul collection radius": "نطاق جمع الروح",
+        "soul debt floating text": "-🍞 الصحة من ديون الروح",
+        "soul debt": "دين الروح",
+        "disabled for": "معاق ل🍞"
     },
     {
         "language": "한국어",
@@ -7005,10 +7013,11 @@
         "insufficient soul fragments": "부족한 영혼 조각",
         "yellow_portal_desc": "선택한 위치에서 어떻게든 다시 태어날 수 있게 해줍니다.",
         "undying failed": "언다잉을 활성화하려면 최소 🍞개의 영혼 조각이 필요합니다.",
-        "yellow portal": "",
-        "soul collection radius": "",
-        "soul debt floating text": "",
-        "soul debt": ""
+        "yellow portal": "노란 포털",
+        "soul collection radius": "영혼 수집 반경",
+        "soul debt floating text": "-🍞 영혼의 빚으로부터 얻는 건강",
+        "soul debt": "영혼의 빚",
+        "disabled for": "🍞를 위해 비활성화됨"
     },
     {
         "language": "Русский",
@@ -7784,10 +7793,11 @@
         "insufficient soul fragments": "Недостаточно фрагментов души",
         "yellow_portal_desc": "Позволяет возродиться в любом месте на ваш выбор.",
         "undying failed": "Безсмертие требует не менее 🍞 фрагментов души для активации.",
-        "yellow portal": "",
-        "soul collection radius": "",
-        "soul debt floating text": "",
-        "soul debt": ""
+        "yellow portal": "Желтый портал",
+        "soul collection radius": "Радиус сбора душ",
+        "soul debt floating text": "-🍞 здоровье от Долга Души",
+        "soul debt": "Долг души",
+        "disabled for": "Отключено для 🍞"
     },
     {
         "language": "中文(简)",
@@ -8563,10 +8573,11 @@
         "insufficient soul fragments": "灵魂碎片不足",
         "yellow_portal_desc": "允许你在任何你选择的位置重新生成",
         "undying failed": "不死术需要至少🍞个灵魂碎片才能激活。",
-        "yellow portal": "",
-        "soul collection radius": "",
-        "soul debt floating text": "",
-        "soul debt": ""
+        "yellow portal": "黄色传送门",
+        "soul collection radius": "灵魂收集半径",
+        "soul debt floating text": "-🍞 灵魂债务恢复的生命值",
+        "soul debt": "灵魂债务",
+        "disabled for": "为🍞禁用"
     },
     {
         "language": "中文(繁)",
@@ -9342,10 +9353,11 @@
         "insufficient soul fragments": "靈魂碎片不足",
         "yellow_portal_desc": "允許你在任何你選擇的位置重生",
         "undying failed": "不滅需要至少🍞個靈魂碎片才能啟用。",
-        "yellow portal": "",
-        "soul collection radius": "",
-        "soul debt floating text": "",
-        "soul debt": ""
+        "yellow portal": "黃色傳送門",
+        "soul collection radius": "靈魂收集範圍",
+        "soul debt floating text": "-🍞 來自靈魂債務的健康值",
+        "soul debt": "靈魂債務",
+        "disabled for": "禁用🍞"
     },
     {
         "language": "Polski",
@@ -10121,10 +10133,11 @@
         "insufficient soul fragments": "Niewystarczające fragmenty duszy",
         "yellow_portal_desc": "Pozwala na odrodzenie się w dowolnym miejscu według własnego wyboru.",
         "undying failed": "Nieumarli potrzebują co najmniej 🍞 fragmentów duszy, aby się aktywować.",
-        "yellow portal": "",
-        "soul collection radius": "",
-        "soul debt floating text": "",
-        "soul debt": ""
+        "yellow portal": "Żółty Portal",
+        "soul collection radius": "Promień zbierania dusz",
+        "soul debt floating text": "-🍞 zdrowie z długu dusz",
+        "soul debt": "Dług Duszy",
+        "disabled for": "Wyłączone dla 🍞"
     },
     {
         "language": "Dutch",
@@ -10900,10 +10913,11 @@
         "insufficient soul fragments": "Onvoldoende Zielfragmenten",
         "yellow_portal_desc": "Stelt je in staat om opnieuw te verschijnen op een locatie naar keuze.",
         "undying failed": "Onsterfelijk vereist ten minste 🍞 zielfragmenten om te activeren.",
-        "yellow portal": "",
-        "soul collection radius": "",
-        "soul debt floating text": "",
-        "soul debt": ""
+        "yellow portal": "Gele Poort",
+        "soul collection radius": "Ziel verzamelingstraject",
+        "soul debt floating text": "-🍞 gezondheid van Zielen Schuld",
+        "soul debt": "Zielenschuld",
+        "disabled for": "Uitgeschakeld voor 🍞"
     },
     {
         "language": "Предреформенный русскій",
@@ -11682,6 +11696,7 @@
         "yellow portal": "",
         "soul collection radius": "",
         "soul debt floating text": "",
-        "soul debt": ""
+        "soul debt": "",
+        "disabled for": ""
     }
 ]

@@ -810,7 +810,7 @@ kbd {
   flex-grow: 2;
   padding-top: 5px;
   color: black;
-  justify-content: space-between;
+  gap: 4px;
   flex-direction: column;
   height: 100%;
   padding: 0 5%;
@@ -3061,4 +3061,12 @@ body.wizardtype-deathmason .card.is-discard-locked .lock-discard {
 
 #discard-charges-icon:active {
   transform: translate(0, 1px);
+}
+
+.codex-only {
+  display: none;
+}
+
+.codex .codex-only {
+  display: block;
 }
