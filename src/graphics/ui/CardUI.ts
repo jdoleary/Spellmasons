@@ -1634,7 +1634,7 @@ export function animateKeyPress(element: HTMLElement) {
 export function createFloatingNumber(parentElement: HTMLElement, number: string, options = {}) {
   // Default options
   const defaults = {
-    duration: 700,
+    duration: 1500,
     distance: 20,
   };
 
