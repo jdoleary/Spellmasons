@@ -4167,7 +4167,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
               // Note: sourceUnit is intentionally undefined
               // so that heath-cost spells remain unaffected by runes
               sourceUnit: undefined,
-              fromVec2: effectState.casterUnit
+              fromVec2: effectState.casterUnit,
+              // spell health cost shouldn't trigger onDamage events
+              pureDamage: true,
             }, this, prediction);
           }
           if (soulDebtHealthCost && !prediction) {

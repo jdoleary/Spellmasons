@@ -1024,11 +1024,13 @@ interface damageArgs {
   sourceUnit?: IUnit,
   fromVec2?: Vec2,
   thinBloodLine?: boolean,
+  // Prevents triggering on damage events
+  pureDamage?: boolean,
 }
 
 // damageFromVec2 is the location that the damage came from and is used for blood splatter
 export function takeDamage(damageArgs: damageArgs, underworld: Underworld, prediction: boolean) {
-  let { unit, sourceUnit, fromVec2, thinBloodLine } = damageArgs;
+  let { unit, sourceUnit, fromVec2, thinBloodLine, pureDamage } = damageArgs;
   if (!unit.alive) {
     // Do not deal damage to dead units
     return;
@@ -1043,7 +1045,7 @@ export function takeDamage(damageArgs: damageArgs, underworld: Underworld, predi
     return
   }
   // Prevent infinite recursion from damage events causing further damage
-  if (!unit.takingPureDamage) {
+  if (!unit.takingPureDamage && !pureDamage) {
     // Disable re-processing damage events
     unit.takingPureDamage = true;
 
