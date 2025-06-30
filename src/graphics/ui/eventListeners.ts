@@ -94,6 +94,12 @@ function handleJPromptHotkeys(event: KeyboardEvent) {
     // Return immediately, prompt hotkey overrides other hotkeys
     return true;
   }
+  if (document.querySelector(`.prompt`) && event.code === 'Space') {
+    // Consume.  When jprompt is active don't allow for accidentally ending turn
+    playSFXKey('deny');
+    return true;
+
+  }
   // Don't cause caller to return
   return false;
 
