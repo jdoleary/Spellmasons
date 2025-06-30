@@ -4171,7 +4171,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
             }, this, prediction);
           }
           if (soulDebtHealthCost && !prediction) {
-            floatingText({ coords: effectState.casterUnit, text: ['Soul Debt floating text', Math.abs(soulDebtHealthCost).toString()], style: { fill: 0xf00 } });
+            floatingText({ coords: effectState.casterUnit, text: ['Soul Debt floating text', Math.abs(soulDebtHealthCost).toString()], style: { fill: colors.bloodColorDefault } });
           }
         }
         //// end INCUR HEALTH COST ////
