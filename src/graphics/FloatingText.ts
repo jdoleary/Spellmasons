@@ -119,7 +119,7 @@ export default function floatingText({
     aalpha *= 0.5;
   }
   const instance: FText = {
-    startPosition: coords,
+    startPosition: clone(coords),
     dy: 0,
     pixiText,
     vy: 1,
@@ -129,12 +129,25 @@ export default function floatingText({
     keepWithinCameraBounds,
   };
   container.addChild(pixiText);
+  // Prevent overlap
+  const YDistanceFromOtherInstances = 20;
+  for (let otherInstance of allFloatingTextInstances) {
+    const diffY = otherInstance.startPosition.y - instance.startPosition.y;
+    const diffX = otherInstance.startPosition.y - instance.startPosition.y;
+    if (diffY >= 0 && diffY < YDistanceFromOtherInstances && diffX < (instance.pixiText.width + otherInstance.pixiText.width) / 2) {
+      instance.startPosition.y = otherInstance.startPosition.y - YDistanceFromOtherInstances;
+      pixiText.y = instance.startPosition.y;
+    }
+
+  }
+  allFloatingTextInstances.push(instance);
   const promise = new Promise<void>((resolve) => {
     requestAnimationFrame(() => floatAway(instance, resolve));
   });
   test_ignorePromiseSpy(promise);
   return promise;
 }
+const allFloatingTextInstances: FText[] = [];
 function floatAway(instance: FText, resolve: (value: void) => void) {
   if (instance.alpha > 0) {
     instance.dy -= instance.vy;
@@ -166,6 +179,10 @@ function floatAway(instance: FText, resolve: (value: void) => void) {
       // Must manually clean up pixiText
       // https://www.html5gamedevs.com/topic/31749-how-to-cleaning-up-all-pixi-sprites-and-textures/?do=findComment&comment=182386
       instance.pixiText.destroy(true);
+      const index = allFloatingTextInstances.indexOf(instance);
+      if (index != -1) {
+        allFloatingTextInstances.splice(index, 1);
+      }
       resolve();
     } else {
       requestAnimationFrame(() => floatAway(instance, resolve));
