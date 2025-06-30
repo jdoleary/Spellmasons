@@ -25,6 +25,7 @@ NEW for July:
 - Test that deathmason doesn't discard entire hand until beginning of next turn
 - Test the "+ soul fragments" floating text doesn't show up on other player's screens above their own player
 - Verify that corruption particles don't hang around in multiplayer with multiple deathmasons
+- Test peer connection logging.  Limit to only in steam lobby
 
 --- Archived
 - Uncomment: commits: `gate: Temporarily disable Cardmason until update`
