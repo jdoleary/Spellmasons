@@ -40,6 +40,7 @@ const spell: Spell = {
     animationPath: '',
     requiresFollowingCard: true,
     description: ['spell_teach'],
+    omitForWizardType: ['Deathmason', 'Goru'],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive);
