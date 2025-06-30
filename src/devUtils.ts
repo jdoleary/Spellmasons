@@ -80,6 +80,9 @@ export function setupDevGlobalFunctions(overworld: Overworld) {
             player.unit.mana = 1000000;
             player.unit.manaPerTurn = 1000000;
             player.unit.manaMax = 1000000;
+            if (player.wizardType == 'Goru') {
+                player.unit.soulFragments = 100000;
+            }
             // Give me all cards
             Object.keys(Cards.allCards).forEach(cardId => {
                 const card = Cards.allCards[cardId];
