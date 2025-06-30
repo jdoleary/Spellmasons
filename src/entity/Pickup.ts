@@ -1,6 +1,6 @@
 import type * as PIXI from 'pixi.js';
 import * as Image from '../graphics/Image';
-import type * as Player from './Player';
+import * as Player from './Player';
 import { addPixiSprite, addPixiSpriteAnimated, containerUnits, pixiText, startBloodParticleSplatter } from '../graphics/PixiUtils';
 import { syncPlayerHealthManaUI, IUnit, takeDamage, playAnimation, runPickupEvents, drawCharges } from './Unit';
 import { checkIfNeedToClearTooltip } from '../graphics/PlanningView';
@@ -713,7 +713,13 @@ export const pickups: IPickupSource[] = [
     },
     effect: ({ unit, pickup, player, underworld, prediction }) => {
       if (unit) {
-        if (unit.charges) {
+        if (player && Player.isGoru(player)) {
+          unit.soulFragments += 1;
+          if (!prediction) {
+            floatingText({ coords: unit, text: `+1 ${i18n([`soul fragments`])}`, style: { fill: 'white', ...config.PIXI_TEXT_DROP_SHADOW } });
+            playSFXKey('potionPickupMana');
+          }
+        } else if (unit.charges) {
           drawCharges(unit, underworld, 1);
           if (!prediction) {
             floatingText({ coords: unit, text: i18n([`Draw Card`]), style: { fill: 'blue', ...config.PIXI_TEXT_DROP_SHADOW } });
