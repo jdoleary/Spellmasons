@@ -404,6 +404,10 @@ export function addModifier(unit: IUnit, key: string, underworld: Underworld, pr
     if (modifier.addModifierVisuals && !prediction) {
       modifier.addModifierVisuals(unit, underworld);
     }
+    if (globalThis.player && unit == globalThis.player.unit) {
+      underworld.syncPlayerPredictionUnitOnly();
+      syncPlayerHealthManaUI(underworld);
+    }
   } else {
     console.error('Modifier ', key, 'never registered.');
   }

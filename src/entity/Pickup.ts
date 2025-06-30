@@ -398,7 +398,10 @@ export function triggerPickup(pickup: IPickup, unit: IUnit, player: Player.IPlay
     pickup.effect({ unit, player, pickup, underworld, prediction });
     removePickup(pickup, underworld, prediction);
     // Now that the players attributes may have changed, sync UI
-    syncPlayerHealthManaUI(underworld);
+    if (globalThis.player && player == globalThis.player) {
+      underworld.syncPlayerPredictionUnitOnly();
+      syncPlayerHealthManaUI(underworld);
+    }
   }
   underworld.progressGameState();
 }
