@@ -26,6 +26,7 @@ NEW for July:
 - Test the "+ soul fragments" floating text doesn't show up on other player's screens above their own player
 - Verify that corruption particles don't hang around in multiplayer with multiple deathmasons
 - Test peer connection logging.  Limit to only in steam lobby
+- export const IS_JULY25_UPDATE_OUT = true;
 
 --- Archived
 - Uncomment: commits: `gate: Temporarily disable Cardmason until update`
