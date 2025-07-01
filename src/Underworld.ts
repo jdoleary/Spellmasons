@@ -2352,7 +2352,11 @@ export default class Underworld {
     // Give stat points, but not in the first level
     if (levelIndex > 0) {
       for (let player of this.players) {
-        const points = config.STAT_POINTS_PER_LEVEL;
+        let points = config.STAT_POINTS_PER_LEVEL;
+        // Less stat points per level for Goru and Deathmason
+        if (player.wizardType == 'Deathmason' || player.wizardType == 'Goru') {
+          points *= 0.6;
+        }
         player.statPointsUnspent += points;
         Player.incrementPresentedRunesForPlayer(player, this);
         if (!tutorialChecklist.spendUpgradePoints.complete && levelIndex >= 3) {
