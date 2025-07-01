@@ -27,6 +27,7 @@ NEW for July:
 - Verify that corruption particles don't hang around in multiplayer with multiple deathmasons
 - Test peer connection logging.  Limit to only in steam lobby
 - export const IS_JULY25_UPDATE_OUT = true;
+- Test difficulty of DM and Goru with adjusted Skill Points
 
 --- Archived
 - Uncomment: commits: `gate: Temporarily disable Cardmason until update`
