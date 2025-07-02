@@ -41,6 +41,8 @@ export const bloodVampire = 0xf1fa68;
 export const bloodPoisoner = 0x86eb83;
 export const bloodGripthulu = 0x83d7eb;
 
+export const goruCoatPrimary = 0x5698a1;
+export const goruCoatSecondary = 0x437e86;
 export const playerCoatPrimary = 0x417F81;
 export const playerCoatSecondary = 0x70A5A7;
 export const playerCastAnimationGlow = 0xff5eb3;

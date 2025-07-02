@@ -207,8 +207,11 @@ export function setPlayerRobeColor(player: IPlayer, color: number | string, colo
   if (player.unit.image && player.unit.image.sprite.filters) {
     const colorSecondary = lightenColor(color, 0.3);
     if (color && colorSecondary && color !== playerNoColor) {
-      const robeColorFilter = new MultiColorReplaceFilter(
+      let colorReplaceArray = player.wizardType == 'Goru' ?
         [
+          [colors.goruCoatPrimary, colorSecondary],
+          [colors.goruCoatSecondary, color],
+        ] : [
           [playerCoatPrimary, color],
           [playerCoatSecondary, colorSecondary],
           // Note: Most of the real color replace for the player's magic is done in 
@@ -219,7 +222,14 @@ export function setPlayerRobeColor(player: IPlayer, color: number | string, colo
           // with a smaller epsilon.  So the player magic color is replaced in multiple
           // locations.
           [playerCastAnimationColor, player.colorMagic],
-        ],
+        ];
+
+      if (player.wizardType == 'Goru') {
+
+      }
+      const robeColorFilter = new MultiColorReplaceFilter(
+        // @ts-ignore
+        colorReplaceArray,
         0.1
       );
       // @ts-ignore: jid is a custom identifier to differentiate this filter
@@ -409,6 +419,7 @@ export function restoreWizardTypeVisuals(player: IPlayer, underworld: Underworld
       stopAndDestroyForeverEmitter(corruptionParticles.emitter);
     }
   }
+  setPlayerRobeColor(player, player.color);
   if (globalThis.player == player) {
     document.body.classList.toggle('wizardtype-deathmason', player.wizardType == 'Deathmason');
     document.body.classList.toggle('wizardtype-goru', player.wizardType == 'Goru');
