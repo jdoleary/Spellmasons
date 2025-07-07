@@ -14,6 +14,7 @@
 - Run `npm run headless-build-only` to check tsc errors which `npm run bun-headless` will not catch
 
 NEW for July:
+- Retest pie peer
 - Test disconnection string near backupSaveName jprompt
 - Test deathmason discard count on multiplayer (non host)
 - Test cardmason sync on new multiplayer game
@@ -30,6 +31,7 @@ NEW for July:
 - Test difficulty of DM and Goru with adjusted Skill Points
 - fix: Stamina bar not updating while another player is casting
 - text tutorial for deathmason and goru
+- Test: Version mismatch jprompt in p2p
 
 --- Archived
 - Uncomment: commits: `gate: Temporarily disable Cardmason until update`

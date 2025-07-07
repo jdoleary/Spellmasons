@@ -102,6 +102,7 @@ export interface IPlayer {
   statPointsUnspent: number;
   lockedRunes: { index: number, key: string, runePresentedIndexWhenLocked?: number }[];
   runePresentedIndex: number;
+  gameVersion?: string;
 }
 export function inPortal(player: IPlayer): boolean {
   // Note: Even though inPortal can be determined by player.isSpawned,
@@ -444,6 +445,7 @@ export function setClientConnected(player: IPlayer, connected: boolean, underwor
   }
   syncLobby(underworld);
 }
+const alreadyWarnedVersionMismatch: string[] = []
 export function syncLobby(underworld: Underworld) {
   globalThis.lobbyPlayerList = underworld.players
     .map(p => {
@@ -459,6 +461,18 @@ export function syncLobby(underworld: Underworld) {
       }
       return { name: p.name || p.playerId, clientId: p.clientId, clientConnected: p.clientConnected, status, color: colors.convertToHashColor(p.color || 0xffffff), ready: p.lobbyReady ? i18n('Ready') : i18n('Not Ready') };
     });
+  if (underworld.players[0] != globalThis.player && exists(globalThis.player?.gameVersion) && exists(underworld.players[0]?.gameVersion) && globalThis.player?.gameVersion !== underworld.players[0]?.gameVersion) {
+    const mismatchId = `${globalThis.player?.gameVersion} !== ${underworld.players[0]?.gameVersion}`;
+    if (!alreadyWarnedVersionMismatch.includes(mismatchId)) {
+      alreadyWarnedVersionMismatch.push(mismatchId);
+      Jprompt({ text: i18n(`p2p-game-version-mismatch`) + `\n\n You: ${globalThis.SPELLMASONS_PACKAGE_VERSION}\n Them: ${underworld.players[0]?.gameVersion}`, yesText: 'Disconnect', noBtnText: 'continue anyway', forceShow: true }).then(doQuit => {
+        if (doQuit) {
+          globalThis.pieDisconnect('User Quit due to version mismatch');
+        }
+      });
+    }
+
+  }
 
   const isLobbyOpen = document.body.classList.contains('peer-hub-connected');
   document.querySelectorAll('.openLobbyBtn').forEach(el => {

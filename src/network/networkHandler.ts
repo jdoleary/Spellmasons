@@ -605,6 +605,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         color: storage.get(storage.STORAGE_ID_PLAYER_COLOR),
         name: storage.get(storage.STORAGE_ID_PLAYER_NAME),
         wizardType: storage.get(storage.STORAGE_ID_WIZARD_TYPE) || 'Spellmason',
+        version: globalThis.SPELLMASONS_PACKAGE_VERSION
       });
       break;
     }
@@ -824,8 +825,9 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         // computer
         break;
       }
-      const { color, colorMagic, name, wizardType, lobbyReady } = payload;
+      const { color, colorMagic, name, wizardType, lobbyReady, version } = payload;
       if (fromPlayer) {
+        fromPlayer.gameVersion = version;
         if (exists(lobbyReady)) {
           fromPlayer.lobbyReady = lobbyReady;
           // If all connected players are also ready, start the game:
@@ -892,6 +894,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
               color: storage.get(storage.STORAGE_ID_PLAYER_COLOR),
               name: storage.get(storage.STORAGE_ID_PLAYER_NAME),
               wizardType: storage.get(storage.STORAGE_ID_WIZARD_TYPE) || 'Spellmason',
+              version: globalThis.SPELLMASONS_PACKAGE_VERSION
             });
           }
         }
@@ -1555,7 +1558,8 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
         colorMagic,
         wizardType: storedWizardType || 'Spellmason',
         name: capped_name,
-        lobbyReady
+        lobbyReady,
+        version: globalThis.SPELLMASONS_PACKAGE_VERSION
       });
     }
   }
