@@ -15,6 +15,7 @@
 
 NEW for July:
 - Retest pie peer
+- Test that network disruption (removing ethernet cable) notifies players of disconnect: electron:8a2254d0aee9e6150bbf27e59781d5d561b675d3
 - Test disconnection string near backupSaveName jprompt
 - Test deathmason discard count on multiplayer (non host)
 - Test cardmason sync on new multiplayer game
