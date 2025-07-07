@@ -73,9 +73,11 @@ export function tryShowStatPointsSpendable() {
 export const elCardHand = document.getElementById('card-hand') as HTMLElement;
 export const elFloatingCardHolderLeft = document.getElementById('floating-card-holder-left') as HTMLElement;
 export const elFloatingCardHolderLeft2 = document.getElementById('floating-card-holder-left-2') as HTMLElement;
+export const elFloatingCardHolderLeft3 = document.getElementById('floating-card-holder-left-3') as HTMLElement;
 export const elFloatingCardHolderRight = document.getElementById('floating-card-holder-right') as HTMLElement;
 export const elFloatingCardHolderRight2 = document.getElementById('floating-card-holder-right-2') as HTMLElement;
-const cardContainers = [elCardHand, elFloatingCardHolderLeft, elFloatingCardHolderRight, elFloatingCardHolderLeft2, elFloatingCardHolderRight2];
+export const elFloatingCardHolderRight3 = document.getElementById('floating-card-holder-right-3') as HTMLElement;
+const cardContainers = [elCardHand, elFloatingCardHolderLeft, elFloatingCardHolderRight, elFloatingCardHolderLeft2, elFloatingCardHolderRight2, elFloatingCardHolderLeft3, elFloatingCardHolderRight3];
 // Where the selected cards are displayed
 const elSelectedCards = document.getElementById('selected-cards') as HTMLElement;
 const dragstart = (ev: any) => {
@@ -352,8 +354,8 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined, under
   }
 
   // Reconcile the elements with the player's hand
-  // *5: for extra toolbar slots
-  for (let slotIndex = 0; slotIndex < NUMBER_OF_TOOLBAR_SLOTS * 5; slotIndex++) {
+  // *7: for extra toolbar slots
+  for (let slotIndex = 0; slotIndex < NUMBER_OF_TOOLBAR_SLOTS * config.NUMBER_OF_TOOLBARS; slotIndex++) {
     const cardId = player.cardsInToolbar[slotIndex];
     const container = cardContainers[Math.floor(slotIndex / NUMBER_OF_TOOLBAR_SLOTS)];
     if (container) {
@@ -1597,6 +1599,8 @@ const mappings = {
   'floating-card-holder-right': (x: number): string | undefined => (globalThis.controlMap[`spellRight${x}` as keyof typeof globalThis.controlMap] || [])[0],
   'floating-card-holder-left-2': (x: number): string | undefined => (globalThis.controlMap[`spellLeft${x}b` as keyof typeof globalThis.controlMap] || [])[0],
   'floating-card-holder-right-2': (x: number): string | undefined => (globalThis.controlMap[`spellRight${x}b` as keyof typeof globalThis.controlMap] || [])[0],
+  'floating-card-holder-left-3': (x: number): string | undefined => (globalThis.controlMap[`spellLeft${x}c` as keyof typeof globalThis.controlMap] || [])[0],
+  'floating-card-holder-right-3': (x: number): string | undefined => (globalThis.controlMap[`spellRight${x}c` as keyof typeof globalThis.controlMap] || [])[0],
 
 }
 

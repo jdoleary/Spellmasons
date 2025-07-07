@@ -2352,6 +2352,12 @@ body:not(.view-Game) #chatbox {
   left: 64px;
 }
 
+#floating-card-holder-left-3 {
+  position: absolute;
+  bottom: 0;
+  left: 120px;
+}
+
 #floating-card-holder-right {
   position: absolute;
   bottom: 0;
@@ -2364,6 +2370,14 @@ body:not(.view-Game) #chatbox {
   position: absolute;
   bottom: 0;
   right: 64px;
+  /* Display overtop of the tooltip if the tooltip intersects it's space */
+  z-index: 1;
+}
+
+#floating-card-holder-right-3 {
+  position: absolute;
+  bottom: 0;
+  right: 120px;
   /* Display overtop of the tooltip if the tooltip intersects it's space */
   z-index: 1;
 }

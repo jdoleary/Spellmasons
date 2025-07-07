@@ -368,6 +368,7 @@ function handleInputDown(keyCodeMapping: string | undefined, overworld: Overworl
     case 'spellLeft9':
       CardUI.selectCardByIndex(8, CardUI.elFloatingCardHolderLeft);
       break;
+
     case 'spellLeft1b':
       CardUI.selectCardByIndex(0, CardUI.elFloatingCardHolderLeft2);
       break;
@@ -395,6 +396,35 @@ function handleInputDown(keyCodeMapping: string | undefined, overworld: Overworl
     case 'spellLeft9b':
       CardUI.selectCardByIndex(8, CardUI.elFloatingCardHolderLeft2);
       break;
+
+    case 'spellLeft1c':
+      CardUI.selectCardByIndex(0, CardUI.elFloatingCardHolderLeft3);
+      break;
+    case 'spellLeft2c':
+      CardUI.selectCardByIndex(1, CardUI.elFloatingCardHolderLeft3);
+      break;
+    case 'spellLeft3c':
+      CardUI.selectCardByIndex(2, CardUI.elFloatingCardHolderLeft3);
+      break;
+    case 'spellLeft4c':
+      CardUI.selectCardByIndex(3, CardUI.elFloatingCardHolderLeft3);
+      break;
+    case 'spellLeft5c':
+      CardUI.selectCardByIndex(4, CardUI.elFloatingCardHolderLeft3);
+      break;
+    case 'spellLeft6c':
+      CardUI.selectCardByIndex(5, CardUI.elFloatingCardHolderLeft3);
+      break;
+    case 'spellLeft7c':
+      CardUI.selectCardByIndex(6, CardUI.elFloatingCardHolderLeft3);
+      break;
+    case 'spellLeft8c':
+      CardUI.selectCardByIndex(7, CardUI.elFloatingCardHolderLeft3);
+      break;
+    case 'spellLeft9c':
+      CardUI.selectCardByIndex(8, CardUI.elFloatingCardHolderLeft3);
+      break;
+
     case 'spellRight1':
       CardUI.selectCardByIndex(0, CardUI.elFloatingCardHolderRight);
       break;
@@ -422,6 +452,7 @@ function handleInputDown(keyCodeMapping: string | undefined, overworld: Overworl
     case 'spellRight9':
       CardUI.selectCardByIndex(8, CardUI.elFloatingCardHolderRight);
       break;
+
     case 'spellRight1b':
       CardUI.selectCardByIndex(0, CardUI.elFloatingCardHolderRight2);
       break;
@@ -448,6 +479,34 @@ function handleInputDown(keyCodeMapping: string | undefined, overworld: Overworl
       break;
     case 'spellRight9b':
       CardUI.selectCardByIndex(8, CardUI.elFloatingCardHolderRight2);
+      break;
+
+    case 'spellRight1c':
+      CardUI.selectCardByIndex(0, CardUI.elFloatingCardHolderRight3);
+      break;
+    case 'spellRight2c':
+      CardUI.selectCardByIndex(1, CardUI.elFloatingCardHolderRight3);
+      break;
+    case 'spellRight3c':
+      CardUI.selectCardByIndex(2, CardUI.elFloatingCardHolderRight3);
+      break;
+    case 'spellRight4c':
+      CardUI.selectCardByIndex(3, CardUI.elFloatingCardHolderRight3);
+      break;
+    case 'spellRight5c':
+      CardUI.selectCardByIndex(4, CardUI.elFloatingCardHolderRight3);
+      break;
+    case 'spellRight6c':
+      CardUI.selectCardByIndex(5, CardUI.elFloatingCardHolderRight3);
+      break;
+    case 'spellRight7c':
+      CardUI.selectCardByIndex(6, CardUI.elFloatingCardHolderRight3);
+      break;
+    case 'spellRight8c':
+      CardUI.selectCardByIndex(7, CardUI.elFloatingCardHolderRight3);
+      break;
+    case 'spellRight9c':
+      CardUI.selectCardByIndex(8, CardUI.elFloatingCardHolderRight3);
       break;
     case 'touchPadMoveCharacter':
       // This key makes it easier for players who are using a touchpad to move

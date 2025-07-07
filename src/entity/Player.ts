@@ -141,7 +141,7 @@ export function create(clientId: string, playerId: string, underworld: Underworl
     awaitingSpawn: false,
     isSpawned: false,
     // *5 for all card containers including floating card containers
-    cardsInToolbar: Array(config.NUMBER_OF_TOOLBAR_SLOTS * 5).fill(''),
+    cardsInToolbar: Array(config.NUMBER_OF_TOOLBAR_SLOTS * config.NUMBER_OF_TOOLBARS).fill(''),
     inventory: [],
     freeSpells: [],
     disabledCards: [],
