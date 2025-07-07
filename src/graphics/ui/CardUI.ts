@@ -1284,7 +1284,7 @@ function createCardElement(content: Cards.ICard, underworld?: Underworld, fullSi
     if (!hideAsUnknown && fullSize) {
       const descExtended = document.createElement('div');
       descExtended.classList.add('codex-only');
-      descExtended.style = 'color:red;';
+      descExtended.setAttribute('style', 'color:red');
       let str = '';
       if (content.omitForWizardType) {
         str += content.omitForWizardType.map(x => i18n(['disabled for', x])).join('\n');
