@@ -31,7 +31,7 @@ NEW for July:
 - Test difficulty of DM and Goru with adjusted Skill Points
 - fix: Stamina bar not updating while another player is casting
 - text tutorial for deathmason and goru
-- Test: Version mismatch jprompt in p2p
+- Test: Version mismatch jprompt in p2p - 85ece8e50b6834ad01f5e56aedf3410e71319ee7
 
 --- Archived
 - Uncomment: commits: `gate: Temporarily disable Cardmason until update`
