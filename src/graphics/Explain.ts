@@ -1,4 +1,4 @@
-import { isDeathmason } from '../entity/Player';
+import { isDeathmason, isGoru } from '../entity/Player';
 import { allUnits } from '../entity/units';
 import { elTutorialChecklistInner } from '../HTMLElements';
 import * as storage from '../storage';
@@ -75,6 +75,7 @@ export const EXPLAIN_UPGRADE_BOOKMARK = 'Upgrade Points';
 export const EXPLAIN_CARDMASON_CARDS = 'Cardmason Basics';
 export const EXPLAIN_CARDMASON_LOCK = 'Cardmason Locking Cards';
 export const EXPLAIN_CARDMASON_REDRAW = 'Cardmason Redraw';
+export const EXPLAIN_GORU = 'Goru Basics';
 interface ExplainData {
   condition?: () => boolean;
   // Returns args to pass into Jprompt
@@ -189,6 +190,9 @@ const explainMap: { [key: string]: ExplainData } = {
   [EXPLAIN_CARDMASON_REDRAW]: {
     prompt: () => ({ imageSrc: 'images/explain/redraw.gif', text: 'Cardmason Redraw Text', yesText: 'Okay' })
   },
+  [EXPLAIN_GORU]: {
+    prompt: () => ({ imageSrc: 'images/explain/goru-basics.gif', text: 'Goru Basics', yesText: 'Okay' })
+  },
 }
 globalThis.explainKeys = Object.keys(explainMap);
 export const autoExplains = [
@@ -207,6 +211,9 @@ export const autoExplainsCardmason = [
   EXPLAIN_CARDMASON_LOCK,
   EXPLAIN_CARDMASON_REDRAW
 ];
+export const autoExplainGoru = [
+  EXPLAIN_GORU,
+];
 export function autoExplain() {
   // @ts-ignore: This global isn't on the server
   if (globalThis.devUnderworld && globalThis.devUnderworld.levelIndex > 2) {
@@ -220,6 +227,16 @@ export function autoExplain() {
   }
   if (globalThis.player && isDeathmason(globalThis.player)) {
     for (let e of autoExplainsCardmason) {
+      if (!isAlreadyExplained(e)) {
+        explain(e);
+        // Stop after finding one that needs explaining
+        return;
+      }
+    }
+
+  }
+  if (globalThis.player && isGoru(globalThis.player)) {
+    for (let e of autoExplainGoru) {
       if (!isAlreadyExplained(e)) {
         explain(e);
         // Stop after finding one that needs explaining
