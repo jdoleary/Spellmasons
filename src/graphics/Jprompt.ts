@@ -58,17 +58,21 @@ export default async function Jprompt(prompt: PromptArgs): Promise<boolean> {
         <button class="yes button-wrapper" ${yesKey ? `data-key="${yesKey}"` : ''}>
             <div class="button-inner">
                 ${globalThis.i18n(yesText)}
-                <div class="hotkey-badge-holder">
-                    <kbd class="hotkey-badge">${yesKeyText}</kbd>
-                </div>
+                ${yesKeyText ? `
+                    <div class="hotkey-badge-holder">
+                        <kbd class="hotkey-badge">${yesKeyText}</kbd>
+                    </div>
+                `: ''}
             </div>
         </button>
         ${noBtnText ? `<button class="no button-wrapper" data-key="${noBtnKey}"> 
             <div class="button-inner">
                 ${globalThis.i18n(noBtnText)}
-                <div class="hotkey-badge-holder">
-                    <kbd class="hotkey-badge">${noBtnKey}</kbd>
-                </div>
+                ${noBtnKey ? `
+                    <div class="hotkey-badge-holder">
+                        <kbd class="hotkey-badge">${noBtnKey}</kbd>
+                    </div>
+                `: ''}
             </div>
         </button>` : ''}
     </div>
