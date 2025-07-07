@@ -1568,7 +1568,7 @@ export function updateCardBadges(underworld: Underworld, skipAnimation?: boolean
             if (elHotkeyBadge) {
               let map = key.toString();
               try {
-                map = translateKeymappingToSingleChar(mappings[cardHolder.id as keyof typeof mappings](key) || '');
+                map = translateKeymappingToSingleChar(mappings[cardHolder.id as keyof typeof mappings](key) || '') || '';
               } catch (_) {
                 map = '';
               }
