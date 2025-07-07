@@ -1133,18 +1133,17 @@ export function takeDamage(damageArgs: damageArgs, underworld: Underworld, predi
   }
 }
 
+// Turns decimals into UI friendly numbers
+function txt(attribute: number): number {
+  // We use ceil so 0.3 health doesn't display as 0 health
+  return Math.ceil(attribute);
+}
 export function syncPlayerHealthManaUI(underworld: Underworld) {
   if (globalThis.headless) { return; }
   if (!(globalThis.player && elHealthBar && elManaBar && elStaminaBar && elHealthLabel && elManaLabel && elStaminaBarLabel)) {
     return
   }
   const predictionPlayerUnit = underworld.unitsPrediction.find(u => u.id == globalThis.player?.unit.id);
-
-  // Turns decimals into UI friendly numbers
-  function txt(attribute: number): number {
-    // We use ceil so 0.3 health doesn't display as 0 health
-    return Math.ceil(attribute);
-  }
 
   const unit = globalThis.player.unit;
   const shieldAmount = unit.modifiers.shield?.quantity || 0;
@@ -1326,17 +1325,24 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
     }
   }
 
+  syncStaminaBar();
   const staminaLeft = Math.max(0, unit.stamina);
-  elStaminaBar.style["width"] = `${100 * unit.stamina / unit.staminaMax}%`;
-  // At the end of the level when stamina is set super high, just show their max stamina so that
-  // it appears that moving after level end doesn't decrease your stamina
-  elStaminaBarLabel.innerHTML = staminaLeft > 100_000 ? `${txt(unit.staminaMax)}` : `${txt(staminaLeft)}`;
   if (staminaLeft <= 0 && !player?.endedTurn) {
     // Now that the current player has moved, highlight the "end-turn-btn" to
     // remind them that they need to end their turn before they can move again
     document.querySelector('#end-turn-btn')?.classList.add('highlight');
   } else {
     document.querySelector('#end-turn-btn')?.classList.remove('highlight');
+  }
+}
+export function syncStaminaBar() {
+  const unit = globalThis.player?.unit;
+  if (unit) {
+    const staminaLeft = Math.max(0, unit.stamina);
+    elStaminaBar.style["width"] = `${100 * unit.stamina / unit.staminaMax}%`;
+    // At the end of the level when stamina is set super high, just show their max stamina so that
+    // it appears that moving after level end doesn't decrease your stamina
+    elStaminaBarLabel.innerHTML = staminaLeft > 100_000 ? `${txt(unit.staminaMax)}` : `${txt(staminaLeft)}`;
   }
 }
 

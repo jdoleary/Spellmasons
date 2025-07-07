@@ -28,6 +28,7 @@ NEW for July:
 - Test peer connection logging.  Limit to only in steam lobby
 - export const IS_JULY25_UPDATE_OUT = true;
 - Test difficulty of DM and Goru with adjusted Skill Points
+- fix: Stamina bar not updating while another player is casting
 
 --- Archived
 - Uncomment: commits: `gate: Temporarily disable Cardmason until update`
