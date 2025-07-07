@@ -1411,9 +1411,31 @@ function updateChargeBadge(elBadge: Element | null, charges: number = 0, skipAni
     console.warn("Err UI: Found card, but could not find associated badge element to update charges");
   }
 }
-
+function translateKeymappingToSingleChar(key: string) {
+  const mappings: { [key: string]: string } = {
+    "Backquote": "`",
+    "Minus": "-",
+    "Equal": "=",
+    "BracketLeft": "[",
+    "BracketRight": "]",
+    "Backslash": "\\",
+    "Semicolon": ";",
+    "Quote": "'",
+    "Comma": ",",
+    "Period": ".",
+    "Slash": "/",
+  }
+  if (mappings[key]) {
+    return mappings[key];
+  } else {
+    return key;
+  }
+}
 // Updates the UI mana badge for cards in hand.  To be invoked whenever a player's
 // cardUsageCounts object is modified in order to sync the UI
+
+// @ts-ignore: Hack to update badges once keybinds change
+window.updateCardBadgesOnKeybindChange = () => updateCardBadges(devUnderworld);
 export function updateCardBadges(underworld: Underworld, skipAnimation?: boolean) {
   if (globalThis.headless) { return; }
   if (globalThis.player) {
@@ -1534,10 +1556,6 @@ export function updateCardBadges(underworld: Underworld, skipAnimation?: boolean
     const cardHolders = Array.from(document.querySelectorAll('.card-holder'));
     for (let cardHolder of cardHolders) {
       if (cardHolder) {
-        if (cardHolder.id == 'floating-card-holder-left-2' || cardHolder.id == 'floating-card-holder-right-2') {
-          // -2 holders do not have hotkeys
-          continue;
-        }
         for (let x = 0; x < cardHolder.children.length && x < 10; x++) {
           // Card hotkeys start being indexed by 1 not 0
           // and the 9th card is accessible by hotkey 0 on the keyboard
@@ -1548,9 +1566,9 @@ export function updateCardBadges(underworld: Underworld, skipAnimation?: boolean
             if (elHotkeyBadge) {
               let map = key.toString();
               try {
-                map = mappings[cardHolder.id as keyof typeof mappings](key) || key.toString();
+                map = translateKeymappingToSingleChar(mappings[cardHolder.id as keyof typeof mappings](key) || '');
               } catch (_) {
-                map = key.toString();
+                map = '';
               }
               let hotkeyString = '';
               if (map.startsWith('shiftKey')) {
@@ -1577,8 +1595,8 @@ const mappings = {
   'card-hand': (x: number): string | undefined => (globalThis.controlMap[`spell${x}` as keyof typeof globalThis.controlMap] || [])[0],
   'floating-card-holder-left': (x: number): string | undefined => (globalThis.controlMap[`spellLeft${x}` as keyof typeof globalThis.controlMap] || [])[0],
   'floating-card-holder-right': (x: number): string | undefined => (globalThis.controlMap[`spellRight${x}` as keyof typeof globalThis.controlMap] || [])[0],
-  'floating-card-holder-left-2': (x: number): string | undefined => undefined,
-  'floating-card-holder-right-2': (x: number): string | undefined => undefined,
+  'floating-card-holder-left-2': (x: number): string | undefined => (globalThis.controlMap[`spellLeft${x}b` as keyof typeof globalThis.controlMap] || [])[0],
+  'floating-card-holder-right-2': (x: number): string | undefined => (globalThis.controlMap[`spellRight${x}b` as keyof typeof globalThis.controlMap] || [])[0],
 
 }
 
