@@ -459,7 +459,7 @@ export function syncLobby(underworld: Underworld) {
       } else if (p.endedTurn && underworld.turn_phase == turn_phase.PlayerTurns) {
         status = '✅ ' + i18n('Ready for next turn');
       }
-      return { name: p.name || p.playerId, clientId: p.clientId, clientConnected: p.clientConnected, status, color: colors.convertToHashColor(p.color || 0xffffff), ready: p.lobbyReady ? i18n('Ready') : i18n('Not Ready') };
+      return { name: p.name || p.playerId, clientId: p.clientId, clientConnected: p.clientConnected, status, color: colors.convertToHashColor(p.color || 0xffffff), ready: p.lobbyReady ? i18n('Ready') : i18n('Not Ready'), gameVersion: p.gameVersion };
     });
   if (underworld.players[0] != globalThis.player && exists(globalThis.player?.gameVersion) && exists(underworld.players[0]?.gameVersion) && globalThis.player?.gameVersion !== underworld.players[0]?.gameVersion) {
     const mismatchId = `${globalThis.player?.gameVersion} !== ${underworld.players[0]?.gameVersion}`;
