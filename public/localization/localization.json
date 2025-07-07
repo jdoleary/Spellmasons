@@ -779,7 +779,8 @@
         "soul debt": "Soul Debt",
         "disabled for": "Disabled for 🍞",
         "goru basics": "Goru Basics",
-        "goru-basics-explanation": "Goru uses SOUL FRAGMENTS instead of mana to cast spells.  When you get close enough to a corpse, you collect its soul fragments so that you can continue to cast spells."
+        "goru-basics-explanation": "Goru uses SOUL FRAGMENTS instead of mana to cast spells.  When you get close enough to a corpse, you collect its soul fragments so that you can continue to cast spells.",
+        "steam-lobbies-message": "Update: Steam Lobbies are now available! ❕ ❕ Steam Lobbies use a direct connection to other players which generally provides better performance and reliability compared to Community Servers.❕However, Community Servers are still provided as an alternative. ❕ ❕ Enjoy spellcrafting and thanks for playing! ❕ ~ Jordan"
     },
     {
         "language": "Français",
@@ -1561,7 +1562,8 @@
         "soul debt": "Dette d'âme",
         "disabled for": "Désactivé pour 🍞",
         "goru basics": "Bases de Goru",
-        "goru-basics-explanation": "Goru utilise des FRAGMENTS D'ÂME au lieu de mana pour lancer des sorts. Lorsque vous vous approchez suffisamment d'un corps, vous collectez ses fragments d'âme afin de pouvoir continuer à lancer des sorts."
+        "goru-basics-explanation": "Goru utilise des FRAGMENTS D'ÂME au lieu de mana pour lancer des sorts. Lorsque vous vous approchez suffisamment d'un corps, vous collectez ses fragments d'âme afin de pouvoir continuer à lancer des sorts.",
+        "steam-lobbies-message": "Mise à jour : Les salons Steam sont désormais disponibles ! ❕ ❕ Les salons Steam utilisent une connexion directe avec d'autres joueurs, ce qui offre généralement de meilleures performances et une meilleure fiabilité par rapport aux serveurs communautaires. ❕ Cependant, les serveurs communautaires sont toujours proposés en alternative. ❕ ❕ Profitez de l'art de l'enchantement et merci de jouer ! ❕ ~ Jordan"
     },
     {
         "language": "italiano",
@@ -2343,7 +2345,8 @@
         "soul debt": "Debito dell'anima",
         "disabled for": "Disabilitato per 🍞",
         "goru basics": "Basi di Goru",
-        "goru-basics-explanation": "Goru utilizza i FRAMMENTI D'ANIMA invece del mana per lanciare incantesimi. Quando ti avvicini abbastanza a un cadavere, raccogli i suoi frammenti d'anima così da poter continuare a lanciare incantesimi."
+        "goru-basics-explanation": "Goru utilizza i FRAMMENTI D'ANIMA invece del mana per lanciare incantesimi. Quando ti avvicini abbastanza a un cadavere, raccogli i suoi frammenti d'anima così da poter continuare a lanciare incantesimi.",
+        "steam-lobbies-message": "Aggiornamento: I Lobb di Steam sono ora disponibili! ❕ ❕ I Lobb di Steam usano una connessione diretta ad altri giocatori, il che generalmente offre migliori prestazioni e affidabilità rispetto ai Server Comunitari. ❕ Tuttavia, i Server Comunitari sono ancora forniti come alternativa. ❕ ❕ Buon divertimento con la creazione di incantesimi e grazie per aver giocato! ❕ ~ Jordan"
     },
     {
         "language": "Deutsche",
@@ -3125,7 +3128,8 @@
         "soul debt": "Seelenverpflichtung",
         "disabled for": "Für 🍞 deaktiviert",
         "goru basics": "Goru Grundlagen",
-        "goru-basics-explanation": "Goru verwendet Seelenfragmente anstelle von Mana, um Zauber zu wirken. Wenn du dich nahe genug an einem Leichnam befindest, sammelst du seine Seelenfragmente, damit du weiterhin Zauber wirken kannst."
+        "goru-basics-explanation": "Goru verwendet Seelenfragmente anstelle von Mana, um Zauber zu wirken. Wenn du dich nahe genug an einem Leichnam befindest, sammelst du seine Seelenfragmente, damit du weiterhin Zauber wirken kannst.",
+        "steam-lobbies-message": "Update: Steam-Lobbys sind jetzt verfügbar! ❕ ❕ Steam-Lobbys nutzen eine direkte Verbindung zu anderen Spielern, die im Allgemeinen eine bessere Leistung und Zuverlässigkeit im Vergleich zu Community-Servern bietet. ❕ Community-Server werden jedoch weiterhin als Alternative angeboten. ❕ ❕ Viel Spaß beim Zaubern und danke fürs Spielen! ❕ ~ Jordan"
     },
     {
         "language": "español",
@@ -3907,7 +3911,8 @@
         "soul debt": "Deuda de Alma",
         "disabled for": "Deshabilitado para 🍞",
         "goru basics": "Fundamentos de Goru",
-        "goru-basics-explanation": "Goru utiliza FRAGMENTOS DE ALMA en lugar de maná para lanzar hechizos. Cuando te acercas lo suficiente a un cadáver, recoges sus fragmentos de alma para que puedas seguir lanzando hechizos."
+        "goru-basics-explanation": "Goru utiliza FRAGMENTOS DE ALMA en lugar de maná para lanzar hechizos. Cuando te acercas lo suficiente a un cadáver, recoges sus fragmentos de alma para que puedas seguir lanzando hechizos.",
+        "steam-lobbies-message": "Actualización: ¡Las Lobbys de Steam ya están disponibles! ❕ ❕ Las Lobbys de Steam utilizan una conexión directa con otros jugadores, lo que generalmente proporciona un mejor rendimiento y confiabilidad en comparación con los Servidores Comunitarios. ❕ Sin embargo, los Servidores Comunitarios aún están disponibles como alternativa. ❕ ❕ ¡Disfruta de la creación de hechizos y gracias por jugar! ❕ ~ Jordan"
     },
     {
         "language": "日本",
@@ -4689,7 +4694,8 @@
         "soul debt": "魂の負債",
         "disabled for": "🍞のために無効化しました",
         "goru basics": "ゴルの基本",
-        "goru-basics-explanation": "ゴルは魔法を唱えるためにマナの代わりにソウルフラグメントを使用する。死体に近づくと、そのソウルフラグメントを集めて魔法を使い続けることができる。"
+        "goru-basics-explanation": "ゴルは魔法を唱えるためにマナの代わりにソウルフラグメントを使用する。死体に近づくと、そのソウルフラグメントを集めて魔法を使い続けることができる。",
+        "steam-lobbies-message": "アップデート: Steamロビーが利用可能になりました！ ❕ ❕ Steamロビーはプレイヤー同士の直接接続を使用しており、一般的にコミュニティサーバーに比べてパフォーマンスと信頼性が向上します。❕ただし、コミュニティサーバーも引き続き代替手段として提供されます。 ❕ ❕ 魔法製作を楽しんで、プレイしてくれてありがとう！ ❕ ~ ジョーダン"
     },
     {
         "language": "Português",
@@ -5471,7 +5477,8 @@
         "soul debt": "Dívida da Alma",
         "disabled for": "Desativado para 🍞",
         "goru basics": "Noções Básicas sobre Goru",
-        "goru-basics-explanation": "Goru usa FRAGMENTOS DA ALMA em vez de mana para lançar feitiços. Quando você se aproxima o suficiente de um cadáver, coleta seus fragmentos de alma para poder continuar lançando feitiços."
+        "goru-basics-explanation": "Goru usa FRAGMENTOS DA ALMA em vez de mana para lançar feitiços. Quando você se aproxima o suficiente de um cadáver, coleta seus fragmentos de alma para poder continuar lançando feitiços.",
+        "steam-lobbies-message": "Atualização: Salas Steam agora estão disponíveis! ❕ ❕ As Salas Steam utilizam uma conexão direta com outros jogadores, o que geralmente oferece melhor desempenho e confiabilidade em comparação com os Servidores Comunitários.❕No entanto, os Servidores Comunitários ainda estão disponíveis como uma alternativa. ❕ ❕ Aproveite a criação de feitiços e obrigado por jogar! ❕ ~ Jordan"
     },
     {
         "language": "عربى",
@@ -6253,7 +6260,8 @@
         "soul debt": "دين الروح",
         "disabled for": "معاق ل🍞",
         "goru basics": "أساسيات جورو",
-        "goru-basics-explanation": "يستخدم غورُو شظايا الروح بدلاً من المانا لنسج التعويذات. عندما تقترب بما يكفي من جثة، تجمع شظايا روحها لكي تتمكن من الاستمرار في نثر التعويذات."
+        "goru-basics-explanation": "يستخدم غورُو شظايا الروح بدلاً من المانا لنسج التعويذات. عندما تقترب بما يكفي من جثة، تجمع شظايا روحها لكي تتمكن من الاستمرار في نثر التعويذات.",
+        "steam-lobbies-message": "تحديث: الخزائن المتاحة الآن على ستيم! ❕ ❕ تستخدم خزائن ستيم اتصالاً مباشراً مع لاعبين آخرين مما يوفر عادةً أداءً وموثوقية أفضل مقارنةً بالخوادم المجتمعية. ❕ ومع ذلك، لا تزال الخوادم المجتمعية متاحة كبديل. ❕ ❕ استمتع بصناعة التعويذات وشكرًا للعب! ❕ ~ جوردان"
     },
     {
         "language": "한국어",
@@ -7035,7 +7043,8 @@
         "soul debt": "영혼의 빚",
         "disabled for": "🍞를 위해 비활성화됨",
         "goru basics": "고루 기초",
-        "goru-basics-explanation": "고루는 마나 대신 영혼 조각을 사용하여 주문을 시전합니다. 시체에 가까이 다가가면 영혼 조각을 수집하여 계속해서 주문을 시전할 수 있습니다."
+        "goru-basics-explanation": "고루는 마나 대신 영혼 조각을 사용하여 주문을 시전합니다. 시체에 가까이 다가가면 영혼 조각을 수집하여 계속해서 주문을 시전할 수 있습니다.",
+        "steam-lobbies-message": "업데이트: 스팀 로비가 이제 이용 가능합니다! ❕ ❕ 스팀 로비는 다른 플레이어와의 직접 연결을 사용하여 일반적으로 커뮤니티 서버에 비해 더 나은 성능과 안정성을 제공합니다. ❕ 그러나 커뮤니티 서버는 여전히 대안으로 제공됩니다. ❕ ❕ 마법 제작을 즐기시고 게임을 플레이해 주셔서 감사합니다! ❕ ~ 조던"
     },
     {
         "language": "Русский",
@@ -7817,7 +7826,8 @@
         "soul debt": "Долг души",
         "disabled for": "Отключено для 🍞",
         "goru basics": "Основы Гору",
-        "goru-basics-explanation": "Гору использует ДУХОВНЫЕ ФРАГМЕНТЫ вместо маны для колдовства. Когда вы подходите достаточно близко кCorpse, вы собираете его душевные фрагменты, чтобы продолжать колдовать заклинания."
+        "goru-basics-explanation": "Гору использует ДУХОВНЫЕ ФРАГМЕНТЫ вместо маны для колдовства. Когда вы подходите достаточно близко кCorpse, вы собираете его душевные фрагменты, чтобы продолжать колдовать заклинания.",
+        "steam-lobbies-message": "Обновление: Теперь доступны лобби Steam! ❕ ❕ Лобби Steam используют прямое соединение с другими игроками, что обычно обеспечивает лучшую производительность и надежность по сравнению с Коммунальными серверами. ❕ Однако коммунальные серверы по-прежнему доступны в качестве альтернативы. ❕ ❕ Наслаждайтесь созданием заклинаний и спасибо за игру! ❕ ~ Джордан"
     },
     {
         "language": "中文(简)",
@@ -8599,7 +8609,8 @@
         "soul debt": "灵魂债务",
         "disabled for": "为🍞禁用",
         "goru basics": "戈鲁基础知识",
-        "goru-basics-explanation": "戈鲁使用灵魂碎片代替法力来施法。当你靠近尸体时，你会收集到它的灵魂碎片，以便你能够继续施法。"
+        "goru-basics-explanation": "戈鲁使用灵魂碎片代替法力来施法。当你靠近尸体时，你会收集到它的灵魂碎片，以便你能够继续施法。",
+        "steam-lobbies-message": "更新：Steam 大厅现已可用！ ❕ ❕ Steam 大厅通过与其他玩家的直接连接，通常提供比社区服务器更好的性能和可靠性。❕但社区服务器仍然作为替代方案提供。❕ ❕ 享受施法乐趣，感谢您的游戏体验！ ❕ ~ 乔丹"
     },
     {
         "language": "中文(繁)",
@@ -9381,7 +9392,8 @@
         "soul debt": "靈魂債務",
         "disabled for": "禁用🍞",
         "goru basics": "哥魯基礎知識",
-        "goru-basics-explanation": "戈魯使用靈魂碎片來施放法術，而不是使用魔法值。當你靠近屍體時，可以收集到它的靈魂碎片，以便繼續施放法術。"
+        "goru-basics-explanation": "戈魯使用靈魂碎片來施放法術，而不是使用魔法值。當你靠近屍體時，可以收集到它的靈魂碎片，以便繼續施放法術。",
+        "steam-lobbies-message": "更新：Steam 大廳現在已經可用！ ❕ ❕ Steam 大廳使用與其他玩家的直接連接，相較於社區伺服器通常能提供更好的性能和可靠性。❕然而，社區伺服器仍然可以作為替代選擇。❕ ❕ 享受施法創作，感謝你的遊玩！ ❕ ~ 喬丹"
     },
     {
         "language": "Polski",
@@ -10163,7 +10175,8 @@
         "soul debt": "Dług Duszy",
         "disabled for": "Wyłączone dla 🍞",
         "goru basics": "Podstawy Goru",
-        "goru-basics-explanation": "Goru używa FRAGMENTÓW DUSZY zamiast many do rzucania zaklęć. Gdy zbliżysz się wystarczająco blisko do ciała, zbierasz jego fragmenty duszy, aby móc kontynuować rzucanie zaklęć."
+        "goru-basics-explanation": "Goru używa FRAGMENTÓW DUSZY zamiast many do rzucania zaklęć. Gdy zbliżysz się wystarczająco blisko do ciała, zbierasz jego fragmenty duszy, aby móc kontynuować rzucanie zaklęć.",
+        "steam-lobbies-message": "Aktualizacja: Lobby Steam są teraz dostępne! ❕ ❕ Lobby Steam wykorzystują bezpośrednie połączenie z innymi graczami, co zazwyczaj zapewnia lepszą wydajność i niezawodność w porównaniu do serwerów społecznościowych. ❕ Jednak nadal dostępne są serwery społecznościowe jako alternatywa. ❕ ❕ Ciesz się tworzeniem zaklęć i dziękujemy za grę! ❕ ~ Jordan"
     },
     {
         "language": "Dutch",
@@ -10912,7 +10925,7 @@
         "deathmason locking cards": "Doodsmason Vergrendelen Kaarten",
         "deathmason redraw": "Doodsmaker Hertekenning",
         "deathmason basics text": "De Doodsmetselaar heeft een beperkt aantal kaarten om te gebruiken - maar kaarten kosten geen mana meer om te spelen.❕❕Elke beurt gooi je al je kaarten weg en trek je opnieuw kaarten tot aan je maximale handgrootte.",
-        "deathmason locking cards text": "Je kunt voorkomen dat een kaart wordt afgevoerd door deze te \"vergrendelen\".❕❕Om een kaart te vergrendelen, klik je op het hangslotpictogram in de rechterbovenhoek.❕❕Kaarten kunnen niet tussen niveaus worden opgeslagen, alleen tussen beurten.",
+        "deathmason locking cards text": "Update: Steam Lobbies are now available! ❕❕ Steam Lobbies use a direct connection to other players which generally provides better performance and reliability compared to Community Servers.❕However, Community Servers are still provided as an alternative. ❕❕ Enjoy spellcrafting and thanks for playing! ❕ ~ Jordan",
         "deathmason redraw text": "Als je in een beurt andere kaarten nodig hebt, kun je al je ontgrendelde kaarten afleggen en 1 kaart hertekenen voor elke 2 afgelegde kaarten.",
         "spell_target_submerged": "Richt op 🍞 eenheden die ondergedompeld zijn in vloeistof. Stapelbaar",
         "target submerged": "Doel Onderwater",
@@ -10945,7 +10958,8 @@
         "soul debt": "Zielenschuld",
         "disabled for": "Uitgeschakeld voor 🍞",
         "goru basics": "Goru Basisprincipes",
-        "goru-basics-explanation": "Goru gebruikt ZIELFRAGMENTEN in plaats van mana om spreuken uit te spreken. Wanneer je dichtbij een lijk komt, verzamel je zijn zielfragmenten zodat je verder spreuken kunt blijven werpen."
+        "goru-basics-explanation": "Goru gebruikt ZIELFRAGMENTEN in plaats van mana om spreuken uit te spreken. Wanneer je dichtbij een lijk komt, verzamel je zijn zielfragmenten zodat je verder spreuken kunt blijven werpen.",
+        "steam-lobbies-message": "Update: Steam Lobbies zijn nu beschikbaar! ❕ ❕ Steam Lobbies maken gebruik van een directe verbinding met andere spelers, wat over het algemeen betere prestaties en betrouwbaarheid biedt in vergelijking met Community Servers. ❕ Echter, Community Servers blijven als alternatief beschikbaar. ❕ ❕ Geniet van het spreukenmaken en bedankt voor het spelen! ❕ ~ Jordan"
     },
     {
         "language": "Предреформенный русскій",
@@ -11727,6 +11741,7 @@
         "soul debt": "",
         "disabled for": "",
         "goru basics": "",
-        "goru-basics-explanation": ""
+        "goru-basics-explanation": "",
+        "steam-lobbies-message": ""
     }
 ]
