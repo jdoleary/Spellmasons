@@ -181,7 +181,7 @@ export function visualPolymorphPlayerUnit(targetUnit: Unit.IUnit, toSourceUnit: 
       // short circuit, already the correct sprite
       return;
     }
-    targetUnit.defaultImagePath = toSourceUnit.unitProps.defaultImagePath || targetUnit.defaultImagePath;
+    targetUnit.defaultImagePath = toSourceUnit.unitProps.defaultImagePath || toSourceUnit.animations.idle || targetUnit.defaultImagePath;
     targetUnit.animations = toSourceUnit.animations || targetUnit.animations;
     targetUnit.sfx = toSourceUnit.sfx || targetUnit.sfx;
     targetUnit.bloodColor = toSourceUnit.unitProps.bloodColor || targetUnit.bloodColor;

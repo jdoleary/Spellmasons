@@ -119,6 +119,8 @@ export function doCloneUnit(unit: Unit.IUnit, underworld: Underworld, prediction
         return lastId;
       }, 0) + 1;
     }
+    clone.animations = { ...unit.animations };
+    clone.defaultImagePath = unit.defaultImagePath;
     // If the cloned unit is player controlled, make them be controlled by the AI
     if (clone.unitType == UnitType.PLAYER_CONTROLLED) {
       clone.unitType = UnitType.AI;

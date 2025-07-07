@@ -14,6 +14,8 @@ import { slashCardId } from '../../cards/slash';
 import { clone_id } from '../../cards/clone';
 import { ultra_clone_id } from '../../cards/clone2';
 import { GORU_ATTACK_IMAGE_PATH, GORU_DEFAULT_IMAGE_PATH } from './goru';
+import { suffocateCardId } from '../../cards/suffocate';
+import { poisonCardId } from '../../cards/poison';
 
 export const spellmasonUnitId = 'Spellmason';
 const playerUnit: UnitSource = {
@@ -30,6 +32,8 @@ const playerUnit: UnitSource = {
   },
   // This is how a user unit would act if controlled by AI (this can happen if you clone yourself)
   action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
+    const isGoru = unit.defaultImagePath == GORU_DEFAULT_IMAGE_PATH;
+    const isDeathmason = exists(unit.charges);
     const attackTarget = attackTargets && attackTargets[0];
     // If target is not a unit, we need to get the targeting info again, because
     // getUnitAttackTargets only allows for returning unit targets, and AI Spellmasons
@@ -42,9 +46,22 @@ const playerUnit: UnitSource = {
 
     // Attack
     if (vec2Target && ((attackTarget && canAttackTarget) || (!Unit.isUnit(groundTarget) && isVec2(groundTarget)))) {
-      const cardIds = unit.modifiers[teachCardId]?.spell || [slashCardId];
+      let cardIds = unit.modifiers[teachCardId]?.spell || [slashCardId];
       const cards = getCardsFromIds(cardIds);
-      const cost = calculateCost(cards, {})
+      let cost = calculateCost(cards, {})
+
+      // Because goru and deathmason don't have mana and it would be unreasonable for clones to operate with cards/souls
+      // I've disabled Teach for goru and deathmason clones and just made their casts free
+      if (isGoru) {
+        cardIds = [suffocateCardId];
+        cost = { manaCost: 0, healthCost: 0, staminaCost: 0 };
+      }
+      // Because goru and deathmason don't have mana and it would be unreasonable for clones to operate with cards/souls
+      // I've disabled Teach for goru and deathmason clones and just made their casts free
+      if (isDeathmason) {
+        cardIds = [poisonCardId];
+        cost = { manaCost: 0, healthCost: 0, staminaCost: 0 };
+      }
       const sufficientMana = cost.manaCost <= unit.mana;
       const sufficientHealth = cost.healthCost <= unit.health;
       if (sufficientHealth && sufficientMana) {
@@ -70,6 +87,9 @@ const playerUnit: UnitSource = {
           animationKey = 'playerAttackMedium0';
         } else if (cardIds.length < 10) {
           animationKey = 'playerAttackMedium1';
+        }
+        if (isGoru) {
+          animationKey = GORU_ATTACK_IMAGE_PATH;
         }
         // end copied block
         await raceTimeout(Math.min(10_000, cardIds.length * 1_000), 'NPC Spellmason', Unit.playComboAnimation(unit, animationKey, keyMoment, { animationSpeed: 0.2, loop: false }));
