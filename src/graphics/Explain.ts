@@ -191,7 +191,7 @@ const explainMap: { [key: string]: ExplainData } = {
     prompt: () => ({ imageSrc: 'images/explain/redraw.gif', text: 'Cardmason Redraw Text', yesText: 'Okay' })
   },
   [EXPLAIN_GORU]: {
-    prompt: () => ({ imageSrc: 'images/explain/goru-basics.gif', text: 'Goru Basics', yesText: 'Okay' })
+    prompt: () => ({ imageSrc: 'images/explain/goru-basics.gif', text: 'goru-basics-explanation', yesText: 'Okay' })
   },
 }
 globalThis.explainKeys = Object.keys(explainMap);
