@@ -215,3 +215,9 @@ globalThis.fullyExitGame = () => {
   });
 
 }
+
+globalThis.steamworks?.subscribeToGenericErrors((msg, forceDisplay) => {
+  if (forceDisplay) {
+    globalThis.Jprompt({ text: msg, yesText: 'Okay', forceShow: true });
+  }
+});
