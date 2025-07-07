@@ -294,7 +294,7 @@ export function _getCardsFromIds(cardIds: string[], cards: { [cardId: string]: I
 }
 
 const getCardCostSum = (card: ICard) => card.manaCost + card.healthCost + (card.staminaCost || 0);
-export function cardmasonCardProbabilities(cards: ICard[]): { id: string, probability: number, card: ICard, cost: number }[] {
+export function deathmasonCardProbabilities(cards: ICard[]): { id: string, probability: number, card: ICard, cost: number }[] {
     const highestCostSum = cards.reduce((highest, cur) => {
         const cardCostSum = getCardCostSum(cur);
         return cardCostSum > highest ? cardCostSum : highest

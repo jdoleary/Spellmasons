@@ -809,25 +809,17 @@ function addToolbarListener(
   underworld: Underworld
 ) {
   element.addEventListener('contextmenu', (e) => {
-    if (document.body.classList.contains('cardmason') && globalThis.player) {
-      // Cardmason locks card for rerolling
-      const cardId = globalThis.player.cardsInToolbar[toolbarIndex];
-      if (cardId) {
-        Player.toggleCardLockedForDiscard(globalThis.player, cardId, underworld);
-      }
+    // For spellmason, right click manages inventory (probably unknown and unused since I never talk about it in tutorial)
+    if (element.classList.contains(ACTIVE_TOOLBAR_ELEMENT_CLASSNAME)) {
+      // just close the inventory
+      toggleInventory(undefined, false, underworld);
     } else {
-      // For spellmason, right click manages inventory (probably unknown and unused since I never talk about it in tutorial)
-      if (element.classList.contains(ACTIVE_TOOLBAR_ELEMENT_CLASSNAME)) {
-        // just close the inventory
-        toggleInventory(undefined, false, underworld);
-      } else {
-        document.querySelectorAll(`.${ACTIVE_TOOLBAR_ELEMENT_CLASSNAME}`).forEach(el => {
-          el.classList.remove(ACTIVE_TOOLBAR_ELEMENT_CLASSNAME);
-        })
-        // Otherwise open the inventory with the right-clicked element selected
-        element.classList.add(ACTIVE_TOOLBAR_ELEMENT_CLASSNAME)
-        toggleInventory(toolbarIndex, true, underworld);
-      }
+      document.querySelectorAll(`.${ACTIVE_TOOLBAR_ELEMENT_CLASSNAME}`).forEach(el => {
+        el.classList.remove(ACTIVE_TOOLBAR_ELEMENT_CLASSNAME);
+      })
+      // Otherwise open the inventory with the right-clicked element selected
+      element.classList.add(ACTIVE_TOOLBAR_ELEMENT_CLASSNAME)
+      toggleInventory(toolbarIndex, true, underworld);
     }
     e.preventDefault();
     e.stopPropagation();
@@ -1202,7 +1194,7 @@ function createCardElement(content: Cards.ICard, underworld?: Underworld, fullSi
   elCardHotkeyBadge.classList.add('hotkey-badge');
   elCardHotkeyBadge.innerHTML = ``;
 
-  // Add lock icon for Cardmason
+  // Add lock icon for Deathmason
   const elCardLockDiscard = document.createElement('div');
   elCardLockDiscard.classList.add('lock-discard');
   elCardInner.appendChild(elCardLockDiscard);

@@ -29,6 +29,7 @@ NEW for July:
 - export const IS_JULY25_UPDATE_OUT = true;
 - Test difficulty of DM and Goru with adjusted Skill Points
 - fix: Stamina bar not updating while another player is casting
+- text tutorial for deathmason and goru
 
 --- Archived
 - Uncomment: commits: `gate: Temporarily disable Cardmason until update`

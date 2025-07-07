@@ -72,15 +72,14 @@ export const EXPLAIN_MINI_BOSSES = 'miniboss';
 export const EXPLAIN_PING = 'Pinging';
 export const EXPLAIN_BOOKMARKS = 'Bookmarks';
 export const EXPLAIN_UPGRADE_BOOKMARK = 'Upgrade Points';
-export const EXPLAIN_CARDMASON_CARDS = 'Cardmason Basics';
-export const EXPLAIN_CARDMASON_LOCK = 'Cardmason Locking Cards';
-export const EXPLAIN_CARDMASON_REDRAW = 'Cardmason Redraw';
+export const EXPLAIN_DEATHMASON_CARDS = 'Deathmason Basics';
+export const EXPLAIN_DEATHMASON_LOCK = 'Deathmason Locking Cards';
+export const EXPLAIN_DEATHMASON_REDRAW = 'Deathmason Redraw';
 export const EXPLAIN_GORU = 'Goru Basics';
 interface ExplainData {
   condition?: () => boolean;
   // Returns args to pass into Jprompt
   prompt: () => PromptArgs;
-  forCardmason?: boolean;
 };
 
 const explainMap: { [key: string]: ExplainData } = {
@@ -181,14 +180,14 @@ const explainMap: { [key: string]: ExplainData } = {
       imageSrc: 'images/explain/skillpoints.gif', text: 'explain upgrade bookmark', yesText: 'Got it!'
     })
   },
-  [EXPLAIN_CARDMASON_CARDS]: {
-    prompt: () => ({ imageSrc: 'images/explain/cardmason-basics.gif', text: 'cardmason basics text', yesText: 'Okay' })
+  [EXPLAIN_DEATHMASON_CARDS]: {
+    prompt: () => ({ imageSrc: 'images/explain/deathmason-basics.gif', text: 'deathmason basics text', yesText: 'Okay' })
   },
-  [EXPLAIN_CARDMASON_LOCK]: {
-    prompt: () => ({ imageSrc: 'images/explain/lock-cards.gif', text: 'Cardmason Locking Cards Text', yesText: 'Okay' })
+  [EXPLAIN_DEATHMASON_LOCK]: {
+    prompt: () => ({ imageSrc: 'images/explain/lock-cards.gif', text: 'Deathmason Locking Cards Text', yesText: 'Okay' })
   },
-  [EXPLAIN_CARDMASON_REDRAW]: {
-    prompt: () => ({ imageSrc: 'images/explain/redraw.gif', text: 'Cardmason Redraw Text', yesText: 'Okay' })
+  [EXPLAIN_DEATHMASON_REDRAW]: {
+    prompt: () => ({ imageSrc: 'images/explain/redraw.gif', text: 'Deathmason Redraw Text', yesText: 'Okay' })
   },
   [EXPLAIN_GORU]: {
     prompt: () => ({ imageSrc: 'images/explain/goru-basics.gif', text: 'goru-basics-explanation', yesText: 'Okay' })
@@ -206,10 +205,10 @@ export const autoExplains = [
   EXPLAIN_FORGE_ORDER,
   EXPLAIN_BOOKMARKS,
 ];
-export const autoExplainsCardmason = [
-  EXPLAIN_CARDMASON_CARDS,
-  EXPLAIN_CARDMASON_LOCK,
-  EXPLAIN_CARDMASON_REDRAW
+export const autoExplainsDeathmason = [
+  EXPLAIN_DEATHMASON_CARDS,
+  EXPLAIN_DEATHMASON_LOCK,
+  EXPLAIN_DEATHMASON_REDRAW
 ];
 export const autoExplainGoru = [
   EXPLAIN_GORU,
@@ -226,7 +225,7 @@ export function autoExplain() {
     }
   }
   if (globalThis.player && isDeathmason(globalThis.player)) {
-    for (let e of autoExplainsCardmason) {
+    for (let e of autoExplainsDeathmason) {
       if (!isAlreadyExplained(e)) {
         explain(e);
         // Stop after finding one that needs explaining

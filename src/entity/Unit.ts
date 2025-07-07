@@ -51,7 +51,7 @@ import { ANCIENT_UNIT_ID } from './units/ancient';
 import { IPickup } from './Pickup';
 import seedrandom from 'seedrandom';
 import { slimeId } from '../modifierSlime';
-import { cardmasonCardProbabilities, isRune } from '../cards/cardUtils';
+import { deathmasonCardProbabilities, isRune } from '../cards/cardUtils';
 import { VAMPIRE_ID } from './units/vampire';
 import { growthId } from '../modifierGrowth';
 import { resurrect_id } from '../cards/resurrect';
@@ -1233,7 +1233,7 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
   elManaBar3.style["width"] = `${100 * manaRatio3}%`;
 
 
-  // Exception: Cardmason "manabar" becomes a bar that tracks the number of charges or cards the player has
+  // Exception: Deathmason "manabar" becomes a bar that tracks the number of charges or cards the player has
   if (isDeathmason(globalThis.player) && predictionPlayerUnit) {
     elManaBar.style["width"] = `0%`;
     elManaBar2.style["width"] = `0%`;
@@ -2103,7 +2103,7 @@ export function drawCharges(unit: IUnit, underworld: Underworld, count: number =
     unit.charges = {};
   }
 
-  const cardsWithManaBasedProbability = cardmasonCardProbabilities(cards);
+  const cardsWithManaBasedProbability = deathmasonCardProbabilities(cards);
   // Debug probabilities
   // console.table(cardsWithManaBasedProbability.map(c => ({ id: c.id, p: c.probability, c: c.cost })).sort((a, b) => a.p - b.p));
 
