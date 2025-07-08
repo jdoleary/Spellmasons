@@ -50,7 +50,7 @@ import { spellmasonUnitId } from '../entity/units/playerUnit';
 import { makeManaTrail, removeFloatingParticlesFor } from '../graphics/Particles';
 import { test_ignorePromiseSpy } from '../promiseSpy';
 
-export const NO_LOG_LIST = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING, MESSAGE_TYPES.MOVE_PLAYER, MESSAGE_TYPES.SET_PLAYER_POSITION];
+export const NO_LOG_LIST = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING, MESSAGE_TYPES.MOVE_PLAYER, MESSAGE_TYPES.SET_PLAYER_POSITION, MESSAGE_TYPES.PEER_PING, MESSAGE_TYPES.PEER_PONG];
 export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING, MESSAGE_TYPES.MOVE_PLAYER, MESSAGE_TYPES.SET_PLAYER_POSITION,
 MESSAGE_TYPES.PEER_PING, MESSAGE_TYPES.PEER_PONG, MESSAGE_TYPES.GET_PLAYER_CONFIG, MESSAGE_TYPES.KICKED_FROM_PEER_LOBBY, MESSAGE_TYPES.PEER_VOLUNTARY_DISCONNECT
 ];
@@ -567,7 +567,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       break;
     }
     case MESSAGE_TYPES.PEER_PONG: {
-      console.log(`Got pong after ${Date.now() - d.time}ms.`, d);
+      console.debug(`Got pong after ${Date.now() - d.time}ms.`, d);
       break;
     }
     case MESSAGE_TYPES.GET_PLAYER_CONFIG: {
