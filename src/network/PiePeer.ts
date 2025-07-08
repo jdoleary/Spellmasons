@@ -60,6 +60,7 @@ if (globalThis.steamworks) {
     console.log('Subscribe to p2p messages beta 5');
     globalThis.steamworks?.subscribeToLobbyJoinRequested(() => {
         console.log('Lobby join requested, setting Pie to P2P mode');
+        globalThis.pieLeaveRoom?.();
         globalThis.setPieToP2PMode(true);
     })
     globalThis.steamworks?.subscribeToLobbyDataUpdate(({ lobby, member, success }: { lobby: string, member: string, success: string }) => {
