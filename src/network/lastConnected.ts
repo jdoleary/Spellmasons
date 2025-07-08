@@ -6,14 +6,13 @@ import PiePeer from "./PiePeer";
 // Check for disconnects
 let lastConnectedIntervalId: NodeJS.Timeout;
 
-// Check every 6 seconds
-const LAST_CONTACT_INTERVAL = 3_500;
-const PING_THRESHOLD = 9_000;
-const DISCONNECT_THRESHOLD = 12_000;
+// Check every X seconds
+const LAST_CONTACT_INTERVAL = 3_000;
+const PING_THRESHOLD = 6_900;
+const DISCONNECT_THRESHOLD = 10_000;
 // Time of last contact
 export const lastContact: { [peerId: string]: number } = {};
 export function checkLastConnectedOnInterval(overworld: Overworld) {
-
     // Last Contact - ping connection checking
     clearInterval(lastConnectedIntervalId);
     lastConnectedIntervalId = setInterval(() => {
@@ -31,7 +30,7 @@ function checkLastConnected(overworld: Overworld) {
         return;
     }
     const now = Date.now();
-    console.debug('Check last connected', Object.entries(lastContact).map(([id, time]) => ({ id, time: now - time })));
+    console.debug('Check last connected', Object.entries(lastContact).map(([id, time]) => ({ id, time: now - time })), now);
     for (let peer of globalThis.peers) {
         if (peer == globalThis.clientId) {
             // Do not ping self
@@ -48,7 +47,7 @@ function checkLastConnected(overworld: Overworld) {
             Player.setClientConnected(player, false, overworld.underworld)
         }
         if (timeSinceLastContact >= PING_THRESHOLD) {
-            console.log(`Last Connected: pinging peer ${peer}`)
+            console.debug(`Last Connected: pinging peer ${peer}`)
             //send ping
             globalThis.pie.sendData({
                 type: MESSAGE_TYPES.PEER_PING,

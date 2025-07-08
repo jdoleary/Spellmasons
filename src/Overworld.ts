@@ -47,13 +47,12 @@ export default function makeOverworld(pie: Pie): Overworld {
   // Setup checks for disconnections
   checkLastConnectedOnInterval(overworld);
   globalThis.steamworks?.subscribeToP2PConnectionLost((peerId) => {
-    console.warn(`Lost connection to ${peerId}`);
     if (overworld.underworld) {
       const player = overworld.underworld.players.find(p => p.clientId == peerId);
       if (player) {
         Player.setClientConnected(player, false, overworld.underworld);
       }
-      globalThis.Jprompt({ text: `Lost connection to ${player?.name || peerId}`, yesText: 'Okay', forceShow: true });
+      console.warn(`Lost connection to ${player?.name || peerId}`);
     }
   });
 
