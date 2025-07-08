@@ -4314,7 +4314,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // Clear previous players array
     const previousPlayersLength = this.players.length;
     players.forEach((p, i) => Player.load(p, i, this, isClientPlayerSourceOfTruth));
-    if (this.players.length < previousPlayersLength) {
+    if (players.length < previousPlayersLength) {
       console.error('Unexpected, syncPlayers: loaded players array is smaller');
       this.players.splice(previousPlayersLength);
     }
