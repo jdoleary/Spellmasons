@@ -19,6 +19,7 @@ export default function registerStatUpgradeModifiers() {
       description: `rune_${stat}`,
       _costPerUpgrade: 30,
       constant: true,
+      omitForWizardType: stat == 'manaMax' ? ['Deathmason', 'Goru'] : [],
       add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
         const statBumpAmount: Pick<Unit.IUnit, "attackRange" | "manaMax" | "healthMax" | "staminaMax"> = {
           attackRange: 20, //previously 8

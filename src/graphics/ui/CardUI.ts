@@ -576,7 +576,7 @@ export function renderRunesMenu(underworld: Underworld) {
   }
 
   const constantRunes: string[] = Object.entries(Cards.allModifiers).flatMap(([key, modifier]) => {
-    if (modifier._costPerUpgrade && modifier.constant) {
+    if (modifier._costPerUpgrade && modifier.constant && globalThis.player && !(modifier.omitForWizardType || []).includes(globalThis.player.wizardType)) {
       return [key];
     } else {
       return [];
