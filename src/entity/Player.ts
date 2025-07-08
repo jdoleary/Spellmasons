@@ -277,7 +277,7 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
         Unit.addModifier(player.unit, undyingModifierId, underworld, false);
       }
 
-      player.unit.soulFragments = config.GORU_PLAYER_STARTING_SOUL_FRAGMENTS + underworld.levelIndex;
+      player.unit.soulFragments = config.GORU_PLAYER_STARTING_SOUL_FRAGMENTS + Math.floor(underworld.levelIndex / 2);
       player.unit.mana = 0;
       player.unit.manaMax = 0;
     }
