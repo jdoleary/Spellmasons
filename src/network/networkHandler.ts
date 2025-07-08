@@ -87,6 +87,10 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
   }
 
   const fromPlayer = getFromPlayerViaClientId(fromClient, underworld);
+  // If we have recieved a message from the player, then the player is connected
+  if (fromPlayer && !fromPlayer.clientConnected && overworld.pie instanceof PiePeer) {
+    Player.setClientConnected(fromPlayer, true, underworld)
+  }
   switch (type) {
     case MESSAGE_TYPES.CHAT_SENT: {
       const { message } = payload;
@@ -493,33 +497,7 @@ function logHandleOnDataMessage(type: MESSAGE_TYPES, payload: any, fromClient: s
   }
 
 }
-let peerPings: {
-  peerPingId: number,
-  peerLobbyId: string,
-  time: number,
-  res: (value: string | PromiseLike<string>) => void,
-  rej: (value: string | PromiseLike<string>) => void,
-}[] = [];
-let peerPingIndex = 0;
-// Consume promise response, may not be available but not in same lobby
-globalThis.peerPing = () => {
-  if (!globalThis.pie) {
-    return Promise.reject('No globalThis.pie');
-  }
-  globalThis.pie.sendData({
-    type: MESSAGE_TYPES.PEER_PONG,
-  });
-  return raceTimeout(10_000, 'peerPing timed out', new Promise<string>((res, rej) => {
-    peerPings.push({
-      peerPingId: peerPingIndex++,
-      peerLobbyId: globalThis.peerLobbyId,
-      time: Date.now(),
-      res,
-      rej,
-    })
-  }))
 
-}
 let lastSpellMessageTime = 0;
 async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise<any> {
   currentlyProcessingOnDataMessage = d;
@@ -575,28 +553,21 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       break;
     }
     case MESSAGE_TYPES.PEER_PING: {
-      console.log('Sending Peer Ping', d);
-      // Respond with pong
-      underworld.pie.sendData({
-        type: MESSAGE_TYPES.PEER_PONG,
-        peerPingId: payload.peerPingId,
-      });
+      // Only respond with pong if current user matches the peerPingId
+      if (globalThis.clientId == payload.peerPingId) {
+        console.log('Sending Peer Ping', d);
+        // Respond with pong
+        underworld.pie.sendData({
+          type: MESSAGE_TYPES.PEER_PONG,
+          peerPingId: payload.peerPingId,
+        });
+      } else {
+        console.warn('Got PING meant for different user', payload);
+      }
       break;
     }
     case MESSAGE_TYPES.PEER_PONG: {
-      console.log(`Got pong after ${Date.now() - payload.time}ms.`, d);
-      const rec = peerPings.find(x => x.peerPingId == payload.peerPingId)
-      if (rec) {
-        if (rec.peerLobbyId !== globalThis.peerLobbyId) {
-          rec.rej('Not in same lobby');
-        } else {
-          rec.res('Connected');
-        }
-        // Delete record
-        peerPings = peerPings.filter(x => x !== rec);
-      } else {
-        console.warn('Got pong but wasn\'t waiting for any ping', d);
-      }
+      console.log(`Got pong after ${Date.now() - d.time}ms.`, d);
       break;
     }
     case MESSAGE_TYPES.GET_PLAYER_CONFIG: {

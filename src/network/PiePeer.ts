@@ -3,6 +3,7 @@ import * as storage from '../storage';
 import { v4 as uuidv4 } from 'uuid';
 import * as msgpack from "@msgpack/msgpack";
 import { MESSAGE_TYPES } from '../types/MessageTypes';
+import { lastContact } from './lastConnected';
 
 export interface SteamPeer {
     id: bigint;
@@ -356,6 +357,9 @@ export default class PiePeer {
     }
     handleMessage(message: any) {
         console.log('PiePeer handleMessage:', message);
+        if (message.fromClient) {
+            lastContact[message.fromClient] = Date.now();
+        }
         if (!this.soloMode && peerLobbyId != '' && message.peerLobbyId != peerLobbyId) {
             console.warn('Ignoring message from wrong lobby', peerLobbyId, message);
             return;
@@ -485,7 +489,9 @@ export default class PiePeer {
                         globalThis.electronSettings?.getLobbyMembers().then(members => {
                             console.log('SteamP2P, sending updated members', members);
                             for (let m of members) {
-                                globalThis.peers.add(m.steamId64.toString());
+                                const steamId = m.steamId64.toString();
+                                console.debug('Adding peer', steamId, '; own id:', clientId);
+                                globalThis.peers.add(steamId);
                             }
                             this.sendData({ type: MESSAGE_TYPES.GET_PLAYER_CONFIG });
                             peerHostBroadcastClientsPresenceChanged(this);
@@ -542,11 +548,24 @@ export default class PiePeer {
             this.handleMessage(message);
         } else {
             try {
-                // Send to all connections
-                if (globalThis.electronSettings)
-                    globalThis.p2pSend(message);
-                // Also "send" to self (handle immediately)
-                this.handleMessage(message);
+                // If wisper only send to chosen peer:
+                if (message.subType && message.subType == 'Whisper') {
+                    if (globalThis.electronSettings)
+                        if (!message.whisperClientIds || !message.whisperClientIds.length) {
+                            console.error('Attempting to whisper to empty client list', message);
+                            return;
+                        }
+                    for (let whisperTo of message.whisperClientIds) {
+                        globalThis.p2pSend(message, BigInt(whisperTo));
+                    }
+
+                } else {
+                    // Send to all connections
+                    if (globalThis.electronSettings)
+                        globalThis.p2pSend(message);
+                    // Also "send" to self (handle immediately)
+                    this.handleMessage(message);
+                }
             } catch (e) {
                 error('Err: Unable to stringify', message);
                 error(e);

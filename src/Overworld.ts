@@ -1,4 +1,3 @@
-import PieClient from "@websocketpie/client";
 import { setupDevGlobalFunctions } from "./devUtils";
 import { registerAdminContextMenuOptions } from "./graphics/ui/eventListeners";
 import { setupNetworkHandlerGlobalFunctions } from "./network/networkHandler";
@@ -17,6 +16,7 @@ import { calculateGameDifficulty } from "./Difficulty";
 import { setPlayerNameUI } from "./PlayerUtils";
 import registerAllMods from "./registerMod";
 import { upgradeCardsSource, upgradeSourceWhenDead } from "./Upgrade";
+import { checkLastConnectedOnInterval } from "./network/lastConnected";
 
 export interface Overworld {
   pie: Pie;
@@ -43,6 +43,19 @@ export default function makeOverworld(pie: Pie): Overworld {
     clients: [],
     underworld: undefined
   };
+
+  // Setup checks for disconnections
+  checkLastConnectedOnInterval(overworld);
+  globalThis.steamworks?.subscribeToP2PConnectionLost((peerId) => {
+    console.warn(`Lost connection to ${peerId}`);
+    if (overworld.underworld) {
+      const player = overworld.underworld.players.find(p => p.clientId == peerId);
+      if (player) {
+        Player.setClientConnected(player, false, overworld.underworld);
+      }
+      globalThis.Jprompt({ text: `Lost connection to ${player?.name || peerId}`, yesText: 'Okay', forceShow: true });
+    }
+  });
 
   // Initialize content
   // Note: Units must be registered before cards so that summon_generic

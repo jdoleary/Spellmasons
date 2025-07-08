@@ -236,6 +236,7 @@ declare global {
     subscribeToLobbyDataUpdate: (cb: (arg: { lobby: string, member: string, success: string }) => void) => void;
     subscribeToP2PMessages: (cb: (data: any) => void) => void;
     subscribeToGenericErrors: (cb: (msg: string, forceDisplay: boolean) => void) => void;
+    subscribeToP2PConnectionLost: (cb: (peerId: string) => void) => void;
   }
   // A target that controls what the cinematic camera is moving to
   var cinematicCameraTarget: Vec2 | undefined;
@@ -348,8 +349,6 @@ declare global {
   var isHostForStatelessPie: boolean | undefined;
   var isNullOrUndef: <T>(x: T) => x is Extract<T, null | undefined>;
   var exists: <T>(x: T) => x is NonNullable<T>;
-  // To see if connected to a peer, returns a promise, use globalThis.peerPing
-  var peerPing: () => Promise<boolean>;
   // Tracks which lobby (mine) a player is in so they can know if they are connected peer-to-peer to other players
   // Set inside ClientPresenceChanged
   var peerLobbyId: string;

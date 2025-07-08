@@ -48,10 +48,8 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs, overworld:
   // list here or else may clobber during race condition
   if (o.peerLobbyId == peerLobbyId && !globalThis.isHost(overworld.pie)) {
     for (let steamId64String of o.clients) {
-      // Add only other players as peers, never self
-      if (steamId64String !== globalThis.clientId) {
-        globalThis.peers.add(steamId64String);
-      }
+      console.debug('Adding peer', steamId64String, '; own id:', clientId);
+      globalThis.peers.add(steamId64String);
     }
   }
 
