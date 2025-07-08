@@ -467,7 +467,7 @@ export function syncLobby(underworld: Underworld) {
       alreadyWarnedVersionMismatch.push(mismatchId);
       Jprompt({ text: i18n(`p2p-game-version-mismatch`) + `\n\n You: ${globalThis.SPELLMASONS_PACKAGE_VERSION}\n Them: ${underworld.players[0]?.gameVersion}`, yesText: 'Disconnect', noBtnText: 'continue anyway', forceShow: true }).then(doQuit => {
         if (doQuit) {
-          globalThis.pieDisconnect?.('User Quit due to version mismatch');
+          globalThis.pieLeaveRoom?.();
         }
       });
     }
