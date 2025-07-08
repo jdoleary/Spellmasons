@@ -33,6 +33,7 @@ NEW for July:
 - fix: Stamina bar not updating while another player is casting
 - text tutorial for deathmason and goru
 - Test: Version mismatch jprompt in p2p - 85ece8e50b6834ad01f5e56aedf3410e71319ee7
+- Test that syncPlayers will remove extra players locally if the host is sending a smaller players list.  Also test with a larger players list
 
 --- Archived
 - Uncomment: commits: `gate: Temporarily disable Cardmason until update`

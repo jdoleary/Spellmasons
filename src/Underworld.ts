@@ -4309,14 +4309,18 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   sendPlayerThinking(thoughts: { target?: Vec2, cardIds: string[] }) {
     sendPlayerThinkingThrottled(thoughts, this);
   }
-  syncPlayers(players: Player.IPlayerSerialized[], isClientPlayerSourceOfTruth: boolean) {
-    console.log('sync: Syncing players', JSON.stringify(players.map(p => p.playerId)));
+  syncPlayers(syncFromPlayers: Player.IPlayerSerialized[], isClientPlayerSourceOfTruth: boolean) {
+    console.log('sync: Syncing players', JSON.stringify(syncFromPlayers.map(p => p.playerId)), 'overriding: ', JSON.stringify(this.players.map(p => p.playerId)));
     // Clear previous players array
     const previousPlayersLength = this.players.length;
-    players.forEach((p, i) => Player.load(p, i, this, isClientPlayerSourceOfTruth));
-    if (players.length < previousPlayersLength) {
+    syncFromPlayers.forEach((p, i) => Player.load(p, i, this, isClientPlayerSourceOfTruth));
+    if (syncFromPlayers.length < previousPlayersLength) {
       console.error('Unexpected, syncPlayers: loaded players array is smaller');
-      this.players.splice(previousPlayersLength);
+      this.players.splice(syncFromPlayers.length);
+    }
+    if (syncFromPlayers.length > this.players.length) {
+      console.error('Unexpected, syncPlayers: loaded players array is LARGER');
+      ensureAllClientsHaveAssociatedPlayers(this.overworld, syncFromPlayers.map(p => p.clientId), syncFromPlayers.map(p => p.name), true)
     }
     if (globalThis.player?.isSpawned) {
       // If player is already spawned, clear spawn instructions
