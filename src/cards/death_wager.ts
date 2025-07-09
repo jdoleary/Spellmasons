@@ -29,6 +29,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.FORBIDDEN],
     allowNonUnitTarget: true,
+    omitForWizardType: ['Deathmason', 'Goru'],
     thumbnail: 'spellIconDeathWager.png',
     description: ['spell_death_wager'],
     effect: async (state, card, quantity, underworld, prediction) => {

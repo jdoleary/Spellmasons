@@ -22,6 +22,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.RARE],
     thumbnail: 'spellIconManaSteal.png',
+    omitForWizardType: ['Deathmason', 'Goru'],
     description: ['spell_mana_steal', base_mana_stolen.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
