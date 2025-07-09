@@ -2107,7 +2107,7 @@ export function drawCharges(unit: IUnit, underworld: Underworld, count: number =
   // Debug probabilities
   // console.table(cardsWithManaBasedProbability.map(c => ({ id: c.id, p: c.probability, c: c.cost })).sort((a, b) => a.p - b.p));
 
-  const TOTAL_ANIMATION_TIME = 2000; // Fixed total duration in milliseconds
+  const TOTAL_ANIMATION_TIME = math.lerp(500, 2000, Math.min(1, count / 16));
   const delayBetweenAnimations = count > 1 ? TOTAL_ANIMATION_TIME / (count - 1) : 0;
 
   for (let i = 0; i < count; i++) {
