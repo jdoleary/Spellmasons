@@ -36,6 +36,7 @@ NEW for July:
 - Test that syncPlayers will remove extra players locally if the host is sending a smaller players list.  Also test with a larger players list
 - Verify that peer send isn't sending message to self
 - Verify non host can't see difficulty options
+- Test Goru soul fragment desync by swappign with corpses as soon as you kill them in multiplayer to see if the number of soul fragments remains stable
 
 --- Archived
 - Uncomment: commits: `gate: Temporarily disable Cardmason until update`

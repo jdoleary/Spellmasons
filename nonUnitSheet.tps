@@ -787,6 +787,8 @@
             <key type="filename">images/tiles/water/wall.png</key>
             <key type="filename">images/tiles/water/wallN.png</key>
             <key type="filename">public/images/spell/blank.png</key>
+            <key type="filename">public/images/spell/discardAll.png</key>
+            <key type="filename">public/images/spell/discardOne.png</key>
             <key type="filename">public/images/spell/resurrect.png</key>
             <key type="filename">public/images/spell/spellIconAlchemize.png</key>
             <key type="filename">public/images/spell/spellIconArrow.png</key>
@@ -842,6 +844,10 @@
             <key type="filename">public/images/spell/spellIconMegaSlash.png</key>
             <key type="filename">public/images/spell/spellIconMerge.png</key>
             <key type="filename">public/images/spell/spellIconMeteor.png</key>
+            <key type="filename">public/images/spell/spellIconNovaCorpse.png</key>
+            <key type="filename">public/images/spell/spellIconNovaPain.png</key>
+            <key type="filename">public/images/spell/spellIconNovaTarget.png</key>
+            <key type="filename">public/images/spell/spellIconNukitsuke.png</key>
             <key type="filename">public/images/spell/spellIconPierce.png</key>
             <key type="filename">public/images/spell/spellIconPlusRadius.png</key>
             <key type="filename">public/images/spell/spellIconPoison.png</key>
@@ -873,6 +879,7 @@
             <key type="filename">public/images/spell/spellIconSpikePit.png</key>
             <key type="filename">public/images/spell/spellIconSplit.png</key>
             <key type="filename">public/images/spell/spellIconStomp.png</key>
+            <key type="filename">public/images/spell/spellIconSubmerge.png</key>
             <key type="filename">public/images/spell/spellIconSuffocate.png</key>
             <key type="filename">public/images/spell/spellIconSuffocate2.png</key>
             <key type="filename">public/images/spell/spellIconSummon_ancient.png</key>
@@ -910,6 +917,7 @@
             <key type="filename">public/images/spell/spellIconTargetDisk.png</key>
             <key type="filename">public/images/spell/spellIconTargetInjured.png</key>
             <key type="filename">public/images/spell/spellIconTargetKind.png</key>
+            <key type="filename">public/images/spell/spellIconTargetLiquid.png</key>
             <key type="filename">public/images/spell/spellIconTargetSimilar.png</key>
             <key type="filename">public/images/spell/spellIconTargetSimilar2.png</key>
             <key type="filename">public/images/spell/spellIconTeach.png</key>
@@ -1213,6 +1221,21 @@
                 <rect>17,17,34,34</rect>
                 <key>scale9Paddings</key>
                 <rect>17,17,34,34</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">public/images/spell/discard-all.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0,0</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>21,19,41,37</rect>
+                <key>scale9Paddings</key>
+                <rect>21,19,41,37</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
