@@ -14,6 +14,7 @@ const originalMapping = Object.freeze({
   touchPadMoveCharacter: ['KeyG'],
   openChat: ['KeyT'],
   adminPowerBar: ['ctrlKey+Space'],
+  discardCards: ['KeyB'],
   spell1: ['Digit1'],
   spell2: ['Digit2'],
   spell3: ['Digit3'],

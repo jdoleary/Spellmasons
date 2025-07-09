@@ -250,6 +250,9 @@ function handleInputDown(keyCodeMapping: string | undefined, overworld: Overworl
         toggleMenu();
       }
       break;
+    case 'discardCards':
+      document.getElementById('discard-charges-icon')?.click();
+      break;
     case 'openChat':
       if (!isSinglePlayer()) {
         document.body.classList.toggle('showChat', true);

@@ -3077,6 +3077,11 @@ body.wizardtype-deathmason .card.is-discard-locked .lock-discard {
   transform: translate(0, 1px);
 }
 
+#discard-charges-icon .hotkey-badge-holder {
+  bottom: -8px;
+  right: 6px;
+}
+
 .codex-only {
   display: none;
 }

@@ -5,7 +5,7 @@ import * as config from '../../config';
 import {
   clearSpellEffectProjection, modifiersToText, runPredictions,
 } from '../PlanningView';
-import { calculateCost, calculateCostForSingleCard, levelsUntilCardIsEnabled } from '../../cards/cardUtils';
+import { calculateCostForSingleCard, levelsUntilCardIsEnabled } from '../../cards/cardUtils';
 import floatingText, { centeredFloatingText } from '../FloatingText';
 import { NUMBER_OF_TOOLBAR_SLOTS } from '../../config';
 import Underworld from '../../Underworld';
@@ -18,7 +18,6 @@ import { chooseBookmark } from '../../views';
 import { quantityWithUnit } from '../../cards/util';
 import { presentRunes } from '../../jmath/RuneUtil';
 import { sellCardId } from '../../cards/sell';
-import { countCharges, drawCharges } from '../../entity/Unit';
 
 const elCardHolders = document.getElementById('card-holders') as HTMLElement;
 const elInvContent = document.getElementById('inventory-content') as HTMLElement;
@@ -185,11 +184,17 @@ export function setupCardUIEventListeners(overworld: Overworld) {
           return;
         }
         const drawNew = Math.floor(countDiscard / config.DEATHMASON_DISCARD_DRAW_RATIO);
+        // Don't show if you wont draw any new cards
+        if (drawNew <= 0) {
+          playSFXKey('deny');
+          centeredFloatingText(['cannot-discard'], 'red');
+          return;
+        }
         Jprompt({
           text: ['confirm-discard', countDiscard.toString(), drawNew.toString()],
           yesText: 'Yes',
-          yesKey: 'Enter',
-          yesKeyText: 'Enter',
+          yesKey: globalThis.controlMap.discardCards[0],
+          yesKeyText: mappingToLabel(globalThis.controlMap.discardCards[0] || ''),
           noBtnText: 'Cancel',
           noBtnKey: 'Escape',
         }).then(confirm => {
@@ -1413,6 +1418,27 @@ function updateChargeBadge(elBadge: Element | null, charges: number = 0, skipAni
     console.warn("Err UI: Found card, but could not find associated badge element to update charges");
   }
 }
+
+// Returns a human readable label for a given key mapping
+function mappingToLabel(key: string) {
+  let map = ''
+  try {
+    map = translateKeymappingToSingleChar(key) || '';
+  } catch (_) {
+    map = '';
+  }
+  let hotkeyString = '';
+  if (map.startsWith('shiftKey')) {
+    hotkeyString += SHIFT_SYMBOL;
+  }
+  if (map.startsWith('ctrlKey')) {
+    hotkeyString += CTRL_SYMBOL;
+  }
+  hotkeyString += map.charAt(map.length - 1);
+
+  return hotkeyString;
+
+}
 function translateKeymappingToSingleChar(key: string) {
   const mappings: { [key: string]: string } = {
     "Backquote": "`",
@@ -1566,27 +1592,15 @@ export function updateCardBadges(underworld: Underworld, skipAnimation?: boolean
           if (card) {
             const elHotkeyBadge = card.querySelector('.hotkey-badge') as HTMLElement;
             if (elHotkeyBadge) {
-              let map = key.toString();
-              try {
-                map = translateKeymappingToSingleChar(mappings[cardHolder.id as keyof typeof mappings](key) || '') || '';
-              } catch (_) {
-                map = '';
-              }
-              let hotkeyString = '';
-              if (map.startsWith('shiftKey')) {
-                hotkeyString += SHIFT_SYMBOL;
-              }
-              if (map.startsWith('ctrlKey')) {
-                hotkeyString += CTRL_SYMBOL;
-              }
-              hotkeyString += map.charAt(map.length - 1);
-
-
-              elHotkeyBadge.innerHTML = hotkeyString;
+              elHotkeyBadge.innerHTML = mappingToLabel(mappings[cardHolder.id as keyof typeof mappings](key) || '')
             }
           }
         }
       }
+    }
+    const discardAllHotkey = elDiscardAll.querySelector('.hotkey-badge') as HTMLElement;
+    if (discardAllHotkey) {
+      discardAllHotkey.innerText = mappingToLabel(globalThis.controlMap.discardCards[0] || '');
     }
 
   }
