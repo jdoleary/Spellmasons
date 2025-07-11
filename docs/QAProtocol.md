@@ -37,6 +37,7 @@ NEW for July:
 - Verify that peer send isn't sending message to self
 - Verify non host can't see difficulty options
 - Test Goru soul fragment desync by swappign with corpses as soon as you kill them in multiplayer to see if the number of soul fragments remains stable
+- set IS_JULY25_UPDATE_OUT to true
 
 --- Archived
 - Uncomment: commits: `gate: Temporarily disable Cardmason until update`
