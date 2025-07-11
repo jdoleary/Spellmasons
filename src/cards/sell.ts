@@ -25,6 +25,7 @@ const spell: Spell = {
     sfx: '',
     omitForWizardType: ['Deathmason'],
     description: ['spell_sell'],
+    frontload: true,
     effect: async (state, card, quantity, underworld, prediction) => {
       // Clear out the rest of the spell so it doesn't actually cast it
       const sellIndex = state.cardIds.indexOf(sellCardId);

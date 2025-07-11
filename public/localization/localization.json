@@ -681,7 +681,7 @@
         "unstable": "Unstable",
         "unstable_description": "Teleports to a random location at the end of its turn.",
         "sell": "Sell",
-        "spell_sell": "Sells the following spells in the spell combination in exchange for SP.  Rarer spells are worth more. Sold spells will be REMOVED from your spell book.",
+        "spell_sell": "Sells all of the spells in the spell combination in exchange for SP.  Rarer spells are worth more. Sold spells will be REMOVED from your spell book.",
         "screenshake": "Screenshake",
         "blood and gore": "Blood and Gore",
         "quicksave-delete-note": "Quicksaves are kept for up to 2 days",
