@@ -26,7 +26,7 @@ import { HasLife, HasMana, HasSpace, HasStamina } from './Type';
 import { collideWithLineSegments } from '../jmath/moveWithCollision';
 import * as inLiquid from '../inLiquid';
 import { Modifier } from '../cards/util';
-import { explain, EXPLAIN_DEATH, EXPLAIN_MINI_BOSSES } from '../graphics/Explain';
+import { explain, EXPLAIN_DEATH, EXPLAIN_MINI_BOSSES, EXPLAIN_SOUL_DEBT } from '../graphics/Explain';
 import { ARCHER_ID } from './units/archer';
 import { BLOOD_ARCHER_ID } from './units/blood_archer';
 import * as Obstacle from './Obstacle';
@@ -1251,6 +1251,9 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
     elManaLabel.dataset.soulFragments = predictionPlayerUnit.soulFragments.toString();
     elManaLabel.classList.toggle('souldebt', inSoulDebt)
     elManaLabel.innerHTML = text;
+    if (inSoulDebt) {
+      explain(EXPLAIN_SOUL_DEBT);
+    }
 
 
   } else {

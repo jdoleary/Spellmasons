@@ -1,3 +1,4 @@
+import { GORU_SOUL_DEBT_PROPORTION_HEALTH_COST } from '../config';
 import { isDeathmason, isGoru } from '../entity/Player';
 import { allUnits } from '../entity/units';
 import { elTutorialChecklistInner } from '../HTMLElements';
@@ -76,6 +77,7 @@ export const EXPLAIN_DEATHMASON_CARDS = 'Deathmason Basics';
 export const EXPLAIN_DEATHMASON_LOCK = 'Deathmason Locking Cards';
 export const EXPLAIN_DEATHMASON_REDRAW = 'Deathmason Redraw';
 export const EXPLAIN_GORU = 'Goru Basics';
+export const EXPLAIN_SOUL_DEBT = 'Soul Debt';
 interface ExplainData {
   condition?: () => boolean;
   // Returns args to pass into Jprompt
@@ -191,6 +193,9 @@ const explainMap: { [key: string]: ExplainData } = {
   },
   [EXPLAIN_GORU]: {
     prompt: () => ({ imageSrc: 'images/explain/goru-basics.gif', text: 'goru-basics-explanation', yesText: 'Okay' })
+  },
+  [EXPLAIN_SOUL_DEBT]: {
+    prompt: () => ({ imageSrc: 'images/explain/explain-soul-debt.gif', text: ['explain_soul_debt', (GORU_SOUL_DEBT_PROPORTION_HEALTH_COST * 100).toString() + "%"], yesText: 'Okay' })
   },
 }
 globalThis.explainKeys = Object.keys(explainMap);
