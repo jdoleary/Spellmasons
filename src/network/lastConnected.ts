@@ -20,8 +20,6 @@ export function checkLastConnectedOnInterval(overworld: Overworld) {
 
     }, LAST_CONTACT_INTERVAL);
 }
-//@ts-ignore
-window.t = checkLastConnected;
 function checkLastConnected(overworld: Overworld) {
     if (!(globalThis.pie && globalThis.pie instanceof PiePeer)) {
         return;

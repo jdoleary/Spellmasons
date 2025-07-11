@@ -1463,7 +1463,7 @@ function translateKeymappingToSingleChar(key: string) {
 // cardUsageCounts object is modified in order to sync the UI
 
 // @ts-ignore: Hack to update badges once keybinds change
-window.updateCardBadgesOnKeybindChange = () => updateCardBadges(devUnderworld);
+globalThis.updateCardBadgesOnKeybindChange = () => updateCardBadges(devUnderworld);
 export function updateCardBadges(underworld: Underworld, skipAnimation?: boolean) {
   if (globalThis.headless) { return; }
   if (globalThis.player) {
