@@ -2691,6 +2691,8 @@ export default class Underworld {
 
       // Give all player units huge stamina when portal spawns for convenience.
       playerUnit.stamina = 1_000_000;
+      // Clear out soul debt
+      playerUnit.soulFragments = Math.max(0, playerUnit.soulFragments);
       // Give all players max health and mana (it will be reset anyway when they are reset for the next level
       // but this disswades them from going around to pickup potions)
       playerUnit.health = playerUnit.healthMax;
