@@ -235,7 +235,7 @@ ${explainUpdateText}
   };
 }
 
-let useP2P = false;
+let useP2P = true;
 globalThis.setPieToP2PMode = (active: boolean) => {
   if (useP2P == active) {
     console.debug(`setPieToP2PMode, do nothing already set to ${active}`);

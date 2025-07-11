@@ -161,10 +161,10 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         // Regenerate level data with new game mode information
         underworld.generateLevelData(underworld.levelIndex);
 
-        // Since svelte can't keep track of state outside of itself,
-        // any time the view switches back to the Menu it should force rerender
-        if (globalThis.refreshMenu) {
-          globalThis.refreshMenu();
+        // @ts-ignore
+        if (globalThis.rerenderGameDifficultyButtons) {
+          // @ts-ignore
+          globalThis.rerenderGameDifficultyButtons();
         }
         console.log('gamemode set to: "', gameMode, '"');
       } else {
