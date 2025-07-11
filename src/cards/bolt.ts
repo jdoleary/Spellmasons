@@ -21,6 +21,7 @@ const spell: Spell = {
     id,
     category: CardCategory.Damage,
     manaCost: 8,
+    soulFragmentCostOverride: 2,
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.UNCOMMON],

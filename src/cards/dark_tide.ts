@@ -14,6 +14,7 @@ const spell: Spell = {
     category: CardCategory.Curses,
     manaCost: 30,
     healthCost: 0,
+    soulFragmentCostOverride: 2,
     expenseScaling: 1,
     allowNonUnitTarget: true,
     ignoreRange: true,

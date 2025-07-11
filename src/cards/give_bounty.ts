@@ -13,6 +13,7 @@ const spell: Spell = {
     supportQuantity: false,
     manaCost: 200,
     healthCost: 0,
+    soulFragmentCostOverride: 6,
     expenseScaling: 1,
     costGrowthAlgorithm: 'exponential',
     probability: probabilityMap[CardRarity.FORBIDDEN],

@@ -137,6 +137,7 @@ const novas: Spell[] = [
       supportQuantity: false,
       manaCost: 30,
       healthCost: 0,
+      soulFragmentCostOverride: 1,
       expenseScaling: 1,
       sfx: 'nova',
       probability: probabilityMap[CardRarity.UNCOMMON],

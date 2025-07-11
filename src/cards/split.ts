@@ -77,6 +77,7 @@ const spell: Spell = {
     category: CardCategory.Curses,
     manaCost: 80,
     healthCost: 0,
+    soulFragmentCostOverride: 4,
     costGrowthAlgorithm: 'nlogn',
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.FORBIDDEN],
