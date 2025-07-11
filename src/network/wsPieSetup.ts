@@ -280,7 +280,8 @@ export function setupPieAndUnderworld() {
     pie.useStats = true;
     console.log('Client: Initialize Underworld');
     const overworld = makeOverworld(pie);
-    if (useP2P && isNullOrUndef(overworld.underworld)) {
+    // @ts-ignore: test_make_lobby_on_setup_pie
+    if (useP2P && isNullOrUndef(overworld.underworld) && globalThis.test_make_lobby_on_setup_pie) {
       // Since p2p uses "lobbies" instead of rooms, initialize underworld immediately if it doesn't already exist
       new Underworld(overworld, overworld.pie, Math.random().toString());
     }
