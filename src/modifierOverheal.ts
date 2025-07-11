@@ -27,7 +27,8 @@ export default function registerOverheal() {
         if (amount < 0) {
           // overheal (aka excess healing): This calculation should happen after
           // all other modifiers that would adjust the incoming healing amount
-          const overheal = (unit.health - unit.healthMax) - amount;
+          // Math.min ensures that if the unit has health over max (like from sacrifice) that doesn't contribute to the overheal amount
+          const overheal = Math.min(0, (unit.health - unit.healthMax)) - amount;
           if (overheal > 0) {
             // shieldToGive = overheal * % effectiveness/conversion rate
             const shieldToGive = Math.floor(overheal * CalcMult(modifier.quantity));
