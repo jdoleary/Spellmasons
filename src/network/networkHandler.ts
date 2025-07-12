@@ -555,7 +555,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
     case MESSAGE_TYPES.PEER_PING: {
       // Only respond with pong if current user matches the peerPingId
       if (globalThis.clientId == payload.peerPingId) {
-        console.log('Sending Peer Ping', d);
+        console.debug('Sending Peer Ping', d);
         // Respond with pong
         underworld.pie.sendData({
           type: MESSAGE_TYPES.PEER_PONG,
