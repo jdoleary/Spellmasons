@@ -13,15 +13,11 @@
 - Test tutorial ALWAYS on electron build
 - Run `npm run headless-build-only` to check tsc errors which `npm run bun-headless` will not catch
 
-NEW for July:
-- Retest pie peer
-- Test that network disruption (removing ethernet cable) notifies players of disconnect: electron:8a2254d0aee9e6150bbf27e59781d5d561b675d3
-- Test disconnection string near backupSaveName jprompt
+NEW Content for July:
 - Test deathmason discard count on multiplayer (non host)
 - Test cardmason sync on new multiplayer game
 - Test wizard picker large and small
     - Make sure wizard picker works in hotseat
-- i18n:green_portal_desc
 - check soul quantity when loading
 - deathmason locked discard cards persists on client between turn phases
 - Test that deathmason doesn't discard entire hand until beginning of next turn
@@ -32,17 +28,20 @@ NEW for July:
 - Test difficulty of DM and Goru with adjusted Skill Points
 - fix: Stamina bar not updating while another player is casting
 - text tutorial for deathmason and goru
-- Test: Version mismatch jprompt in p2p - 85ece8e50b6834ad01f5e56aedf3410e71319ee7
-- Test that syncPlayers will remove extra players locally if the host is sending a smaller players list.  Also test with a larger players list
-- Verify that peer send isn't sending message to self
-- Verify non host can't see difficulty options
 - Test Goru soul fragment desync by swappign with corpses as soon as you kill them in multiplayer to see if the number of soul fragments remains stable
+- Test hotseat with Goru and Deathmason
+
+- Peer verification
+    - [x] Test: Version mismatch jprompt in p2p - 85ece8e50b6834ad01f5e56aedf3410e71319ee7
+    - Test that syncPlayers will remove extra players locally if the host is sending a smaller players list.  Also test with a larger players list
+    - [x] Verify that peer send isn't sending message to self
+    - [x] Verify non host can't see difficulty options
+    - [x] Playing singleplayer to joining from invite
+    - [x] Play singleplayer, quit, host, invite friend, start game
+
 - set IS_JULY25_UPDATE_OUT to true
 
 --- Archived
-- Uncomment: commits: `gate: Temporarily disable Cardmason until update`
-- Uncomment: commits: `gate: Temporarily disable new spells until update`
-    - config.IS_JULY25_UPDATE_OUT
 - Test loading a saved multiplayer game
 - Test Hotseat multiplayer basics
     - Test one player dying and next player carrying on to next level and make sure they both spawn
