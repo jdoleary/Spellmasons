@@ -355,7 +355,14 @@ export function load(player: IPlayerSerialized, index: number, underworld: Under
       playerLoaded.reroll = globalThis.player.reroll;
       playerLoaded.statPointsUnspent = globalThis.player.statPointsUnspent;
       playerLoaded.lockedDiscardCards = globalThis.player.lockedDiscardCards;
-      // TODO load wizard tye here
+      if (playerLoaded.wizardType !== globalThis.player.wizardType) {
+        console.warn('Caught desync, wizardType', playerLoaded.wizardType, globalThis.player.wizardType)
+      }
+      playerLoaded.wizardType = globalThis.player.wizardType;
+      if (playerLoaded.drawChargesSeed !== globalThis.player.drawChargesSeed) {
+        console.warn('Caught desync, drawChargesSeed', playerLoaded.drawChargesSeed, globalThis.player.drawChargesSeed)
+      }
+      playerLoaded.drawChargesSeed = globalThis.player.drawChargesSeed;
 
     }
   }
