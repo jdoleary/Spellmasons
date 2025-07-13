@@ -207,9 +207,15 @@ export function setupCardUIEventListeners(overworld: Overworld) {
 
           // Discard all current charges and draw some fraction of discarded charges
           if (globalThis.player) {
+            if (!globalThis.player.drawChargesSeed) {
+              globalThis.player.drawChargesSeed = 0;
+            }
+            globalThis.player.drawChargesSeed++;
+
             overworld.underworld.pie.sendData({
               type: MESSAGE_TYPES.DEATHMASON_DISCARD_CARDS,
               countDiscard,
+              drawChargesSeed: globalThis.player.drawChargesSeed
             });
 
           }

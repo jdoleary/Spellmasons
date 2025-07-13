@@ -2088,10 +2088,6 @@ export function drawCharges(unit: IUnit, underworld: Underworld, count: number =
     console.error('No associated player found for unit to drawCharges from');
     return;
   }
-  if (!player.drawChargesSeed) {
-    player.drawChargesSeed = 0;
-  }
-  player.drawChargesSeed++;
   if (!isDeathmason(player)) {
     console.warn('Aborting drawCharges for non-wizardtype-deathmason player');
     return;

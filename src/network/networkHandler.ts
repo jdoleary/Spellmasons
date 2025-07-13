@@ -328,6 +328,9 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       if (fromPlayer && overworld.underworld) {
         const countDiscard = Player.discardCards(fromPlayer, overworld.underworld, { dryRun: true });
         if (payload.countDiscard == countDiscard) {
+          if(payload.drawChargesSeed !== underworld){
+            fromPlayer.drawChargesSeed = payload.drawChargesSeed;
+          }
           Player.discardCards(fromPlayer, overworld.underworld, {});
           const drawNew = Math.floor(countDiscard / config.DEATHMASON_DISCARD_DRAW_RATIO);
           Unit.drawCharges(fromPlayer.unit, overworld.underworld, drawNew);
