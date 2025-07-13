@@ -7,7 +7,7 @@ import type PieClient from '@websocketpie/client';
 import type { Vec2 } from '../jmath/Vec';
 import type { LevelData } from '../Underworld';
 import type { View } from '../View';
-import type { RequestToJoin, Faction, JEmitter, Mod, Pie } from './commonTypes';
+import type { RequestToJoin, Faction, JEmitter, Mod, Pie, WizardType } from './commonTypes';
 import type { IPickup } from '../entity/Pickup';
 import type { IHostApp } from '../network/networkUtil';
 import type { LanguageMapping, Localizable } from '../localization';
@@ -264,6 +264,7 @@ declare global {
     name: string,
     color: number,
     colorMagic: number,
+    wizardType?: WizardType
   }[] | undefined;
   var limitParticleEmitters: number | undefined;
   var UIEasyOnTheEyes: boolean | undefined;

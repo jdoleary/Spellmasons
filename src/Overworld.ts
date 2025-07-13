@@ -145,6 +145,9 @@ export function ensureAllClientsHaveAssociatedPlayers(overworld: Overworld, clie
           player.name = config.name;
           player.color = config.color;
           player.colorMagic = config.colorMagic;
+          if (config.wizardType) {
+            Player.setWizardType(player, config.wizardType);
+          }
           setPlayerNameUI(player);
         }
       }

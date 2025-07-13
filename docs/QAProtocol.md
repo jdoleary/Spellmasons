@@ -13,6 +13,8 @@
 - Test tutorial ALWAYS on electron build
 - Run `npm run headless-build-only` to check tsc errors which `npm run bun-headless` will not catch
 
+SUNDAY:
+- There is a drawChargesSeed desync.  Will this cause a desync if client is deathmason?
 NEW Content for July:
 - Test deathmason discard count on multiplayer (non host)
 - Test cardmason sync on new multiplayer game

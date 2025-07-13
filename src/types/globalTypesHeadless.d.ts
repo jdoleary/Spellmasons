@@ -8,7 +8,7 @@ import type { Vec2 } from '../jmath/Vec';
 import type { View } from '../View';
 import type { Localizable } from '../localization';
 import type { PromptArgs } from '../graphics/Jprompt';
-import type { Faction, JEmitter, Mod, Pie, RequestToJoin } from './commonTypes';
+import type { Faction, JEmitter, Mod, Pie, RequestToJoin, WizardType } from './commonTypes';
 import type { ICard } from '../cards';
 import type keyMapping from '../graphics/ui/keyMapping';
 import type { LogLevel } from '../RemoteLogging';
@@ -324,7 +324,8 @@ declare global {
   var hotseatPlayerConfig: {
     name: string,
     color: number,
-    colorMagic: number
+    colorMagic: number,
+    wizardType?: WizardType
   }[] | undefined;
   var limitParticleEmitters: number | undefined;
   var UIEasyOnTheEyes: boolean | undefined;
