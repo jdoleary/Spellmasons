@@ -1048,6 +1048,14 @@ export default class Underworld {
         // This keeps the unit.image in the same place as unit.x, unit.y
         Unit.syncImage(u)
         drawHealthBarAboveHead(i, this, zoom);
+
+        // Sometimes runPredictions doesn't trigger if another is already processing
+        // (for example, in multiplayer when another player is casting), so this extra
+        // call to syncStaminaBar ensures that the player's stamina bar will update while the
+        // player is moving even if another player is casting
+        if (globalThis.player && globalThis.player.unit == u) {
+          Unit.syncStaminaBar();
+        }
         // Animate shield modifier sprites
         if ((u.modifiers[shield.shieldId] || u.modifiers[fortify.id] || u.modifiers[immune.id] || u.modifiers[manaBarrierId]) && u.image) {
           // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type

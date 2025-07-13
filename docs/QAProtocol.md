@@ -19,15 +19,14 @@ NEW Content for July:
 - Test deathmason discard count on multiplayer (non host)
 - Test cardmason sync on new multiplayer game
 - Test wizard picker large and small
-    - Make sure wizard picker works in hotseat
+    - [x] Make sure wizard picker works in hotseat
 - check soul quantity when loading
 - deathmason locked discard cards persists on client between turn phases
 - Test that deathmason doesn't discard entire hand until beginning of next turn
 - Test the "+ soul fragments" floating text doesn't show up on other player's screens above their own player
 - Verify that corruption particles don't hang around in multiplayer with multiple deathmasons
 - Test peer connection logging.  Limit to only in steam lobby
-- export const IS_JULY25_UPDATE_OUT = true;
-- Test difficulty of DM and Goru with adjusted Skill Points
+- [x] export const IS_JULY25_UPDATE_OUT = true;
 - fix: Stamina bar not updating while another player is casting
 - text tutorial for deathmason and goru
 - Test Goru soul fragment desync by swappign with corpses as soon as you kill them in multiplayer to see if the number of soul fragments remains stable

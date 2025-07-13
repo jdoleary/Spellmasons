@@ -328,7 +328,7 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       if (fromPlayer && overworld.underworld) {
         const countDiscard = Player.discardCards(fromPlayer, overworld.underworld, { dryRun: true });
         if (payload.countDiscard == countDiscard) {
-          if(payload.drawChargesSeed !== underworld){
+          if (payload.drawChargesSeed !== underworld) {
             fromPlayer.drawChargesSeed = payload.drawChargesSeed;
           }
           Player.discardCards(fromPlayer, overworld.underworld, {});
@@ -978,13 +978,6 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
           // Trigger run predictions when the position of any player changes since
           // this could change prediction results
           runPredictions(underworld);
-          // Sometimes runPredictions doesn't trigger if another is already processing
-          // (for example, in multiplayer when another player is casting), so this extra
-          // call to syncStaminaBar ensures that the player's stamina bar will update while the
-          // player is moving even if another player is casting
-          if (fromPlayer == globalThis.player) {
-            Unit.syncStaminaBar();
-          }
         }
       } else {
         console.error('Cannot move player, caster does not exist');
