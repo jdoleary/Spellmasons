@@ -438,18 +438,22 @@ function getTutorialStorageKey(key: string): string {
 
 }
 globalThis.resetTutorial = function resetTutorial() {
-  storage.remove(`BEAT_DIFFICULTY-tutorial`);
-  for (let key of Object.keys(tutorialChecklist)) {
-    storage.remove(getTutorialStorageKey(key));
-  }
-  setTutorialVisiblity(true);
-  // Reset all explain prompts when tutorial is reset
-  for (let explainKey of explainKeys) {
-    storage.remove(explainKey);
-  }
-  globalThis.enemyEncountered = [];
-  storage.remove(storage.ENEMY_ENCOUNTERED_STORAGE_KEY);
-  Jprompt({ text: 'Tutorial will reset after the game is restarted.', yesText: 'Okay', forceShow: true });
+  Jprompt({ text: 'Are you sure you wish to reset the tutorial?', noBtnText: 'Cancel', noBtnKey: 'Escape', yesText: 'Yes', forceShow: true }).then(doResetTutorial => {
+    if (doResetTutorial) {
+      storage.remove(`BEAT_DIFFICULTY-tutorial`);
+      for (let key of Object.keys(tutorialChecklist)) {
+        storage.remove(getTutorialStorageKey(key));
+      }
+      setTutorialVisiblity(true);
+      // Reset all explain prompts when tutorial is reset
+      for (let explainKey of explainKeys) {
+        storage.remove(explainKey);
+      }
+      globalThis.enemyEncountered = [];
+      storage.remove(storage.ENEMY_ENCOUNTERED_STORAGE_KEY);
+      Jprompt({ text: 'Tutorial will reset after the game is restarted.', yesText: 'Okay', forceShow: true });
+    }
+  });
 }
 // Returns a value that remains the same as the first time this function was invoked for the duration of the play session
 export function isTutorialComplete() {
