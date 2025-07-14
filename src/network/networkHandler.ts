@@ -809,6 +809,11 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
           if (connectedPlayers.length > 0 && connectedPlayers.every(p => p.lobbyReady)) {
             console.log('Lobby: All players are ready, start game.');
             setView(View.Game);
+            // Sync player UI on game start (for loading into games)
+            if (player == globalThis.player && overworld.underworld) {
+              overworld.underworld.syncPlayerPredictionUnitOnly();
+              Unit.syncPlayerHealthManaUI(overworld.underworld);
+            }
             // Change end turn button from End Turn to Ready in multiplayer
             if (elEndTurnBtn && !globalThis.headless) {
               const elEndTurnSpan = elEndTurnBtn.querySelector('[data-localize-text]') as HTMLElement;
