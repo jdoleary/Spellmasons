@@ -442,7 +442,7 @@ export function tryCollectSoul(player: IPlayer, u: Unit.IUnit, underworld: Under
   ) {
     return;
   }
-  if (globalThis.player == player && math.distance(u, player.unit) <= config.GORU_SOUL_COLLECT_RADIUS) {
+  if (globalThis.player == player && player.unit.alive && math.distance(u, player.unit) <= config.GORU_SOUL_COLLECT_RADIUS) {
     underworld.pie.sendData({
       type: MESSAGE_TYPES.COLLECT_SOULS,
       victim_unit_id: u.id,
