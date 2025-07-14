@@ -1,3 +1,70 @@
+## 1.60.13 Major Update
+Major Feature: Deathmason as a playable character.
+The Deathmason uses cards to cast.  You draw up to your max cards each turn and you can discard and redraw half of the discarded cards during your turn. You can lock favorite cards so they don't get discarded until the end of the level.
+
+Major Feature: Goru as a playable character.
+Goru uses souls to cast.  You must aquire more souls by picking them up from corpses to keep casting.  You can spend into soul debt but it'll cost you 5% health for every 1 soul debt each time you cast.
+
+Goru and Deathmason unlock after finishing the tutorial
+
+Content
+There's a smattering of new spells to make some less popular builds (such as close range, and liquid) more viable, but I wont reveal them here and leave it to you to discover :)
+
+Quality of Life changes
+QoL: New cards get automatically added to side toolbars
+QoL: Autounlock a rune when it is maxxed out
+QoL: Turn off inventory glow once new stat points are seen
+QoL: 3 toolbars on each side, all keybindable
+QoL: Allow keybinding all hotkeys
+QoL: Change mid-game teleport portal color to yellow
+ Thanks Weedybird!
+QoL: Add checkmark in upper left in-game player list to represent "ready for next turn"
+QoL: Protect against accidental end turn when answering UI prompt
+QoL: Multiple instances of floating text now share the same instance with a number to show how many times it's occurred
+QoL: Explain to player why disconnection occurred
+QoL: Update disconnected sprite to be a more obvious "broken internet" symbol
+
+Balancing
+balance: Difficulty scaling doesn't empower ally summons
+    (This made necromancer builds OP in multiplayer compared to other builds)
+    Thanks Autoquark for bringing this up
+balance: Investment cost 30 -> 80
+balance: Damage limiter: 30 -> 45 max damage dealt per instance
+balance: Health cost from spells dont trigger onDamage events
+    (shield can't be spent to use health cost spells)
+
+UI Improvements
+UI: Add "Are you sure" prompt for "reset tutorial"
+    Thanks @Carlos
+UI: Fix showing how much it adds to rune when maxxed
+    (important for ones that only allow upgrading once like Icy Veins)
+    Thanks Nikitasss
+UI: Menu button secondary active state is now more
+    obvious than hover state.
+
+Bug Fixes
+fix: Stamina bar not updating while another player is casting
+fix: not being able to sell add_bounce and add_pierce spells
+    Thanks Martin_Talzor!
+fix: overheal rune: Health over maximum (like from sacrifice) doesn't contribute to overheal amount.
+    Thanks bbott
+fix UI: Allow for clearing out more than one custom keybind
+fix UI: update health and mana UI bars on modifier add
+    (for example potion barrier, spawning onto a potion showed the damage self warning box)
+    and potion pickup
+fix: Major bug where deathmason could overdraw cards after discarding
+    if he had cards locked.
+    Thanks Pizza Lover 2 and Kyonuma
+fix: Enemy Goru getting undying back when cloned or split
+    Thanks Martin_Talzor!
+fix: encyclopedia show-card-large
+    Thanks Superbaum
+fix deathmason discard desync
+    Thanks Pizza Lover 2 and Kyonuma
+    https://discord.com/channels/1032294536640200766/1187826016463364156/1386187054391496845
+fix: Back button getting stuck in loop
+    Thanks Bogiac
+
 ## 1.59.1
 -Network: Enable Steam Lobbies for improved multiplayer
 

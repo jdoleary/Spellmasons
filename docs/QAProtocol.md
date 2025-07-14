@@ -15,12 +15,12 @@
 
 
 NEW Content for July:
-- [ ] After playing a game as deathmason if you switch to spellmason you have no mana
+- [x] After playing a game as deathmason if you switch to spellmason you have no mana
 - [x] Test deathmason discard count on multiplayer (non host)
 - [x] Test cardmason sync on new multiplayer game
-- Test wizard picker large and small
+- [x] Test wizard picker large and small
     - [x] Make sure wizard picker works in hotseat
-- check soul quantity when loading
+- [x]check soul quantity when loading
 - [x] test tutorial for deathmason and goru
 - [x] deathmason locked discard cards persists on client between turn phases
 - [x]Test that deathmason doesn't discard entire hand until beginning of next turn
