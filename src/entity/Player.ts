@@ -251,26 +251,10 @@ export function setPlayerRobeColor(player: IPlayer, color: number | string, colo
     }
   }
 }
-export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld) {
-  player.endedTurn = false;
-
-  resetPlayerForSpawn(player, underworld);
-
-  if (elInstructions && globalThis.player == player) {
-    elInstructions.innerHTML = `${i18n('choose spawn instructions')}`
-    // Add left-click image for early levels to help players know how to spawn
-    if (underworld.levelIndex < 2) {
-      elInstructions.style.top = "260px";
-      elInstructions.innerHTML += ` <img src="mouse-LMB-bg.png" alt="Left Mouse Button"/>`
-    } else {
-      // Much less obtrusive instructions for later levels
-      elInstructions.style.top = "20px";
-    }
-  }
-
-  Unit.resetUnitStats(player.unit, underworld);
+export function initializeWizardStats(player: IPlayer, underworld: Underworld) {
   // If in the beginning of a level set charges to full
   if (!player.isSpawned) {
+    console.log('Initialize Wizard Stats', player)
     if (player.wizardType == 'Goru') {
       // Player goru only gets undying once
       if (underworld.levelIndex <= 0) {
@@ -290,6 +274,27 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
       player.unit.manaMax = 0;
     }
   }
+
+}
+export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld) {
+  player.endedTurn = false;
+
+  resetPlayerForSpawn(player, underworld);
+
+  if (elInstructions && globalThis.player == player) {
+    elInstructions.innerHTML = `${i18n('choose spawn instructions')}`
+    // Add left-click image for early levels to help players know how to spawn
+    if (underworld.levelIndex < 2) {
+      elInstructions.style.top = "260px";
+      elInstructions.innerHTML += ` <img src="mouse-LMB-bg.png" alt="Left Mouse Button"/>`
+    } else {
+      // Much less obtrusive instructions for later levels
+      elInstructions.style.top = "20px";
+    }
+  }
+
+  Unit.resetUnitStats(player.unit, underworld);
+  initializeWizardStats(player, underworld);
   Unit.syncPlayerHealthManaUI(underworld);
 }
 // Keep a global reference to the current client's player
@@ -743,6 +748,10 @@ export function setWizardType(player: IPlayer, wizardType: WizardType | undefine
   }
   if (underworld) {
     restoreWizardTypeVisuals(player, underworld);
+    if (underworld.levelIndex == 0) {
+      // Make sure the play's wizard info is initialized correctly
+      initializeWizardStats(player, underworld)
+    }
   }
 }
 const IS_DISCARD_LOCKED_CLASSNAME = 'is-discard-locked';
