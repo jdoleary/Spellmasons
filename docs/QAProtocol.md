@@ -13,24 +13,29 @@
 - Test tutorial ALWAYS on electron build
 - Run `npm run headless-build-only` to check tsc errors which `npm run bun-headless` will not catch
 
+MONDAY:
+
 SUNDAY:
 - There is a drawChargesSeed desync.  Will this cause a desync if client is deathmason?
+
 NEW Content for July:
 - Test deathmason discard count on multiplayer (non host)
 - Test cardmason sync on new multiplayer game
 - Test wizard picker large and small
     - [x] Make sure wizard picker works in hotseat
 - check soul quantity when loading
-- deathmason locked discard cards persists on client between turn phases
-- Test that deathmason doesn't discard entire hand until beginning of next turn
-- Test the "+ soul fragments" floating text doesn't show up on other player's screens above their own player
+- [x] test tutorial for deathmason and goru
+- [x] deathmason locked discard cards persists on client between turn phases
+- [x]Test that deathmason doesn't discard entire hand until beginning of next turn
+- [x]Test the "+ soul fragments" floating text doesn't show up on other player's screens above their own player
 - Verify that corruption particles don't hang around in multiplayer with multiple deathmasons
 - Test peer connection logging.  Limit to only in steam lobby
 - [x] export const IS_JULY25_UPDATE_OUT = true;
-- fix: Stamina bar not updating while another player is casting
-- text tutorial for deathmason and goru
-- Test Goru soul fragment desync by swappign with corpses as soon as you kill them in multiplayer to see if the number of soul fragments remains stable
-- Test hotseat with Goru and Deathmason
+- [x] fix: Stamina bar not updating while another player is casting
+- [x] Test Goru soul fragment desync by swappign with corpses as soon as you kill them in multiplayer to see if the number of soul fragments remains stable
+- [x] Test hotseat with Goru and Deathmason
+- [ ] 2nd player goru should start with the right amount of souls
+- [x] set IS_JULY25_UPDATE_OUT to true
 
 - Peer verification
     - [x] Test: Version mismatch jprompt in p2p - 85ece8e50b6834ad01f5e56aedf3410e71319ee7
@@ -40,7 +45,6 @@ NEW Content for July:
     - [x] Playing singleplayer to joining from invite
     - [x] Play singleplayer, quit, host, invite friend, start game
 
-- set IS_JULY25_UPDATE_OUT to true
 
 --- Archived
 - Test loading a saved multiplayer game
