@@ -251,27 +251,21 @@ export function setPlayerRobeColor(player: IPlayer, color: number | string, colo
     }
   }
 }
-export function initializeWizardStats(player: IPlayer, underworld: Underworld) {
+export function initializeWizardStatsForLevelStart(player: IPlayer, underworld: Underworld) {
   // If in the beginning of a level set charges to full
   if (!player.isSpawned) {
-    console.log('Initialize Wizard Stats', player)
     if (player.wizardType == 'Goru') {
       // Player goru only gets undying once
-      if (underworld.levelIndex <= 0) {
+      if (underworld.levelIndex <= 0 && !player.unit.modifiers[undyingModifierId]) {
         Unit.addModifier(player.unit, undyingModifierId, underworld, false);
       }
-
       player.unit.soulFragments = config.GORU_PLAYER_STARTING_SOUL_FRAGMENTS + Math.floor(underworld.levelIndex / 2);
-      player.unit.mana = 0;
-      player.unit.manaMax = 0;
     }
     if (player.wizardType == 'Deathmason') {
       // Do not allow keeping locked cards between levels
       discardCards(player, underworld, { forceDiscardAll: true });
       // Refill cards
       Unit.refillCharges(player.unit, underworld);
-      player.unit.mana = 0;
-      player.unit.manaMax = 0;
     }
   }
 
@@ -294,7 +288,7 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
   }
 
   Unit.resetUnitStats(player.unit, underworld);
-  initializeWizardStats(player, underworld);
+  initializeWizardStatsForLevelStart(player, underworld);
   Unit.syncPlayerHealthManaUI(underworld);
 }
 // Keep a global reference to the current client's player
@@ -749,8 +743,18 @@ export function setWizardType(player: IPlayer, wizardType: WizardType | undefine
   if (underworld) {
     restoreWizardTypeVisuals(player, underworld);
     if (underworld.levelIndex == 0) {
-      // Make sure the play's wizard info is initialized correctly
-      initializeWizardStats(player, underworld)
+      // Make sure the player's wizard info is initialized correctly
+      initializeWizardStatsForLevelStart(player, underworld);
+      if (player.wizardType == 'Goru') {
+        player.unit.mana = 0;
+        player.unit.manaMax = 0;
+      } else if (player.wizardType == 'Deathmason') {
+        player.unit.mana = 0;
+        player.unit.manaMax = 0;
+      } else if (player.wizardType == 'Spellmason' || !player.wizardType) {
+        player.unit.manaMax = config.UNIT_BASE_MANA;
+        player.unit.mana = player.unit.manaMax;
+      }
     }
   }
 }

@@ -13,14 +13,11 @@
 - Test tutorial ALWAYS on electron build
 - Run `npm run headless-build-only` to check tsc errors which `npm run bun-headless` will not catch
 
-MONDAY:
-
-SUNDAY:
-- There is a drawChargesSeed desync.  Will this cause a desync if client is deathmason?
 
 NEW Content for July:
-- Test deathmason discard count on multiplayer (non host)
-- Test cardmason sync on new multiplayer game
+- [ ] After playing a game as deathmason if you switch to spellmason you have no mana
+- [x] Test deathmason discard count on multiplayer (non host)
+- [x] Test cardmason sync on new multiplayer game
 - Test wizard picker large and small
     - [x] Make sure wizard picker works in hotseat
 - check soul quantity when loading
@@ -34,7 +31,7 @@ NEW Content for July:
 - [x] fix: Stamina bar not updating while another player is casting
 - [x] Test Goru soul fragment desync by swappign with corpses as soon as you kill them in multiplayer to see if the number of soul fragments remains stable
 - [x] Test hotseat with Goru and Deathmason
-- [ ] 2nd player goru should start with the right amount of souls
+- [x] 2nd player goru should start with the right amount of souls
 - [x] set IS_JULY25_UPDATE_OUT to true
 
 - Peer verification
