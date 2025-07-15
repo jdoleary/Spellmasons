@@ -360,6 +360,7 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         }
         if (victim.soulFragments != soulFragments) {
           console.error('COLLECT_SOULS desync soulFragments count');
+          return;
         }
 
         const soulPositions = removeFloatingParticlesFor(victim);
