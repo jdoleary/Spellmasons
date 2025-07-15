@@ -88,6 +88,7 @@ globalThis.zoomTarget = 1.8;
 globalThis.hotseatPlayerConfig = [];
 globalThis.awaitingSpawn = false;
 globalThis.currentHoverElement = null;
+globalThis.totalSoulTrails = 0;
 // Default to 1 for singleplayer
 globalThis.numberOfHotseatPlayers = 1;
 if (isNullOrUndef(globalThis.UIEasyOnTheEyes)) {

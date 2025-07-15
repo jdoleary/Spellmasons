@@ -368,8 +368,12 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         const colorStart = '#d9fff9';
         const colorEnd = '#566d70';
         fromPlayer.unit.soulFragments += soulFragments;
+        globalThis.totalSoulTrails = Math.max(0, globalThis.totalSoulTrails || 0);
+        globalThis.totalSoulTrails += soulFragments;
         for (let i = 0; i < soulFragments; i++) {
-          const promise = makeManaTrail(soulPositions[i] || victim, fromPlayer.unit, underworld, colorStart, colorEnd, soulFragments).then(() => {
+          const promise = makeManaTrail(soulPositions[i] || victim, fromPlayer.unit, underworld, colorStart, colorEnd, globalThis.totalSoulTrails).then(() => {
+            globalThis.totalSoulTrails--;
+
             playSFXKey('soulget');
             if (player == fromPlayer) {
               floatingText({ coords: fromPlayer.unit, text: `+ 1 ${i18n('soul fragments')}`, aggregateMatcher: /\d+/ });

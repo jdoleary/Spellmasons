@@ -418,4 +418,5 @@ declare global {
   var peers: Set<string>;
   var peerHostBroadcastClientsPresenceChanged: (pie: PiePeer) => void;
   var lastSeenStatpointsUnspent: number | undefined;
+  var totalSoulTrails: number;
 }
