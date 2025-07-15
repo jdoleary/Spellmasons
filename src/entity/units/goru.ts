@@ -435,20 +435,36 @@ export function tryCollectSoul(player: IPlayer, u: Unit.IUnit, underworld: Under
       && player.wizardType === 'Goru'
       // ...not own unit (can't collect own souls)
       && u !== player.unit
-      // dead units
+      // ...dead target units
       && !u.alive
+      // ...who have souls
       && u.soulFragments > 0
     )
   ) {
     return;
   }
-  if (globalThis.player == player && player.unit.alive && math.distance(u, player.unit) <= config.GORU_SOUL_COLLECT_RADIUS) {
+  const distanceFromCorpse = math.distance(u, player.unit);
+  if (globalThis.player == player && player.unit.alive && distanceFromCorpse <= config.GORU_SOUL_COLLECT_RADIUS) {
+    // Prevent multiple gorus from collecting souls from the same corpse at the same time
+    const goruPlayers = underworld.players.filter(p => p.wizardType == 'Goru');
+    if (goruPlayers.length > 1) {
+      const closestGoru = goruPlayers.reduce((closest, current) => {
+        const curDistanceFromCorpse = math.distance(u, current.unit);
+        if (curDistanceFromCorpse < closest.dist) {
+          return { player: current, dist: curDistanceFromCorpse };
+        }
+        return closest;
+      }, { player: globalThis.player, dist: distanceFromCorpse }).player;
+      // Only collect if current player is closer than other gorus
+      if (closestGoru != globalThis.player) {
+        return;
+      }
+    }
     underworld.pie.sendData({
       type: MESSAGE_TYPES.COLLECT_SOULS,
       victim_unit_id: u.id,
       soulFragments: u.soulFragments,
-    })
-
+    });
   }
 }
 export function tryCollectSouls(player: IPlayer, underworld: Underworld, prediction: boolean) {
