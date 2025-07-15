@@ -241,6 +241,10 @@ export function create(
       predictedNextTurnDamage: 0,
     }, sourceUnitProps);
 
+    // Adjust soul fragments based on number of player's connected to balance goru difficulty
+    const playerAdjustedSoulFragments = Math.max(0, underworld.players.filter(p => p.clientConnected).length - 1);
+    unit.soulFragments += Math.round(playerAdjustedSoulFragments * config.EXTRA_SOULS_PER_EXTRA_PLAYER);
+
 
 
     if (creator) {
