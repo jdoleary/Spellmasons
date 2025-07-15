@@ -13,13 +13,14 @@ import { Vec2 } from '../jmath/Vec';
 import { easeOutCubic } from '../jmath/Easing';
 import * as config from '../config';
 import { makeManaTrail } from '../graphics/Particles';
+import floatingText from '../graphics/FloatingText';
 
 
 const baseNovaRadius = 100;
 
-function getAdjustedRadius(radiusBoost: number = 0) {
+function getAdjustedRadius(quantity: number, radiusBoost: number = 0, scalePerQuantity = 0.5) {
   // +50% radius per radius boost
-  return baseNovaRadius * (1 + (0.5 * radiusBoost));
+  return baseNovaRadius * (1 + (scalePerQuantity * (quantity - 1) + (0.5 * radiusBoost)));
 }
 
 const DAMAGE_NOVA_DAMAGE = 20;
@@ -44,7 +45,9 @@ const novas: Spell[] = [
         const colorEnd = 0xFF0000;
 
         const radiusBoost = state.aggregator.radiusBoost;
-        const radius = getAdjustedRadius(radiusBoost);
+        // Pain nova can get out of hand really quickly because it scales with both damage and size
+        // so size scaling has been reduced otherwise it's easy to wipe the whole map with
+        const radius = getAdjustedRadius(quantity, radiusBoost, 0.2);
         const location = state.casterUnit;
         if (prediction) {
           drawUICirclePrediction(location, radius, colorEnd, 'Nova Radius');
@@ -102,7 +105,7 @@ const novas: Spell[] = [
         const colorEnd = 0x00FF00;
 
         const radiusBoost = state.aggregator.radiusBoost;
-        const radius = getAdjustedRadius(radiusBoost);
+        const radius = getAdjustedRadius(quantity, radiusBoost);
         const location = state.casterUnit;
         if (prediction) {
           drawUICirclePrediction(location, radius, colorEnd, 'Nova Radius');
@@ -134,7 +137,7 @@ const novas: Spell[] = [
     card: {
       id: CORPSE_NOVA_STAMINA_ID,
       category: CardCategory.Soul,
-      supportQuantity: false,
+      supportQuantity: true,
       manaCost: 30,
       healthCost: 0,
       soulFragmentCostOverride: 1,
@@ -149,7 +152,7 @@ const novas: Spell[] = [
         const colorEnd = 0x00aeae;
 
         const radiusBoost = state.aggregator.radiusBoost;
-        const radius = getAdjustedRadius(radiusBoost);
+        const radius = getAdjustedRadius(quantity, radiusBoost, 1.0);
         const location = state.casterUnit;
         if (prediction) {
           drawUICirclePrediction(location, radius, colorEnd, 'Nova Radius');
@@ -168,8 +171,13 @@ const novas: Spell[] = [
             return;
           }
           state.casterUnit.stamina += CORPSE_NOVA_STAMINA_PER_CORPSE;
-          if (!prediction)
-            promises.push(makeManaTrail(u, state.casterUnit, underworld, `#d5b356`, `#d5b356`, corpsesInRange.length));
+          if (!prediction) {
+            promises.push(makeManaTrail(u, state.casterUnit, underworld, `#d5b356`, `#d5b356`, corpsesInRange.length).then(() => {
+              if (state.casterPlayer == globalThis.player) {
+                floatingText({ coords: state.casterUnit, text: `+ 1 ${i18n('Stamina')}`, aggregateMatcher: /\d+/, countMultiplier: CORPSE_NOVA_STAMINA_PER_CORPSE });
+              }
+            }));
+          }
           cleanup(u, true);
         });
         // Wait for the nova to complete

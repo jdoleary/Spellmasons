@@ -29,6 +29,7 @@ interface FloatingTextInsructions {
   aalpha?: number;
   prediction?: boolean;
   aggregateMatcher?: RegExp;
+  countMultiplier?: number;
 }
 // If too many instances of floatingText with the same text occur too
 // quickly, just render one in their place
@@ -46,6 +47,7 @@ export default function floatingText({
   aalpha = 0.003,
   prediction,
   aggregateMatcher,
+  countMultiplier = 1,
 }: FloatingTextInsructions): Promise<void> {
   if (!(globalThis.pixi && app && container) || prediction) {
     return Promise.resolve();
@@ -72,7 +74,7 @@ export default function floatingText({
   const doOptimize = aggregateMatcher || optim.count > optimizeThreshold;
   if (aggregateMatcher) {
     if (optim.canon) {
-      optim.canon.text = optim.canon.text.replace(aggregateMatcher, `${optim.count}`);
+      optim.canon.text = optim.canon.text.replace(aggregateMatcher, `${optim.count * countMultiplier}`);
       return Promise.resolve();
     }
   } else {

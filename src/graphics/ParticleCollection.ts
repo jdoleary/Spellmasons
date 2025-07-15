@@ -110,7 +110,7 @@ export function makeNova(position: Vec2, size: number, colorStart: number, color
             "end": colors.convertToHashColor(colorEnd)
           },
           "speed": {
-            "start": 500,
+            "start": 400,
             "end": 0,
             "minimumSpeedMultiplier": 1
           },
