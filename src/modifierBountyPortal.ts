@@ -26,7 +26,7 @@ export default function registerBountyPortal() {
       if (modifier) {
         // Create a purple portal on kill
         if (killedUnit.modifiers[bountyId]) {
-          const portalPickupSource = Pickup.pickups.find(p => p.name == Pickup.PORTAL_PURPLE_NAME);
+          const portalPickupSource = Pickup.pickups.find(p => p.name == Pickup.PORTAL_YELLOW_NAME);
           if (portalPickupSource) {
             Pickup.create({ pos: killedUnit, pickupSource: portalPickupSource, logSource: 'Bounty Portal' }, underworld, prediction);
           } else {
