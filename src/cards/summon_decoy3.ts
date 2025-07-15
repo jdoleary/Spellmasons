@@ -10,6 +10,7 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { thornsId } from '../modifierThorns';
 import { runeThornyDecoysId } from '../modifierThornyDecoys';
 import { runeHardenedMinionsId } from '../modifierHardenedMinions';
+import { summonDecoy2Id } from './summon_decoy2';
 
 const id = 'decoy 3';
 const spell: Spell = {
@@ -17,7 +18,7 @@ const spell: Spell = {
     id,
     category: CardCategory.Soul,
     sfx: 'summonDecoy',
-    requires: ['decoy2'],
+    requires: [summonDecoy2Id],
     supportQuantity: true,
     manaCost: 100,
     healthCost: 0,
