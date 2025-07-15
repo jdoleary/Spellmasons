@@ -1760,7 +1760,7 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
   // a real path object
   if (!u.path) {
     const unitSource = allUnits[u.unitSourceId];
-    if (unitSource) {
+    if (unitSource && u.unitType == UnitType.AI) {
       const targets = unitSource.getUnitAttackTargets(u, underworld);
       if (targets && targets[0]) {
         underworld.setPath(u, targets[0]);
