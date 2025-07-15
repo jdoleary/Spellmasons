@@ -106,6 +106,10 @@ const spell: Spell = {
 };
 
 function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1, extra?: any) {
+  if (unit.modifiers[soulShardOwnerModifierId]) {
+    // Cannot soul shard a unit that already has soul shard owner
+    return;
+  }
   if (isNullOrUndef(extra.shardOwnerId)) {
     console.log("Cannot add soul shard modifier without a shard owner id");
     return;
