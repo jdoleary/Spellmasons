@@ -111,6 +111,9 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   // across the network
   id: number;
   soulFragments: number;
+  // soulsBeingCollected prevents a network latency issue where more souls could leave a body
+  // than the body had
+  soulsBeingCollected?: boolean;
   unitSourceId: string;
   // if this IUnit is a prediction copy, real is a reference to the real unit that it is a copy of
   real?: IUnit;

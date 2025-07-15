@@ -364,6 +364,7 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
 
         const soulPositions = removeFloatingParticlesFor(victim);
         victim.soulFragments = 0;
+        victim.soulsBeingCollected = false;
         // If a goru killed the unit that goru get's all the souls
         const colorStart = '#d9fff9';
         const colorEnd = '#566d70';

@@ -439,6 +439,7 @@ export function tryCollectSoul(player: IPlayer, u: Unit.IUnit, underworld: Under
       && !u.alive
       // ...who have souls
       && u.soulFragments > 0
+      && !u.soulsBeingCollected
     )
   ) {
     return;
@@ -460,6 +461,7 @@ export function tryCollectSoul(player: IPlayer, u: Unit.IUnit, underworld: Under
         return;
       }
     }
+    u.soulsBeingCollected = true;
     underworld.pie.sendData({
       type: MESSAGE_TYPES.COLLECT_SOULS,
       victim_unit_id: u.id,
