@@ -583,6 +583,7 @@ export function addCardToHand(card: Cards.ICard | undefined, player: IPlayer | u
       }
     }
     let didReplace = false;
+    let replaceCharges = 1;
     // If card replaces old cards
     if (card.replaces) {
       // Replace all replaced cards with new card
@@ -593,6 +594,10 @@ export function addCardToHand(card: Cards.ICard | undefined, player: IPlayer | u
           }
           if (cid == removeCardId) {
             didReplace = true;
+            // If player is deathmason, keep charges when upgrading card
+            if (isDeathmason(player) && player.unit && player.unit.charges) {
+              replaceCharges = player.unit.charges[removeCardId] || 1;
+            }
             return card.id
           } else {
             return cid;
@@ -606,7 +611,7 @@ export function addCardToHand(card: Cards.ICard | undefined, player: IPlayer | u
         player.unit.charges = {};
       }
       // Give at least 1 charge when you get a new card
-      player.unit.charges[card.id] = 1;
+      player.unit.charges[card.id] = replaceCharges || 1;
       // Update UI to show new charges
       underworld.syncPlayerPredictionUnitOnly();
       Unit.syncPlayerHealthManaUI(underworld);
