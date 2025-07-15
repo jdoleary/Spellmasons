@@ -911,6 +911,8 @@ export function updateTooltipContent(underworld: Underworld) {
   // Update information in content
   // show info on unit, pickup, etc clicked
   let text = '';
+  let description = '';
+  let skipDescription = false;
   switch (selectedType) {
     case "unit":
       let playerSpecificInfo = '';
@@ -918,6 +920,9 @@ export function updateTooltipContent(underworld: Underworld) {
         if (globalThis.selectedUnit.unitType === UnitType.PLAYER_CONTROLLED) {
           const player = underworld.players.find((p) => p.unit === globalThis.selectedUnit);
           if (player) {
+            if (player.wizardType != 'Spellmason') {
+              skipDescription = true;
+            }
             const replacedCards = Cards.getCardsFromIds(player.inventory).flatMap(card => card.replaces || []);
             const inventory = player.inventory
               // .filter: Hide replaced cards in inventory
@@ -943,6 +948,9 @@ export function updateTooltipContent(underworld: Underworld) {
         }
         const unitSource = allUnits[globalThis.selectedUnit.unitSourceId]
         if (unitSource) {
+          if (!skipDescription) {
+            description = i18n(unitSource.info.description)
+          }
           const imageSrc = Unit.getExplainPathForUnitId(unitSource.id);
           if (!elInspectorTooltipImage.src.endsWith(imageSrc)) {
             // Only show tooltip images if gore is allowed since they contain gore
@@ -974,8 +982,10 @@ ${globalThis.selectedUnit.manaCostToCast && globalThis.selectedUnit.manaCostToCa
           // Use this to debug strength when developing, but strength isn't relevant to players `💪 ${globalThis.selectedUnit.strength} Strength`
           text += `\
 <h1>${globalThis.selectedUnit.name ? globalThis.selectedUnit.name.split(' ').map(name => i18n(name)).join(' ') : i18n(unitSource.id)}</h1>
+${description ? `
 <hr/>
-<div>${i18n(unitSource.info.description)}</div>
+<div>${description}</div>
+  `: ''}
 <hr/>
 ${globalThis.selectedUnit.faction == Faction.ALLY ? '🤝' : '⚔️️'} ${i18n((Faction[globalThis.selectedUnit.faction] || '').toString())} ${globalThis.selectedUnit.unitType !== UnitType.PLAYER_CONTROLLED ? `
 🗡️ ${txt(globalThis.selectedUnit.damage)} ${i18n(['damage'])}` : ''}${globalThis.selectedUnit.unitSubType !== UnitSubType.MELEE ? `

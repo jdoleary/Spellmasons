@@ -26,6 +26,7 @@ import { CORRUPTION_PARTICLES_JID, makeCorruptionParticles, stopAndDestroyForeve
 import { visualPolymorphPlayerUnit } from '../cards/polymorph';
 import { GORU_UNIT_ID } from './units/goru';
 import { undyingModifierId } from '../modifierUndying';
+import { bossmasonUnitId } from './units/deathmason';
 
 const elInGameLobby = document.getElementById('in-game-lobby') as (HTMLElement | undefined);
 elInGameLobby?.addEventListener('click', (e) => {
@@ -753,12 +754,17 @@ export function setWizardType(player: IPlayer, wizardType: WizardType | undefine
       if (player.wizardType == 'Goru') {
         player.unit.mana = 0;
         player.unit.manaMax = 0;
+        player.unit.manaPerTurn = 0;
+        player.unit.unitSourceId = GORU_UNIT_ID;
       } else if (player.wizardType == 'Deathmason') {
         player.unit.mana = 0;
         player.unit.manaMax = 0;
+        player.unit.manaPerTurn = 0;
+        player.unit.unitSourceId = bossmasonUnitId;
       } else if (player.wizardType == 'Spellmason' || !player.wizardType) {
         player.unit.manaMax = config.UNIT_BASE_MANA;
         player.unit.mana = player.unit.manaMax;
+        player.unit.unitSourceId = spellmasonUnitId;
       }
     }
   }
