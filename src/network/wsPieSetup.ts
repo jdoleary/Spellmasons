@@ -319,6 +319,8 @@ export function setupPieAndUnderworld() {
 
     globalThis.joinRoom = (room_info, isHosting) => joinRoom(overworld, room_info, isHosting);
     function connectToSingleplayer() {
+      // PiePeer can't handle singleplayer
+      globalThis.setPieToP2PMode(false);
       document.body?.classList.toggle('loading', true);
       // If we just left multiplayer, make sure we change end turn button back to normal
       if (elEndTurnBtn) {
@@ -342,8 +344,6 @@ export function setupPieAndUnderworld() {
     globalThis.connectToSingleplayer = connectToSingleplayer;
     globalThis.startSingleplayer = function startSingleplayer(numberOfHotseatPlayers: number, gameMode?: GameMode) {
       console.log('Start Game: Attempt to start the game');
-      // PiePeer can't handle singleplayer
-      globalThis.setPieToP2PMode(false);
       globalThis.numberOfHotseatPlayers = numberOfHotseatPlayers;
       return connectToSingleplayer().then(() => {
         // Create first level
