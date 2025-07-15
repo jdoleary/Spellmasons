@@ -90,7 +90,7 @@ export function setupDevGlobalFunctions(overworld: Overworld) {
                     if (!card.modName || globalThis.activeMods?.includes(card.modName)) {
                         addCardToHand(card, player, underworld);
                         if (isDeathmason(player) && player.unit.charges) {
-                            player.unit.charges[cardId] = 100;
+                            player.unit.charges[cardId] = 5;
                         }
                     }
                 } else {
