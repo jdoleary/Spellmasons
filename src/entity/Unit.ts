@@ -1760,10 +1760,13 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
   // a real path object
   if (!u.path) {
     const unitSource = allUnits[u.unitSourceId];
-    if (unitSource && u.unitType == UnitType.AI) {
-      const targets = unitSource.getUnitAttackTargets(u, underworld);
-      if (targets && targets[0]) {
-        underworld.setPath(u, targets[0]);
+    if (unitSource) {
+      // Only copy prediction paths for AI because only AI need to show you if they'll hit you
+      if (u.unitType == UnitType.AI) {
+        const targets = unitSource.getUnitAttackTargets(u, underworld);
+        if (targets && targets[0]) {
+          underworld.setPath(u, targets[0]);
+        }
       }
     } else {
       console.error('Cannot find unitSource for id', u.unitSourceId);
