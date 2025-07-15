@@ -25,6 +25,8 @@ import { inexhaustibleId } from "../modifierInexhaustible";
 import { runeBloodWarlockId } from "../modifierBloodWarlock";
 import { precisionId } from "../modifierPrecision";
 import * as Cards from "../cards";
+import { IUnit } from "../entity/Unit";
+import { soulmuncherId, witchyVibesId } from "../modifierDeathmasonConstants";
 
 export interface CardCost {
     manaCost: number;
@@ -294,17 +296,26 @@ export function _getCardsFromIds(cardIds: string[], cards: { [cardId: string]: I
 }
 
 const getCardCostSum = (card: ICard) => card.manaCost + card.healthCost + (card.staminaCost || 0);
-export function deathmasonCardProbabilities(cards: ICard[]): { id: string, probability: number, card: ICard, cost: number }[] {
+export function deathmasonCardProbabilities(cards: ICard[], unit: IUnit): { id: string, probability: number, card: ICard, cost: number }[] {
     const highestCostSum = cards.reduce((highest, cur) => {
         const cardCostSum = getCardCostSum(cur);
         return cardCostSum > highest ? cardCostSum : highest
     }, 0);
+    const necroDeathCount = unit.modifiers[soulmuncherId];
+    const witchyVibesCount = unit.modifiers[witchyVibesId];
     // Probability doesn't handle decimals so scale everything up so that 15 and 40 don't round down to be 10 and 40
     const scalar = 10;
     return cards.map(c => {
         // Default to highestCostSum to prevent division by 0.  That makes free cards like "Sell" ultra rare. This may need to be balanced away
         const cardCostSum = getCardCostSum(c) || highestCostSum;
-        const probability = Math.round(scalar * highestCostSum / cardCostSum);
+        let probability = Math.round(scalar * highestCostSum / cardCostSum);
+        if (necroDeathCount && c.category == CardCategory.Soul) {
+            probability *= necroDeathCount.quantity
+        }
+        if (witchyVibesCount && c.category == CardCategory.Curses) {
+            probability *= witchyVibesCount.quantity
+        }
+
         return ({ id: c.id, probability, card: c, cost: cardCostSum })
     });
 

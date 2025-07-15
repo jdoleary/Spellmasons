@@ -783,7 +783,11 @@
         "steam-lobbies-message": "Update: Steam Lobbies are now available! ❕ ❕ Steam Lobbies use a direct connection to other players which generally provides better performance and reliability compared to Community Servers.❕However, Community Servers are still provided as an alternative. ❕ ❕ Enjoy spellcrafting and thanks for playing! ❕ ~ Jordan",
         "p2p-game-version-mismatch": "Your game is running a different version than the host.  This WILL cause desyncs and other issues if you continue.  Please exit and update your game to match the host.",
         "continue anyway": "continue anyway",
-        "explain_soul_debt": "You can spend more soul fragments than you have, but you will incur soul debt.  Soul Debt costs you health each time you cast. 1 fragment of soul debt costs 🍞 of your max health."
+        "explain_soul_debt": "You can spend more soul fragments than you have, but you will incur soul debt.  Soul Debt costs you health each time you cast. 1 fragment of soul debt costs 🍞 of your max health.",
+        "soulmuncher-desc": "Increases the relative probability of drawing Soul cards",
+        "soul muncher": "Soul Muncher",
+        "witchy-vibes-desc": "Increases the relative probability of drawing Curse cards",
+        "witchy vibes": "Witchy Vibes"
     },
     {
         "language": "Français",
@@ -1569,7 +1573,11 @@
         "steam-lobbies-message": "Mise à jour : Les salons Steam sont désormais disponibles ! ❕ ❕ Les salons Steam utilisent une connexion directe avec d'autres joueurs, ce qui offre généralement de meilleures performances et une meilleure fiabilité par rapport aux serveurs communautaires. ❕ Cependant, les serveurs communautaires sont toujours proposés en alternative. ❕ ❕ Profitez de l'art de l'enchantement et merci de jouer ! ❕ ~ Jordan",
         "p2p-game-version-mismatch": "Votre jeu fonctionne avec une version différente de celle de l'hôte. Cela CAUSERA des désynchronisations et d'autres problèmes si vous continuez. Veuillez quitter et mettre à jour votre jeu pour qu'il corresponde à celui de l'hôte.",
         "continue anyway": "continue quand même",
-        "explain_soul_debt": "Vous pouvez dépenser plus de fragments d'âme que vous n'en avez, mais vous accumulerez une dette d'âme. La dette d'âme vous coûte de la santé chaque fois que vous lancez un sort. 1 fragment de dette d'âme coûte 🍞 de votre santé maximale."
+        "explain_soul_debt": "Vous pouvez dépenser plus de fragments d'âme que vous n'en avez, mais vous accumulerez une dette d'âme. La dette d'âme vous coûte de la santé chaque fois que vous lancez un sort. 1 fragment de dette d'âme coûte 🍞 de votre santé maximale.",
+        "soulmuncher-desc": "Augmente la probabilité relative de tirer des cartes d'âme.",
+        "soul muncher": "Consommateur d'âmes",
+        "witchy-vibes-desc": "Augmente la probabilité relative de tirer des cartes Malédiction.",
+        "witchy vibes": "Ambiances Sorcières"
     },
     {
         "language": "italiano",
@@ -2355,7 +2363,11 @@
         "steam-lobbies-message": "Aggiornamento: I Lobb di Steam sono ora disponibili! ❕ ❕ I Lobb di Steam usano una connessione diretta ad altri giocatori, il che generalmente offre migliori prestazioni e affidabilità rispetto ai Server Comunitari. ❕ Tuttavia, i Server Comunitari sono ancora forniti come alternativa. ❕ ❕ Buon divertimento con la creazione di incantesimi e grazie per aver giocato! ❕ ~ Jordan",
         "p2p-game-version-mismatch": "Il tuo gioco sta eseguendo una versione diversa rispetto all'host. Questo CAUSERÀ desincronizzazioni e altri problemi se continui. Ti preghiamo di uscire e aggiornare il tuo gioco per allinearlo all'host.",
         "continue anyway": "continua comunque",
-        "explain_soul_debt": "Puoi spendere più frammenti dell'anima di quanti ne possiedi, ma accumulerai debito d'anima. Il debito d'anima ti costa salute ogni volta che lanci un incantesimo. 1 frammento di debito d'anima costa 🍞 della tua salute massima."
+        "explain_soul_debt": "Puoi spendere più frammenti dell'anima di quanti ne possiedi, ma accumulerai debito d'anima. Il debito d'anima ti costa salute ogni volta che lanci un incantesimo. 1 frammento di debito d'anima costa 🍞 della tua salute massima.",
+        "soulmuncher-desc": "Aumenta la probabilità relativa di pescare carte Anima.",
+        "soul muncher": "Mangiatrice di Anime",
+        "witchy-vibes-desc": "Aumenta la probabilità relativa di pescare carte Maledizione",
+        "witchy vibes": "Vibrazioni Stregonesche"
     },
     {
         "language": "Deutsche",
@@ -3141,7 +3153,11 @@
         "steam-lobbies-message": "Update: Steam-Lobbys sind jetzt verfügbar! ❕ ❕ Steam-Lobbys nutzen eine direkte Verbindung zu anderen Spielern, die im Allgemeinen eine bessere Leistung und Zuverlässigkeit im Vergleich zu Community-Servern bietet. ❕ Community-Server werden jedoch weiterhin als Alternative angeboten. ❕ ❕ Viel Spaß beim Zaubern und danke fürs Spielen! ❕ ~ Jordan",
         "p2p-game-version-mismatch": "Dein Spiel läuft mit einer anderen Version als der Host. Dies wird zu Desynchronisierungen und anderen Problemen führen, wenn du weiterspielst. Bitte verlasse das Spiel und aktualisiere es, um mit dem Host übereinzustimmen.",
         "continue anyway": "fahre trotzdem fort",
-        "explain_soul_debt": "Du kannst mehr Seelenfragmente ausgeben, als du hast, aber du wirst Seelenschulden aufnehmen. Seelenschulden kosten dir Gesundheit, jedes Mal wenn du zauberst. 1 Fragment Seelenschuld kostet 🍞 deiner maximalen Gesundheit."
+        "explain_soul_debt": "Du kannst mehr Seelenfragmente ausgeben, als du hast, aber du wirst Seelenschulden aufnehmen. Seelenschulden kosten dir Gesundheit, jedes Mal wenn du zauberst. 1 Fragment Seelenschuld kostet 🍞 deiner maximalen Gesundheit.",
+        "soulmuncher-desc": "Erhöht die relative Wahrscheinlichkeit, Seelenkarten zu ziehen.",
+        "soul muncher": "Seelenfresser",
+        "witchy-vibes-desc": "Erhöht die relative Wahrscheinlichkeit, Fluchkarten zu ziehen.",
+        "witchy vibes": "Hexen-Stimmung"
     },
     {
         "language": "español",
@@ -3927,7 +3943,11 @@
         "steam-lobbies-message": "Actualización: ¡Las Lobbys de Steam ya están disponibles! ❕ ❕ Las Lobbys de Steam utilizan una conexión directa con otros jugadores, lo que generalmente proporciona un mejor rendimiento y confiabilidad en comparación con los Servidores Comunitarios. ❕ Sin embargo, los Servidores Comunitarios aún están disponibles como alternativa. ❕ ❕ ¡Disfruta de la creación de hechizos y gracias por jugar! ❕ ~ Jordan",
         "p2p-game-version-mismatch": "Tu juego está ejecutando una versión diferente a la del host. Esto CAUSARÁ desincronizaciones y otros problemas si continúas. Por favor, sal y actualiza tu juego para que coincida con el host.",
         "continue anyway": "continúa de todos modos",
-        "explain_soul_debt": "Puedes gastar más fragmentos de alma de los que tienes, pero incurrirás en deuda de alma. La deuda de alma te cuesta salud cada vez que lanzas un hechizo. 1 fragmento de deuda de alma cuesta 🍞 de tu salud máxima."
+        "explain_soul_debt": "Puedes gastar más fragmentos de alma de los que tienes, pero incurrirás en deuda de alma. La deuda de alma te cuesta salud cada vez que lanzas un hechizo. 1 fragmento de deuda de alma cuesta 🍞 de tu salud máxima.",
+        "soulmuncher-desc": "Aumenta la probabilidad relativa de obtener cartas de Alma.",
+        "soul muncher": "Devorador de Almas",
+        "witchy-vibes-desc": "Aumenta la probabilidad relativa de sacar cartas de Maldición.",
+        "witchy vibes": "Vibraciones de bruja"
     },
     {
         "language": "日本",
@@ -4713,7 +4733,11 @@
         "steam-lobbies-message": "アップデート: Steamロビーが利用可能になりました！ ❕ ❕ Steamロビーはプレイヤー同士の直接接続を使用しており、一般的にコミュニティサーバーに比べてパフォーマンスと信頼性が向上します。❕ただし、コミュニティサーバーも引き続き代替手段として提供されます。 ❕ ❕ 魔法製作を楽しんで、プレイしてくれてありがとう！ ❕ ~ ジョーダン",
         "p2p-game-version-mismatch": "あなたのゲームはホストと異なるバージョンで実行されています。このまま続けると同期ずれやその他の問題が発生します。終了して、ホストに合わせてゲームを更新してください。",
         "continue anyway": "それでも続ける",
-        "explain_soul_debt": "所持しているよりも多くのソウルフラグメントを消費することができますが、魂の負債を背負うことになります。魂の負債を抱えると、呪文を使用するたびに健康を消耗します。1つのソウル負債は最大健康の🍞を消費します。"
+        "explain_soul_debt": "所持しているよりも多くのソウルフラグメントを消費することができますが、魂の負債を背負うことになります。魂の負債を抱えると、呪文を使用するたびに健康を消耗します。1つのソウル負債は最大健康の🍞を消費します。",
+        "soulmuncher-desc": "ソウルカードを引く相対的な確率を増加させる",
+        "soul muncher": "ソウルイーター",
+        "witchy-vibes-desc": "呪いのカードを引く相対的な確率を増加させる",
+        "witchy vibes": "魔女の雰囲気"
     },
     {
         "language": "Português",
@@ -5499,7 +5523,11 @@
         "steam-lobbies-message": "Atualização: Salas Steam agora estão disponíveis! ❕ ❕ As Salas Steam utilizam uma conexão direta com outros jogadores, o que geralmente oferece melhor desempenho e confiabilidade em comparação com os Servidores Comunitários.❕No entanto, os Servidores Comunitários ainda estão disponíveis como uma alternativa. ❕ ❕ Aproveite a criação de feitiços e obrigado por jogar! ❕ ~ Jordan",
         "p2p-game-version-mismatch": "Seu jogo está rodando uma versão diferente da do anfitrião. Isso CAUSARÁ desincronizações e outros problemas se você continuar. Por favor, saia e atualize seu jogo para corresponder ao anfitrião.",
         "continue anyway": "continue assim mesmo",
-        "explain_soul_debt": "Você pode gastar mais fragmentos de alma do que possui, mas irá incorrer em dívida de alma. A dívida de alma custa vida toda vez que você a usa. 1 fragmento de dívida de alma custa 🍞 da sua vida máxima."
+        "explain_soul_debt": "Você pode gastar mais fragmentos de alma do que possui, mas irá incorrer em dívida de alma. A dívida de alma custa vida toda vez que você a usa. 1 fragmento de dívida de alma custa 🍞 da sua vida máxima.",
+        "soulmuncher-desc": "Aumenta a probabilidade relativa de puxar cartas de Alma.",
+        "soul muncher": "Ceifador de Almas",
+        "witchy-vibes-desc": "Aumenta a probabilidade relativa de puxar cartas de Maldição.",
+        "witchy vibes": "Vibrações de Bruxaria"
     },
     {
         "language": "عربى",
@@ -6285,7 +6313,11 @@
         "steam-lobbies-message": "تحديث: الخزائن المتاحة الآن على ستيم! ❕ ❕ تستخدم خزائن ستيم اتصالاً مباشراً مع لاعبين آخرين مما يوفر عادةً أداءً وموثوقية أفضل مقارنةً بالخوادم المجتمعية. ❕ ومع ذلك، لا تزال الخوادم المجتمعية متاحة كبديل. ❕ ❕ استمتع بصناعة التعويذات وشكرًا للعب! ❕ ~ جوردان",
         "p2p-game-version-mismatch": "لعبتك تعمل بإصدار مختلف عن المضيف. هذا سيسبب مشاكل في التزامن ومشاكل أخرى إذا واصلت. يرجى الخروج وتحديث لعبتك لتتطابق مع المضيف.",
         "continue anyway": "استمر على أي حال",
-        "explain_soul_debt": "يمكنك قضاء المزيد من شظايا الروح أكثر مما لديك، لكنك ستتحمل دين الروح. يكلفك دين الروح الصحة في كل مرة تستخدم فيها السحر. 1 شظية من دين الروح تكلف 🍞 من صحتك القصوى."
+        "explain_soul_debt": "يمكنك قضاء المزيد من شظايا الروح أكثر مما لديك، لكنك ستتحمل دين الروح. يكلفك دين الروح الصحة في كل مرة تستخدم فيها السحر. 1 شظية من دين الروح تكلف 🍞 من صحتك القصوى.",
+        "soulmuncher-desc": "يزيد من احتمال سحب بطاقات الروح النسبي",
+        "soul muncher": "آكل الأرواح",
+        "witchy-vibes-desc": "يزيد من احتمال سحب بطاقات اللعنة نسبياً",
+        "witchy vibes": "أجواء ساحرة"
     },
     {
         "language": "한국어",
@@ -7071,7 +7103,11 @@
         "steam-lobbies-message": "업데이트: 스팀 로비가 이제 이용 가능합니다! ❕ ❕ 스팀 로비는 다른 플레이어와의 직접 연결을 사용하여 일반적으로 커뮤니티 서버에 비해 더 나은 성능과 안정성을 제공합니다. ❕ 그러나 커뮤니티 서버는 여전히 대안으로 제공됩니다. ❕ ❕ 마법 제작을 즐기시고 게임을 플레이해 주셔서 감사합니다! ❕ ~ 조던",
         "p2p-game-version-mismatch": "당신의 게임 버전이 호스트와 다릅니다. 계속할 경우 이러한 불일치와 다른 문제가 발생할 수 있습니다. 게임을 종료하고 호스트와 일치하도록 업데이트해 주십시오.",
         "continue anyway": "어쨌든 계속하세요.",
-        "explain_soul_debt": "당신은 가지고 있는 것보다 더 많은 영혼 조각을 사용할 수 있지만, 영혼 빚을 지게 됩니다. 영혼 빚은 마법을 사용할 때마다 체력을 소모하게 됩니다. 1의 영혼 빚은 최대 체력의 🍞 만큼의 비용이 듭니다."
+        "explain_soul_debt": "당신은 가지고 있는 것보다 더 많은 영혼 조각을 사용할 수 있지만, 영혼 빚을 지게 됩니다. 영혼 빚은 마법을 사용할 때마다 체력을 소모하게 됩니다. 1의 영혼 빚은 최대 체력의 🍞 만큼의 비용이 듭니다.",
+        "soulmuncher-desc": "영혼 카드 획득의 상대 확률을 증가시킵니다.",
+        "soul muncher": "소울 이터",
+        "witchy-vibes-desc": "저주 카드 드로우 확률을 상대적으로 증가시킵니다.",
+        "witchy vibes": "마녀의 분위기"
     },
     {
         "language": "Русский",
@@ -7857,7 +7893,11 @@
         "steam-lobbies-message": "Обновление: Теперь доступны лобби Steam! ❕ ❕ Лобби Steam используют прямое соединение с другими игроками, что обычно обеспечивает лучшую производительность и надежность по сравнению с Коммунальными серверами. ❕ Однако коммунальные серверы по-прежнему доступны в качестве альтернативы. ❕ ❕ Наслаждайтесь созданием заклинаний и спасибо за игру! ❕ ~ Джордан",
         "p2p-game-version-mismatch": "Ваша игра работает на другой версии, чем у хоста. Это приведет к рассинхронизации и другим проблемам, если вы продолжите. Пожалуйста, выйдите из игры и обновите её, чтобы она соответствовала версии хоста.",
         "continue anyway": "всё равно продолжай",
-        "explain_soul_debt": "Вы можете потратить больше осколков души, чем у вас есть, но это приведет к долгу души. Долг души будет стоить вам здоровье каждый раз, когда вы применяете заклинание. 1 осколок долга души стоит 🍞 вашей максимального здоровья."
+        "explain_soul_debt": "Вы можете потратить больше осколков души, чем у вас есть, но это приведет к долгу души. Долг души будет стоить вам здоровье каждый раз, когда вы применяете заклинание. 1 осколок долга души стоит 🍞 вашей максимального здоровья.",
+        "soulmuncher-desc": "Увеличивает относительную вероятность вытягивания карт Душ.",
+        "soul muncher": "Пожиратель душ",
+        "witchy-vibes-desc": "Увеличивает относительную вероятность вытянуть карты Проклятия.",
+        "witchy vibes": "Ведьмовские флюиды"
     },
     {
         "language": "中文(简)",
@@ -8643,7 +8683,11 @@
         "steam-lobbies-message": "更新：Steam 大厅现已可用！ ❕ ❕ Steam 大厅通过与其他玩家的直接连接，通常提供比社区服务器更好的性能和可靠性。❕但社区服务器仍然作为替代方案提供。❕ ❕ 享受施法乐趣，感谢您的游戏体验！ ❕ ~ 乔丹",
         "p2p-game-version-mismatch": "您的游戏与主机运行的版本不同。如果继续游戏，将会导致不同步和其他问题。请退出并更新您的游戏以匹配主机。",
         "continue anyway": "无论如何继续",
-        "explain_soul_debt": "你可以花费超过你拥有的灵魂碎片，但你将承担灵魂债务。每次施法都会消耗你的生命值。1个灵魂债务碎片会消耗🍞你的最大生命值。"
+        "explain_soul_debt": "你可以花费超过你拥有的灵魂碎片，但你将承担灵魂债务。每次施法都会消耗你的生命值。1个灵魂债务碎片会消耗🍞你的最大生命值。",
+        "soulmuncher-desc": "增加抽取灵魂卡片的相对概率",
+        "soul muncher": "魂吞者",
+        "witchy-vibes-desc": "增加抽取诅咒卡的相对概率",
+        "witchy vibes": "女巫气息"
     },
     {
         "language": "中文(繁)",
@@ -9429,7 +9473,11 @@
         "steam-lobbies-message": "更新：Steam 大廳現在已經可用！ ❕ ❕ Steam 大廳使用與其他玩家的直接連接，相較於社區伺服器通常能提供更好的性能和可靠性。❕然而，社區伺服器仍然可以作為替代選擇。❕ ❕ 享受施法創作，感謝你的遊玩！ ❕ ~ 喬丹",
         "p2p-game-version-mismatch": "您的遊戲版本與主機不同。如果您繼續這樣做，將會導致不同步和其他問題。請退出並更新您的遊戲以與主機匹配。",
         "continue anyway": "繼續無論如何",
-        "explain_soul_debt": "你可以花費比擁有的靈魂碎片還多的數量，但這樣會產生靈魂債務。每次施法時，靈魂債務會消耗你的健康值。1個靈魂債務碎片會消耗你最大健康值的🍞。"
+        "explain_soul_debt": "你可以花費比擁有的靈魂碎片還多的數量，但這樣會產生靈魂債務。每次施法時，靈魂債務會消耗你的健康值。1個靈魂債務碎片會消耗你最大健康值的🍞。",
+        "soulmuncher-desc": "提高抽取靈魂卡的相對機率",
+        "soul muncher": "靈魂吞噬者",
+        "witchy-vibes-desc": "增加抽取詛咒卡的相對機率",
+        "witchy vibes": "女巫氣息"
     },
     {
         "language": "Polski",
@@ -10215,7 +10263,11 @@
         "steam-lobbies-message": "Aktualizacja: Lobby Steam są teraz dostępne! ❕ ❕ Lobby Steam wykorzystują bezpośrednie połączenie z innymi graczami, co zazwyczaj zapewnia lepszą wydajność i niezawodność w porównaniu do serwerów społecznościowych. ❕ Jednak nadal dostępne są serwery społecznościowe jako alternatywa. ❕ ❕ Ciesz się tworzeniem zaklęć i dziękujemy za grę! ❕ ~ Jordan",
         "p2p-game-version-mismatch": "Twoja gra działa w innej wersji niż host. Spowoduje to niespójności i inne problemy, jeśli kontynuujesz. Proszę wyjdź i zaktualizuj swoją grę, aby dopasować ją do hosta.",
         "continue anyway": "kontynuuj mimo to",
-        "explain_soul_debt": "Możesz wydać więcej fragmentów duszy, niż masz, ale zaciągniesz dług duszy. Dług duszy kosztuje ci zdrowie za każdym razem, gdy rzucisz zaklęcie. 1 fragment długu duszy kosztuje 🍞 twojego maksymalnego zdrowia."
+        "explain_soul_debt": "Możesz wydać więcej fragmentów duszy, niż masz, ale zaciągniesz dług duszy. Dług duszy kosztuje ci zdrowie za każdym razem, gdy rzucisz zaklęcie. 1 fragment długu duszy kosztuje 🍞 twojego maksymalnego zdrowia.",
+        "soulmuncher-desc": "Zwiększa względne prawdopodobieństwo pobrania kart Duszy",
+        "soul muncher": "Zjadacz Dusz",
+        "witchy-vibes-desc": "Zwiększa względne prawdopodobieństwo wyciągania kart Klątwy.",
+        "witchy vibes": "Czarownicze Wibracje"
     },
     {
         "language": "Dutch",
@@ -11001,7 +11053,11 @@
         "steam-lobbies-message": "Update: Steam Lobbies zijn nu beschikbaar! ❕ ❕ Steam Lobbies maken gebruik van een directe verbinding met andere spelers, wat over het algemeen betere prestaties en betrouwbaarheid biedt in vergelijking met Community Servers. ❕ Echter, Community Servers blijven als alternatief beschikbaar. ❕ ❕ Geniet van het spreukenmaken en bedankt voor het spelen! ❕ ~ Jordan",
         "p2p-game-version-mismatch": "Je spel draait op een andere versie dan de host. Dit ZAL desynchronisaties en andere problemen veroorzaken als je doorgaat. Verlaat het spel en werk je spel bij om overeen te komen met de host.",
         "continue anyway": "ga gewoon door",
-        "explain_soul_debt": "Je kunt meer zielfragmenten uitgeven dan je hebt, maar je zult zielen schuld oplopen. Zielen schuld kost je gezondheid elke keer dat je het gebruikt. 1 fragment zielen schuld kost 🍞 van je maximale gezondheid."
+        "explain_soul_debt": "Je kunt meer zielfragmenten uitgeven dan je hebt, maar je zult zielen schuld oplopen. Zielen schuld kost je gezondheid elke keer dat je het gebruikt. 1 fragment zielen schuld kost 🍞 van je maximale gezondheid.",
+        "soulmuncher-desc": "Verhoogt de relatieve waarschijnlijkheid om Zielkaarten te trekken",
+        "soul muncher": "Zielenslechter",
+        "witchy-vibes-desc": "Verhoogt de relatieve kans om Vloekkaarten te trekken",
+        "witchy vibes": "Hekserige Sfeer"
     },
     {
         "language": "Предреформенный русскій",
@@ -11787,6 +11843,10 @@
         "steam-lobbies-message": "",
         "p2p-game-version-mismatch": "",
         "continue anyway": "",
-        "explain_soul_debt": ""
+        "explain_soul_debt": "",
+        "soulmuncher-desc": "",
+        "soul muncher": "",
+        "witchy-vibes-desc": "",
+        "witchy vibes": ""
     }
 ]
