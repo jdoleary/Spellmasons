@@ -1,9 +1,10 @@
-## 1.61.0 Patch
+## 1.61.2 Patch
 content: Add Deathmason specific runes
 Balance: Adjust soul fragments based on number of player's connected to balance goru difficulty
     Thanks MrMagician
 Balance: Summon Trap
     Much cheaper but cannot be placed ON a unit
+    Allow it to stack so stacks summon a larger, more dangerous trap
 
 Optimize: Soul particle effects
     Thanks Martin_Talzor
@@ -26,6 +27,9 @@ fix: Fix particle radius to match radius
     Thanks Ekuland
 fix: tooltip for Deathmason and Goru
 fix: maintain deathmason cards when upgrading a card replaces that card.
+    Thanks Spododo
+fix: Maintain wizard type when loading a game
+fix: Submerge so it is removed on death. This ensures corpses are visible and not "under water"
     Thanks Spododo
 
 ## 1.60.13 Major Update

@@ -13,10 +13,6 @@
 - Test tutorial ALWAYS on electron build
 - Run `npm run headless-build-only` to check tsc errors which `npm run bun-headless` will not catch
 
-- upgrade soul muncher and witchy vibes
-- load game with all 3
-- loading a game doesn't maintain wizard type
-
 
 
 NEW Content for July:
