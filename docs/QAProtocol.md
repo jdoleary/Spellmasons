@@ -13,10 +13,7 @@
 - Test tutorial ALWAYS on electron build
 - Run `npm run headless-build-only` to check tsc errors which `npm run bun-headless` will not catch
 
-- collect souls in multiplayer on community server
 - upgrade soul muncher and witchy vibes
-- try nova with quantity
-- try to contaminate self with soul shard
 - load game with all 3
 - collect souls with multiple gorus
 - why am I teleporting when goru and deathmason appear?
