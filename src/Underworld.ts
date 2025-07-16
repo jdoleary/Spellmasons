@@ -3622,7 +3622,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   // Spawn units out of portals
   redPortalBehavior(faction: Faction) {
     const portalName = faction == Faction.ENEMY ? Pickup.RED_PORTAL : Pickup.BLUE_PORTAL;
-    const deathmasons = this.units.filter(u => u.unitSourceId == bossmasonUnitId && u.faction == faction)
+    const deathmasons = this.units.filter(u => u.unitType == UnitType.AI && u.unitSourceId == bossmasonUnitId && u.faction == faction)
     for (let deathmason of deathmasons) {
       const seed = seedrandom(`${getUniqueSeedString(this)}-${deathmason.id}`);
       const deathmasonPortals = this.pickups.filter(p => p.name == portalName && !p.flaggedForRemoval);

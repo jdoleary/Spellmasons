@@ -751,16 +751,13 @@ export function setWizardType(player: IPlayer, wizardType: WizardType | undefine
         player.unit.mana = 0;
         player.unit.manaMax = 0;
         player.unit.manaPerTurn = 0;
-        player.unit.unitSourceId = GORU_UNIT_ID;
       } else if (player.wizardType == 'Deathmason') {
         player.unit.mana = 0;
         player.unit.manaMax = 0;
         player.unit.manaPerTurn = 0;
-        player.unit.unitSourceId = bossmasonUnitId;
       } else if (player.wizardType == 'Spellmason' || !player.wizardType) {
         player.unit.manaMax = config.UNIT_BASE_MANA;
         player.unit.mana = player.unit.manaMax;
-        player.unit.unitSourceId = spellmasonUnitId;
       }
     }
   }
