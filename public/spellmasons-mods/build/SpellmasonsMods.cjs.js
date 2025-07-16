@@ -967,7 +967,7 @@ const spell$h = {
   card: {
     id: cardId$6,
     category: CardCategory$i.Damage,
-    supportQuantity: false,
+    supportQuantity: true,
     manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,
@@ -976,7 +976,7 @@ const spell$h = {
     sfx: "hurt",
     description: [`Summons a trap that does 30 damage when stepped on`],
     allowNonUnitTarget: true,
-    effect: async (state, card, _quantity, underworld, prediction) => {
+    effect: async (state, card, quantity, underworld, prediction) => {
       const summonLocation = {
         x: state.castLocation.x,
         y: state.castLocation.y
@@ -999,9 +999,15 @@ const spell$h = {
       const index = 0;
       if (!prediction) {
         VisualEffects$3.skyBeam(summonLocation);
-        underworld.spawnPickup(index, summonLocation, prediction);
+        const pickup = underworld.spawnPickup(index, summonLocation, prediction);
+        if (pickup) {
+          pickup.power = quantity;
+        }
       } else {
-        underworld.spawnPickup(index, summonLocation, prediction);
+        const pickup = underworld.spawnPickup(index, summonLocation, prediction);
+        if (pickup) {
+          pickup.power = quantity;
+        }
       }
       return state;
     }
