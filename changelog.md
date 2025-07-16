@@ -1,3 +1,32 @@
+## 1.61.0 Patch
+content: Add Deathmason specific runes
+Balance: Adjust soul fragments based on number of player's connected to balance goru difficulty
+    Thanks MrMagician
+Balance: Summon Trap
+    Much cheaper but cannot be placed ON a unit
+
+Optimize: Soul particle effects
+    Thanks Martin_Talzor
+
+fix: Decoy 3 requirement
+    Thanks Chumler!
+fix: bounty portal to be yellow
+    Thanks Spododo
+fix: Prevent soul sharding a unit that is a soul shard owner
+    Thanks Dorioso Aytario
+fix: prevent soul collection desync on distant servers.  Now a goru will only trigger soul collection on a corpse once until the souls are recieved
+    Thanks Dregenbern and Skillo!
+fix: Prevent multiple goru players from collecting
+    souls at the same tiem from the same corpse and causing duplication
+fix: stamina draining before spawning in
+fix: Fix particle radius to match radius
+    Add floating text to stamina nova
+    Allow novas to scale with stacking
+    Thanks Ekuland
+fix: tooltip for Deathmason and Goru
+fix: maintain deathmason cards when upgrading a card replaces that card.
+    Thanks Spododo
+
 ## 1.60.13 Major Update
 Major Feature: Deathmason as a playable character.
 The Deathmason uses cards to cast.  You draw up to your max cards each turn and you can discard and redraw half of the discarded cards during your turn. You can lock favorite cards so they don't get discarded until the end of the level.
