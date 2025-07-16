@@ -957,7 +957,8 @@ const {
   cards: cards$f,
   VisualEffects: VisualEffects$3,
   config: config$2,
-  math: math$3
+  math: math$3,
+  Pickup: Pickup$3
 } = globalThis.SpellmasonsAPI;
 const { refundLastSpell: refundLastSpell$b } = cards$f;
 const { playDefaultSpellSFX: playDefaultSpellSFX$6 } = cardUtils$7;
@@ -1001,12 +1002,12 @@ const spell$h = {
         VisualEffects$3.skyBeam(summonLocation);
         const pickup = underworld.spawnPickup(index, summonLocation, prediction);
         if (pickup) {
-          pickup.power = quantity;
+          Pickup$3.setPower(pickup, quantity);
         }
       } else {
         const pickup = underworld.spawnPickup(index, summonLocation, prediction);
         if (pickup) {
-          pickup.power = quantity;
+          Pickup$3.setPower(pickup, quantity);
         }
       }
       return state;
