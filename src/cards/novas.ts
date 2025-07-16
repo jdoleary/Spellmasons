@@ -174,7 +174,7 @@ const novas: Spell[] = [
           if (!prediction) {
             promises.push(makeManaTrail(u, state.casterUnit, underworld, `#d5b356`, `#d5b356`, corpsesInRange.length).then(() => {
               if (state.casterPlayer == globalThis.player) {
-                floatingText({ coords: state.casterUnit, text: `+ 1 ${i18n('Stamina')}`, aggregateMatcher: /\d+/, countMultiplier: CORPSE_NOVA_STAMINA_PER_CORPSE });
+                floatingText({ coords: state.casterUnit, text: `+ ${CORPSE_NOVA_STAMINA_PER_CORPSE} ${i18n('Stamina')}`, aggregateMatcher: /\d+/, countMultiplier: CORPSE_NOVA_STAMINA_PER_CORPSE });
               }
             }));
           }
