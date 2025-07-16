@@ -836,10 +836,14 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         Player.syncLobby(underworld);
         // Don't override wizardType if it's not being set
         if (exists(wizardType)) {
-          Player.setWizardType(fromPlayer, wizardType, overworld.underworld);
+          if ((exists(overworld.underworld) && overworld.underworld.levelIndex <= 0) && !fromPlayer.isSpawned) {
+            Player.setWizardType(fromPlayer, wizardType, overworld.underworld);
+          } else {
+            console.warn('Cannot change wizard type in ongoing game')
+          }
         }
         // Update the player image
-        const sourceUnit = wizardType == 'Goru' ? allUnits[GORU_UNIT_ID] : allUnits[spellmasonUnitId];
+        const sourceUnit = fromPlayer.wizardType == 'Goru' ? allUnits[GORU_UNIT_ID] : allUnits[spellmasonUnitId];
         if (sourceUnit) {
           visualPolymorphPlayerUnit(fromPlayer.unit, sourceUnit)
           Unit.returnToDefaultSprite(fromPlayer.unit);

@@ -15,8 +15,7 @@
 
 - upgrade soul muncher and witchy vibes
 - load game with all 3
-- collect souls with multiple gorus
-- why am I teleporting when goru and deathmason appear?
+- loading a game doesn't maintain wizard type
 
 
 
