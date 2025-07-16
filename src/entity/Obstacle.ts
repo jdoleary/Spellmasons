@@ -11,6 +11,7 @@ import * as config from '../config';
 import * as math from '../jmath/math';
 import { isUnit, IUnit } from './Unit';
 import Events from '../Events';
+import { SubmergeId } from '../cards/submerge';
 export interface IObstacle {
   x: number;
   y: number;
@@ -128,6 +129,10 @@ export function isCoordInLiquid(coord: Vec2, underworld: Underworld): Polygon2 |
 
 // sourceUnit is the unit that caused 'entity' to fall in liquid
 export function tryFallInOutOfLiquid(entity: HasSpace, underworld: Underworld, prediction: boolean, sourceUnit?: IUnit) {
+  // If unit is cursed with submerge do not do any special inLiquid handling
+  if (isUnit(entity) && entity.modifiers[SubmergeId]) {
+    return;
+  }
   const insideLiquidPoly = isCoordInLiquid(entity, underworld);
   if (insideLiquidPoly) {
     fallInOrOutToSafeDistanceFromEdge(entity, insideLiquidPoly, underworld);
