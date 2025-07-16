@@ -22,6 +22,7 @@ fix: stamina draining before spawning in
 fix: Fix particle radius to match radius
     Add floating text to stamina nova
     Allow novas to scale with stacking
+    Allow Plus Radius to affect nova radius
     Thanks Ekuland
 fix: tooltip for Deathmason and Goru
 fix: maintain deathmason cards when upgrading a card replaces that card.
