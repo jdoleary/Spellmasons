@@ -165,11 +165,12 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean, 
 ❤️ ${healthMax} ${i18n(['health capacity'])}${manaMax ? `
 🔵 ${manaMax} + ${manaPerTurn} ${i18n('Mana')} ${i18n('per turn')}` : ''}`;
   }
+  const budgetCost = unitSource?.spawnParams?.budgetCost || 1;
 
   return {
     card: {
       id,
-      soulFragmentCostOverride: unitSource?.spawnParams?.budgetCost || 1,
+      soulFragmentCostOverride: asMiniboss ? Unit.getSoulFragmentsForMiniboss(budgetCost) : budgetCost,
       category: CardCategory.Soul,
       sfx: 'summonDecoy',
       supportQuantity: true,

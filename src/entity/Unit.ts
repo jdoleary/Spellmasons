@@ -1686,6 +1686,9 @@ export async function runPickupEvents(unit: IUnit, pickup: IPickup, underworld: 
     ))
   );
 }
+export function getSoulFragmentsForMiniboss(nonMinibossSoulFragments: number): number {
+  return Math.round(nonMinibossSoulFragments * 1.5);
+}
 
 export function makeMiniboss(unit: IUnit, underworld: Underworld) {
   unit.isMiniboss = true;
@@ -1700,7 +1703,7 @@ export function makeMiniboss(unit: IUnit, underworld: Underworld) {
   unit.manaPerTurn *= config.UNIT_MINIBOSS_MANA_MULTIPLIER;
   unit.manaCostToCast *= config.UNIT_MINIBOSS_MANA_MULTIPLIER;
   unit.strength *= 7;
-  unit.soulFragments = Math.round(unit.soulFragments * 1.5);
+  unit.soulFragments = getSoulFragmentsForMiniboss(unit.soulFragments);
   Image.setScaleFromModifiers(unit.image, unit.strength);
   const crown = Image.addSubSprite(unit.image, 'crown');
   // Exception: Ancients are short so their crown
