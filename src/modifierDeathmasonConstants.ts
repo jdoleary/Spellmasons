@@ -37,3 +37,21 @@ export function registerWitchyVibes() {
     probability: 0,
   });
 }
+
+
+export const fairIsFairId = 'Fair is Fair'
+export function registerFairIsFair() {
+  registerModifiers(fairIsFairId, {
+    description: `fair-is-fair-desc`,
+    unitOfMeasure: '',
+    _costPerUpgrade: 200,
+    quantityPerUpgrade: 1,
+    maxUpgradeCount: 1,
+    constant: true,
+    omitForWizardType: ['Goru', 'Spellmason'],
+    add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
+      getOrInitModifier(unit, fairIsFairId, { isCurse: false, quantity, keepOnDeath: true }, () => { });
+    },
+    probability: 0,
+  });
+}

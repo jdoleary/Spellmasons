@@ -60,6 +60,7 @@ import { runeHardenedMinionsId } from '../modifierHardenedMinions';
 import { runeSharpTeethId } from '../modifierSharpTeeth';
 import { isDeathmason, isGoru } from './Player';
 import { createFloatingParticleSystem } from '../graphics/Particles';
+import { fairIsFairId } from '../modifierDeathmasonConstants';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -2113,6 +2114,10 @@ export function drawCharges(unit: IUnit, underworld: Underworld, count: number =
   }
 
   const cardsWithManaBasedProbability = deathmasonCardProbabilities(cards, unit);
+  // Set draw probabilities to equal
+  if (unit.modifiers[fairIsFairId]) {
+    cardsWithManaBasedProbability.forEach(c => { c.probability = 1 });
+  }
   // Debug probabilities
   const maxProb = cardsWithManaBasedProbability.reduce((sum, cur) => sum + cur.probability, 0);
   console.table(cardsWithManaBasedProbability.map(c => ({ id: c.id, p: c.probability, percent: `${(100 * c.probability / maxProb).toFixed(2)}%` })).sort((a, b) => a.p - b.p));
