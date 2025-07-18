@@ -77,6 +77,8 @@ function spawnGolems(unit: Unit.IUnit, quantity: number, underworld: Underworld,
             prediction,
             unit
           );
+          // Since they are made for free they shouldn't have souls
+          summonedUnit.soulFragments = 0;
 
           if (!prediction) {
             playSFXKey('resurrect');
