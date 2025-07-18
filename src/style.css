@@ -3089,3 +3089,7 @@ body.wizardtype-deathmason .card.is-discard-locked .lock-discard {
 .codex .codex-only {
   display: block;
 }
+
+.display-none {
+  display: none;
+}

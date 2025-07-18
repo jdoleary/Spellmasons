@@ -181,6 +181,9 @@ export function addOverworldEventListeners(overworld: Overworld) {
   const elQuitButton: HTMLButtonElement = document.getElementById(
     'quit',
   ) as HTMLButtonElement;
+  const elRestartButton: HTMLButtonElement = document.getElementById(
+    'play-again',
+  ) as HTMLButtonElement;
   const elDisconnectButton: HTMLButtonElement = document.getElementById(
     'disconnect-btn',
   ) as HTMLButtonElement;
@@ -305,6 +308,15 @@ export function addOverworldEventListeners(overworld: Overworld) {
         };
 
       }),
+      {
+        target: elRestartButton,
+        event: 'click',
+        listener: () => {
+          if (overworld.underworld) {
+            overworld.underworld.restart();
+          }
+        }
+      },
       {
         target: elQuitButton,
         event: 'click',

@@ -2782,30 +2782,37 @@ export default class Underworld {
     // Show game over modal after a delay
     gameOverModalTimeout = setTimeout(() => {
       document.body.classList.toggle('game-over', true);
+      document.getElementById('play-again')?.classList.toggle('display-none', isHost(this.pie));
     }, 2000);
 
     this.updateGameOverModal();
     if (globalThis.headless) {
-      const overworld = this.overworld;
-      const pie = this.pie;
       if (!this.isRestarting) {
         const millisTillRestart = 10000;
         console.log('-------------------Host app game over', true, `restarting in ${Math.floor(millisTillRestart / 1000)} seconds`);
         this.isRestarting = setTimeout(() => {
-          const newUnderworld = new Underworld(overworld, pie, Math.random().toString());
-          // Add players back to underworld
-          // defaultLobbyReady: Since they are still in the game, set them to lobbyReady
-          ensureAllClientsHaveAssociatedPlayers(overworld, overworld.clients, [], true);
-          // Generate the level data
-          newUnderworld.lastLevelCreated = newUnderworld.generateLevelDataSyncronous(0, this.gameMode);
-          // Actually create the level 
-          newUnderworld.createLevelSyncronous(newUnderworld.lastLevelCreated);
-          this.overworld.clients.forEach(clientId => {
-            hostGiveClientGameState(clientId, newUnderworld, newUnderworld.lastLevelCreated, MESSAGE_TYPES.INIT_GAME_STATE);
-          });
+          this.restart();
         }, millisTillRestart);
       }
     }
+  }
+  restart() {
+    if (!isHost(this.pie)) {
+      console.error('Err: Attempting to restart from nonHost');
+      return
+    }
+
+    const newUnderworld = new Underworld(this.overworld, this.pie, Math.random().toString());
+    // Add players back to underworld
+    // defaultLobbyReady: Since they are still in the game, set them to lobbyReady
+    ensureAllClientsHaveAssociatedPlayers(this.overworld, this.overworld.clients, [], true);
+    // Generate the level data
+    newUnderworld.lastLevelCreated = newUnderworld.generateLevelDataSyncronous(0, this.gameMode);
+    // Actually create the level 
+    newUnderworld.createLevelSyncronous(newUnderworld.lastLevelCreated);
+    this.overworld.clients.forEach(clientId => {
+      hostGiveClientGameState(clientId, newUnderworld, newUnderworld.lastLevelCreated, MESSAGE_TYPES.INIT_GAME_STATE);
+    });
   }
   updateGameOverModal() {
     // Add stats to modal:
