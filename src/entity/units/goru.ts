@@ -445,7 +445,7 @@ export function tryCollectSoul(player: IPlayer, u: Unit.IUnit, underworld: Under
     return;
   }
   const distanceFromCorpse = math.distance(u, player.unit);
-  if (globalThis.player == player && player.unit.alive && distanceFromCorpse <= config.GORU_SOUL_COLLECT_RADIUS) {
+  if (globalThis.player == player && player.unit.alive && player.isSpawned && distanceFromCorpse <= config.GORU_SOUL_COLLECT_RADIUS) {
     // Prevent multiple gorus from collecting souls from the same corpse at the same time
     const goruPlayers = underworld.players.filter(p => p.wizardType == 'Goru');
     if (goruPlayers.length > 1) {
