@@ -143,6 +143,7 @@ export function mergeUnits(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], under
       target.manaPerTurn += unit.manaPerTurn;
       target.strength += unit.strength;
     }
+    target.soulFragments += unit.soulFragments;
 
     // Store Modifiers
     for (const modifierKey of Object.keys(unit.modifiers)) {
