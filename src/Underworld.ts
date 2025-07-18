@@ -65,7 +65,7 @@ import { baseTiles, caveSizes, convertBaseTilesToFinalTiles, generateCave, getLi
 import { Material } from './Conway';
 import { oneDimentionIndexToVec2, vec2ToOneDimentionIndexPreventWrap } from './jmath/ArrayUtil';
 import { raceTimeout } from './Promise';
-import { cleanUpEmitters, containerParticles, containerParticlesUnderUnits, makeManaTrail, updateParticles } from './graphics/Particles';
+import { cleanUpEmitters, containerParticles, containerParticlesUnderUnits, makeManaTrail, removeFloatingParticlesFor, updateParticles } from './graphics/Particles';
 import { elInstructions } from './network/networkHandler';
 import type PieClient from '@websocketpie/client';
 import { isOutOfRange, sendPlayerThinkingThrottled } from './PlayerUtils';
@@ -2688,6 +2688,13 @@ export default class Underworld {
     this.pickups.filter(p => p.name !== Pickup.PORTAL_PURPLE_NAME && !p.flaggedForRemoval).forEach(p => {
       makeScrollDissapearParticles(p, false);
       Pickup.removePickup(p, this, false);
+    });
+
+    // Remove remaining floating souls on end of level so player doesn't feel compelled to pick them up
+    this.units.filter(u => !u.alive).forEach(u => {
+      removeFloatingParticlesFor(u);
+      u.soulFragments = 0;
+      u.soulsBeingCollected = false;
     });
 
     // Spawn a portal near each remaining player
