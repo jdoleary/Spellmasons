@@ -787,7 +787,10 @@
         "soulmuncher-desc": "Increases the relative probability of drawing Soul cards",
         "soul muncher": "Soul Muncher",
         "witchy-vibes-desc": "Increases the relative probability of drawing Curse cards",
-        "witchy vibes": "Witchy Vibes"
+        "witchy vibes": "Witchy Vibes",
+        "play again": "Play Again",
+        "fair is fair": "Fair is Fair",
+        "fair-is-fair-desc": "All cards have the same probability of being drawn"
     },
     {
         "language": "Français",
@@ -1577,7 +1580,10 @@
         "soulmuncher-desc": "Augmente la probabilité relative de tirer des cartes d'âme.",
         "soul muncher": "Consommateur d'âmes",
         "witchy-vibes-desc": "Augmente la probabilité relative de tirer des cartes Malédiction.",
-        "witchy vibes": "Ambiances Sorcières"
+        "witchy vibes": "Ambiances Sorcières",
+        "play again": "Jouer à nouveau",
+        "fair is fair": "Probabilités équitables",
+        "fair-is-fair-desc": "Toutes les cartes ont la même probabilité d'être tirées."
     },
     {
         "language": "italiano",
@@ -2367,7 +2373,10 @@
         "soulmuncher-desc": "Aumenta la probabilità relativa di pescare carte Anima.",
         "soul muncher": "Mangiatrice di Anime",
         "witchy-vibes-desc": "Aumenta la probabilità relativa di pescare carte Maledizione",
-        "witchy vibes": "Vibrazioni Stregonesche"
+        "witchy vibes": "Vibrazioni Stregonesche",
+        "play again": "Gioca di nuovo",
+        "fair is fair": "Probabilità eque",
+        "fair-is-fair-desc": "Tutte le carte hanno la stessa probabilità di essere estratte."
     },
     {
         "language": "Deutsche",
@@ -3157,7 +3166,10 @@
         "soulmuncher-desc": "Erhöht die relative Wahrscheinlichkeit, Seelenkarten zu ziehen.",
         "soul muncher": "Seelenfresser",
         "witchy-vibes-desc": "Erhöht die relative Wahrscheinlichkeit, Fluchkarten zu ziehen.",
-        "witchy vibes": "Hexen-Stimmung"
+        "witchy vibes": "Hexen-Stimmung",
+        "play again": "Nochmal spielen",
+        "fair is fair": "Faire Wahrscheinlichkeiten",
+        "fair-is-fair-desc": "Alle Karten haben die gleiche Wahrscheinlichkeit, gezogen zu werden."
     },
     {
         "language": "español",
@@ -3947,7 +3959,10 @@
         "soulmuncher-desc": "Aumenta la probabilidad relativa de obtener cartas de Alma.",
         "soul muncher": "Devorador de Almas",
         "witchy-vibes-desc": "Aumenta la probabilidad relativa de sacar cartas de Maldición.",
-        "witchy vibes": "Vibraciones de bruja"
+        "witchy vibes": "Vibraciones de bruja",
+        "play again": "Jugar de nuevo",
+        "fair is fair": "Probabilidades justas",
+        "fair-is-fair-desc": "Todas las cartas tienen la misma probabilidad de ser desenfrenadas."
     },
     {
         "language": "日本",
@@ -4737,7 +4752,10 @@
         "soulmuncher-desc": "ソウルカードを引く相対的な確率を増加させる",
         "soul muncher": "ソウルイーター",
         "witchy-vibes-desc": "呪いのカードを引く相対的な確率を増加させる",
-        "witchy vibes": "魔女の雰囲気"
+        "witchy vibes": "魔女の雰囲気",
+        "play again": "もう一度プレイ",
+        "fair is fair": "公正な確率",
+        "fair-is-fair-desc": "すべてのカードは引かれる確率が同じです。"
     },
     {
         "language": "Português",
@@ -5527,7 +5545,10 @@
         "soulmuncher-desc": "Aumenta a probabilidade relativa de puxar cartas de Alma.",
         "soul muncher": "Ceifador de Almas",
         "witchy-vibes-desc": "Aumenta a probabilidade relativa de puxar cartas de Maldição.",
-        "witchy vibes": "Vibrações de Bruxaria"
+        "witchy vibes": "Vibrações de Bruxaria",
+        "play again": "Jogar Novamente",
+        "fair is fair": "Probabilidades justas",
+        "fair-is-fair-desc": "Todas as cartas têm a mesma probabilidade de serem sorteadas."
     },
     {
         "language": "عربى",
@@ -6317,7 +6338,10 @@
         "soulmuncher-desc": "يزيد من احتمال سحب بطاقات الروح النسبي",
         "soul muncher": "آكل الأرواح",
         "witchy-vibes-desc": "يزيد من احتمال سحب بطاقات اللعنة نسبياً",
-        "witchy vibes": "أجواء ساحرة"
+        "witchy vibes": "أجواء ساحرة",
+        "play again": "لعبة مرة أخرى",
+        "fair is fair": "احتمالات عادلة",
+        "fair-is-fair-desc": "جميع البطاقات لها نفس الاحتمالية في السحب."
     },
     {
         "language": "한국어",
@@ -7107,7 +7131,10 @@
         "soulmuncher-desc": "영혼 카드 획득의 상대 확률을 증가시킵니다.",
         "soul muncher": "소울 이터",
         "witchy-vibes-desc": "저주 카드 드로우 확률을 상대적으로 증가시킵니다.",
-        "witchy vibes": "마녀의 분위기"
+        "witchy vibes": "마녀의 분위기",
+        "play again": "다시 플레이하기",
+        "fair is fair": "공정한 확률",
+        "fair-is-fair-desc": "모든 카드는 뽑힐 확률이 동일합니다."
     },
     {
         "language": "Русский",
@@ -7897,7 +7924,10 @@
         "soulmuncher-desc": "Увеличивает относительную вероятность вытягивания карт Душ.",
         "soul muncher": "Пожиратель душ",
         "witchy-vibes-desc": "Увеличивает относительную вероятность вытянуть карты Проклятия.",
-        "witchy vibes": "Ведьмовские флюиды"
+        "witchy vibes": "Ведьмовские флюиды",
+        "play again": "Играть снова",
+        "fair is fair": "Справедливые вероятности",
+        "fair-is-fair-desc": "Все карты имеют одинаковую вероятность вытягивания."
     },
     {
         "language": "中文(简)",
@@ -8687,7 +8717,10 @@
         "soulmuncher-desc": "增加抽取灵魂卡片的相对概率",
         "soul muncher": "魂吞者",
         "witchy-vibes-desc": "增加抽取诅咒卡的相对概率",
-        "witchy vibes": "女巫气息"
+        "witchy vibes": "女巫气息",
+        "play again": "再玩一次",
+        "fair is fair": "公平的概率",
+        "fair-is-fair-desc": "所有牌被抽中的概率是相同的。"
     },
     {
         "language": "中文(繁)",
@@ -9477,7 +9510,10 @@
         "soulmuncher-desc": "提高抽取靈魂卡的相對機率",
         "soul muncher": "靈魂吞噬者",
         "witchy-vibes-desc": "增加抽取詛咒卡的相對機率",
-        "witchy vibes": "女巫氣息"
+        "witchy vibes": "女巫氣息",
+        "play again": "再玩一次",
+        "fair is fair": "公平的機率",
+        "fair-is-fair-desc": "所有卡牌被抽中的概率相同"
     },
     {
         "language": "Polski",
@@ -10267,7 +10303,10 @@
         "soulmuncher-desc": "Zwiększa względne prawdopodobieństwo pobrania kart Duszy",
         "soul muncher": "Zjadacz Dusz",
         "witchy-vibes-desc": "Zwiększa względne prawdopodobieństwo wyciągania kart Klątwy.",
-        "witchy vibes": "Czarownicze Wibracje"
+        "witchy vibes": "Czarownicze Wibracje",
+        "play again": "Graj ponownie",
+        "fair is fair": "Sprawiedliwe prawdopodobieństwa",
+        "fair-is-fair-desc": "Wszystkie karty mają taką samą prawdopodobieństwo bycia dobranymi."
     },
     {
         "language": "Dutch",
@@ -11057,7 +11096,10 @@
         "soulmuncher-desc": "Verhoogt de relatieve waarschijnlijkheid om Zielkaarten te trekken",
         "soul muncher": "Zielenslechter",
         "witchy-vibes-desc": "Verhoogt de relatieve kans om Vloekkaarten te trekken",
-        "witchy vibes": "Hekserige Sfeer"
+        "witchy vibes": "Hekserige Sfeer",
+        "play again": "Speel Opnieuw",
+        "fair is fair": "Eerlijke waarschijnlijkheden",
+        "fair-is-fair-desc": "Alle kaarten hebben dezelfde kans om getrokken te worden."
     },
     {
         "language": "Предреформенный русскій",
@@ -11847,6 +11889,9 @@
         "soulmuncher-desc": "",
         "soul muncher": "",
         "witchy-vibes-desc": "",
-        "witchy vibes": ""
+        "witchy vibes": "",
+        "play again": "",
+        "fair is fair": "",
+        "fair-is-fair-desc": ""
     }
 ]
