@@ -889,6 +889,8 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         }
         if (!(isNaN(payload.x) && isNaN(payload.y))) {
           fromPlayer.isSpawned = true;
+          // Fail-safe: Ensure spawning player spawns alive
+          fromPlayer.unit.alive = true;
           if (fromPlayer.clientId == globalThis.clientId) {
             globalThis.awaitingSpawn = false;
           }
