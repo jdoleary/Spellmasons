@@ -1,3 +1,17 @@
+## Patch
+fix: merge combines soul fragments
+fix: Free souls on Golemancer
+    Thanks Spododo
+fix: Miniboss summons have more soul fragments than they cost
+    Thanks @Shleo
+fix: Unspawned goru can pickup souls
+    Thanks @NordKaiser
+content: Fair is Fair
+    Thanks Skillo and Kain Valkin
+QoL: Remove remaining floating souls on end of level so player doesn't feel compelled to pick them up
+menu: Add restart button
+    Thanks @Flounder
+    
 ## 1.61.2 Patch
 content: Add Deathmason specific runes
 Balance: Adjust soul fragments based on number of player's connected to balance goru difficulty
