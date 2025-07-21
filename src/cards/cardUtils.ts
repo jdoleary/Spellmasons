@@ -26,7 +26,7 @@ import { runeBloodWarlockId } from "../modifierBloodWarlock";
 import { precisionId } from "../modifierPrecision";
 import * as Cards from "../cards";
 import { IUnit } from "../entity/Unit";
-import { soulmuncherId, witchyVibesId } from "../modifierDeathmasonConstants";
+import { fairIsFairId, soulmuncherId, witchyVibesId } from "../modifierDeathmasonConstants";
 
 export interface CardCost {
     manaCost: number;
@@ -309,11 +309,15 @@ export function deathmasonCardProbabilities(cards: ICard[], unit: IUnit): { id: 
         // Default to highestCostSum to prevent division by 0.  That makes free cards like "Sell" ultra rare. This may need to be balanced away
         const cardCostSum = getCardCostSum(c) || highestCostSum;
         let probability = Math.round(scalar * highestCostSum / cardCostSum);
+        // Set draw probabilities to equal
+        if (unit.modifiers[fairIsFairId]) {
+            probability = 1;
+        }
         if (necroDeathCount && c.category == CardCategory.Soul) {
-            probability *= necroDeathCount.quantity
+            probability *= (necroDeathCount.quantity + 1)
         }
         if (witchyVibesCount && c.category == CardCategory.Curses) {
-            probability *= witchyVibesCount.quantity
+            probability *= (witchyVibesCount.quantity + 1)
         }
 
         return ({ id: c.id, probability, card: c, cost: cardCostSum })
