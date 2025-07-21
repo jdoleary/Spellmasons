@@ -25,7 +25,7 @@ const spell: Spell = {
     manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,
-    probability: probabilityMap[CardRarity.RARE],
+    probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconNukitsuke.png',
     description: 'spell_nukitsuke',
     effect: async (state, card, quantity, underworld, prediction) => {
