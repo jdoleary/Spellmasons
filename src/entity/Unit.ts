@@ -658,11 +658,19 @@ export function syncronize(unitSerialized: IUnitSerialized, originalUnit: IUnit)
   // originalUnit.image = Image.syncronize(image, originalUnit.image);
 }
 export function changeToDieSprite(unit: IUnit) {
+  // Early return: Special handling for die sprite.  Since die sprite changes container
+  // when done animating, if changeSprite is called again, it'll switch it to containerUnits
+  // and replay the animation without this early return
+  const imagePath = globalThis.noGore
+    ? 'tombstone'
+    : unit.animations.die
+  if (unit.image?.sprite.imagePath == imagePath) {
+    return;
+  }
+
   Image.changeSprite(
     unit.image,
-    globalThis.noGore
-      ? 'tombstone'
-      : unit.animations.die,
+    imagePath,
     containerUnits,
     // DieSprite intentionally stops animating when it is complete, therefore
     // resolver is undefined, since no promise is waiting for it.
