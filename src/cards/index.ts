@@ -125,6 +125,7 @@ import teach from './teach';
 import sell from './sell';
 import novas from './novas';
 import nukitsuke from './nukitsuke';
+import nukitsuke2 from './nukitsuke2';
 // Not used as a card, for making half of looped enemies immune
 // on first turn
 import registerSummoningSickness from '../modifierSummoningSickness';
@@ -448,6 +449,7 @@ export function registerCards(overworld: Overworld) {
     registerSpell(nova, overworld)
   );
   config.IS_JULY25_UPDATE_OUT && registerSpell(nukitsuke, overworld);
+  config.IS_JULY25_UPDATE_OUT && registerSpell(nukitsuke2, overworld);
 
   // Blessings
   registerSpell(heal, overworld);

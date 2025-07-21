@@ -11,7 +11,9 @@ content: Fair is Fair
 QoL: Remove remaining floating souls on end of level so player doesn't feel compelled to pick them up
 menu: Add restart button
     Thanks @Flounder
-    
+mod: Improved some spell icons, Thanks Weedybird!
+content: Nukitsuke 2: Damage scales by distance
+
 ## 1.61.2 Patch
 content: Add Deathmason specific runes
 Balance: Adjust soul fragments based on number of player's connected to balance goru difficulty

@@ -790,7 +790,8 @@
         "witchy vibes": "Witchy Vibes",
         "play again": "Play Again",
         "fair is fair": "Fair is Fair",
-        "fair-is-fair-desc": "All cards have the same probability of being drawn"
+        "fair-is-fair-desc": "All cards have the same probability of being drawn",
+        "spell_nukitsuke_2": "Dash towards the first target, dealing 🍞 damage to anything you pass through.  Damage increases the farther away a unit is."
     },
     {
         "language": "Français",
@@ -1583,7 +1584,8 @@
         "witchy vibes": "Ambiances Sorcières",
         "play again": "Jouer à nouveau",
         "fair is fair": "Probabilités équitables",
-        "fair-is-fair-desc": "Toutes les cartes ont la même probabilité d'être tirées."
+        "fair-is-fair-desc": "Toutes les cartes ont la même probabilité d'être tirées.",
+        "spell_nukitsuke_2": "Foncez vers la première cible, infligeant 🍞 dégâts à tout ce que vous traversez. Les dégâts augmentent avec la distance de l'unité."
     },
     {
         "language": "italiano",
@@ -2376,7 +2378,8 @@
         "witchy vibes": "Vibrazioni Stregonesche",
         "play again": "Gioca di nuovo",
         "fair is fair": "Probabilità eque",
-        "fair-is-fair-desc": "Tutte le carte hanno la stessa probabilità di essere estratte."
+        "fair-is-fair-desc": "Tutte le carte hanno la stessa probabilità di essere estratte.",
+        "spell_nukitsuke_2": "Corri verso il primo obiettivo, infliggendo 🍞 danni a tutto ciò che attraversi. I danni aumentano quanto più un'unità è lontana."
     },
     {
         "language": "Deutsche",
@@ -3169,7 +3172,8 @@
         "witchy vibes": "Hexen-Stimmung",
         "play again": "Nochmal spielen",
         "fair is fair": "Faire Wahrscheinlichkeiten",
-        "fair-is-fair-desc": "Alle Karten haben die gleiche Wahrscheinlichkeit, gezogen zu werden."
+        "fair-is-fair-desc": "Alle Karten haben die gleiche Wahrscheinlichkeit, gezogen zu werden.",
+        "spell_nukitsuke_2": "Stürze dich auf das erste Ziel und füge allem, was du durchquerst, 🍞 Schaden zu. Der Schaden erhöht sich, je weiter ein Gegner entfernt ist."
     },
     {
         "language": "español",
@@ -3962,7 +3966,8 @@
         "witchy vibes": "Vibraciones de bruja",
         "play again": "Jugar de nuevo",
         "fair is fair": "Probabilidades justas",
-        "fair-is-fair-desc": "Todas las cartas tienen la misma probabilidad de ser desenfrenadas."
+        "fair-is-fair-desc": "Todas las cartas tienen la misma probabilidad de ser desenfrenadas.",
+        "spell_nukitsuke_2": "Corre hacia el primer objetivo, infligiendo 🍞 daño a cualquier cosa que atravieses. El daño aumenta cuanto más lejos esté una unidad."
     },
     {
         "language": "日本",
@@ -4755,7 +4760,8 @@
         "witchy vibes": "魔女の雰囲気",
         "play again": "もう一度プレイ",
         "fair is fair": "公正な確率",
-        "fair-is-fair-desc": "すべてのカードは引かれる確率が同じです。"
+        "fair-is-fair-desc": "すべてのカードは引かれる確率が同じです。",
+        "spell_nukitsuke_2": "最初のターゲットに向かって突進し、通過したものに🍞ダメージを与えます。 ダメージはユニットからの距離が遠くなるほど増加します。"
     },
     {
         "language": "Português",
@@ -5548,7 +5554,8 @@
         "witchy vibes": "Vibrações de Bruxaria",
         "play again": "Jogar Novamente",
         "fair is fair": "Probabilidades justas",
-        "fair-is-fair-desc": "Todas as cartas têm a mesma probabilidade de serem sorteadas."
+        "fair-is-fair-desc": "Todas as cartas têm a mesma probabilidade de serem sorteadas.",
+        "spell_nukitsuke_2": "Corra em direção ao primeiro alvo, causando 🍞 de dano a qualquer coisa que você atravessar. O dano aumenta quanto mais longe a unidade estiver."
     },
     {
         "language": "عربى",
@@ -6341,7 +6348,8 @@
         "witchy vibes": "أجواء ساحرة",
         "play again": "لعبة مرة أخرى",
         "fair is fair": "احتمالات عادلة",
-        "fair-is-fair-desc": "جميع البطاقات لها نفس الاحتمالية في السحب."
+        "fair-is-fair-desc": "جميع البطاقات لها نفس الاحتمالية في السحب.",
+        "spell_nukitsuke_2": "اندفع نحو الهدف الأول، مما يتسبب في 🍞 الضرر لأي شيء تعبر من خلاله. يزداد الضرر كلما ابتعدت الوحدة."
     },
     {
         "language": "한국어",
@@ -7134,7 +7142,8 @@
         "witchy vibes": "마녀의 분위기",
         "play again": "다시 플레이하기",
         "fair is fair": "공정한 확률",
-        "fair-is-fair-desc": "모든 카드는 뽑힐 확률이 동일합니다."
+        "fair-is-fair-desc": "모든 카드는 뽑힐 확률이 동일합니다.",
+        "spell_nukitsuke_2": "첫 번째 목표를 향해 돌진하여 지나가는 모든 것에 🍞 피해를 입힙니다. 피해는 유닛과의 거리가 멀어질수록 증가합니다."
     },
     {
         "language": "Русский",
@@ -7927,7 +7936,8 @@
         "witchy vibes": "Ведьмовские флюиды",
         "play again": "Играть снова",
         "fair is fair": "Справедливые вероятности",
-        "fair-is-fair-desc": "Все карты имеют одинаковую вероятность вытягивания."
+        "fair-is-fair-desc": "Все карты имеют одинаковую вероятность вытягивания.",
+        "spell_nukitsuke_2": "Растяните к первой цели, нанося 🍞 урон всем, мимо чего вы проходите. Урон увеличивается с расстоянием до юнита."
     },
     {
         "language": "中文(简)",
@@ -8720,7 +8730,8 @@
         "witchy vibes": "女巫气息",
         "play again": "再玩一次",
         "fair is fair": "公平的概率",
-        "fair-is-fair-desc": "所有牌被抽中的概率是相同的。"
+        "fair-is-fair-desc": "所有牌被抽中的概率是相同的。",
+        "spell_nukitsuke_2": "向第一个目标冲刺，对你经过的任何物体造成🍞伤害。伤害随着单位距离的增加而增加。"
     },
     {
         "language": "中文(繁)",
@@ -9513,7 +9524,8 @@
         "witchy vibes": "女巫氣息",
         "play again": "再玩一次",
         "fair is fair": "公平的機率",
-        "fair-is-fair-desc": "所有卡牌被抽中的概率相同"
+        "fair-is-fair-desc": "所有卡牌被抽中的概率相同",
+        "spell_nukitsuke_2": "朝第一個目標衝刺，對路過的任何東西造成 🍞 傷害。傷害隨著單位距離的增加而增強。"
     },
     {
         "language": "Polski",
@@ -10306,7 +10318,8 @@
         "witchy vibes": "Czarownicze Wibracje",
         "play again": "Graj ponownie",
         "fair is fair": "Sprawiedliwe prawdopodobieństwa",
-        "fair-is-fair-desc": "Wszystkie karty mają taką samą prawdopodobieństwo bycia dobranymi."
+        "fair-is-fair-desc": "Wszystkie karty mają taką samą prawdopodobieństwo bycia dobranymi.",
+        "spell_nukitsuke_2": "Pędź w kierunku pierwszego celu, zadając 🍞 obrażenia wszystkiemu, co napotkasz na swojej drodze. Obrażenia wzrastają, im dalej znajduje się jednostka."
     },
     {
         "language": "Dutch",
@@ -11099,7 +11112,8 @@
         "witchy vibes": "Hekserige Sfeer",
         "play again": "Speel Opnieuw",
         "fair is fair": "Eerlijke waarschijnlijkheden",
-        "fair-is-fair-desc": "Alle kaarten hebben dezelfde kans om getrokken te worden."
+        "fair-is-fair-desc": "Alle kaarten hebben dezelfde kans om getrokken te worden.",
+        "spell_nukitsuke_2": "Ren naar het eerste doelwit, waarbij je 🍞 schade toebrengt aan alles wat je passeert. De schade neemt toe naarmate een eenheid verder weg is."
     },
     {
         "language": "Предреформенный русскій",
@@ -11892,6 +11906,7 @@
         "witchy vibes": "",
         "play again": "",
         "fair is fair": "",
-        "fair-is-fair-desc": ""
+        "fair-is-fair-desc": "",
+        "spell_nukitsuke_2": ""
     }
 ]
