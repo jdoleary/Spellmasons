@@ -314,6 +314,7 @@ export function addOverworldEventListeners(overworld: Overworld) {
         listener: () => {
           if (overworld.underworld) {
             overworld.underworld.restart();
+            elRestartButton.classList.toggle('display-none', true);
           }
         }
       },

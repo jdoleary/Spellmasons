@@ -115,6 +115,7 @@ import { OutlineFilter } from '@pixi/filter-outline';
 import { LogLevel } from './RemoteLogging';
 import PiePeer from './network/PiePeer';
 import { investmentId } from './modifierInvestment';
+import { isSinglePlayer } from './network/wsPieSetup';
 
 const loopCountLimit = 10000;
 export enum turn_phase {
@@ -2789,7 +2790,8 @@ export default class Underworld {
     // Show game over modal after a delay
     gameOverModalTimeout = setTimeout(() => {
       document.body.classList.toggle('game-over', true);
-      document.getElementById('play-again')?.classList.toggle('display-none', isHost(this.pie));
+      const playAgainBtn = document.getElementById('play-again');
+      playAgainBtn?.classList.toggle('display-none', !(isSinglePlayer() || isHost(this.pie)));
     }, 2000);
 
     this.updateGameOverModal();
