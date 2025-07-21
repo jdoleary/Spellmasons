@@ -2814,11 +2814,21 @@ export default class Underworld {
     const newUnderworld = new Underworld(this.overworld, this.pie, Math.random().toString());
     // Add players back to underworld
     // defaultLobbyReady: Since they are still in the game, set them to lobbyReady
-    ensureAllClientsHaveAssociatedPlayers(this.overworld, this.overworld.clients, [], true);
+    let clients = this.overworld.clients
+    if (this.pie instanceof PiePeer) {
+      clients = Array.from(globalThis.peers)
+    }
+    console.log('jtest', this.overworld.clients, Array.from(globalThis.peers), clients);
+
+    ensureAllClientsHaveAssociatedPlayers(this.overworld, clients, [], true);
     // Generate the level data
     newUnderworld.lastLevelCreated = newUnderworld.generateLevelDataSyncronous(0, this.gameMode);
     // Actually create the level 
     newUnderworld.createLevelSyncronous(newUnderworld.lastLevelCreated);
+    // @ts-ignore jtestExtraClients
+    if (globalThis.jtestExtraClients && this.pie instanceof PiePeer) {
+      peerHostBroadcastClientsPresenceChanged(this.pie);
+    }
     this.overworld.clients.forEach(clientId => {
       hostGiveClientGameState(clientId, newUnderworld, newUnderworld.lastLevelCreated, MESSAGE_TYPES.INIT_GAME_STATE);
     });
