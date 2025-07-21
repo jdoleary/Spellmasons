@@ -6,6 +6,7 @@ fix: Miniboss summons have more soul fragments than they cost
     Thanks @Shleo
 fix: Unspawned goru can pickup souls
     Thanks @NordKaiser
+fix: Death animation playing over and over
 content: Fair is Fair
     Thanks Skillo and Kain Valkin
 QoL: Remove remaining floating souls on end of level so player doesn't feel compelled to pick them up
