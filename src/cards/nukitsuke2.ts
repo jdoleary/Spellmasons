@@ -20,7 +20,7 @@ export const nukitsuke2_id = 'Nukitsuke 2';
 const spell: Spell = {
   card: {
     id: nukitsuke2_id,
-    requires: [nukitsuke_id],
+    replaces: [nukitsuke_id],
     category: CardCategory.Movement,
     supportQuantity: true,
     sfx: 'dash',
