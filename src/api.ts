@@ -55,6 +55,7 @@ import * as cardsUtil from './cards/util';
 import * as Events from './Events';
 import { forcePushTowards, forcePushAwayFrom, forcePushToDestination, forcePushDelta } from './effects/force_move';
 import * as EffectsHeal from './effects/heal'
+import * as explode from "./effects/explode";
 
 import * as commonTypes from './types/commonTypes';
 import * as particleEmitter from 'jdoleary-fork-pixi-particle-emitter'
@@ -75,6 +76,7 @@ const SpellmasonsAPI = {
   Easing,
   eventListeners,
   Events,
+  explode,
   FloatingText,
   forcePushDelta,
   forcePushTowards,
