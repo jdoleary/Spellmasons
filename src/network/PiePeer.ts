@@ -468,8 +468,8 @@ export default class PiePeer {
         } else {
             const playerName = storage.get(storage.STORAGE_ID_PLAYER_NAME);
             if (!playerName) {
-                alert('You must choose a name in settings before joining a game');
-                return Promise.reject('You must choose a name in settings before joining a game');
+                console.warn("Using id as name", this.clientId)
+                storage.set(storage.STORAGE_ID_PLAYER_NAME, this.clientId)
             }
             if (isHosting) {
                 document.body.classList.toggle('isPeerHost', true);
