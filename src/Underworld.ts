@@ -2811,6 +2811,8 @@ export default class Underworld {
       return
     }
 
+    const savedWizardTypes = this.players.map(p => ({ wizardType: p.wizardType, playerId: p.playerId }))
+
     const newUnderworld = new Underworld(this.overworld, this.pie, Math.random().toString());
     // Add players back to underworld
     // defaultLobbyReady: Since they are still in the game, set them to lobbyReady
@@ -2818,9 +2820,20 @@ export default class Underworld {
     if (this.pie instanceof PiePeer) {
       clients = Array.from(globalThis.peers)
     }
-    console.log('jtest', this.overworld.clients, Array.from(globalThis.peers), clients);
+    console.log('Restart with clients', this.overworld.clients, Array.from(globalThis.peers), clients);
 
     ensureAllClientsHaveAssociatedPlayers(this.overworld, clients, [], true);
+
+    // Restore wizard info
+    for (let savedWizardInfo of savedWizardTypes) {
+      const player = this.players.find(p => p.playerId == savedWizardInfo.playerId)
+      if (!player) {
+        console.log('Err: Player id missing', savedWizardInfo.playerId)
+        console.error('Attempting to restore player wizard info but no player found with id')
+      } else {
+        Player.setWizardType(player, savedWizardInfo.wizardType, newUnderworld)
+      }
+    }
     // Generate the level data
     newUnderworld.lastLevelCreated = newUnderworld.generateLevelDataSyncronous(0, this.gameMode);
     // Actually create the level 
