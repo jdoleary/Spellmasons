@@ -1,5 +1,6 @@
 import type Underworld from "./Underworld";
 import { SERVER_HUB_URL } from "./config";
+import { STORAGE_OPT_IN_REMOTE_LOGGING } from "./storage";
 
 const originalConsoleError = console.error;
 // const originalConsoleWarn = console.warn;
@@ -14,6 +15,11 @@ export function enableRemoteLogging() {
         return;
     }
 
+    if (storageGet(STORAGE_OPT_IN_REMOTE_LOGGING) !== 'yes') {
+        console.log("Privacy: User has opted out of remote logging. Remote logging will not occur.");
+        return;
+    }
+
     console.error = function () {
         sendLogToServerHub(Array.from(arguments), LogLevel.ERROR);
 
@@ -22,6 +28,16 @@ export function enableRemoteLogging() {
         originalConsoleError.apply(console, arguments);
     };
 
+    globalThis.remoteLog = (...args: any[]) => {
+        if (globalThis.headless || globalThis.privacyPolicyAndEULAConsent) {
+            sendLogToServerHub(args, LogLevel.LOG);
+        }
+    }
+    globalThis.remoteLogWithContext = (message: string, level: LogLevel, context: string) => {
+        if (globalThis.headless || globalThis.privacyPolicyAndEULAConsent) {
+            sendLogToServerHub([message], level, context);
+        }
+    }
 
     // console.warn = function () {
     //     sendLogToServerHub(Array.from(arguments), LogLevel.WARN);
@@ -32,14 +48,10 @@ export function enableRemoteLogging() {
     // };
 }
 globalThis.remoteLog = (...args: any[]) => {
-    if (globalThis.headless || globalThis.privacyPolicyAndEULAConsent) {
-        sendLogToServerHub(args, LogLevel.LOG);
-    }
+    // Squelch until enabled
 }
 globalThis.remoteLogWithContext = (message: string, level: LogLevel, context: string) => {
-    if (globalThis.headless || globalThis.privacyPolicyAndEULAConsent) {
-        sendLogToServerHub([message], level, context);
-    }
+    // Squelch until enabled
 }
 // Copied from spellmasons-server-hub
 interface EventGroupMessage {

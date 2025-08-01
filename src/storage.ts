@@ -12,6 +12,7 @@ export const STORAGE_CONTROLS_KEY = 'controls';
 export const ENEMY_ENCOUNTERED_STORAGE_KEY = 'enemyEncountered';
 export const SPELLS_DISCOVERED_STORAGE_KEY = 'spellsDiscovered';
 export const STORAGE_PIE_CLIENTID_KEY = 'clientId';
+export const STORAGE_OPT_IN_REMOTE_LOGGING = 'remote-logging-opt-in';
 const ACCESSIBILITY_OUTLINE_STORAGE_KEY = 'accessibilityOutlineNew';
 globalThis.STORAGE_ID_UI_ZOOM = STORAGE_ID_UI_ZOOM;
 globalThis.enemyEncountered = [];
