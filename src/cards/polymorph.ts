@@ -13,6 +13,7 @@ import floatingText from '../graphics/FloatingText';
 import seedrandom from 'seedrandom';
 import { chooseObjectWithProbability, chooseOneOfSeeded, getUniqueSeedString } from '../jmath/rand';
 import { containerProjectiles } from '../graphics/PixiUtils';
+import * as config from '../config';
 
 export const polymorphId = 'Polymorph';
 const spell: Spell = {
@@ -99,6 +100,9 @@ function polymorphUnit(fromUnit: Unit.IUnit, underworld: Underworld, prediction:
 
   // Cases for polymorphing AI / Player
   if (fromUnit.unitType != UnitType.PLAYER_CONTROLLED) {
+    // Copy quantity scaling from summon generic:
+    const unitSummonQuantity = fromUnit.isMiniboss ? fromUnit.strength / config.MINIBOSS_STRENGTH_MULTIPLIER : fromUnit.strength;
+
     let unit: Unit.IUnit = Unit.create(
       toSourceUnit.id,
       fromUnit.x,
@@ -107,7 +111,15 @@ function polymorphUnit(fromUnit: Unit.IUnit, underworld: Underworld, prediction:
       toSourceUnit.info.image,
       UnitType.AI,
       toSourceUnit.info.subtype,
-      { ...toSourceUnit.unitProps, isMiniboss: fromUnit.isMiniboss, originalLife: fromUnit.originalLife },
+      {
+        ...toSourceUnit.unitProps,
+        isMiniboss: fromUnit.isMiniboss,
+        originalLife: fromUnit.originalLife,
+        healthMax: (toSourceUnit.unitProps.healthMax || config.UNIT_BASE_HEALTH) * unitSummonQuantity,
+        health: (toSourceUnit.unitProps.health || config.UNIT_BASE_HEALTH) * unitSummonQuantity,
+        damage: (toSourceUnit.unitProps.damage || 0) * unitSummonQuantity,
+        strength: unitSummonQuantity,
+      },
       underworld,
       prediction,
       state?.casterUnit
@@ -258,6 +270,7 @@ function polymorphPickup(fromPickup: IPickup, underworld: Underworld, prediction
 
   const pickup = Pickup.create({ pos: fromPickup, pickupSource: toPickupSource, logSource: 'spawnPickup' }, underworld, prediction);
   if (exists(pickup)) {
+    Pickup.setPower(pickup, fromPickup.power);
     if (!prediction) {
       playSFXKey('spawnPotion');
       floatingText({ coords: fromPickup, text: toPickupSource.name });

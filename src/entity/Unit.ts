@@ -245,8 +245,6 @@ export function create(
     const playerAdjustedSoulFragments = Math.max(0, underworld.players.filter(p => p.clientConnected).length - 1);
     unit.soulFragments += Math.round(playerAdjustedSoulFragments * config.EXTRA_SOULS_PER_EXTRA_PLAYER);
 
-
-
     if (creator) {
       unit.summonedBy = creator;
 
@@ -1709,7 +1707,7 @@ export function makeMiniboss(unit: IUnit, underworld: Underworld) {
   unit.mana *= config.UNIT_MINIBOSS_MANA_MULTIPLIER;
   unit.manaPerTurn *= config.UNIT_MINIBOSS_MANA_MULTIPLIER;
   unit.manaCostToCast *= config.UNIT_MINIBOSS_MANA_MULTIPLIER;
-  unit.strength *= 7;
+  unit.strength *= config.MINIBOSS_STRENGTH_MULTIPLIER;
   unit.soulFragments = getSoulFragmentsForMiniboss(unit.soulFragments);
   Image.setScaleFromModifiers(unit.image, unit.strength);
   const crown = Image.addSubSprite(unit.image, 'crown');
