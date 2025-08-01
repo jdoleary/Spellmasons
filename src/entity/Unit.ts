@@ -59,7 +59,7 @@ import { doubledamageId } from '../modifierDoubleDamage';
 import { runeHardenedMinionsId } from '../modifierHardenedMinions';
 import { runeSharpTeethId } from '../modifierSharpTeeth';
 import { isDeathmason, isGoru } from './Player';
-import { createFloatingParticleSystem } from '../graphics/Particles';
+import { createFloatingParticleSystem, removeFloatingParticlesFor } from '../graphics/Particles';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -854,6 +854,8 @@ export function resurrect(unit: IUnit, underworld: Underworld, preventRepeatRez:
   if (unit.modifiers[primedCorpseId]) {
     removeModifier(unit, primedCorpseId, underworld);
   }
+  // Resurrected units should have their floating souls removed
+  removeFloatingParticlesFor(unit);
   returnToDefaultSprite(unit);
   // Unhide subsprites on resurrect
   for (let subsprite of unit.image?.sprite.children || []) {
