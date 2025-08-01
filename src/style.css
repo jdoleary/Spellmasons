@@ -3044,6 +3044,13 @@ body.wizardtype-deathmason #selected-cards .card.is-discard-locked .lock-discard
   display: none;
 }
 
+.floating-card-holder .lock-discard {
+  width: 30px;
+  height: 30px;
+  left: 18px;
+  top: -15px;
+}
+
 .lock-discard {
   background-image: url(/ui/icons/spell-lock.png);
   display: none;
