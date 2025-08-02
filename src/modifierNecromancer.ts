@@ -12,6 +12,7 @@ export default function registerNecromancer() {
     description: i18n('class_necromancer'),
     _costPerUpgrade: 200,
     maxUpgradeCount: 1,
+    omitForWizardType: ['Goru', 'Deathmason'],
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       const player = underworld.players.find(p => p.unit == unit);
       if (player) {
