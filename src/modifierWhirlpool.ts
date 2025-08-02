@@ -22,6 +22,10 @@ export default function registerWhirlpool() {
   });
   registerEvents(whirlpoolId, {
     onTurnStart: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
+      // Whirlpool only works if the unit is alive to prevent it from running forever after their death
+      if (!unit.alive) {
+        return
+      }
       const modifier = unit.modifiers[whirlpoolId];
       if (modifier) {
         const submergedCorpses = underworld.getAllUnits(prediction).filter(u => !u.alive && u.inLiquid && !u.flaggedForRemoval);
