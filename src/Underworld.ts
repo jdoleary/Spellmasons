@@ -2814,6 +2814,13 @@ export default class Underworld {
     const savedWizardTypes = this.players.map(p => ({ wizardType: p.wizardType, playerId: p.playerId }))
 
     const newUnderworld = new Underworld(this.overworld, this.pie, Math.random().toString());
+
+    // Maintain difficulty
+    newUnderworld.gameMode = this.gameMode;
+    // Must be called when difficulty (gameMode) changes to update summon spell stats
+    Cards.refreshSummonCardDescriptions(newUnderworld);
+    recalculateGameDifficulty(newUnderworld);
+
     // Add players back to underworld
     // defaultLobbyReady: Since they are still in the game, set them to lobbyReady
     let clients = this.overworld.clients
