@@ -14,7 +14,7 @@ const spell: Spell = {
     replaces: [arrowTripleCardId],
     category: CardCategory.Damage,
     supportQuantity: true,
-    manaCost: 35,
+    manaCost: 25,
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.RARE],
