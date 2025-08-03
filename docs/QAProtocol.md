@@ -14,6 +14,10 @@
 - Run `npm run headless-build-only` to check tsc errors which `npm run bun-headless` will not catch
 
 
+August:
+- [ ] Verify that new license is included with game
+
+
 
 NEW Content for July:
 - [x] After playing a game as deathmason if you switch to spellmason you have no mana
