@@ -791,7 +791,13 @@
         "play again": "Play Again",
         "fair is fair": "Fair is Fair",
         "fair-is-fair-desc": "All cards have the same probability of being drawn",
-        "spell_nukitsuke_2": "Dash towards the first target, dealing 🍞 damage to anything you pass through.  Damage increases the farther away a unit is."
+        "spell_nukitsuke_2": "Dash towards the first target, dealing 🍞 damage to anything you pass through.  Damage increases the farther away a unit is.",
+        "privacy": "Privacy Settings",
+        "menu remote logging description": "Remote Logging / Data Sharing helps support development by sharing game logs and error information",
+        "opted-in": "Opted-in",
+        "opted-out": "Opted-out",
+        "opt-out of data sharing": "Opt-Out of Data Sharing",
+        "you have opted out.": "You have opted out of Data Sharing."
     },
     {
         "language": "Français",
@@ -1585,7 +1591,13 @@
         "play again": "Jouer à nouveau",
         "fair is fair": "Probabilités équitables",
         "fair-is-fair-desc": "Toutes les cartes ont la même probabilité d'être tirées.",
-        "spell_nukitsuke_2": "Foncez vers la première cible, infligeant 🍞 dégâts à tout ce que vous traversez. Les dégâts augmentent avec la distance de l'unité."
+        "spell_nukitsuke_2": "Foncez vers la première cible, infligeant 🍞 dégâts à tout ce que vous traversez. Les dégâts augmentent avec la distance de l'unité.",
+        "privacy": "Paramètres de confidentialité",
+        "menu remote logging description": "Journalisation à distance / Partage de données aide à soutenir le développement en partageant les journaux de jeu et les informations d'erreur.",
+        "opted-in": "Autorisé",
+        "opted-out": "Non autorisé",
+        "opt-out of data sharing": "Se désinscrire du partage des données",
+        "you have opted out.": "Vous avez choisi de ne pas partager vos données."
     },
     {
         "language": "italiano",
@@ -2379,7 +2391,13 @@
         "play again": "Gioca di nuovo",
         "fair is fair": "Probabilità eque",
         "fair-is-fair-desc": "Tutte le carte hanno la stessa probabilità di essere estratte.",
-        "spell_nukitsuke_2": "Corri verso il primo obiettivo, infliggendo 🍞 danni a tutto ciò che attraversi. I danni aumentano quanto più un'unità è lontana."
+        "spell_nukitsuke_2": "Corri verso il primo obiettivo, infliggendo 🍞 danni a tutto ciò che attraversi. I danni aumentano quanto più un'unità è lontana.",
+        "privacy": "Impostazioni sulla Privacy",
+        "menu remote logging description": "Registrazione Remota/Condivisione Dati aiuta a supportare lo sviluppo condividendo i registri di gioco e le informazioni sugli errori.",
+        "opted-in": "Consentito",
+        "opted-out": "Non permesso",
+        "opt-out of data sharing": "Rinuncia alla Condivisione dei Dati",
+        "you have opted out.": "Hai scelto di non condividere i dati."
     },
     {
         "language": "Deutsche",
@@ -3173,7 +3191,13 @@
         "play again": "Nochmal spielen",
         "fair is fair": "Faire Wahrscheinlichkeiten",
         "fair-is-fair-desc": "Alle Karten haben die gleiche Wahrscheinlichkeit, gezogen zu werden.",
-        "spell_nukitsuke_2": "Stürze dich auf das erste Ziel und füge allem, was du durchquerst, 🍞 Schaden zu. Der Schaden erhöht sich, je weiter ein Gegner entfernt ist."
+        "spell_nukitsuke_2": "Stürze dich auf das erste Ziel und füge allem, was du durchquerst, 🍞 Schaden zu. Der Schaden erhöht sich, je weiter ein Gegner entfernt ist.",
+        "privacy": "Datenschutzeinstellungen",
+        "menu remote logging description": "Ferngesteuertes Protokollieren / Datenfreigabe unterstützt die Entwicklung, indem es Spiellogs und Fehlerinformationen teilt.",
+        "opted-in": "Erlaubt",
+        "opted-out": "Unzulässig",
+        "opt-out of data sharing": "Abmeldung von der Datenfreigabe",
+        "you have opted out.": "Sie haben die Datenfreigabe deaktiviert."
     },
     {
         "language": "español",
@@ -3967,7 +3991,13 @@
         "play again": "Jugar de nuevo",
         "fair is fair": "Probabilidades justas",
         "fair-is-fair-desc": "Todas las cartas tienen la misma probabilidad de ser desenfrenadas.",
-        "spell_nukitsuke_2": "Corre hacia el primer objetivo, infligiendo 🍞 daño a cualquier cosa que atravieses. El daño aumenta cuanto más lejos esté una unidad."
+        "spell_nukitsuke_2": "Corre hacia el primer objetivo, infligiendo 🍞 daño a cualquier cosa que atravieses. El daño aumenta cuanto más lejos esté una unidad.",
+        "privacy": "Configuración de Privacidad",
+        "menu remote logging description": "Registro remoto/Intercambio de datos ayuda a apoyar el desarrollo compartiendo registros del juego e información de errores.",
+        "opted-in": "Permitido",
+        "opted-out": "No permitido",
+        "opt-out of data sharing": "Excluirse del intercambio de datos",
+        "you have opted out.": "Has optado por no compartir datos."
     },
     {
         "language": "日本",
@@ -4761,7 +4791,13 @@
         "play again": "もう一度プレイ",
         "fair is fair": "公正な確率",
         "fair-is-fair-desc": "すべてのカードは引かれる確率が同じです。",
-        "spell_nukitsuke_2": "最初のターゲットに向かって突進し、通過したものに🍞ダメージを与えます。 ダメージはユニットからの距離が遠くなるほど増加します。"
+        "spell_nukitsuke_2": "最初のターゲットに向かって突進し、通過したものに🍞ダメージを与えます。 ダメージはユニットからの距離が遠くなるほど増加します。",
+        "privacy": "プライバシー設定",
+        "menu remote logging description": "リモート ロギング / データ共有は、ゲームログやエラー情報を共有することにより、開発のサポートを行います。",
+        "opted-in": "許可されました",
+        "opted-out": "無許可",
+        "opt-out of data sharing": "データ共有をオプトアウト",
+        "you have opted out.": "データ共有をオプトアウトしました。"
     },
     {
         "language": "Português",
@@ -5555,7 +5591,13 @@
         "play again": "Jogar Novamente",
         "fair is fair": "Probabilidades justas",
         "fair-is-fair-desc": "Todas as cartas têm a mesma probabilidade de serem sorteadas.",
-        "spell_nukitsuke_2": "Corra em direção ao primeiro alvo, causando 🍞 de dano a qualquer coisa que você atravessar. O dano aumenta quanto mais longe a unidade estiver."
+        "spell_nukitsuke_2": "Corra em direção ao primeiro alvo, causando 🍞 de dano a qualquer coisa que você atravessar. O dano aumenta quanto mais longe a unidade estiver.",
+        "privacy": "Configurações de Privacidade",
+        "menu remote logging description": "Compartilhamento Remoto de Logs/Dados ajuda a suportar o desenvolvimento ao compartilhar logs de jogo e informações de erro.",
+        "opted-in": "Permitido",
+        "opted-out": "Não Permitido",
+        "opt-out of data sharing": "Cancelar compartilhamento de dados",
+        "you have opted out.": "Você optou por não compartilhar dados."
     },
     {
         "language": "عربى",
@@ -6349,7 +6391,13 @@
         "play again": "لعبة مرة أخرى",
         "fair is fair": "احتمالات عادلة",
         "fair-is-fair-desc": "جميع البطاقات لها نفس الاحتمالية في السحب.",
-        "spell_nukitsuke_2": "اندفع نحو الهدف الأول، مما يتسبب في 🍞 الضرر لأي شيء تعبر من خلاله. يزداد الضرر كلما ابتعدت الوحدة."
+        "spell_nukitsuke_2": "اندفع نحو الهدف الأول، مما يتسبب في 🍞 الضرر لأي شيء تعبر من خلاله. يزداد الضرر كلما ابتعدت الوحدة.",
+        "privacy": "إعدادات الخصوصية",
+        "menu remote logging description": "مشاركة السجلات عن بعد / مشاركة البيانات تساعد في دعم التطوير من خلال مشاركة سجلات اللعبة ومعلومات الأخطاء.",
+        "opted-in": "مسموح",
+        "opted-out": "غير مسموح",
+        "opt-out of data sharing": "إلغاء الاشتراك في مشاركة البيانات",
+        "you have opted out.": "لقد اخترت عدم مشاركة البيانات."
     },
     {
         "language": "한국어",
@@ -7143,7 +7191,13 @@
         "play again": "다시 플레이하기",
         "fair is fair": "공정한 확률",
         "fair-is-fair-desc": "모든 카드는 뽑힐 확률이 동일합니다.",
-        "spell_nukitsuke_2": "첫 번째 목표를 향해 돌진하여 지나가는 모든 것에 🍞 피해를 입힙니다. 피해는 유닛과의 거리가 멀어질수록 증가합니다."
+        "spell_nukitsuke_2": "첫 번째 목표를 향해 돌진하여 지나가는 모든 것에 🍞 피해를 입힙니다. 피해는 유닛과의 거리가 멀어질수록 증가합니다.",
+        "privacy": "개인정보 설정",
+        "menu remote logging description": "원격 로깅 / 데이터 공유는 게임 로그와 오류 정보를 공유하여 개발을 지원합니다.",
+        "opted-in": "허용됨",
+        "opted-out": "허용되지 않음",
+        "opt-out of data sharing": "데이터 공유 옵트아웃",
+        "you have opted out.": "데이터 공유를 거부했습니다."
     },
     {
         "language": "Русский",
@@ -7937,7 +7991,13 @@
         "play again": "Играть снова",
         "fair is fair": "Справедливые вероятности",
         "fair-is-fair-desc": "Все карты имеют одинаковую вероятность вытягивания.",
-        "spell_nukitsuke_2": "Растяните к первой цели, нанося 🍞 урон всем, мимо чего вы проходите. Урон увеличивается с расстоянием до юнита."
+        "spell_nukitsuke_2": "Растяните к первой цели, нанося 🍞 урон всем, мимо чего вы проходите. Урон увеличивается с расстоянием до юнита.",
+        "privacy": "Настройки конфиденциальности",
+        "menu remote logging description": "Удалённый сбор данных / Обмен данными помогает поддерживать разработку, предоставляя журналы игры и информацию об ошибках.",
+        "opted-in": "Разрешено",
+        "opted-out": "Не разрешено",
+        "opt-out of data sharing": "Отключить обмен данными",
+        "you have opted out.": "Вы отказались от передачи данных."
     },
     {
         "language": "中文(简)",
@@ -8731,7 +8791,13 @@
         "play again": "再玩一次",
         "fair is fair": "公平的概率",
         "fair-is-fair-desc": "所有牌被抽中的概率是相同的。",
-        "spell_nukitsuke_2": "向第一个目标冲刺，对你经过的任何物体造成🍞伤害。伤害随着单位距离的增加而增加。"
+        "spell_nukitsuke_2": "向第一个目标冲刺，对你经过的任何物体造成🍞伤害。伤害随着单位距离的增加而增加。",
+        "privacy": "隐私设置",
+        "menu remote logging description": "远程日志/数据共享通过分享游戏日志和错误信息来支持开发工作。",
+        "opted-in": "允许",
+        "opted-out": "未授权",
+        "opt-out of data sharing": "拒绝数据共享",
+        "you have opted out.": "您已选择退出数据共享。"
     },
     {
         "language": "中文(繁)",
@@ -9525,7 +9591,13 @@
         "play again": "再玩一次",
         "fair is fair": "公平的機率",
         "fair-is-fair-desc": "所有卡牌被抽中的概率相同",
-        "spell_nukitsuke_2": "朝第一個目標衝刺，對路過的任何東西造成 🍞 傷害。傷害隨著單位距離的增加而增強。"
+        "spell_nukitsuke_2": "朝第一個目標衝刺，對路過的任何東西造成 🍞 傷害。傷害隨著單位距離的增加而增強。",
+        "privacy": "隱私設定",
+        "menu remote logging description": "遠端日誌/資料分享透過分享遊戲日誌和錯誤資訊來支持開發過程。",
+        "opted-in": "允許",
+        "opted-out": "未允許",
+        "opt-out of data sharing": "選擇退出數據共享",
+        "you have opted out.": "您已選擇退出資料共享。"
     },
     {
         "language": "Polski",
@@ -10319,7 +10391,13 @@
         "play again": "Graj ponownie",
         "fair is fair": "Sprawiedliwe prawdopodobieństwa",
         "fair-is-fair-desc": "Wszystkie karty mają taką samą prawdopodobieństwo bycia dobranymi.",
-        "spell_nukitsuke_2": "Pędź w kierunku pierwszego celu, zadając 🍞 obrażenia wszystkiemu, co napotkasz na swojej drodze. Obrażenia wzrastają, im dalej znajduje się jednostka."
+        "spell_nukitsuke_2": "Pędź w kierunku pierwszego celu, zadając 🍞 obrażenia wszystkiemu, co napotkasz na swojej drodze. Obrażenia wzrastają, im dalej znajduje się jednostka.",
+        "privacy": "Ustawienia prywatności",
+        "menu remote logging description": "Remote Logging / Udostępnianie Danych pomaga wspierać rozwój poprzez udostępnianie dzienników gry i informacji o błędach.",
+        "opted-in": "Dozwolone",
+        "opted-out": "Niedozwolony",
+        "opt-out of data sharing": "Rezygnacja z udostępniania danych",
+        "you have opted out.": "Zrezygnowałeś z udostępniania danych."
     },
     {
         "language": "Dutch",
@@ -11113,7 +11191,13 @@
         "play again": "Speel Opnieuw",
         "fair is fair": "Eerlijke waarschijnlijkheden",
         "fair-is-fair-desc": "Alle kaarten hebben dezelfde kans om getrokken te worden.",
-        "spell_nukitsuke_2": "Ren naar het eerste doelwit, waarbij je 🍞 schade toebrengt aan alles wat je passeert. De schade neemt toe naarmate een eenheid verder weg is."
+        "spell_nukitsuke_2": "Ren naar het eerste doelwit, waarbij je 🍞 schade toebrengt aan alles wat je passeert. De schade neemt toe naarmate een eenheid verder weg is.",
+        "privacy": "Privacy-instellingen",
+        "menu remote logging description": "Remote Logging / Gegevensdeling ondersteunt de ontwikkeling door spel-logs en foutinformatie te delen.",
+        "opted-in": "Toegestaan",
+        "opted-out": "Niet toegestaan",
+        "opt-out of data sharing": "Afmelden voor gegevensdeling",
+        "you have opted out.": "U hebt gekozen om geen gegevens te delen."
     },
     {
         "language": "Предреформенный русскій",
@@ -11907,6 +11991,12 @@
         "play again": "",
         "fair is fair": "",
         "fair-is-fair-desc": "",
-        "spell_nukitsuke_2": ""
+        "spell_nukitsuke_2": "",
+        "privacy": "",
+        "menu remote logging description": "",
+        "opted-in": "",
+        "opted-out": "",
+        "opt-out of data sharing": "",
+        "you have opted out.": ""
     }
 ]

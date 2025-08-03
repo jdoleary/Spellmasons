@@ -2,6 +2,7 @@ import type Underworld from "./Underworld";
 import { SERVER_HUB_URL } from "./config";
 import { STORAGE_OPT_IN_REMOTE_LOGGING } from "./storage";
 
+const YES = 'yes';
 const originalConsoleError = console.error;
 // const originalConsoleWarn = console.warn;
 export function enableRemoteLogging() {
@@ -15,13 +16,15 @@ export function enableRemoteLogging() {
         return;
     }
 
-    if (storageGet(STORAGE_OPT_IN_REMOTE_LOGGING) !== 'yes') {
+    if (storageGet(STORAGE_OPT_IN_REMOTE_LOGGING) !== YES) {
         console.log("Privacy: User has opted out of remote logging. Remote logging will not occur.");
         return;
     }
 
     console.error = function () {
-        sendLogToServerHub(Array.from(arguments), LogLevel.ERROR);
+        if (storageGet(STORAGE_OPT_IN_REMOTE_LOGGING) === YES) {
+            sendLogToServerHub(Array.from(arguments), LogLevel.ERROR);
+        }
 
         // Call the original console.error function
         // @ts-ignore
@@ -30,12 +33,16 @@ export function enableRemoteLogging() {
 
     globalThis.remoteLog = (...args: any[]) => {
         if (globalThis.headless || globalThis.privacyPolicyAndEULAConsent) {
-            sendLogToServerHub(args, LogLevel.LOG);
+            if (storageGet(STORAGE_OPT_IN_REMOTE_LOGGING) === YES) {
+                sendLogToServerHub(args, LogLevel.LOG);
+            }
         }
     }
     globalThis.remoteLogWithContext = (message: string, level: LogLevel, context: string) => {
         if (globalThis.headless || globalThis.privacyPolicyAndEULAConsent) {
-            sendLogToServerHub([message], level, context);
+            if (storageGet(STORAGE_OPT_IN_REMOTE_LOGGING) === YES) {
+                sendLogToServerHub([message], level, context);
+            }
         }
     }
 
