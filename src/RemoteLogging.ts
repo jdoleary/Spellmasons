@@ -9,6 +9,8 @@ export function enableRemoteLogging() {
     if (globalThis.headless) {
         // Squelch console.debug so as to not flood server logs
         console.debug = () => { }
+        // headless servers should not log due to privacy policy
+        return;
     }
 
     if (!globalThis.headless && location.href.includes('localhost')) {
