@@ -1,5 +1,5 @@
 import * as storage from './storage';
-const PRIVACY_POLICY_AND_EULA_CONSENT_STORAGE_KEY = 'privacy_policy_and_eula_consent_nov_2025';
+const PRIVACY_POLICY_AND_EULA_CONSENT_STORAGE_KEY = 'privacy_policy_and_eula_consent_august_2025';
 const PRIVACY_POLICY_AND_EULA_CONSENT_STORAGE_VALUE = 'accepted';
 export function areCookiesAllowed() {
     return localStorage.getItem(PRIVACY_POLICY_AND_EULA_CONSENT_STORAGE_KEY) === PRIVACY_POLICY_AND_EULA_CONSENT_STORAGE_VALUE;

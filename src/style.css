@@ -2963,6 +2963,7 @@ body.isPeerHost .openLobbyBtn {
 
 #legal-content {
   min-height: 100px;
+  font-family: sans-serif;
 }
 
 #legal-content h1,
