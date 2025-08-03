@@ -132,6 +132,8 @@ function polymorphUnit(fromUnit: Unit.IUnit, underworld: Underworld, prediction:
         unit.health = 0;
         unit.mana = 0;
         unit.alive = false;
+        // Polymorphing a dead unit shouldn't change soul fragments
+        unit.soulFragments = fromUnit.soulFragments;
         if (unit.image) {
           Unit.changeToDieSprite(unit);
         }
