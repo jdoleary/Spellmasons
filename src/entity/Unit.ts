@@ -169,6 +169,7 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   takingPureDamage?: boolean;
   charges?: { [spellId: string]: number };
   chargesMaxAdditional?: number;
+  difficulty: number;
 }
 // This does not need to be unique to underworld, it just needs to be unique
 let lastPredictionUnitId = 0;
@@ -239,6 +240,8 @@ export function create(
       UITargetCircleOffsetY: -10,
       beingPushed: false,
       predictedNextTurnDamage: 0,
+      // Difficulty will be adjusted according to the underworld later in this function
+      difficulty: 1,
     }, sourceUnitProps);
 
     // Adjust soul fragments based on number of player's connected to balance goru difficulty
@@ -290,9 +293,7 @@ export function create(
 
     // Note: This must be invoked after initial setting of stat and statMax (health, mana, stamina, etc)
     // so that it can scale stat relative to maxStat
-    // We must also pass in '1' as the old difficulty, since the unit is being created
-    // and thus has not been adjusted by previous difficulty changes
-    adjustUnitDifficulty(unit, 1, underworld.difficulty);
+    adjustUnitDifficulty(unit, underworld.difficulty);
 
     // Note, making miniboss must come AFTER setting the scale and difficulty
     // Note, this is the idempotent way to create a miniboss, pass isMiniboss:true to to the sourceUnitProps override
@@ -369,21 +370,21 @@ export function adjustUnitPropsDueToDifficulty(stats: DifficultyAdjustedUnitStat
 }
 
 // sets all the properties that depend on difficulty
-export function adjustUnitDifficulty(unit: IUnit, oldDifficulty: number, newDifficulty: number) {
+export function adjustUnitDifficulty(unit: IUnit, newDifficulty: number) {
   if (unit.faction == Faction.ALLY) {
     // Difficulty only affects enemy units
     return;
   }
   // Don't let difficulty be 0 which can occur on 0 player multiplayer games
   // which would initialize all units to 0 health
-  if (oldDifficulty == 0) {
-    oldDifficulty = 1;
+  if (unit.difficulty == 0) {
+    unit.difficulty = 1;
   }
   if (newDifficulty == 0) {
     newDifficulty = 1;
   }
 
-  const newDifficultyRatio = newDifficulty / oldDifficulty;
+  const newDifficultyRatio = newDifficulty / unit.difficulty;
 
   const newStats = adjustUnitPropsDueToDifficulty(unit, newDifficultyRatio);
   Object.assign(unit, newStats);
@@ -531,7 +532,7 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
   // so the promise doesn't hang forever
   let loadedunit: IUnit = {
     // Load defaults for new props that old save files might not have
-    ...{ strength: 1, soulFragments: 1 },
+    ...{ strength: 1, soulFragments: 1, difficulty: underworld.difficulty },
     ...restUnit,
     summonedBy: (prediction ? underworld.unitsPrediction : underworld.units).find(u => u.id == summonedById),
     shaderUniforms: {},
@@ -544,6 +545,7 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
         ? Image.load(unit.image, containerUnits)
         : Image.create({ x: unit.x, y: unit.y }, unit.defaultImagePath, containerUnits),
   };
+  console.debug('Loading unit with difficulty', loadedunit.difficulty, 'from underwrold difficulty:', underworld.difficulty)
   // Randomize frame so all created units aren't "idle animating" in perfect unison
   // it looks more organic
   if (loadedunit.image && loadedunit.image.sprite.imagePath === loadedunit.animations.idle) {

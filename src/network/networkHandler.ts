@@ -1300,6 +1300,7 @@ async function handleLoadGameState(payload: {
     // Clean up previous units:
     underworld.units.forEach(u => Unit.cleanup(u, false, true));
     underworld.units = units.filter(u => !u.flaggedForRemoval).map(u => Unit.load(u, underworld, false));
+    recalculateGameDifficulty(underworld);
   }
   // Note: Players should sync after units are loaded so
   // that the player.unit reference is synced
