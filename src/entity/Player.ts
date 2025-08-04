@@ -730,6 +730,7 @@ export function incrementPresentedRunesForPlayer(player: Pick<IPlayer, 'lockedRu
 // Note: setWizardType is for data state changes.  Any visual changes should happen in restoreWizardTypeVisuals
 // since it is called in more places to syncronize in the even of a Load, for example.
 export function setWizardType(player: IPlayer, wizardType: WizardType | undefined | null, underworld?: Underworld) {
+  console.log('setWizardType', wizardType, 'for', player.playerId, '.  Player was', player.wizardType);
   if (isNullOrUndef(wizardType)) {
     wizardType = 'Spellmason';
   }

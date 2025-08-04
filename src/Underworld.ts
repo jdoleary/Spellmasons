@@ -2833,7 +2833,7 @@ export default class Underworld {
 
     // Restore wizard info
     for (let savedWizardInfo of savedWizardTypes) {
-      const player = this.players.find(p => p.playerId == savedWizardInfo.playerId)
+      const player = newUnderworld.players.find(p => p.playerId == savedWizardInfo.playerId)
       if (!player) {
         console.log('Err: Player id missing', savedWizardInfo.playerId)
         console.error('Attempting to restore player wizard info but no player found with id')
