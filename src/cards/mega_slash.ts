@@ -22,6 +22,7 @@ const spell: Spell = {
     animationPath: 'spellHurtCuts',
     sfx: 'hurt3',
     description: ['spell_slash', damageDone.toString()],
+    soulFragmentCostOverride: 1,
     effect: async (state, card, quantity, underworld, prediction) => {
       return await slashEffect(state, card, quantity, underworld, prediction, damageDone, slashScale);
     },
