@@ -4,6 +4,7 @@
     since multiple players have gotten stuck unable to change wizard after quitting a game
     (Note: Wizard type should not intentionally be changed _during_ a game)
 - balance: Arrow Multi is now worth the cost
+- balance: Giant Slash now only costs 1 soul instead of 2 to be worth the upgrade
 
 - legal: Simplify and clarify Privacy Policy and EULA
 - legal: Add menu button to opt-out of remote logging / data sharing (note: it is not opted-out by default)

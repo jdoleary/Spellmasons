@@ -17,6 +17,7 @@ August:
 - [ ] Make sure "Accept" button is visible on all resolutions
 - [ ] Disable doom scroll
 - [ ] Single player difficulty increases on load
+- [ ] Check Remote Play Together
 
 
 
