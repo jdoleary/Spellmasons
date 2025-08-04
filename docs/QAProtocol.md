@@ -14,10 +14,9 @@
 
 August:
 - [ ] Verify that new license is included with game
-- [ ] Make sure "Accept" button is visible on all resolutions
-- [ ] Disable doom scroll
+- [ ] Disable doom scroll mod for now
 - [ ] Single player difficulty increases on load
-- [ ] Check Remote Play Together
+- [ ] Check Remote Play Together on Default build
 
 
 
