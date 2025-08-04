@@ -388,6 +388,7 @@ export function adjustUnitDifficulty(unit: IUnit, newDifficulty: number) {
 
   const newStats = adjustUnitPropsDueToDifficulty(unit, newDifficultyRatio);
   Object.assign(unit, newStats);
+  unit.difficulty = newDifficulty;
 }
 
 export function addModifier(unit: IUnit, key: string, underworld: Underworld, prediction: boolean, quantity: number = 1, extra?: object) {

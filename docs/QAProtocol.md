@@ -15,6 +15,8 @@
 August:
 - [ ] Verify that new license is included with game
 - [ ] Make sure "Accept" button is visible on all resolutions
+- [ ] Disable doom scroll
+- [ ] Single player difficulty increases on load
 
 
 
