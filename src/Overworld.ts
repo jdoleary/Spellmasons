@@ -208,7 +208,7 @@ export function recalculateGameDifficulty(underworld: Underworld) {
   // The host should be the only one to update unit difficulty, 
   // otherwise the stat changes will be applied multiple times (once for each connected player)
   if (globalThis.isHost(underworld.pie)) {
-    console.trace('adjusting game difficulty from ', oldDifficulty, ' to ', underworld.difficulty, ' for ', underworld.players.filter(p => p.clientConnected).length, ' connected players.');
+    console.log('adjusting game difficulty from ', oldDifficulty, ' to ', underworld.difficulty, ' for ', underworld.players.filter(p => p.clientConnected).length, ' connected players.');
     underworld.units.forEach(unit => {
       // Adjust stats for all non-player units
       if (unit.unitType !== UnitType.PLAYER_CONTROLLED) {

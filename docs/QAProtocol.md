@@ -1,17 +1,15 @@
 # QA Protocol
 ## Regular
+- Run `npm run headless-build-only` to check tsc errors which `npm run bun-headless` will not catch
+- Test hosting LAN server from Electron build
+- Test tutorial ALWAYS on electron build
+- Test Host Local Server, Host via Docker (run `testDockerImage.sh`)
 - Run `npm run build_types` to keeps mods types up to date (and push the changes to github)
     - Test mods
     - Push types to spellmasons-mods
-- Test Host Local Server, Host via Docker (run `testDockerImage.sh`)
-
-- Test multiple separate games on the same server
 - Make sure the AI can take their turn
 - Test saving if you modify underworld with new elements added to the level that need to be serialized
 - Test loading an old save file for backwards compatibility
-- Test hosting LAN server from Electron build
-- Test tutorial ALWAYS on electron build
-- Run `npm run headless-build-only` to check tsc errors which `npm run bun-headless` will not catch
 
 
 August:
