@@ -835,12 +835,8 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         Player.setPlayerRobeColor(fromPlayer, color, colorMagic);
         Player.syncLobby(underworld);
         // Don't override wizardType if it's not being set
-        if (exists(wizardType)) {
-          if ((exists(overworld.underworld) && overworld.underworld.levelIndex <= 0) && !fromPlayer.isSpawned) {
-            Player.setWizardType(fromPlayer, wizardType, overworld.underworld);
-          } else {
-            console.warn('Cannot change wizard type in ongoing game')
-          }
+        if (exists(wizardType) && wizardType != fromPlayer.wizardType) {
+          Player.setWizardType(fromPlayer, wizardType, overworld.underworld);
         }
         // Update the player image
         const sourceUnit = fromPlayer.wizardType == 'Goru' ? allUnits[GORU_UNIT_ID] : allUnits[spellmasonUnitId];
