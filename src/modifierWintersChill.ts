@@ -27,7 +27,7 @@ export default function registerWintersChill() {
     }
   });
   registerEvents(wintersChillId, {
-    onTurnEnd: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
+    onTurnStart: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
       const modifier = unit.modifiers[wintersChillId];
       if (modifier) {
         if (unit) {
