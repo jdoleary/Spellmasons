@@ -180,15 +180,24 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
         if (caster.unit.modifiers[endlessQuiverId] && card.id.toLowerCase().includes('arrow')) {
             // Freeze mana cost for arrows
             cardCost.manaCost = card.manaCost;
+            cardCost.healthCost = card.healthCost;
+            if (card.staminaCost)
+                cardCost.staminaCost = card.staminaCost;
         }
         if (card.category == CardCategory.Movement && caster.unit.modifiers[inexhaustibleId]) {
             // Freeze mana cost for movement spells
             cardCost.manaCost = card.manaCost;
+            cardCost.healthCost = card.healthCost;
+            if (card.staminaCost)
+                cardCost.staminaCost = card.staminaCost;
         }
         // Precision prevents cards from scaling in mana cost if the player has no targeting spells
         // .filter Filters out disabled cards, so you can sell targeting spells and still have precision work
         if (caster?.unit.modifiers[precisionId] && caster.inventory.filter(c => !caster.disabledCards.includes(c)).every(id => Cards.allCards[id]?.category !== CardCategory.Targeting)) {
             cardCost.manaCost = card.manaCost;
+            cardCost.healthCost = card.healthCost;
+            if (card.staminaCost)
+                cardCost.staminaCost = card.staminaCost;
         }
 
         // Bloodmason
