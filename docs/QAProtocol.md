@@ -13,9 +13,9 @@
 
 
 August:
-- [ ] Verify that new license is included with game
-- [ ] Disable doom scroll mod for now
-- [ ] Single player difficulty increases on load
+- [x] Verify that new license is included with game
+- [x] Disable doom scroll mod for now
+- [x] Single player difficulty increases on load
 - [ ] Check Remote Play Together on Default build
 
 
