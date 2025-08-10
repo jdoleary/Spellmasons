@@ -27,7 +27,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconNukitsuke.png',
-    description: 'spell_nukitsuke',
+    description: ['spell_nukitsuke', damage.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       const targets = getCurrentTargets(state);
       playDefaultSpellSFX(card, prediction);
