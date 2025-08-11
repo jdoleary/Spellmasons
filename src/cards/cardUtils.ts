@@ -257,7 +257,13 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
         if (card.category == CardCategory.Targeting && caster.unit.modifiers[affinityTargeting]) {
             cardCost.manaCost = Math.floor(cardCost.manaCost * (1 - (0.01 * caster.unit.modifiers[affinityTargeting].quantity)));
         }
-
+        const events = [...unit.events];
+        for (let eventName of events) {
+            const fn = Events.onCostCalculationSource[eventName];
+            if (fn && caster) {
+              fn(caster, timesUsedSoFar);
+            }
+            }    
         // If player has charge, use charge instead:
         if (caster && caster.unit.charges?.[card.id]) {
             cardCost.manaCost = 0;
