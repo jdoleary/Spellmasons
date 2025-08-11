@@ -17,6 +17,10 @@ export type onTooltip = {
 };
 const onTooltipSource: { [name: string]: onTooltip } = {};
 
+export type onCostCalculation = {
+  (caster: IUnit, timesUsedSoFar: number): void;
+};
+const onCostCalculationSource: { [name: string]: onCostCalculation } = {};
 
 export type onTakeDamage = {
   // Returns a possibly modified damage
@@ -99,6 +103,7 @@ export default {
   onLiquidSource,
   onKillSource,
   onTooltipSource,
+  onCostCalculationSource,
   onDeathSource,
   onMoveSource,
   onPickupSource,
