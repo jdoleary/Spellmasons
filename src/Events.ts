@@ -4,6 +4,9 @@ import Underworld from './Underworld';
 import { IPickup } from './entity/Pickup';
 import { ForceMoveProjectile } from './jmath/moveWithCollision';
 import { EffectState } from './cards';
+//not sure if these import is correct
+import { CardCost } from './cards/cardUtils';
+import type { ICard } from '.';
 
 export type onDealDamage = {
   // Returns a possibly modified damage
@@ -18,7 +21,7 @@ export type onTooltip = {
 const onTooltipSource: { [name: string]: onTooltip } = {};
 
 export type onCostCalculation = {
-  (caster: IUnit, timesUsedSoFar: number): void;
+  (caster: IUnit, card: ICard, timesUsedSoFar: number, cardCost: CardCost): CardCost;
 };
 const onCostCalculationSource: { [name: string]: onCostCalculation } = {};
 
