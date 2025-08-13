@@ -261,7 +261,7 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
         for (let eventName of events) {
             const fn = Events.onCostCalculationSource[eventName];
             if (fn && caster) {
-              fn(caster, timesUsedSoFar);
+              cardCost = fn(caster, card, timesUsedSoFar, cardCost);
             }
             }    
         // If player has charge, use charge instead:
