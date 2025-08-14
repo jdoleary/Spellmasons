@@ -3,11 +3,9 @@ import type { IUnit } from './entity/Unit';
 import Underworld from './Underworld';
 import { IPickup } from './entity/Pickup';
 import { ForceMoveProjectile } from './jmath/moveWithCollision';
-import { EffectState } from './cards';
-//not sure if these import is correct
 import { CardCost } from './cards/cardUtils';
-import type { ICard } from '.';
 import type { IPlayer } from './entity/Player';
+import { ICard } from './cards';
 
 export type onDealDamage = {
   // Returns a possibly modified damage
