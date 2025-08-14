@@ -2323,11 +2323,16 @@ body:not(.view-Game) #chatbox {
   background-image: url('/ui/iconPlusDown.png');
 }
 
+#reroll-btn-container {
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+}
+
 .reroll-btn {
   width: 94px;
   height: 95px;
   background-image: url('/ui/iconRerollUp.png');
-  margin: 8px auto;
 }
 
 .reroll-btn:hover {
@@ -2338,6 +2343,26 @@ body:not(.view-Game) #chatbox {
   background-image: url('/ui/iconRerollDown.png');
 }
 
+.skip-card-btn {
+  width: 94px;
+  height: 95px;
+  background-image: url('/ui/iconButtonSkipCardUp.png');
+  text-align: center;
+  line-height: 208px;
+}
+
+.skip-card-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.skip-card-btn:hover {
+  filter: drop-shadow(0 0 0.4rem rgb(255, 255, 255));
+}
+
+.skip-card-btn:active {
+  background-image: url('/ui/iconButtonSkipCardDown.png');
+}
 
 /* Extra toolbars for cards */
 #floating-card-holder-left {

@@ -3532,7 +3532,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       return 0;
     }
     // .filter out freeSpells because they shouldn't count against upgrades available since they are given to you
-    return this.cardDropsDropped + config.STARTING_CARD_COUNT - player.inventory.filter(spellId => (player.freeSpells || []).indexOf(spellId) == -1).length;
+    return this.cardDropsDropped + config.STARTING_CARD_COUNT - player.inventory.filter(spellId => (player.freeSpells || []).indexOf(spellId) == -1).length - (player.skippedCards || 0);
   }
   upgradeRune(runeModifierId: string, player: Player.IPlayer, payload: { newSP: number }) {
     const isCurrentPlayer = player == globalThis.player;
@@ -3669,6 +3669,34 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       // Empty before adding new reroll btn
       rerollBtnContainer.innerHTML = '';
       rerollBtnContainer.appendChild(elReroll);
+      if (player.inventory.length >= 3 && globalThis.player) {
+        const spCost = globalThis.player.wizardType == 'Deathmason' ? -30 : 60
+        const elSkipCard = document.createElement('div');
+        elSkipCard.classList.add('skip-card-btn');
+        elSkipCard.style.color = 'white';
+        const isDisabled = spCost < 0 && globalThis.player.statPointsUnspent < Math.abs(spCost)
+        if (isDisabled) {
+          elSkipCard.classList.toggle('disabled', true)
+        }
+        elSkipCard.innerHTML = `${spCost > 0 ? '+' : ''}${spCost} SP`;
+        elSkipCard.addEventListener('click', () => {
+          if (isDisabled) {
+            playSFXKey('deny');
+          } else {
+            playSFXKey('click');
+            // Clear upgrades
+            document.body?.classList.toggle(showUpgradesClassName, false);
+            this.pie.sendData({
+              type: MESSAGE_TYPES.SKIP_UPGRADE,
+              spCost,
+            });
+          }
+        });
+        elSkipCard.addEventListener('mouseenter', (e) => {
+          playSFXKey('click');
+        });
+        rerollBtnContainer.appendChild(elSkipCard);
+      }
     }
   }
   getRandomCoordsWithinBounds(bounds: Limits, seed?: prng): Vec2 {

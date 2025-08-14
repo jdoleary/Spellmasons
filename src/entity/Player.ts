@@ -104,6 +104,7 @@ export interface IPlayer {
   lockedRunes: { index: number, key: string, runePresentedIndexWhenLocked?: number }[];
   runePresentedIndex: number;
   gameVersion?: string;
+  skippedCards: number;
 }
 export function inPortal(player: IPlayer): boolean {
   // Note: Even though inPortal can be determined by player.isSpawned,
@@ -164,6 +165,7 @@ export function create(clientId: string, playerId: string, underworld: Underworl
     statPointsUnspent: Math.max(0, underworld.levelIndex) * config.STAT_POINTS_PER_LEVEL,
     lockedRunes: [],
     runePresentedIndex: 0,
+    skippedCards: 0,
   };
   player.unit.originalLife = true;
   // Player units get full mana every turn
@@ -333,6 +335,8 @@ export function load(player: IPlayerSerialized, index: number, underworld: Under
     lockedDiscardCards: [],
     // @ts-ignore: Allow overwrite by spread for backwards compatibility
     wizardType: 'Spellmason',
+    // @ts-ignore: Allow overwrite by spread for backwards compatibility
+    skippedCards: 0,
     ...player,
     unit: reassignedUnit,
   };

@@ -405,6 +405,16 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         console.error('Cannot CHOOSE_UPGRADE, fromPlayer is undefined', fromClient, fromPlayer)
       }
       break;
+    case MESSAGE_TYPES.SKIP_UPGRADE:
+      if (fromPlayer && payload.spCost) {
+        fromPlayer.skippedCards += 1;
+        fromPlayer.statPointsUnspent += payload.spCost
+        // If there are more upgrades to be had, show them
+        if (globalThis.player == fromPlayer) {
+          underworld.showUpgrades();
+        }
+      }
+      break;
     case MESSAGE_TYPES.LOAD_GAME_STATE:
       // If a client loads a full game state, they should be fully synced
       // so clear the onDataQueue to prevent old messages from being processed
