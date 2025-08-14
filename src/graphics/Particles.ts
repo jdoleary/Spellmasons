@@ -365,7 +365,7 @@ export function updateParticles(delta: number, bloods: BloodParticle[], seedrand
         }
 
         // remove when inside liquid so it doesn't draw blood on top of liquid OR when done ticking
-        if (isInsideLiquid || tickParticle(blood)) {
+        if (isInsideLiquid || tickParticle(blood, underworld)) {
             bloods.splice(i, 1);
             i--;
         }

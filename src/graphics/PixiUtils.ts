@@ -977,7 +977,7 @@ export function startBloodParticleSplatter(underworld: Underworld, damageOrigin:
 
 
 }
-export function tickParticle(particle: BloodParticle) {
+export function tickParticle(particle: BloodParticle, underworld: Underworld) {
   if (globalThis.headless) {
     //remove it from array
     return true;
@@ -989,6 +989,10 @@ export function tickParticle(particle: BloodParticle) {
   particle.tick++;
   //remove from array once it is done moving (OPTIMIZATION)
   if (particle.tick > 10) {
+    //remove it from array
+    return true;
+  }
+  if (underworld.isCoordOnVoidTile(particle)) {
     //remove it from array
     return true;
   }
