@@ -42,14 +42,16 @@ export enum CardRarity {
   SPECIAL = 'SPECIAL',
   UNCOMMON = 'UNCOMMON',
   RARE = 'RARE',
-  FORBIDDEN = 'FORBIDDEN'
+  FORBIDDEN = 'FORBIDDEN',
+  RUNIC = 'RUNIC'
 }
 export const probabilityMap: Record<CardRarity, number> = {
   [CardRarity.COMMON]: 80,
   [CardRarity.SPECIAL]: 50,
   [CardRarity.UNCOMMON]: 30,
   [CardRarity.RARE]: 10,
-  [CardRarity.FORBIDDEN]: 5
+  [CardRarity.FORBIDDEN]: 5,
+  [CardRarity.RUNIC]: 0
 
 }
 export type JEmitter = particles.Emitter & { cleanAfterTurn?: boolean };

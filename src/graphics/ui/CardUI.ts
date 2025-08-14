@@ -1092,7 +1092,9 @@ export function cardRarityAsString(content: { probability: number }): string {
   return CardRarity[cardProbabilityToRarity(content)] || '';
 }
 function cardProbabilityToRarity(content: { probability: number }): CardRarity {
-  if (content.probability == probabilityMap[CardRarity.FORBIDDEN]) {
+  if (content.probability == probabilityMap[CardRarity.RUNIC]) {
+    return CardRarity.RUNIC;
+  } else if (content.probability == probabilityMap[CardRarity.FORBIDDEN]) {
     return CardRarity.FORBIDDEN;
   } else if (content.probability <= probabilityMap[CardRarity.RARE]) {
     return CardRarity.RARE;
@@ -1132,6 +1134,8 @@ export function getCardRarityColor(content: { probability: number }): string {
 }
   */
   switch (rarity) {
+    case CardRarity.RUNIC:
+      return '#833796ff';
     case CardRarity.FORBIDDEN:
       return '#241623';
     case CardRarity.RARE:

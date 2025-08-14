@@ -199,6 +199,11 @@ body.recording-shorts #caution-box-text {
   overflow: hidden;
 }
 
+#upgrade-picker .RUNIC .card-title,
+.show-card-large .RUNIC .card-title {
+  outline: 4px solid #000000;
+}
+
 #upgrade-picker .FORBIDDEN .card-title,
 .show-card-large .FORBIDDEN .card-title {
   outline: 4px solid #000000;
@@ -512,6 +517,11 @@ invisibly blocked, change with caution! */
 .show-card-large .card.FORBIDDEN,
 #upgrade-picker .card.FORBIDDEN {
   background-image: url('images/card-designs/card-FORBIDDEN.png');
+}
+
+.show-card-large .card.RUNIC,
+#upgrade-picker .card.RUNIC {
+  background-image: url('images/card-designs/card-RARE.png');
 }
 
 /* Disable dragging for card thumbnails */
