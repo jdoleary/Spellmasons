@@ -7,6 +7,7 @@ import { EffectState } from './cards';
 //not sure if these import is correct
 import { CardCost } from './cards/cardUtils';
 import type { ICard } from '.';
+import type { IPlayer } from './entity/Player';
 
 export type onDealDamage = {
   // Returns a possibly modified damage
@@ -21,7 +22,7 @@ export type onTooltip = {
 const onTooltipSource: { [name: string]: onTooltip } = {};
 
 export type onCostCalculation = {
-  (caster: IUnit, card: ICard, timesUsedSoFar: number, cardCost: CardCost): CardCost;
+  (caster: IPlayer, card: ICard, timesUsedSoFar: number, cardCost: CardCost): CardCost;
 };
 const onCostCalculationSource: { [name: string]: onCostCalculation } = {};
 
