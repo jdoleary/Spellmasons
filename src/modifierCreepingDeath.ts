@@ -30,7 +30,7 @@ export default function registerCreepingDeath() {
     onKill: async (unit: Unit.IUnit, killedUnit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
       const modifier = unit.modifiers[creepingDeathId];
       if (modifier) {
-        if (killedUnit) {
+        if (killedUnit && killedUnit.faction != unit.faction) {
           let units = prediction ? underworld.unitsPrediction : underworld.units;
           // Find a random enemy unit and suffocate it
           // Unit must be alive, in enemy faction, and not a doodad
