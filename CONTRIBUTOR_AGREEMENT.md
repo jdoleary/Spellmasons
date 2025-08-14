@@ -36,3 +36,4 @@ By submitting a pull request, commit, or any other contribution to the Spellmaso
 **Project:** Spellmasons  
 **Project Owner:** Jordan O'Leary
 **Contributor:** (Enter your Contributor name/GitHub username on a new line below)
+Charlie Heck, Gamer-Guy123
