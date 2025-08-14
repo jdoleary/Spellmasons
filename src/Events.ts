@@ -3,7 +3,9 @@ import type { IUnit } from './entity/Unit';
 import Underworld from './Underworld';
 import { IPickup } from './entity/Pickup';
 import { ForceMoveProjectile } from './jmath/moveWithCollision';
-import { EffectState } from './cards';
+import { CardCost } from './cards/cardUtils';
+import type { IPlayer } from './entity/Player';
+import { ICard } from './cards';
 
 export type onDealDamage = {
   // Returns a possibly modified damage
@@ -17,6 +19,10 @@ export type onTooltip = {
 };
 const onTooltipSource: { [name: string]: onTooltip } = {};
 
+export type onCostCalculation = {
+  (caster: IPlayer, card: ICard, timesUsedSoFar: number, cardCost: CardCost): CardCost;
+};
+const onCostCalculationSource: { [name: string]: onCostCalculation } = {};
 
 export type onTakeDamage = {
   // Returns a possibly modified damage
@@ -99,6 +105,7 @@ export default {
   onLiquidSource,
   onKillSource,
   onTooltipSource,
+  onCostCalculationSource,
   onDeathSource,
   onMoveSource,
   onPickupSource,
