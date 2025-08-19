@@ -102,7 +102,8 @@ export function generateCave(params: CaveParams, biome: Biome, underworld: Under
 
     } else {
 
-        let { materials, width } = makeLevelMaterialsArray(params, underworld);
+        let { materials, width: _width } = makeLevelMaterialsArray(params, underworld);
+        width = _width;
         stampLiquids(materials, width, underworld);
         // Increase the size of the map on all sides so that no stamped liquid pools
         // touch the outside edge which would break the pathing polygons of the walls
