@@ -1,7 +1,7 @@
 import { lineSegmentIntersection } from "./jmath/lineSegment";
 import { distance, lerp, similarTriangles } from "./jmath/math";
 import { isVec2InsidePolygon } from "./jmath/Polygon2";
-import { randBool, randFloat, randInt, randSign } from "./jmath/rand";
+import { chooseOneOfSeeded, getUniqueSeedStringPerLevel, randBool, randFloat, randInt, randSign, seedrandom } from "./jmath/rand";
 import * as Vec from "./jmath/Vec";
 import * as config from './config';
 import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex, vec2ToOneDimentionIndexPreventWrap } from "./jmath/ArrayUtil";
@@ -9,6 +9,7 @@ import { conway, Material } from "./Conway";
 import type { IObstacle } from "./entity/Obstacle";
 import Underworld, { Biome } from "./Underworld";
 import LiquidPools, { doStampsOverlap, stampMatricies, surround } from './LiquidPools';
+import { handmadeMaps } from "./MapsHandmade";
 
 export const caveSizes: { [size: string]: CaveParams } = {
     'tutorial': {
@@ -65,40 +66,77 @@ export interface Limits { xMin: number, xMax: number, yMin: number, yMax: number
 // Then the materials array is converted into a tiles array
 // Then convertBaseTilesToFinalTiles is used to turn the tiles into their final images
 export function generateCave(params: CaveParams, biome: Biome, underworld: Underworld): { map: Map, limits: Limits } {
-    let { materials, width } = makeLevelMaterialsArray(params, underworld);
-    stampLiquids(materials, width, underworld);
-    // Increase the size of the map on all sides so that no stamped liquid pools
-    // touch the outside edge which would break the pathing polygons of the walls
-    const { contents: matrixContents, width: newWidth } = surround(materials, width);
-    // Reassign width, height and materials array now that it has grown
-    width = newWidth;
-    const height = Math.floor(matrixContents.length / width);
-    materials = matrixContents;
+    const seed = seedrandom(getUniqueSeedStringPerLevel(underworld));
+    // Currently an X% chance of using a handmade map
+    const useHandmade = randInt(0, 100, seed) <= 2;
+    let tiles: Tile[];
+    let width: number = 16;
+    let height: number = 16;
+    let liquid;
+    const handmadeMapData = useHandmade ? chooseOneOfSeeded(handmadeMaps, seed) : undefined
+    if (useHandmade && handmadeMapData) {
+        const _height = handmadeMapData.height;
+        const _width = handmadeMapData.width;
+        tiles = handmadeMapData.data.map((t, i) => ({
+            image: ['', `${biome}/all_ground.png`,
+                `${biome}/all_liquid.png`,
+                `${biome}/liquidCornerNE.png`,
+                `${biome}/liquidCornerNW.png`,
+                `${biome}/liquidCornerSE.png`,
+                `${biome}/liquidCornerSW.png`,
+                `${biome}/liquidEGroundW.png`,
+                `${biome}/liquidInsideCornerNE.png`,
+                `${biome}/liquidInsideCornerNW.png`,
+                `${biome}/liquidInsideCornerSE.png`,
+                `${biome}/liquidInsideCornerSW.png`,
+                `${biome}/liquidNGroundS.png`,
+                `${biome}/liquidSGroundN.png`,
+                `${biome}/liquidWGroundE.png`,
+                `${biome}/wall.png`, `${biome}/wallN.png`][t] as string,
+            x: 64 * (i % _width),
+            y: 64 * Math.floor(i / _width)
+        }));
+        width = _width * 64;
+        height = Math.floor(tiles.length / _height) * 64;
+        liquid = tiles.filter(t => t.image.includes('liquid')).map(x => ({ ...x, image: `${biome}/all_liquid.png` }));
 
-    // 1st pass for walls
-    conway(materials, width, underworld);
-    // 2nd pass for semi-walls
-    conway(materials, width, underworld);
+    } else {
 
-    // Convert array of materials into tiles
-    let tiles: Tile[] = materials.map((m, i) => {
-        const dimentions = oneDimentionIndexToVec2(i, width);
-        let image = baseTiles.empty;
-        switch (m) {
-            case Material.GROUND:
-                image = baseTiles.ground;
-                break;
-            case Material.LIQUID:
-                image = baseTiles.liquid;
-                break;
-            case Material.WALL:
-                image = baseTiles.wall;
-                break;
-        }
-        return { image, x: dimentions.x * config.OBSTACLE_SIZE, y: dimentions.y * config.OBSTACLE_SIZE }
-    });
+        let { materials, width } = makeLevelMaterialsArray(params, underworld);
+        stampLiquids(materials, width, underworld);
+        // Increase the size of the map on all sides so that no stamped liquid pools
+        // touch the outside edge which would break the pathing polygons of the walls
+        const { contents: matrixContents, width: newWidth } = surround(materials, width);
+        // Reassign width, height and materials array now that it has grown
+        width = newWidth;
+        height = Math.floor(matrixContents.length / width);
+        materials = matrixContents;
+
+        // 1st pass for walls
+        conway(materials, width, underworld);
+        // 2nd pass for semi-walls
+        conway(materials, width, underworld);
+
+        // Convert array of materials into tiles
+        tiles = materials.map((m, i) => {
+            const dimentions = oneDimentionIndexToVec2(i, width);
+            let image = baseTiles.empty;
+            switch (m) {
+                case Material.GROUND:
+                    image = baseTiles.ground;
+                    break;
+                case Material.LIQUID:
+                    image = baseTiles.liquid;
+                    break;
+                case Material.WALL:
+                    image = baseTiles.wall;
+                    break;
+            }
+            return { image, x: dimentions.x * config.OBSTACLE_SIZE, y: dimentions.y * config.OBSTACLE_SIZE }
+        });
+        liquid = tiles.filter(t => t.image == baseTiles.liquid);
+    }
     const bounds = getLimits(tiles);
-    const liquid = tiles.filter(t => t.image == baseTiles.liquid);
 
 
     const map = {

@@ -1,6 +1,7 @@
 import { registerEvents, registerModifiers, registerSpell } from "./cards";
 import { pickups } from "./entity/Pickup";
 import { registerUnit } from "./entity/units";
+import { handmadeMaps } from "./MapsHandmade";
 import { Overworld } from "./Overworld";
 import { Mod } from "./types/commonTypes";
 type moddedEntity = {
@@ -68,6 +69,9 @@ function registerMod(mod: Mod, overworld: Overworld) {
                 console.error(`A modifier is missing an "id" and cannot be registered!`);
             }
         }
+    }
+    if (mod.maps) {
+        handmadeMaps.push(...mod.maps)
     }
 
     if (!globalThis.headless) {

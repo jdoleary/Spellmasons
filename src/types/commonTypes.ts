@@ -5,6 +5,7 @@ import { UnitSource } from '../entity/units';
 import type PieClient from '@websocketpie/client';
 import type PiePeer from '../network/PiePeer';
 import type { IHostApp } from '../network/networkUtil';
+import { HandmadeMap } from '../MapsHandmade';
 export type GameMode = 'tutorial' | 'hard' | 'impossible'
 export type WizardType = 'Spellmason' | 'Deathmason' | 'Goru';
 export enum UnitType {
@@ -68,6 +69,7 @@ export interface Mod {
   spells?: Spell[];
   modifiers?: Modifiers[];
   events?: Events[];
+  maps?: HandmadeMap[];
 }
 
 export type Pie = PieClient | PiePeer | IHostApp;

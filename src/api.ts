@@ -61,6 +61,7 @@ import * as commonTypes from './types/commonTypes';
 import * as particleEmitter from 'jdoleary-fork-pixi-particle-emitter'
 import * as Arrow from "./cards/arrow"
 import * as Purify from "./cards/purify"
+import { handmadeMaps } from './MapsHandmade';
 
 
 const SpellmasonsAPI = {
@@ -86,6 +87,7 @@ const SpellmasonsAPI = {
   forcePushAwayFrom,
   forcePushToDestination,
   EffectsHeal,
+  handmadeMaps,
   ImmediateModeSprites,
   inLiquid,
   JAudio,
