@@ -412,6 +412,8 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         // If there are more upgrades to be had, show them
         if (globalThis.player == fromPlayer) {
           underworld.showUpgrades();
+          playSFXKey('levelUp');
+
         }
       }
       break;
