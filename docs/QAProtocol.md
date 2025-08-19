@@ -11,12 +11,11 @@
 - Test saving if you modify underworld with new elements added to the level that need to be serialized
 - Test loading an old save file for backwards compatibility
 
-
 August:
 - [x] Verify that new license is included with game
 - [x] Disable doom scroll mod for now
 - [x] Single player difficulty increases on load
-- [ ] Check Remote Play Together on Default build
+- [x] Check Remote Play Together on Default build
 
 
 
