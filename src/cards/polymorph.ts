@@ -210,6 +210,9 @@ export function visualPolymorphPlayerUnit(targetUnit: Unit.IUnit, toSourceUnit: 
 }
 
 export function getPossibleUnitPolymorphs(unitSourceId: string, underworld?: Underworld): UnitSource[] {
+  if (unitSourceId.toLowerCase() == 'altar' || unitSourceId.toLowerCase() == 'pillar') {
+    return Object.values(allUnits).filter(u => u.id != unitSourceId && ['altar', 'pillar'].includes(u.id.toLowerCase()));
+  }
   // Start with all units except self
   let possibleUnitTypes = Object.values(allUnits).filter(u => u.id != unitSourceId);
 
