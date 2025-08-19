@@ -9,8 +9,10 @@ const {
   cardUtils,
   cards,
   JImage,
+  units,
   forcePushTowards,
 } = globalThis.SpellmasonsAPI
+const {allUnits} = units;
 const {CardCategory, CardRarity, probabilityMap, Faction, UnitSubType, UnitType} = commonTypes;
 const {takeDamage} = Unit;
 const { containerProjectiles } = PixiUtils;
@@ -23,7 +25,7 @@ import type { HasSpace } from '../../types/entity/Type';
 import { pillarId } from './raise_pillar';
 import type { IUnit } from '../../types/entity/Unit';
 
-const id = 'earth_push';
+const id = 'Earth Push';
 const defaultPushDistance =140;
 const spell: Spell = {
   card: {
@@ -148,7 +150,8 @@ const spell: Spell = {
                     thinBloodLine: true,
                 }, underworld, prediction);
             } else if (projectile.pushedObject.debugName && projectile.pushedObject.debugName.includes('Urn')) {
-              const urn = Unit.create(projectile.pushedObject.debugName, projectile.pushedObject.x, projectile.pushedObject.y, Faction.ALLY, 'urn_ice', UnitType.AI, UnitSubType.DOODAD, undefined, underworld, prediction, projectile.sourceUnit);
+              const sourceUrn = allUnits[projectile.pushedObject.debugName];
+              const urn = Unit.create(projectile.pushedObject.debugName, projectile.pushedObject.x, projectile.pushedObject.y, Faction.ALLY, 'urn_ice', UnitType.AI, UnitSubType.DOODAD, sourceUrn.unitProps, underworld, prediction, projectile.sourceUnit);
               takeDamage({unit:urn, amount:urn.health,sourceUnit:projectile.sourceUnit},underworld, prediction)
               // Ensure it explodes even if player is unable to deal damage to it (e.g. Bloodletting)
               if(urn.health > 0){

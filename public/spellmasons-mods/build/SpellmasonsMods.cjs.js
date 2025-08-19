@@ -1282,7 +1282,7 @@ const spell$r = {
 function add$2(unit2, _underworld, prediction, quantity, extra) {
   let firstStack = !unit2.events.includes(cardId$3);
   const modifier = cardsUtil$2.getOrInitModifier(unit2, cardId$3, {
-    isCurse: false,
+    isCurse: true,
     quantity,
     persistBetweenLevels: false
   }, () => {
@@ -1717,13 +1717,13 @@ const {
   cards: cards$k,
   VisualEffects: VisualEffects$5,
   rand: rand$4,
-  units: units$4,
+  units: units$5,
   Pickup: Pickup$1,
   Unit: Unit$i,
   JAudio: JAudio$7
 } = globalThis.SpellmasonsAPI;
 const { chooseObjectWithProbability: chooseObjectWithProbability$1, getUniqueSeedString: getUniqueSeedString$2 } = rand$4;
-const { allUnits: allUnits$4 } = units$4;
+const { allUnits: allUnits$5 } = units$5;
 const { refundLastSpell: refundLastSpell$9, addUnitTarget: addUnitTarget$1 } = cards$k;
 const { playDefaultSpellSFX: playDefaultSpellSFX$9 } = cardUtils$a;
 const { CardCategory: CardCategory$n, probabilityMap: probabilityMap$n, CardRarity: CardRarity$n, Faction: Faction$5, UnitType: UnitType$8 } = commonTypes$p;
@@ -1780,7 +1780,7 @@ const spell$n = {
       } else if (randomEffect <= 9) {
         const urnID = rand$4.chooseOneOfSeeded([urn_explosive_id$1, urn_ice_id$1, urn_poison_id$1], seed);
         if (urnID !== void 0) {
-          let sourceUnit = allUnits$4[urnID];
+          let sourceUnit = allUnits$5[urnID];
           if (sourceUnit) {
             const unit2 = Unit$i.create(
               urnID,
@@ -1886,10 +1886,10 @@ const {
   cards: cards$i,
   VisualEffects: VisualEffects$3,
   rand: rand$2,
-  units: units$3,
+  units: units$4,
   Unit: Unit$h
 } = globalThis.SpellmasonsAPI;
-const { allUnits: allUnits$3 } = units$3;
+const { allUnits: allUnits$4 } = units$4;
 const { getUniqueSeedString } = rand$2;
 const { refundLastSpell: refundLastSpell$7, addUnitTarget } = cards$i;
 const { CardCategory: CardCategory$l, probabilityMap: probabilityMap$l, CardRarity: CardRarity$l, Faction: Faction$4, UnitType: UnitType$7 } = commonTypes$n;
@@ -1921,7 +1921,7 @@ const spell$l = {
       const seed = rand$2.seedrandom(seedString);
       const urnID = rand$2.chooseOneOfSeeded([urn_explosive_id, urn_ice_id, urn_poison_id], seed);
       if (urnID !== void 0) {
-        let sourceUnit = allUnits$3[urnID];
+        let sourceUnit = allUnits$4[urnID];
         if (sourceUnit) {
           const unit2 = Unit$h.create(
             urnID,
@@ -2945,7 +2945,7 @@ const spell$9 = {
 const {
   commonTypes: commonTypes$a,
   Unit: Unit$7,
-  units: units$2,
+  units: units$3,
   config: config$6,
   cards: cards$8,
   cardUtils: cardUtils$7,
@@ -2955,12 +2955,12 @@ const {
 } = globalThis.SpellmasonsAPI;
 const { CardCategory: CardCategory$8, CardRarity: CardRarity$8, probabilityMap: probabilityMap$8, Faction: Faction$3, UnitType: UnitType$3 } = commonTypes$a;
 const { takeDamage: takeDamage$4 } = Unit$7;
-const { allUnits: allUnits$2 } = units$2;
+const { allUnits: allUnits$3 } = units$3;
 const { skyBeam: skyBeam$2 } = VisualEffects$2;
 const { refundLastSpell: refundLastSpell$3, getCurrentTargets: getCurrentTargets$5, defaultTargetsForAllowNonUnitTargetTargetingSpell: defaultTargetsForAllowNonUnitTargetTargetingSpell$3 } = cards$8;
 const { playDefaultSpellSFX: playDefaultSpellSFX$7 } = cardUtils$7;
 const { addWarningAtMouse: addWarningAtMouse$2, drawUICirclePrediction: drawUICirclePrediction$3 } = PlanningView$6;
-const id$5 = "raise_pillar";
+const id$5 = "Raise Pillar";
 const spell$8 = {
   card: {
     id: id$5,
@@ -2976,7 +2976,7 @@ const spell$8 = {
     allowNonUnitTarget: true,
     effect: async (state, card, quantity, underworld, prediction) => {
       const unitId = "pillar";
-      const sourceUnit = allUnits$2[unitId];
+      const sourceUnit = allUnits$3[unitId];
       if (sourceUnit) {
         const currentTargets = getCurrentTargets$5(state);
         const newPillarLocations = currentTargets.length ? currentTargets : [state.castLocation];
@@ -3058,15 +3058,17 @@ const {
   cardUtils: cardUtils$6,
   cards: cards$7,
   JImage,
+  units: units$2,
   forcePushTowards: forcePushTowards$1
 } = globalThis.SpellmasonsAPI;
+const { allUnits: allUnits$2 } = units$2;
 const { CardCategory: CardCategory$7, CardRarity: CardRarity$7, probabilityMap: probabilityMap$7, Faction: Faction$2, UnitSubType: UnitSubType$2, UnitType: UnitType$2 } = commonTypes$9;
 const { takeDamage: takeDamage$3 } = Unit$6;
 const { containerProjectiles } = PixiUtils;
 const { makeForceMoveProjectile } = moveWithCollision$3;
 const { playDefaultSpellSFX: playDefaultSpellSFX$6 } = cardUtils$6;
 const { refundLastSpell: refundLastSpell$2 } = cards$7;
-const id$4 = "earth_push";
+const id$4 = "Earth Push";
 const defaultPushDistance$2 = 140;
 const spell$7 = {
   card: {
@@ -3188,7 +3190,8 @@ const spell$7 = {
             thinBloodLine: true
           }, underworld, prediction);
         } else if (projectile.pushedObject.debugName && projectile.pushedObject.debugName.includes("Urn")) {
-          const urn = Unit$6.create(projectile.pushedObject.debugName, projectile.pushedObject.x, projectile.pushedObject.y, Faction$2.ALLY, "urn_ice", UnitType$2.AI, UnitSubType$2.DOODAD, void 0, underworld, prediction, projectile.sourceUnit);
+          const sourceUrn = allUnits$2[projectile.pushedObject.debugName];
+          const urn = Unit$6.create(projectile.pushedObject.debugName, projectile.pushedObject.x, projectile.pushedObject.y, Faction$2.ALLY, "urn_ice", UnitType$2.AI, UnitSubType$2.DOODAD, sourceUrn.unitProps, underworld, prediction, projectile.sourceUnit);
           takeDamage$3({ unit: urn, amount: urn.health, sourceUnit: projectile.sourceUnit }, underworld, prediction);
           if (urn.health > 0) {
             takeDamage$3({ unit: urn, amount: urn.health }, underworld, prediction);
@@ -3231,6 +3234,7 @@ const unit$1 = {
     bloodColor: 8082207
   },
   init: (unit2, underworld) => {
+    Unit$5.addEvent(unit2, EVENT_REMOVE_ON_DEATH_ID);
     cardsUtil.getOrInitModifier(unit2, "Target Cursed", { isCurse: false, quantity: 1e4, keepOnDeath: false }, () => {
     });
     if (unit2.image) {
@@ -3241,6 +3245,17 @@ const unit$1 = {
   },
   getUnitAttackTargets: (unit2, underworld) => {
     return [];
+  }
+};
+const EVENT_REMOVE_ON_DEATH_ID = "removeOnDeath";
+const modifierRemoveOnDeath = {
+  id: EVENT_REMOVE_ON_DEATH_ID,
+  onDeath: async (unit2, underworld, prediction, sourceUnit) => {
+    if (!prediction) {
+      setTimeout(() => {
+        Unit$5.cleanup(unit2, true);
+      }, 1e3);
+    }
   }
 };
 const {
@@ -3272,7 +3287,7 @@ const spell$6 = {
     healthCost: 0,
     expenseScaling: 2,
     probability: probabilityMap$6[CardRarity$6.COMMON],
-    thumbnail: "spellmasons-mods/The_Doom_Scroll/graphics/spellIconRaise_Pillar.png",
+    thumbnail: "spellmasons-mods/The_Doom_Scroll/graphics/spellIconRaise_Altar.png",
     description: "Raise a mana conducive Altar at the target location, acting as a target for future spells cast",
     allowNonUnitTarget: true,
     effect: async (state, card, quantity, underworld, prediction) => {
@@ -3367,7 +3382,7 @@ const { playDefaultSpellSFX: playDefaultSpellSFX$4 } = cardUtils$4;
 const { addWarningAtMouse, drawUICirclePrediction: drawUICirclePrediction$1 } = PlanningView$4;
 const { skyBeam } = VisualEffects;
 const { allUnits } = units;
-const id$2 = "raise_wall";
+const id$2 = "Raise Wall";
 const baseWidth$2 = 48;
 const spell$5 = {
   card: {
@@ -4020,7 +4035,6 @@ const unit = {
     return [];
   }
 };
-console.log("jtest", unit);
 const mod = {
   modName: "The Doom Scroll",
   author: "Bug Jones, Dorioso Aytario",
@@ -4045,6 +4059,7 @@ const mod = {
     unit,
     unit$1
   ],
+  events: [modifierRemoveOnDeath],
   spritesheet: "spellmasons-mods/The_Doom_Scroll/graphics/spritesheet.json"
 };
 const mods = [
