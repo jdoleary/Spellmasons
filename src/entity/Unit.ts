@@ -925,6 +925,16 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean, so
     }
   }
 
+
+  for (let eventName of underworld.events) {
+    if (eventName) {
+      const fn = Events.onDeathSource[eventName];
+      if (fn) {
+        fn(unit, underworld, prediction, overriddenSourceUnit);
+      }
+    }
+  }
+
   // Run onKill events for the sourceUnit of the lethal damage
   // This must occur before onDeath events are removed (Bounty)
   // Doodads don't trigger onKill effects

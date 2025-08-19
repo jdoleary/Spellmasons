@@ -116,6 +116,7 @@ import { LogLevel } from './RemoteLogging';
 import PiePeer from './network/PiePeer';
 import { investmentId } from './modifierInvestment';
 import { isSinglePlayer } from './network/wsPieSetup';
+import { alwaysBounty } from './globalEvents/alwaysBounty';
 
 const loopCountLimit = 10000;
 export enum turn_phase {
@@ -205,6 +206,7 @@ export default class Underworld {
   processedMessageCount: number = 0;
   cardDropsDropped: number = 0;
   enemiesKilled: number = 0;
+  events: string[] = [alwaysBounty];
   // Not to be synced between clients but should belong to the underworld as they are unique
   // to each game lobby:
   // A list of units and pickups and an endPosition that they are moved to via a "force",
@@ -296,6 +298,13 @@ export default class Underworld {
     this.serverStabilityMaxUnits = globalThis.serverStabilityMaxUnits;
     if (this.serverStabilityMaxPickups || this.serverStabilityMaxUnits) {
       console.log('Server Stability: ', this.serverStabilityMaxUnits, this.serverStabilityMaxPickups);
+    }
+  }
+  addEvent(eventId: string) {
+    if (!this.events.includes(eventId)) {
+      this.events.push(eventId);
+      // TODO
+      // this.events.sort(Cards.eventsSorter(Cards.allModifiers));
     }
   }
   getAllUnits(prediction: boolean): Unit.IUnit[] {
@@ -2319,7 +2328,7 @@ export default class Underworld {
 
     // each bounty hunter places a bounty on a random unit in an opposing faction
     this.units.forEach(u => {
-      if (u.modifiers[bountyHunterId]) {
+      if (u.modifiers[bountyHunterId] || levelIndex > 4) {
         placeRandomBounty(u, this, false);
       }
     });
