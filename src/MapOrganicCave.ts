@@ -9,7 +9,7 @@ import { conway, Material } from "./Conway";
 import type { IObstacle } from "./entity/Obstacle";
 import Underworld, { Biome } from "./Underworld";
 import LiquidPools, { doStampsOverlap, stampMatricies, surround } from './LiquidPools';
-import { handmadeMaps } from "./MapsHandmade";
+import { fixLiquid, handmadeMaps } from "./MapsHandmade";
 
 export const caveSizes: { [size: string]: CaveParams } = {
     'tutorial': {
@@ -73,7 +73,7 @@ export function generateCave(params: CaveParams, biome: Biome, underworld: Under
     let width: number = 16;
     let height: number = 16;
     let liquid;
-    const handmadeMapData = useHandmade ? chooseOneOfSeeded(handmadeMaps, seed) : undefined
+    const handmadeMapData = useHandmade ? chooseOneOfSeeded(handmadeMaps.map(fixLiquid), seed) : undefined
     if (useHandmade && handmadeMapData) {
         const _height = handmadeMapData.height;
         const _width = handmadeMapData.width;

@@ -1,3 +1,6 @@
+import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex, vec2ToOneDimentionIndexPreventWrap } from "./jmath/ArrayUtil";
+import { add, Vec2 } from "./jmath/Vec";
+
 export interface HandmadeMap {
     data: number[];
     height: number;
@@ -8,12 +11,12 @@ export const handmadeMaps: HandmadeMap[] = [
         "data": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 15, 15, 15, 15, 15, 15, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 16, 16, 16, 16, 16, 15, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 1, 1, 1, 1, 1, 15, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 1, 5, 13, 6, 1, 15, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 15, 15, 15, 15, 15, 15, 1, 7, 2, 14, 1, 15, 15, 15, 15, 15, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 15, 16, 16, 16, 16, 16, 1, 7, 2, 14, 1, 16, 16, 16, 16, 15, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 15, 1, 1, 5, 13, 13, 13, 9, 2, 14, 1, 1, 1, 1, 1, 15, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 15, 1, 1, 7, 2, 2, 2, 2, 2, 14, 1, 1, 1, 1, 1, 15, 15, 15, 0, 0,
-            0, 15, 15, 15, 15, 15, 1, 1, 3, 12, 12, 12, 12, 12, 4, 1, 1, 1, 1, 1, 16, 16, 15, 15, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 1, 1, 1, 1, 1, 15, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 15, 15, 15, 15, 15, 15, 1, 1, 2, 1, 1, 15, 15, 15, 15, 15, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 15, 16, 16, 16, 16, 16, 1, 1, 2, 1, 1, 16, 16, 16, 16, 15, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 15, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 15, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 15, 1, 1, 1, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 15, 15, 15, 0, 0,
+            0, 15, 15, 15, 15, 15, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 16, 16, 15, 15, 0,
             15, 15, 16, 16, 16, 16, 1, 1, 1, 1, 1, 1, 1, 1, 15, 15, 1, 1, 1, 1, 1, 1, 16, 15, 0,
             15, 16, 1, 1, 1, 1, 1, 1, 1, 1, 15, 15, 15, 15, 15, 16, 1, 1, 1, 1, 1, 1, 1, 15, 15,
             15, 1, 1, 1, 15, 1, 1, 1, 1, 1, 16, 16, 16, 16, 16, 1, 1, 1, 1, 1, 15, 1, 1, 16, 15,
@@ -30,3 +33,102 @@ export const handmadeMaps: HandmadeMap[] = [
     },
 
 ]
+
+const LIQUID = 2;
+const LAND = 1;
+const CORNER_SW = 3;
+const CORNER_SE = 4;
+const CORNER_NW = 5;
+const CORNER_NE = 6;
+const WALL_W = 7;
+const INSIDE_CORNER_NE = 8;
+const INSIDE_CORNER_NW = 9;
+const INSIDE_CORNER_SE = 10;
+const INSIDE_CORNER_SW = 11;
+const WALL_S = 12;
+const WALL_N = 13;
+const WALL_E = 14;
+
+
+const west: Vec2 = { x: -1, y: 0 };
+const northwest: Vec2 = { x: -1, y: -1 };
+const southwest: Vec2 = { x: -1, y: 1 };
+const east: Vec2 = { x: 1, y: 0 };
+const northeast: Vec2 = { x: 1, y: -1 };
+const southeast: Vec2 = { x: 1, y: 1 };
+const north: Vec2 = { x: 0, y: -1 };
+const south: Vec2 = { x: 0, y: 1 };
+type SIDES_WITH_DIAG_KEYS = (keyof typeof SIDES_WITH_DIAG)
+const SIDES_WITH_DIAG = {
+    north,
+    northeast,
+    east,
+    southeast,
+    south,
+    southwest,
+    west,
+    northwest
+}
+function getCell(map: HandmadeMap, position: Vec2): number | undefined {
+    return map.data[vec2ToOneDimentionIndexPreventWrap(position, map.width)];
+}
+export function fixLiquid(map: HandmadeMap): HandmadeMap {
+    for (let i = 0; i < map.data.length; i++) {
+        const coords = oneDimentionIndexToVec2(i, map.width);
+        if (map.data[i] !== LAND) {
+            continue
+        }
+        const tile = map.data[i];
+        const neighbors = (Object.keys(SIDES_WITH_DIAG) as SIDES_WITH_DIAG_KEYS[]).reduce<Record<SIDES_WITH_DIAG_KEYS, number>>((neighbors, side) => {
+            const sidePosition = SIDES_WITH_DIAG[side];
+            if (sidePosition) {
+                const cell = getCell(map, add(coords, sidePosition));
+                // Checking for cell intentionally excludes the "empty" cell
+                if (cell != -1) {
+                    neighbors[side] = cell || -1;
+
+                }
+            }
+            return neighbors;
+        }, {
+            north: -1,
+            northeast: -1,
+            east: -1,
+            southeast: -1,
+            south: -1,
+            southwest: -1,
+            west: -1,
+            northwest: -1,
+        });
+        if (tile) {
+            if (neighbors.west == LIQUID && (neighbors.south == LIQUID || neighbors.southeast == LIQUID)) {
+                map.data[i] = INSIDE_CORNER_NE
+            } else if (neighbors.east == LIQUID && (neighbors.south == LIQUID || neighbors.southwest == LIQUID)) {
+                map.data[i] = INSIDE_CORNER_NW
+            } else if (neighbors.east == LIQUID && (neighbors.north == LIQUID || neighbors.northwest == LIQUID)) {
+                map.data[i] = INSIDE_CORNER_SW
+            } else if (neighbors.west == LIQUID && (neighbors.north == LIQUID || neighbors.northeast == LIQUID)) {
+                map.data[i] = INSIDE_CORNER_SE
+            } else if (neighbors.north == LIQUID) {
+                map.data[i] = WALL_S
+            } else if (neighbors.east == LIQUID) {
+                map.data[i] = WALL_W
+            } else if (neighbors.west == LIQUID) {
+                map.data[i] = WALL_E
+            } else if (neighbors.south == LIQUID) {
+                map.data[i] = WALL_N
+            } else if (neighbors.northeast == LIQUID) {
+                map.data[i] = CORNER_SW
+            } else if (neighbors.northwest == LIQUID) {
+                map.data[i] = CORNER_SE
+            } else if (neighbors.southeast == LIQUID) {
+                map.data[i] = CORNER_NW
+            } else if (neighbors.southwest == LIQUID) {
+                map.data[i] = CORNER_NE
+            }
+        } else {
+            console.error('Unexpected map generation error, tile is undefined.')
+        }
+    }
+    return map
+}
