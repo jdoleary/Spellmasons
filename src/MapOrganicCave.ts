@@ -68,7 +68,10 @@ export interface Limits { xMin: number, xMax: number, yMin: number, yMax: number
 export function generateCave(params: CaveParams, biome: Biome, underworld: Underworld): { map: Map, limits: Limits } {
     const seed = seedrandom(getUniqueSeedStringPerLevel(underworld));
     // Currently an X% chance of using a handmade map
-    const useHandmade = globalThis.forceCustomMapName || randInt(0, 100, seed) <= 20;
+    // and levelIndex check since most handmade maps are large
+    // TODO: eventually maybe do a check to see how many enemies are spawning
+    // and choose an appropriately sized map
+    const useHandmade = globalThis.forceCustomMapName || (underworld.levelIndex >= 5 && randInt(0, 100, seed) <= 20);
     let tiles: Tile[];
     let width: number = 16;
     let height: number = 16;
