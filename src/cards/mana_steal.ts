@@ -7,7 +7,7 @@ import { manaBurnCardId } from './mana_burn';
 import { healManaUnit } from '../effects/heal';
 
 const id = 'Mana Steal';
-const base_mana_stolen = 60;
+const base_mana_stolen = 120;
 const health_burn = 30;
 const spell: Spell = {
   card: {
