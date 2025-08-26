@@ -68,14 +68,14 @@ export interface Limits { xMin: number, xMax: number, yMin: number, yMax: number
 export function generateCave(params: CaveParams, biome: Biome, underworld: Underworld): { map: Map, limits: Limits } {
     const seed = seedrandom(getUniqueSeedStringPerLevel(underworld));
     // Currently an X% chance of using a handmade map
-    const useHandmade = globalThis.forceCustomMapName || randInt(0, 100, seed) <= 2;
+    const useHandmade = globalThis.forceCustomMapName || randInt(0, 100, seed) <= 20;
     let tiles: Tile[];
     let width: number = 16;
     let height: number = 16;
     let liquid;
-    let handmadeMapData = useHandmade ? chooseOneOfSeeded(handmadeMaps.map(fixLiquid), seed) : undefined
+    let handmadeMapData = useHandmade ? chooseOneOfSeeded(handmadeMaps, seed) : undefined
     if (globalThis.forceCustomMapName && underworld.pie.soloMode) {
-        const foundMap = handmadeMaps.map(fixLiquid).find(m => m.name == globalThis.forceCustomMapName)
+        const foundMap = handmadeMaps.find(m => (m.name || '').toLowerCase() == globalThis.forceCustomMapName.toLowerCase())
         if (foundMap) {
             handmadeMapData = foundMap
         } else {
@@ -83,6 +83,7 @@ export function generateCave(params: CaveParams, biome: Biome, underworld: Under
         }
     }
     if (useHandmade && handmadeMapData) {
+        handmadeMapData = fixLiquid(handmadeMapData)
         const _height = handmadeMapData.height;
         const _width = handmadeMapData.width;
         tiles = handmadeMapData.data.map((t, i) => ({
@@ -104,8 +105,8 @@ export function generateCave(params: CaveParams, biome: Biome, underworld: Under
             x: 64 * (i % _width),
             y: 64 * Math.floor(i / _width)
         }));
-        width = _width * 64;
-        height = Math.floor(tiles.length / _height) * 64;
+        width = _width;
+        height = Math.floor(tiles.length / _height);
         liquid = tiles.filter(t => t.image.includes('liquid')).map(x => ({ ...x, image: `${biome}/all_liquid.png` }));
 
     } else {
