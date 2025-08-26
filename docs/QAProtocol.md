@@ -11,6 +11,9 @@
 - Test saving if you modify underworld with new elements added to the level that need to be serialized
 - Test loading an old save file for backwards compatibility
 
+Next:
+- [ ] Back compat: underworld.events is not iterable
+
 August:
 - [x] Verify that new license is included with game
 - [x] Disable doom scroll mod for now
