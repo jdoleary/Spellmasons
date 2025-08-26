@@ -244,6 +244,7 @@ import registerPrecision from '../modifierPrecision';
 
 // Global events
 import registerAlwaysBounty from '../globalEvents/alwaysBounty';
+import registerTestUnderworldEvents from '../globalEvents/testUnderworldEvents';
 
 export interface Modifiers {
   // modifiers that are not attached to a spell need an explicit id set
@@ -672,6 +673,7 @@ export function registerCards(overworld: Overworld) {
 
   // Global Events
   registerAlwaysBounty()
+  registerTestUnderworldEvents()
 }
 
 // This is necessary because unit stats change with difficulty.

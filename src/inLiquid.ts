@@ -29,7 +29,7 @@ export function doLiquidEffect(underworld: Underworld, unit: IUnit, prediction: 
   let adjustedDamage = damage;
 
   // Trigger in liquid events
-  const events = [...unit.events];
+  const events = [...unit.events, ...underworld.events];
   for (let eventName of events) {
     const fn = Events.onLiquidSource[eventName];
     if (fn) {

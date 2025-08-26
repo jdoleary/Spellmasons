@@ -913,20 +913,10 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean, so
     tryCollectSoul(globalThis.player, unit, underworld, prediction);
   }
 
-  const events = [...unit.events];
+  const events = [...unit.events, ...underworld.events];
   const overriddenSourceUnit = sourceUnit?.summonedBy || sourceUnit;
 
   for (let eventName of events) {
-    if (eventName) {
-      const fn = Events.onDeathSource[eventName];
-      if (fn) {
-        fn(unit, underworld, prediction, overriddenSourceUnit);
-      }
-    }
-  }
-
-
-  for (let eventName of underworld.events) {
     if (eventName) {
       const fn = Events.onDeathSource[eventName];
       if (fn) {
@@ -1025,7 +1015,7 @@ export function composeOnDealDamageEvents(damageArgs: damageArgs, underworld: Un
   if (!sourceUnit) return amount;
 
   // Compose onDamageEvents
-  const events = [...sourceUnit.events]
+  const events = [...sourceUnit.events, ...underworld.events]
   for (let eventName of events) {
     const fn = Events.onDealDamageSource[eventName];
     if (fn) {
@@ -1039,7 +1029,7 @@ export function composeOnTakeDamageEvents(damageArgs: damageArgs, underworld: Un
   let { unit, amount, sourceUnit } = damageArgs;
 
   // Compose onDamageEvents
-  const events = [...unit.events]
+  const events = [...unit.events, ...underworld.events]
   for (let eventName of events) {
     const fn = Events.onTakeDamageSource[eventName];
     if (fn) {
@@ -1601,7 +1591,7 @@ export function inRange(unit: IUnit, target: Vec2): boolean {
   return math.distance(unit, target) <= unit.attackRange;
 }
 
-export async function startTurnForUnits(units: IUnit[], underworld: Underworld, prediction: boolean) {
+export async function startTurnForUnits(units: IUnit[], underworld: Underworld, prediction: boolean, faction: Faction) {
   // Add mana to Player units
   for (let unit of units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED && u.alive)) {
     // Restore player to max mana at start of turn
@@ -1634,12 +1624,12 @@ export async function startTurnForUnits(units: IUnit[], underworld: Underworld, 
   // Trigger start turn events
   const turnStartPromises = [];
   for (let unit of units) {
-    turnStartPromises.push(runTurnStartEvents(unit, underworld, prediction))
+    turnStartPromises.push(runTurnStartEvents(unit, underworld, prediction, faction))
   }
   await raceTimeout(5000, 'Turn Start Events did not resolve', Promise.all(turnStartPromises));
 }
 
-export async function endTurnForUnits(units: IUnit[], underworld: Underworld, prediction: boolean) {
+export async function endTurnForUnits(units: IUnit[], underworld: Underworld, prediction: boolean, faction: Faction) {
   // Add mana to AI units
   for (let unit of units.filter(u => u.unitType == UnitType.AI && u.alive)) {
     unit.mana += unit.manaPerTurn;
@@ -1656,18 +1646,18 @@ export async function endTurnForUnits(units: IUnit[], underworld: Underworld, pr
   // Trigger end turn events
   const turnEndPromises = [];
   for (let unit of units) {
-    turnEndPromises.push(runTurnEndEvents(unit, underworld, prediction))
+    turnEndPromises.push(runTurnEndEvents(unit, underworld, prediction, faction))
   }
   await raceTimeout(5000, 'Turn End Events did not resolve', Promise.all(turnEndPromises));
 }
 
-export async function runTurnStartEvents(unit: IUnit, underworld: Underworld, prediction: boolean) {
-  const events = [...unit.events];
+export async function runTurnStartEvents(unit: IUnit, underworld: Underworld, prediction: boolean, faction: Faction) {
+  const events = [...unit.events, ...underworld.events];
   const promises = events.map(
     async (eventName) => {
       const fn = Events.onTurnStartSource[eventName];
       if (fn) {
-        await fn(unit, underworld, prediction);
+        await fn(unit, underworld, prediction, faction);
       }
     },
   );
@@ -1677,13 +1667,13 @@ export async function runTurnStartEvents(unit: IUnit, underworld: Underworld, pr
   await Promise.all(promises);
 }
 
-export async function runTurnEndEvents(unit: IUnit, underworld: Underworld, prediction: boolean) {
-  const events = [...unit.events];
+export async function runTurnEndEvents(unit: IUnit, underworld: Underworld, prediction: boolean, faction: Faction) {
+  const events = [...unit.events, ...underworld.events];
   const promises = events.map(
     async (eventName) => {
       const fn = Events.onTurnEndSource[eventName];
       if (fn) {
-        await fn(unit, underworld, prediction);
+        await fn(unit, underworld, prediction, faction);
       }
     },
   )
@@ -1694,7 +1684,7 @@ export async function runTurnEndEvents(unit: IUnit, underworld: Underworld, pred
 }
 
 export async function runPickupEvents(unit: IUnit, pickup: IPickup, underworld: Underworld, prediction: boolean) {
-  const events = [...unit.events];
+  const events = [...unit.events, ...underworld.events];
   await raceTimeout(3000, `RunPickupEvents (Unit: ${unit.unitSourceId} | Pickup: ${pickup.name} | Prediction: ${prediction})`,
     Promise.all(events.map(
       async (eventName) => {

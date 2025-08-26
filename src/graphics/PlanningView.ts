@@ -725,7 +725,7 @@ export function predictAIActions(underworld: Underworld, restartChunks: boolean)
   // Issue: https://github.com/jdoleary/Spellmasons/issues/388
 
   // TODO - Run turn start events for units that will run it?
-  //Unit.startTurnForUnits(aiUnits, underworld, true);
+  //Unit.startTurnForUnits(aiUnits, underworld, true, faction);
 
   // We want to draw attention markers above enemies
   // who plan to attack the player next turn.

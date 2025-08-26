@@ -29,7 +29,7 @@ export function teleport(object: HasSpace, newLocation: Vec2, underworld: Underw
     Unit.setLocation(object, newLocation, underworld, prediction);
 
     // Trigger onTeleport events
-    for (let eventName of object.events) {
+    for (let eventName of [...object.events, ...underworld.events]) {
       if (eventName) {
         const fn = Events.onTeleportSource[eventName];
         if (fn) {

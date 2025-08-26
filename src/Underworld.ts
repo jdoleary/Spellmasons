@@ -117,6 +117,7 @@ import PiePeer from './network/PiePeer';
 import { investmentId } from './modifierInvestment';
 import { isSinglePlayer } from './network/wsPieSetup';
 import { alwaysBounty } from './globalEvents/alwaysBounty';
+import { testUnderworldEventsId } from './globalEvents/testUnderworldEvents';
 
 const loopCountLimit = 10000;
 export enum turn_phase {
@@ -3034,7 +3035,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   }
   async executePlayerTurn() {
     this.battleLog(`Begin Player Turn Phase`);
-    await Unit.startTurnForUnits(this.players.map(p => p.unit), this, false);
+    await Unit.startTurnForUnits(this.players.map(p => p.unit), this, false, Faction.ALLY);
 
     for (let player of this.players) {
       player.endedTurn = false;
@@ -3091,7 +3092,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (units.length) {
       this.battleLog(`Begin ${faction === 0 ? 'Ally' : 'Enemy'} NPC Turn Phase`);
     }
-    await Unit.startTurnForUnits(units, this, false);
+    await Unit.startTurnForUnits(units, this, false, faction);
 
     // TODO - Define/Control actions and smart targeting
     // in Unit rather than gameLoopUnit, for more versatility?
@@ -3133,7 +3134,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
     // End turn events, liquid damage, mana regen, etc.
     // Use new units list in case it has changed (I.E. summons)
-    await Unit.endTurnForUnits(this.units.filter(u => u.unitType == UnitType.AI && u.faction == faction), this, false);
+    await Unit.endTurnForUnits(this.units.filter(u => u.unitType == UnitType.AI && u.faction == faction), this, false, faction);
   }
   // This function is invoked when all factions have finished their turns
   async endFullTurnCycle() {
@@ -3365,7 +3366,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // Trigger full turn cycle events now that it's restarting at the playerTurn
     if (phase == turn_phase[turn_phase.PlayerTurns]) {
       for (let unit of this.units) {
-        const events = [...unit.events];
+        const events = [...unit.events, ...this.events];
         await Promise.all(events.map(
           async (eventName) => {
             const fn = Events.onFullTurnCycleSource[eventName];
@@ -3403,7 +3404,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
       case turn_phase[turn_phase.NPC_ALLY]: {
         // End player turn now that it is about to start NPC_ALLY turn
-        await Unit.endTurnForUnits(this.players.map(p => p.unit), this, false);
+        await Unit.endTurnForUnits(this.players.map(p => p.unit), this, false, Faction.ALLY);
         this.endPlayerTurnCleanup();
 
         await this.executeNPCTurn(Faction.ALLY);

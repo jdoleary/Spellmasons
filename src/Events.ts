@@ -6,6 +6,7 @@ import { ForceMoveProjectile } from './jmath/moveWithCollision';
 import { CardCost } from './cards/cardUtils';
 import type { IPlayer } from './entity/Player';
 import { ICard } from './cards';
+import { Faction } from './types/commonTypes';
 
 export type onDealDamage = {
   // Returns a possibly modified damage
@@ -81,12 +82,12 @@ export type onFullTurnCycle = {
 const onFullTurnCycleSource: { [name: string]: onFullTurnCycle } = {};
 
 export type onTurnStart = {
-  (unit: IUnit, underworld: Underworld, prediction: boolean): Promise<void>;
+  (unit: IUnit, underworld: Underworld, prediction: boolean, faction: Faction): Promise<void>;
 };
 const onTurnStartSource: { [name: string]: onTurnStart } = {};
 
 export type onTurnEnd = {
-  (unit: IUnit, underworld: Underworld, prediction: boolean): Promise<void>;
+  (unit: IUnit, underworld: Underworld, prediction: boolean, faction: Faction): Promise<void>;
 };
 const onTurnEndSource: { [name: string]: onTurnEnd } = {};
 
