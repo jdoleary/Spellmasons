@@ -360,4 +360,5 @@ declare global {
   // Used to determine when to show glowing inventory to suggest that player has new stat points to spend
   var lastSeenStatpointsUnspent: number | undefined;
   var totalSoulTrails: number;
+  var forceCustomMapName: string;
 }

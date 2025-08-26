@@ -68,12 +68,20 @@ export interface Limits { xMin: number, xMax: number, yMin: number, yMax: number
 export function generateCave(params: CaveParams, biome: Biome, underworld: Underworld): { map: Map, limits: Limits } {
     const seed = seedrandom(getUniqueSeedStringPerLevel(underworld));
     // Currently an X% chance of using a handmade map
-    const useHandmade = randInt(0, 100, seed) <= 2;
+    const useHandmade = globalThis.forceCustomMapName || randInt(0, 100, seed) <= 2;
     let tiles: Tile[];
     let width: number = 16;
     let height: number = 16;
     let liquid;
-    const handmadeMapData = useHandmade ? chooseOneOfSeeded(handmadeMaps.map(fixLiquid), seed) : undefined
+    let handmadeMapData = useHandmade ? chooseOneOfSeeded(handmadeMaps.map(fixLiquid), seed) : undefined
+    if (globalThis.forceCustomMapName && underworld.pie.soloMode) {
+        const foundMap = handmadeMaps.map(fixLiquid).find(m => m.name == globalThis.forceCustomMapName)
+        if (foundMap) {
+            handmadeMapData = foundMap
+        } else {
+            console.error('Attempted to load handmade map with name', globalThis.forceCustomMapName, ' but was not found.')
+        }
+    }
     if (useHandmade && handmadeMapData) {
         const _height = handmadeMapData.height;
         const _width = handmadeMapData.width;

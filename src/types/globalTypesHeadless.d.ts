@@ -419,4 +419,5 @@ declare global {
   var peerHostBroadcastClientsPresenceChanged: (pie: PiePeer) => void;
   var lastSeenStatpointsUnspent: number | undefined;
   var totalSoulTrails: number;
+  var forceCustomMapName: string;
 }
