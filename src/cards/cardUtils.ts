@@ -233,12 +233,6 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
             cardCost.manaCost = Math.floor(cardCost.manaCost * 0.5);
         }
 
-        // Blood Warlock: Soul magic costs health instead of mana
-        if (caster.unit.modifiers[runeBloodWarlockId] && card.category === CardCategory.Soul && cardCost.manaCost > 0) {
-            cardCost.healthCost = Math.round(cardCost.manaCost * 0.5);
-            cardCost.manaCost = 0;
-        }
-
         // Affinity Modifiers - Reduce cost of spell by 1% per quantity
         if (card.category == CardCategory.Blessings && caster.unit.modifiers[affinityBlessingId]) {
             cardCost.manaCost = Math.floor(cardCost.manaCost * (1 - (0.01 * caster.unit.modifiers[affinityBlessingId].quantity)));
@@ -258,6 +252,14 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
         if (card.category == CardCategory.Targeting && caster.unit.modifiers[affinityTargeting]) {
             cardCost.manaCost = Math.floor(cardCost.manaCost * (1 - (0.01 * caster.unit.modifiers[affinityTargeting].quantity)));
         }
+
+        // Runes that swap costs MUST come _after_ affinities to ensure the discount still works
+        // Blood Warlock: Soul magic costs health instead of mana
+        if (caster.unit.modifiers[runeBloodWarlockId] && card.category === CardCategory.Soul && cardCost.manaCost > 0) {
+            cardCost.healthCost = Math.round(cardCost.manaCost * 0.5);
+            cardCost.manaCost = 0;
+        }
+
         const events = [...caster.unit.events];
         for (let eventName of events) {
             const fn = Events.onCostCalculationSource[eventName];
