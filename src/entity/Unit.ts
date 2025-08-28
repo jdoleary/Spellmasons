@@ -1169,7 +1169,7 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
   elHealthBar.style["width"] = `${100 * unit.health / unit.healthMax}%`;
   elHealthBarShield.style["width"] = `${100 * Math.min(shieldAmount / unit.healthMax, 1)}%`;
   if (shieldAmount) {
-    const shieldText = `${unit.modifiers.shield?.quantity} shield`;
+    const shieldText = `${Math.round(shieldAmount)} shield`;
     elHealthLabel.innerHTML = `${shieldText} + ${txt(unit.health)} / ${txt(unit.healthMax)}`;
   } else {
     // Label health without shield
@@ -1212,7 +1212,7 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
     if (willDie) {
       elHealthLabel.innerHTML = i18n('Death');
     } else if (predictionPlayerShield) {
-      const shieldText = `${predictionPlayerShield} shield`;
+      const shieldText = `${Math.round(predictionPlayerShield)} shield`;
       elHealthLabel.innerHTML = `${shieldText} + ${txt(predictionPlayerUnit.health)} / ${txt(predictionPlayerUnit.healthMax)}`;
     } else if (predictionPlayerUnit.health != unit.health || predictionPlayerUnit.healthMax != unit.healthMax) {
       elHealthLabel.innerHTML = `${txt(predictionPlayerUnit.health)} ${i18n('Remaining')}`;
@@ -1265,7 +1265,7 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
     elManaBar2.style["width"] = `0%`;
     elManaBar3.style["width"] = `100%`;
     const inSoulDebt = predictionPlayerUnit.soulFragments < 0
-    const text = inSoulDebt ? `${predictionPlayerUnit.soulFragments} ${i18n('Soul Debt')}` : `${predictionPlayerUnit.soulFragments} ${i18n('Soul Fragments')}`;
+    const text = inSoulDebt ? `${Math.floor(predictionPlayerUnit.soulFragments)} ${i18n('Soul Debt')}` : `${Math.floor(predictionPlayerUnit.soulFragments)} ${i18n('Soul Fragments')}`;
     elManaLabel.dataset.soulFragments = predictionPlayerUnit.soulFragments.toString();
     elManaLabel.classList.toggle('souldebt', inSoulDebt)
     elManaLabel.innerHTML = text;

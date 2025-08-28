@@ -27,6 +27,7 @@ import { precisionId } from "../modifierPrecision";
 import * as Cards from "../cards";
 import { IUnit } from "../entity/Unit";
 import { fairIsFairId, soulmuncherId, witchyVibesId } from "../modifierDeathmasonConstants";
+import Events from "../Events";
 
 export interface CardCost {
     manaCost: number;
@@ -180,15 +181,24 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
         if (caster.unit.modifiers[endlessQuiverId] && card.id.toLowerCase().includes('arrow')) {
             // Freeze mana cost for arrows
             cardCost.manaCost = card.manaCost;
+            cardCost.healthCost = card.healthCost;
+            if (card.staminaCost)
+                cardCost.staminaCost = card.staminaCost;
         }
         if (card.category == CardCategory.Movement && caster.unit.modifiers[inexhaustibleId]) {
             // Freeze mana cost for movement spells
             cardCost.manaCost = card.manaCost;
+            cardCost.healthCost = card.healthCost;
+            if (card.staminaCost)
+                cardCost.staminaCost = card.staminaCost;
         }
         // Precision prevents cards from scaling in mana cost if the player has no targeting spells
         // .filter Filters out disabled cards, so you can sell targeting spells and still have precision work
         if (caster?.unit.modifiers[precisionId] && caster.inventory.filter(c => !caster.disabledCards.includes(c)).every(id => Cards.allCards[id]?.category !== CardCategory.Targeting)) {
             cardCost.manaCost = card.manaCost;
+            cardCost.healthCost = card.healthCost;
+            if (card.staminaCost)
+                cardCost.staminaCost = card.staminaCost;
         }
 
         // Bloodmason
@@ -223,12 +233,6 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
             cardCost.manaCost = Math.floor(cardCost.manaCost * 0.5);
         }
 
-        // Blood Warlock: Soul magic costs health instead of mana
-        if (caster.unit.modifiers[runeBloodWarlockId] && card.category === CardCategory.Soul && cardCost.manaCost > 0) {
-            cardCost.healthCost = Math.round(cardCost.manaCost * 0.5);
-            cardCost.manaCost = 0;
-        }
-
         // Affinity Modifiers - Reduce cost of spell by 1% per quantity
         if (card.category == CardCategory.Blessings && caster.unit.modifiers[affinityBlessingId]) {
             cardCost.manaCost = Math.floor(cardCost.manaCost * (1 - (0.01 * caster.unit.modifiers[affinityBlessingId].quantity)));
@@ -249,6 +253,20 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
             cardCost.manaCost = Math.floor(cardCost.manaCost * (1 - (0.01 * caster.unit.modifiers[affinityTargeting].quantity)));
         }
 
+        // Runes that swap costs MUST come _after_ affinities to ensure the discount still works
+        // Blood Warlock: Soul magic costs health instead of mana
+        if (caster.unit.modifiers[runeBloodWarlockId] && card.category === CardCategory.Soul && cardCost.manaCost > 0) {
+            cardCost.healthCost = Math.round(cardCost.manaCost * 0.5);
+            cardCost.manaCost = 0;
+        }
+
+        const events = [...caster.unit.events];
+        for (let eventName of events) {
+            const fn = Events.onCostCalculationSource[eventName];
+            if (fn && caster) {
+                cardCost = fn(caster, card, timesUsedSoFar, cardCost);
+            }
+        }
         // If player has charge, use charge instead:
         if (caster && caster.unit.charges?.[card.id]) {
             cardCost.manaCost = 0;

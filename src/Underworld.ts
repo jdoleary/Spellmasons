@@ -751,33 +751,38 @@ export default class Underworld {
         const unitImageYOffset = config.COLLISION_MESH_RADIUS / 2;
         const startPos = Vec.clone(forceMoveInst.pushedObject);
         startPos.y += unitImageYOffset;
-        const done = this.runForceMove(forceMoveInst, deltaTime, false);
+        let done = this.runForceMove(forceMoveInst, deltaTime, false);
         const endPos = { x: forceMoveInst.pushedObject.x, y: forceMoveInst.pushedObject.y + unitImageYOffset };
         if (!globalThis.noGore && graphicsBloodSmear && Unit.isUnit(forceMoveInst.pushedObject) && exists(forceMoveInst.pushedObject.health) && forceMoveInst.pushedObject.health <= 0) {
-          const size = 3;
-          for (let j of smearJitter) {
-            // Multiple blood trails
-            graphicsBloodSmear.beginFill(forceMoveInst.pushedObject.bloodColor, 1.0);
-            graphicsBloodSmear.lineStyle(0);
-            const bloodDrop = Vec.jitter(endPos, 5);
-            // Don't draw if inside liquid
-            if (!this.isInsideLiquid(bloodDrop)) {
-              // Draw a blood drop
-              graphicsBloodSmear.drawCircle(bloodDrop.x, bloodDrop.y, randInt(2, 4));
-            }
+          if (this.isCoordOnVoidTile(endPos)) {
+            // Don't render blood for units out of bounds, this causes the "delete the floor bug"
+            done = true;
+          } else {
+            const size = 3;
+            for (let j of smearJitter) {
+              // Multiple blood trails
+              graphicsBloodSmear.beginFill(forceMoveInst.pushedObject.bloodColor, 1.0);
+              graphicsBloodSmear.lineStyle(0);
+              const bloodDrop = Vec.jitter(endPos, 5);
+              // Don't draw if inside liquid
+              if (!this.isInsideLiquid(bloodDrop)) {
+                // Draw a blood drop
+                graphicsBloodSmear.drawCircle(bloodDrop.x, bloodDrop.y, randInt(2, 4));
+              }
 
-            const startWithJitter = Vec.add(startPos, j);
-            const endWithJitter = Vec.add(endPos, j);
-            // Only draw if both are not inside liquid bounds
-            if (!this.isInsideLiquid(startPos) && !this.isInsideLiquid(endWithJitter)) {
-              // Draw circle at the ends of the smear line line so the smear lines don't look like rectangles
-              graphicsBloodSmear.drawCircle(startWithJitter.x, startWithJitter.y, size);
-              graphicsBloodSmear.drawCircle(endWithJitter.x, endWithJitter.y, size);
-              graphicsBloodSmear.endFill();
-              // Draw a smear line
-              graphicsBloodSmear.lineStyle(size, forceMoveInst.pushedObject.bloodColor, 1.0);
-              graphicsBloodSmear.moveTo(startWithJitter.x, startWithJitter.y);
-              graphicsBloodSmear.lineTo(endWithJitter.x, endWithJitter.y);
+              const startWithJitter = Vec.add(startPos, j);
+              const endWithJitter = Vec.add(endPos, j);
+              // Only draw if both are not inside liquid bounds
+              if (!this.isInsideLiquid(startPos) && !this.isInsideLiquid(endWithJitter)) {
+                // Draw circle at the ends of the smear line line so the smear lines don't look like rectangles
+                graphicsBloodSmear.drawCircle(startWithJitter.x, startWithJitter.y, size);
+                graphicsBloodSmear.drawCircle(endWithJitter.x, endWithJitter.y, size);
+                graphicsBloodSmear.endFill();
+                // Draw a smear line
+                graphicsBloodSmear.lineStyle(size, forceMoveInst.pushedObject.bloodColor, 1.0);
+                graphicsBloodSmear.moveTo(startWithJitter.x, startWithJitter.y);
+                graphicsBloodSmear.lineTo(endWithJitter.x, endWithJitter.y);
+              }
             }
           }
         }
@@ -2457,6 +2462,12 @@ export default class Underworld {
         Pickup.tryTriggerPickup(pu, unit, this, prediction);
       }
     }
+  }
+  isCoordOnVoidTile(coord: Vec2): boolean {
+    const cellX = Math.round(coord.x / config.OBSTACLE_SIZE);
+    const cellY = Math.round(coord.y / config.OBSTACLE_SIZE);
+    const originalTile = this.lastLevelCreated?.imageOnlyTiles[vec2ToOneDimentionIndexPreventWrap({ x: cellX, y: cellY }, this.lastLevelCreated?.width)];
+    return !originalTile || (isNullOrUndef(originalTile.image) || originalTile.image == '');
   }
   isCoordOnWallTile(coord: Vec2): boolean {
     const cellX = Math.round(coord.x / config.OBSTACLE_SIZE);

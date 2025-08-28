@@ -46,7 +46,8 @@ const spell: Spell = {
               [CardRarity.SPECIAL]: highestSellVal / 6,
               [CardRarity.UNCOMMON]: highestSellVal / 4,
               [CardRarity.RARE]: highestSellVal / 2,
-              [CardRarity.FORBIDDEN]: highestSellVal
+              [CardRarity.FORBIDDEN]: highestSellVal,
+              [CardRarity.RUNIC]: highestSellVal / 2,
             }[rarity]);
             state.casterPlayer.statPointsUnspent += sellValue;
             return `${i18n(card.id)}: ${sellValue} SP`;

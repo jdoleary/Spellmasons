@@ -93,7 +93,8 @@ const spell: Spell = {
           adjustedAmount = Math.max(0, amount - modifier.quantity);
           modifier.quantity -= amount - adjustedAmount;
 
-          if (modifier && modifier.quantity <= 0) {
+          // Ensure shield quantity won't remain stuck if decimal
+          if (modifier && modifier.quantity < 0.5) {
             Unit.removeModifier(unit, shieldId, underworld);
           }
 

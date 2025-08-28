@@ -59,12 +59,15 @@ import * as explode from "./effects/explode";
 
 import * as commonTypes from './types/commonTypes';
 import * as particleEmitter from 'jdoleary-fork-pixi-particle-emitter'
+import * as Arrow from "./cards/arrow"
+import * as Purify from "./cards/purify"
 
 
 const SpellmasonsAPI = {
   Angle,
   AnimationCombos,
   ArrayUtil,
+  Arrow,
   cards,
   cardsUtil,
   CardUI,
@@ -110,6 +113,7 @@ const SpellmasonsAPI = {
   PlayerUtils,
   Polygon2,
   Projectile,
+  Purify,
   rand,
   rangedAction,
   Rect,

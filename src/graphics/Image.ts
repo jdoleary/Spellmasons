@@ -307,7 +307,7 @@ export function load(image: IImageAnimatedSerialized | undefined, parent: PIXI.C
 }
 export function getAnimationPathFromSprite(sprite: PIXI.Sprite): string {
   const textureCacheIds = sprite._texture.textureCacheIds;
-  const imagePath = textureCacheIds[0] ? textureCacheIds[0].replace(/_?\d+.png/g, "") : '';
+  const imagePath = textureCacheIds[0] ? textureCacheIds[0].replace(/_?\d*.png/g, "") : '';
   return imagePath;
 
 }
