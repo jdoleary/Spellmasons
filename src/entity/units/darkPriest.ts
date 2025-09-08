@@ -53,13 +53,18 @@ const unit: UnitSource = {
         unit.mana -= manaCostToCast;
         didAction = true;
         makeParticleExplosion(unit, unit.attackRange / 140, 0x513b5f, 0x2c2134, false);
-        underworld.units.filter(u =>
-          !u.flaggedForRemoval
-          && u.faction != unit.faction
-          && u.alive
-        ).forEach(u => {
-          const dist = math.distance(unit, u);
-          if (dist <= unit.attackRange) {
+        attackTargets.forEach(u => {
+          if (headless) {
+            Unit.takeDamage({
+              unit: u,
+              amount: unit.damage,
+              sourceUnit: unit,
+              fromVec2: unit,
+            }, underworld, false);
+
+          } else {
+
+            const dist = math.distance(unit, u);
             geyserPromises.push(new Promise<void>(res => {
               setTimeout(() => {
                 Unit.takeDamage({
@@ -92,8 +97,6 @@ const unit: UnitSource = {
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
     return Unit.livingUnitsInDifferentFaction(unit, underworld.units)
       .filter(u => Unit.inRange(unit, u))
-      .sort(math.sortCosestTo(unit))
-      .slice(0, NUMBER_OF_GEYSERS);
   }
 };
 
