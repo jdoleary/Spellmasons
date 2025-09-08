@@ -855,6 +855,10 @@ body.view-Game.hide-card-holders #in-game-lobby,
   display: none;
 }
 
+.hide-card-holders .floating-card-holder {
+  display: none;
+}
+
 body.your-turn #end-turn-btn {
   opacity: 1.0;
 }
