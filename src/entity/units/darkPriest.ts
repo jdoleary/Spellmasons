@@ -4,7 +4,7 @@ import { UnitSubType } from '../../types/commonTypes';
 import * as math from '../../jmath/math';
 import * as config from '../../config';
 import Underworld from '../../Underworld';
-import { makeDarkPriestAttackParticles } from '../../graphics/ParticleCollection';
+import { makeDarkPriestAttackParticles, makeParticleExplosion } from '../../graphics/ParticleCollection';
 
 const manaCostToCast = 60;
 const NUMBER_OF_GEYSERS = 6;
@@ -46,29 +46,35 @@ const unit: UnitSource = {
     // If they have enough mana
     if (unit.mana >= manaCostToCast) {
       if (attackTargets.length) {
-        let geyserPromises = [];
+        let geyserPromises: Promise<void>[] = [];
+        playSFXKey('darkPriestAttack');
         await Unit.playAnimation(unit, unit.animations.attack);
         // Remove mana once the cast occurs
         unit.mana -= manaCostToCast;
         didAction = true;
-        for (let i = 0; i < attackTargets.length; i++) {
-          const attackTarget = attackTargets[i];
-          if (attackTarget) {
-
-            geyserPromises.push(new Promise<void>((resolve) => {
-              // Space them out in time
+        makeParticleExplosion(unit, unit.attackRange / 140, 0x513b5f, 0x2c2134, false);
+        underworld.units.filter(u =>
+          !u.flaggedForRemoval
+          && u.faction != unit.faction
+          && u.alive
+        ).forEach(u => {
+          const dist = math.distance(unit, u);
+          if (dist <= unit.attackRange) {
+            geyserPromises.push(new Promise<void>(res => {
               setTimeout(() => {
                 Unit.takeDamage({
-                  unit: attackTarget,
+                  unit: u,
                   amount: unit.damage,
                   sourceUnit: unit,
                   fromVec2: unit,
                 }, underworld, false);
-                makeDarkPriestAttackParticles(attackTarget, false, resolve);
-              }, math.distance(unit, attackTarget));
-            }));
+                makeDarkPriestAttackParticles(u, false);
+                res();
+              }, dist)
+            }))
           }
-        }
+        })
+
         await Promise.all(geyserPromises);
       }
     }

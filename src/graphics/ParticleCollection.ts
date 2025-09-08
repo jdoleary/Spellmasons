@@ -782,13 +782,13 @@ export function makeDarkPriestAttackParticles(position: Vec2, prediction: boolea
         "end": 0
       },
       "scale": {
-        "start": 0.4,
-        "end": 0.3,
+        "start": 0.1,
+        "end": 0.08,
         "minimumScaleMultiplier": 1
       },
       "color": {
-        "start": "#962d2d",
-        "end": "#ffffff"
+        "start": "#513b5f",
+        "end": "#2c2134",
       },
       "speed": {
         "start": 200,

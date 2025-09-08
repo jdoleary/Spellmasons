@@ -117,6 +117,9 @@ export const sfx: { [key: string]: string[] } = {
   ],
   potionPickupHealth: ['./sound/sfx/potion-pickup-health.mp3'],
   potionPickupMana: ['./sound/sfx/potion-pickup-mana.mp3'],
+  darkPriestAttack: [
+    './sound/sfx/darkPriestAttack.mp3',
+  ],
   priestAttack: [
     './sound/sfx/priest-attack.mp3',
     './sound/sfx/priest-attack-001.mp3',
