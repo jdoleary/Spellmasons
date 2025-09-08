@@ -362,17 +362,24 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
           console.error('COLLECT_SOULS desync soulFragments count');
           return;
         }
+        // failsafe, should not be needed
+        if (isNullOrUndef(fromPlayer.unit.soulLeftToCollect)) {
+          fromPlayer.unit.soulLeftToCollect = fromPlayer.unit.soulLeftToCollectMax || config.BASE_SOULS_LEFT_TO_COLLECT;
+        }
+        const soulFragmentsLeftToCollect = fromPlayer.unit.soulLeftToCollect;
 
-        const soulPositions = removeFloatingParticlesFor(victim);
-        victim.soulFragments = 0;
+        const ableToCollect = Math.min(soulFragmentsLeftToCollect, victim.soulFragments);
+        fromPlayer.unit.soulLeftToCollect -= ableToCollect;
+        const soulPositions = removeFloatingParticlesFor(victim, ableToCollect);
+        victim.soulFragments = Math.max(0, victim.soulFragments - ableToCollect);
         victim.soulsBeingCollected = false;
         // If a goru killed the unit that goru get's all the souls
         const colorStart = '#d9fff9';
         const colorEnd = '#566d70';
-        fromPlayer.unit.soulFragments += soulFragments;
+        fromPlayer.unit.soulFragments += ableToCollect;
         globalThis.totalSoulTrails = Math.max(0, globalThis.totalSoulTrails || 0);
-        globalThis.totalSoulTrails += soulFragments;
-        for (let i = 0; i < soulFragments; i++) {
+        globalThis.totalSoulTrails += ableToCollect;
+        for (let i = 0; i < ableToCollect; i++) {
           const promise = makeManaTrail(soulPositions[i] || victim, fromPlayer.unit, underworld, colorStart, colorEnd, globalThis.totalSoulTrails).then(() => {
             globalThis.totalSoulTrails--;
 

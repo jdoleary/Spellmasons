@@ -263,6 +263,9 @@ export function initializeWizardStatsForLevelStart(player: IPlayer, underworld: 
         Unit.addModifier(player.unit, undyingModifierId, underworld, false);
       }
       player.unit.soulFragments = config.GORU_PLAYER_STARTING_SOUL_FRAGMENTS + Math.floor(underworld.levelIndex / 2);
+      player.unit.soulLeftToCollectMax = config.BASE_SOULS_LEFT_TO_COLLECT;
+      player.unit.soulLeftToCollect = player.unit.soulLeftToCollectMax;
+
     }
     if (player.wizardType == 'Deathmason') {
       // Do not allow keeping locked cards between levels
