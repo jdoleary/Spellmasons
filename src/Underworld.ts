@@ -3060,8 +3060,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // Add missing companions
     if (player.companion) {
       const found = this.companions.find(c => c.target == player.unit);
+      // TODO Fix switching out
       if (!found) {
-        const newCompanionImage = Image.create({ x: 0, y: 0 }, 'companionOcto', containerUnits)
+        const newCompanionImage = Image.create({ x: 0, y: 0 }, player.companion, containerUnits)
         if (newCompanionImage) {
           this.companions.push({ image: newCompanionImage, target: player.unit });
         }
