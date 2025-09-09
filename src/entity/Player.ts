@@ -441,6 +441,7 @@ export function restoreWizardTypeVisuals(player: IPlayer, underworld: Underworld
       underworld.syncPredictionEntities();
     }
   }
+  underworld.addMissingCompanions(player);
 
 }
 

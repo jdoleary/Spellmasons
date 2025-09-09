@@ -1127,10 +1127,10 @@ export default class Underworld {
       }
     }
     for (let companion of this.companions) {
-      const distance = math.distance(companion.image.sprite, companion.target)
-      const speed = distance / 40;
       const multX = Unit.isUnit(companion.target) ? companion.target.image?.sprite.scale.x || 1 : 1
       const offsetTarget = Vec.add(companion.target, { x: multX * 30, y: -70 });
+      const distance = math.distance(companion.image.sprite, offsetTarget)
+      const speed = math.lerp(0.5, 6, distance / 600);
       const next = math.getCoordsAtDistanceTowardsTarget(companion.image.sprite, offsetTarget, speed);
       // Orient:
       if (offsetTarget.x < companion.image.sprite.x) {
@@ -3056,6 +3056,19 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
     CardUI.updateCardBadges(this);
   }
+  addMissingCompanions(player: Player.IPlayer) {
+    // Add missing companions
+    if (player.companion) {
+      const found = this.companions.find(c => c.target == player.unit);
+      if (!found) {
+        const newCompanionImage = Image.create({ x: 0, y: 0 }, 'companionOcto', containerUnits)
+        if (newCompanionImage) {
+          this.companions.push({ image: newCompanionImage, target: player.unit });
+        }
+      }
+    }
+
+  }
   async executePlayerTurn() {
     this.battleLog(`Begin Player Turn Phase`);
     await Unit.startTurnForUnits(this.players.map(p => p.unit), this, false, Faction.ALLY);
@@ -3071,17 +3084,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           playSFXKey('yourTurn');
         }
       }
-
-      // Add missing companions
-      if (player.companion) {
-        const found = this.companions.find(c => c.target == player.unit);
-        if (!found) {
-          const newCompanionImage = Image.create({ x: 0, y: 0 }, 'companionOcto', containerUnits)
-          if (newCompanionImage) {
-            this.companions.push({ image: newCompanionImage, target: player.unit });
-          }
-        }
-      }
+      this.addMissingCompanions(player);
     }
     this.syncTurnMessage();
     // Update unit health / mana bars, etc
