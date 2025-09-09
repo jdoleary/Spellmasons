@@ -1653,6 +1653,10 @@ export function cardListToImages(cardIds: string[]): string {
 }
 
 export function animateDrawCard(card: Cards.ICard, underworld: Underworld) {
+  // Accessibility
+  if (globalThis.noCardDraw) {
+    return;
+  }
   const elHolder = document.getElementById('card-draw-animation-holder') as HTMLElement;
   if (!elHolder) {
     console.error('animateDrawCard el not found');

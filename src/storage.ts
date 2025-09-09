@@ -67,6 +67,9 @@ export function getSavedData() {
         if (exists(options.UIEasyOnTheEyes)) {
           globalThis.UIEasyOnTheEyes = options.UIEasyOnTheEyes;
         }
+        if (exists(options.noCardDraw)) {
+          globalThis.noCardDraw = options.noCardDraw;
+        }
         if (exists(options.limitParticleEmitters)) {
           globalThis.limitParticleEmitters = options.limitParticleEmitters;
         }
