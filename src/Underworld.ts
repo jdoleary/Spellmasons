@@ -242,6 +242,10 @@ export default class Underworld {
     target: Vec2,
     keepOnDeath?: boolean
   }[] = [];
+  companions: {
+    image: Image.IImageAnimated,
+    target: Vec2,
+  }[] = [];
   activeMods: string[] = [];
   generatingLevel: boolean = false;
   simulatingMovePredictions: boolean = false;
@@ -1121,6 +1125,21 @@ export default class Underworld {
       } else {
         stopAndDestroyForeverEmitter(emitter);
       }
+    }
+    for (let companion of this.companions) {
+      const distance = math.distance(companion.image.sprite, companion.target)
+      const speed = distance / 40;
+      const multX = Unit.isUnit(companion.target) ? companion.target.image?.sprite.scale.x || 1 : 1
+      const offsetTarget = Vec.add(companion.target, { x: multX * 30, y: -70 });
+      const next = math.getCoordsAtDistanceTowardsTarget(companion.image.sprite, offsetTarget, speed);
+      // Orient:
+      if (offsetTarget.x < companion.image.sprite.x) {
+        companion.image.sprite.scale.x = -Math.abs(companion.image.sprite.scale.x);
+      } else {
+        companion.image.sprite.scale.x = Math.abs(companion.image.sprite.scale.x);
+      }
+      companion.image.sprite.x = next.x;
+      companion.image.sprite.y = next.y;
     }
     for (let p of this.pickups) {
       Pickup.sync(p);
@@ -2212,6 +2231,10 @@ export default class Underworld {
     // turn-scoped emitters
     this.particleFollowers = [];
     cleanUpEmitters(false);
+    for (let companion of this.companions) {
+      Image.cleanup(companion.image);
+    }
+    this.companions = [];
 
     // Now that it's a new level clear out the level's dodads such as
     // bone dust left behind from destroyed corpses
@@ -3046,6 +3069,17 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         // Don't play turn sfx when recording
         if (!globalThis.isHUDHidden && !document.body?.classList.contains('hide-card-holders')) {
           playSFXKey('yourTurn');
+        }
+      }
+
+      // Add missing companions
+      if (player.companion) {
+        const found = this.companions.find(c => c.target == player.unit);
+        if (!found) {
+          const newCompanionImage = Image.create({ x: 0, y: 0 }, 'companionOcto', containerUnits)
+          if (newCompanionImage) {
+            this.companions.push({ image: newCompanionImage, target: player.unit });
+          }
         }
       }
     }
@@ -4499,7 +4533,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     const { pie, overworld, random, players, units, pickups, walls, pathingPolygons, liquidSprites,
       unitsPrediction, pickupsPrediction, particleFollowers, forceMove, triggerGameLoopHeadless, _gameLoopHeadless,
       awaitForceMoves, queueGameLoop, gameLoop, gameLoopForceMove, gameLoopUnit,
-      removeEventListeners, ...rest } = this;
+      removeEventListeners, companions, ...rest } = this;
     return {
       ...rest,
       // isRestarting is an id for SetTimeout and cannot be serialized
@@ -4576,7 +4610,7 @@ type NonFunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? nev
 type UnderworldNonFunctionProperties = Exclude<NonFunctionPropertyNames<Underworld>, null | undefined>;
 export type IUnderworldSerialized = Omit<Pick<Underworld, UnderworldNonFunctionProperties>, "pie" | "overworld" | "prototype" | "players" | "units"
   | "unitsPrediction" | "pickups" | "pickupsPrediction" | "random" | "turnInterval" | "liquidSprites"
-  | "particleFollowers"
+  | "particleFollowers" | "companions"
   // walls and pathingPolygons are omitted because they are derived from obstacles when cacheWalls() in invoked
   | "walls" | "pathingPolygons" | "triggerGameLoopHeadless" | "_gameLoopHeadless" | "awaitForceMoves" | "queueGameLoop" | "gameLoop" | "gameLoopForceMove" | "gameLoopUnit"
   | "removeEventListeners"> & {

@@ -58,6 +58,7 @@ export interface IPlayer {
   // color of robe
   color: number;
   wizardType: WizardType;
+  companion: "bird" | "ghost" | "octo" | undefined;
   lockedDiscardCards: string[];
   // color of the player's magic
   colorMagic: number;
