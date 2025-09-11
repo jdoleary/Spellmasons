@@ -824,7 +824,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         // computer
         break;
       }
-      const { color, colorMagic, name, wizardType, lobbyReady, version } = payload;
+      const { color, colorMagic, name, wizardType, familiar, lobbyReady, version } = payload;
       if (fromPlayer) {
         fromPlayer.gameVersion = version;
         if (exists(lobbyReady)) {
@@ -849,6 +849,9 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         }
         if (exists(name)) {
           fromPlayer.name = name;
+        }
+        if (exists(familiar)) {
+          fromPlayer.companion = familiar;
         }
         setPlayerNameUI(fromPlayer);
         Player.setPlayerRobeColor(fromPlayer, color, colorMagic);
@@ -1534,7 +1537,7 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
 }
 
 export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
-  globalThis.configPlayer = ({ color, colorMagic, name, wizardType, lobbyReady }: { color?: number, colorMagic?: number, name?: string, wizardType?: WizardType, lobbyReady?: boolean }) => {
+  globalThis.configPlayer = ({ color, colorMagic, name, wizardType, familiar, lobbyReady }: { color?: number, colorMagic?: number, name?: string, wizardType?: WizardType, familiar?: string, lobbyReady?: boolean }) => {
     if (exists(color)) {
       storage.set(storage.STORAGE_ID_PLAYER_COLOR, color);
     }
@@ -1551,13 +1554,20 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
       // strings which is confusing as hell
       storage.set(storage.STORAGE_ID_WIZARD_TYPE, wizardType);
     }
+    if (exists(familiar)) {
+      // Booleans should not be stored in localStorage as booleans because they are converted to
+      // strings which is confusing as hell
+      storage.set(storage.STORAGE_ID_FAMILIAR, familiar);
+    }
     const storedWizardType = storage.get(storage.STORAGE_ID_WIZARD_TYPE);
+    const storedFamiliar = storage.get(storage.STORAGE_ID_FAMILIAR);
     if (overworld.underworld) {
       overworld.pie.sendData({
         type: MESSAGE_TYPES.PLAYER_CONFIG,
         color,
         colorMagic,
         wizardType: storedWizardType || 'Spellmason',
+        familiar: storedFamiliar || '',
         name: capped_name,
         lobbyReady,
         version: globalThis.SPELLMASONS_PACKAGE_VERSION

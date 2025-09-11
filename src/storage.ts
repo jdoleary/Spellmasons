@@ -7,6 +7,7 @@ export const STORAGE_ID_PLAYER_COLOR = 'player-color';
 export const STORAGE_ID_PLAYER_COLOR_MAGIC = 'player-color-magic';
 export const STORAGE_ID_PLAYER_NAME = 'player-name';
 export const STORAGE_ID_WIZARD_TYPE = 'wizard-type';
+export const STORAGE_ID_FAMILIAR = 'familiar';
 export const STORAGE_ID_UI_ZOOM = 'uiZoom';
 export const STORAGE_CONTROLS_KEY = 'controls';
 export const ENEMY_ENCOUNTERED_STORAGE_KEY = 'enemyEncountered';

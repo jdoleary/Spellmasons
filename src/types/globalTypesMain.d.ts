@@ -362,4 +362,5 @@ declare global {
   var lastSeenStatpointsUnspent: number | undefined;
   var totalSoulTrails: number;
   var forceCustomMapName: string;
+  var allFamiliars: string[];
 }

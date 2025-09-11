@@ -135,6 +135,7 @@ export function ensureAllClientsHaveAssociatedPlayers(overworld: Overworld, clie
         if (i == 0) Player.updateGlobalRefToPlayerIfCurrentClient(player);
         if (globalThis.player == player) {
           Player.setWizardType(player, storage.get(storage.STORAGE_ID_WIZARD_TYPE) as WizardType | null, overworld.underworld);
+          player.companion = storage.get(storage.STORAGE_ID_FAMILIAR) || '';
         }
         player.lobbyReady = !!defaultLobbyReady;
         const nameFromServer = names.length && names[k];

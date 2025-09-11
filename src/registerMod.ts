@@ -74,6 +74,10 @@ function registerMod(mod: Mod, overworld: Overworld) {
         handmadeMaps.push(...mod.maps)
     }
 
+    if (mod.familiars) {
+        allFamiliars.push(...mod.familiars);
+    }
+
     if (!globalThis.headless) {
 
         // Register sfx

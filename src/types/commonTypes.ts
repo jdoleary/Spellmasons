@@ -70,6 +70,7 @@ export interface Mod {
   modifiers?: Modifiers[];
   events?: Events[];
   maps?: HandmadeMap[];
+  familiars?: string[];
 }
 
 export type Pie = PieClient | PiePeer | IHostApp;
