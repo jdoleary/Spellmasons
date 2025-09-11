@@ -1128,12 +1128,12 @@ export default class Underworld {
     }
     for (let companion of this.companions) {
       const multX = Unit.isUnit(companion.target) ? companion.target.image?.sprite.scale.x || 1 : 1
-      const offsetTarget = Vec.add(companion.target, { x: multX * 30, y: -70 });
+      const offsetTarget = Vec.add(companion.target, { x: multX * 30, y: -30 });
       const distance = math.distance(companion.image.sprite, offsetTarget)
       const speed = math.lerp(0.5, 6, distance / 600);
       const next = math.getCoordsAtDistanceTowardsTarget(companion.image.sprite, offsetTarget, speed);
       // Orient:
-      if (offsetTarget.x < companion.image.sprite.x) {
+      if (offsetTarget.x >= companion.image.sprite.x) {
         companion.image.sprite.scale.x = -Math.abs(companion.image.sprite.scale.x);
       } else {
         companion.image.sprite.scale.x = Math.abs(companion.image.sprite.scale.x);
@@ -4555,6 +4555,33 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   }
   updateAccessibilityOutlines() {
     this.units.forEach(u => Unit.updateAccessibilityOutline(u, false));
+    this.companions.forEach(c => {
+      if (globalThis.accessibilityOutline) {
+        if (!c.image.sprite.filters) {
+          c.image.sprite.filters = [];
+        }
+        const outlineSettings = globalThis.accessibilityOutline[Faction.ALLY]['regular'];
+        let outlineFilter: OutlineFilter | undefined;
+        // @ts-ignore __proto__ is not typed
+        outlineFilter = c.image.sprite.filters.find(f => f.__proto__ == OutlineFilter.prototype)
+        if (outlineFilter) {
+          if (outlineSettings.thickness) {
+            // +1 because I want the thickness to be between 2-5 because one is way to pencil thin and looks bad
+            outlineFilter.thickness = outlineSettings.thickness + 1;
+            outlineFilter.color = outlineSettings.color;
+          } else {
+            // If thickness is 0, remove the filter:
+            c.image.sprite.filters = c.image.sprite.filters.filter(x => x !== outlineFilter);
+          }
+        } else {
+          // Only add the filter if thickness is not 0
+          if (outlineSettings.thickness) {
+            outlineFilter = new OutlineFilter(outlineSettings.thickness, outlineSettings.color, 0.1);
+            c.image.sprite.filters.push(outlineFilter);
+          }
+        }
+      }
+    })
     this.setContainerUnitsFilter();
   }
   setContainerUnitsFilter() {
