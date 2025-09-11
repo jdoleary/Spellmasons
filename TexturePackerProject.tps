@@ -558,6 +558,41 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">images/units/companionBird_0.png</key>
+            <key type="filename">images/units/companionBird_1.png</key>
+            <key type="filename">images/units/companionBird_2.png</key>
+            <key type="filename">images/units/companionBird_3.png</key>
+            <key type="filename">images/units/companionBird_4.png</key>
+            <key type="filename">images/units/companionBird_5.png</key>
+            <key type="filename">images/units/companionBird_6.png</key>
+            <key type="filename">images/units/companionGhost_0.png</key>
+            <key type="filename">images/units/companionGhost_1.png</key>
+            <key type="filename">images/units/companionGhost_2.png</key>
+            <key type="filename">images/units/companionGhost_3.png</key>
+            <key type="filename">images/units/companionGhost_4.png</key>
+            <key type="filename">images/units/companionGhost_5.png</key>
+            <key type="filename">images/units/companionGhost_6.png</key>
+            <key type="filename">images/units/companionOcto_0.png</key>
+            <key type="filename">images/units/companionOcto_1.png</key>
+            <key type="filename">images/units/companionOcto_2.png</key>
+            <key type="filename">images/units/companionOcto_3.png</key>
+            <key type="filename">images/units/companionOcto_4.png</key>
+            <key type="filename">images/units/companionOcto_5.png</key>
+            <key type="filename">images/units/companionOcto_6.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0,0</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,32,32,64</rect>
+                <key>scale9Paddings</key>
+                <rect>16,32,32,64</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">images/units/dark_priest/priestAttack_1.png</key>
             <key type="filename">images/units/dark_priest/priestAttack_10.png</key>
             <key type="filename">images/units/dark_priest/priestAttack_11.png</key>
