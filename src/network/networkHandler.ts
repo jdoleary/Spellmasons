@@ -852,6 +852,8 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         }
         if (exists(familiar)) {
           fromPlayer.companion = familiar;
+          if (overworld.underworld)
+            overworld.underworld.addMissingCompanions(fromPlayer)
         }
         setPlayerNameUI(fromPlayer);
         Player.setPlayerRobeColor(fromPlayer, color, colorMagic);

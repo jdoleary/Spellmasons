@@ -1127,6 +1127,10 @@ export default class Underworld {
       }
     }
     for (let companion of this.companions) {
+      if (isNaN(companion.image.sprite.x) || isNaN(companion.image.sprite.y)) {
+        companion.image.sprite.x = 0;
+        companion.image.sprite.y = 0;
+      }
       const multX = Unit.isUnit(companion.target) ? companion.target.image?.sprite.scale.x || 1 : 1
       const offsetTarget = Vec.add(companion.target, { x: multX * 30, y: -30 });
       const distance = math.distance(companion.image.sprite, offsetTarget)
@@ -3059,8 +3063,13 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   addMissingCompanions(player: Player.IPlayer) {
     // Add missing companions
     if (player.companion) {
-      const found = this.companions.find(c => c.target == player.unit);
-      // TODO Fix switching out
+      let found = this.companions.find(c => c.target == player.unit);
+      // If familiar is the wrong kind, remove it so the right one can be created
+      if (found && found.image.sprite.imagePath != player.companion) {
+        this.companions = this.companions.filter(c => c.image !== found?.image);
+        Image.cleanup(found.image);
+        found = undefined;
+      }
       if (!found) {
         const newCompanionImage = Image.create({ x: 0, y: 0 }, player.companion, containerUnits)
         if (newCompanionImage) {
