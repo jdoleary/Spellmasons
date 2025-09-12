@@ -14,7 +14,8 @@
 Next:
 - [ ] Back compat: underworld.events is not iterable
 - Test familiars on multiplayers
-- Test switching familiars in game
+- QA modded maps
+- Update i18n
 
 August:
 - [x] Verify that new license is included with game

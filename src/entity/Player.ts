@@ -27,6 +27,7 @@ import { visualPolymorphPlayerUnit } from '../cards/polymorph';
 import { GORU_UNIT_ID } from './units/goru';
 import { undyingModifierId } from '../modifierUndying';
 import { bossmasonUnitId } from './units/deathmason';
+import { startingSoulsId } from '../modifierGoruConstants';
 
 const elInGameLobby = document.getElementById('in-game-lobby') as (HTMLElement | undefined);
 elInGameLobby?.addEventListener('click', (e) => {
@@ -263,7 +264,8 @@ export function initializeWizardStatsForLevelStart(player: IPlayer, underworld: 
       if (underworld.levelIndex <= 0 && !player.unit.modifiers[undyingModifierId]) {
         Unit.addModifier(player.unit, undyingModifierId, underworld, false);
       }
-      player.unit.soulFragments = config.GORU_PLAYER_STARTING_SOUL_FRAGMENTS + Math.floor(underworld.levelIndex / 2);
+      const additionalStartingSouls = player.unit.modifiers[startingSoulsId]?.quantity || 0;
+      player.unit.soulFragments = config.GORU_PLAYER_STARTING_SOUL_FRAGMENTS + Math.floor(underworld.levelIndex / 2) + additionalStartingSouls;
       player.unit.soulLeftToCollectMax = config.BASE_SOULS_LEFT_TO_COLLECT;
       player.unit.soulLeftToCollect = player.unit.soulLeftToCollectMax;
 
