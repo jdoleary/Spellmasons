@@ -3589,7 +3589,13 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       return 0;
     }
     // .filter out freeSpells because they shouldn't count against upgrades available since they are given to you
-    return this.cardDropsDropped + config.STARTING_CARD_COUNT - player.inventory.filter(spellId => (player.freeSpells || []).indexOf(spellId) == -1).length - (player.skippedCards || 0);
+    const upgradesLeftToChoose = this.cardDropsDropped + config.STARTING_CARD_COUNT - player.inventory.filter(spellId => (player.freeSpells || []).indexOf(spellId) == -1).length - (player.skippedCards || 0);
+    console.debug('Player upgrades left to choose: ', upgradesLeftToChoose, `;
++ cardDropsDropped: ${this.cardDropsDropped} 
++ config.STARTING_CARD_COUNT ${config.STARTING_CARD_COUNT} 
+- player.inventory.filter(spellId => (player.freeSpells || []).indexOf(spellId) == -1).length: ${player.inventory.filter(spellId => (player.freeSpells || []).indexOf(spellId) == -1).length} 
+- (player.skippedCards || 0): ${(player.skippedCards || 0)}`)
+    return upgradesLeftToChoose;
   }
   upgradeRune(runeModifierId: string, player: Player.IPlayer, payload: { newSP: number }) {
     const isCurrentPlayer = player == globalThis.player;
