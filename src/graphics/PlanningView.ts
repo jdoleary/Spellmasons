@@ -835,6 +835,9 @@ export function drawUICone(graphics: PIXI.Graphics, target: Vec2, radius: number
 export function drawUICircle(graphics: PIXI.Graphics, target: Vec2, radius: number, color: number, text?: string) {
   graphics.lineStyle(2, color, 1.0)
   graphics.endFill();
+  // Optimization: even if the radius is larger, don't draw the circle larger than 1500
+  // because it'll just tax the rendering engine and it'll be so big it wont show anything anyways
+  radius = Math.min(1500, radius);
   graphics.drawCircle(target.x, target.y, radius);
   if (text && labelText) {
     //labelText.style.fill = color;
