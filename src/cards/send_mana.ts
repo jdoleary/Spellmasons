@@ -35,6 +35,7 @@ const spell: Spell = {
       }
       await Promise.all(promises);
       const finalManaSent = amount * quantity / targets.length;
+
       await healManaUnits(targets, finalManaSent, state.casterUnit, underworld, prediction, state);
       //refund if no targets ?
       return state;

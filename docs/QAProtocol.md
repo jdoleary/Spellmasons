@@ -16,6 +16,8 @@ Next:
 - Test familiars on multiplayers
 - QA modded maps
 - Update i18n
+- Thank KendoWeed69 for starting soul amount rune
+- Test Send Mana and Potion provides cards and souls
 
 August:
 - [x] Verify that new license is included with game

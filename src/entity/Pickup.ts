@@ -480,7 +480,7 @@ export function tryTriggerPickup(pickup: IPickup, unit: IUnit, underworld: Under
   }
 }
 
-const manaPotionRestoreAmount = 40;
+export const manaPotionRestoreAmount = 40;
 const healthPotionRestoreAmount = 50;
 export const spike_damage = 30;
 export const PICKUP_SPIKES_NAME = 'Trap';
@@ -716,22 +716,7 @@ export const pickups: IPickupSource[] = [
     },
     effect: ({ unit, pickup, player, underworld, prediction }) => {
       if (unit) {
-        if (player && Player.isGoru(player)) {
-          const amount = pickup.power || 1;
-          unit.soulFragments += amount;
-          if (!prediction) {
-            floatingText({ coords: unit, text: `+${amount} ${i18n([`soul fragments`])}`, style: { fill: 'white', ...config.PIXI_TEXT_DROP_SHADOW } });
-            playSFXKey('potionPickupMana');
-          }
-        } else if (unit.charges) {
-          drawCharges(unit, underworld, pickup.power || 1);
-          if (!prediction) {
-            floatingText({ coords: unit, text: i18n([`Draw Card`]), style: { fill: 'blue', ...config.PIXI_TEXT_DROP_SHADOW } });
-            playSFXKey('potionPickupMana');
-          }
-        } else {
-          healManaUnit(unit, manaPotionRestoreAmount * pickup.power, undefined, underworld, prediction);
-        }
+        healManaUnit(unit, manaPotionRestoreAmount * pickup.power, undefined, underworld, prediction);
       }
     },
   },
