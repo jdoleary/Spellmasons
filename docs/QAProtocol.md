@@ -18,6 +18,7 @@ Next:
 - Update i18n
 - Thank KendoWeed69 for starting soul amount rune
 - Test Send Mana and Potion provides cards and souls
+- Test Goru soul limit when picking up from multiple units simultaneously (and in multiplayer)
 
 August:
 - [x] Verify that new license is included with game
