@@ -487,6 +487,10 @@ export function cleanup(unit: IUnit, maintainPosition?: boolean, forceCleanPlaye
   // This ensures that units won't get their image sprite changed while
   // they are waiting to be cleaned up, which could result in a dangling sprite
   unit.image = undefined;
+  // If selected unit is cleaned up, close tooltip
+  if (unit == globalThis.selectedUnit) {
+    globalThis.selectedUnit = undefined;
+  }
 }
 // Converts a unit entity into a serialized form
 // that can be saved as JSON and rehydrated later into
