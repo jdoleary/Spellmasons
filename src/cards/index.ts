@@ -248,6 +248,7 @@ import registerPrecision from '../modifierPrecision';
 // Global events
 import registerAlwaysBounty from '../globalEvents/alwaysBounty';
 import registerTestUnderworldEvents from '../globalEvents/testUnderworldEvents';
+import registerAnemia from '../maladyAnemic';
 
 export interface Modifiers {
   // modifiers that are not attached to a spell need an explicit id set
@@ -290,6 +291,8 @@ export interface Modifiers {
   keepBetweenLevels?: boolean;
   // Prevent this rune from showing for given wizardtypes
   omitForWizardType?: WizardType[];
+  // Creates a negative effect in exchange for SP
+  isMalady?: boolean;
 }
 export function calcluateModifierCostPerUpgrade(mod: Modifiers, underworld: Underworld, player?: Player.IPlayer): number {
   if (isNullOrUndef(mod._costPerUpgrade)) {
@@ -683,6 +686,9 @@ export function registerCards(overworld: Overworld) {
   // Global Events
   registerAlwaysBounty()
   registerTestUnderworldEvents()
+
+  // Register maladies
+  registerAnemia();
 }
 
 // This is necessary because unit stats change with difficulty.

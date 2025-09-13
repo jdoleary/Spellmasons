@@ -2325,6 +2325,10 @@ body:not(.view-Game) #chatbox {
   background-size: contain;
 }
 
+.plus-btn-container.malady .plus-btn {
+  background-image: url('/ui/iconPlusUpMalady.png');
+}
+
 .plus-btn.disabled {
   opacity: 0.5;
 }
@@ -2335,6 +2339,10 @@ body:not(.view-Game) #chatbox {
 
 .plus-btn:not(.disabled):active {
   background-image: url('/ui/iconPlusDown.png');
+}
+
+.plus-btn-container.malady .plus-btn:not(.disabled):active {
+  background-image: url('/ui/iconPlusDownMalady.png');
 }
 
 #reroll-btn-container {

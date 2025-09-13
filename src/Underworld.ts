@@ -2408,7 +2408,7 @@ export default class Underworld {
         if (player.wizardType == 'Deathmason' || player.wizardType == 'Goru') {
           points *= 0.6;
         }
-        player.statPointsUnspent += points;
+        player.statPointsUnspent += points + (player.extraStatPointsPerRound || 0);
         Player.incrementPresentedRunesForPlayer(player, this);
         if (!tutorialChecklist.spendUpgradePoints.complete && levelIndex >= 3) {
           tutorialShowTask('spendUpgradePoints');

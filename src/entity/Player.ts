@@ -103,6 +103,7 @@ export interface IPlayer {
   stats: Stats;
   cursesChosen: number;
   statPointsUnspent: number;
+  extraStatPointsPerRound: number;
   lockedRunes: { index: number, key: string, runePresentedIndexWhenLocked?: number }[];
   runePresentedIndex: number;
   gameVersion?: string;
@@ -165,6 +166,7 @@ export function create(clientId: string, playerId: string, underworld: Underworl
     },
     // backfill stat upgrades for players who join late
     statPointsUnspent: Math.max(0, underworld.levelIndex) * config.STAT_POINTS_PER_LEVEL,
+    extraStatPointsPerRound: 0,
     lockedRunes: [],
     runePresentedIndex: 0,
     skippedCards: 0,
