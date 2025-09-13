@@ -140,6 +140,7 @@ import { registerUrnPoisonExplode } from '../entity/units/urn_poison';
 import { registerUrnExplosiveExplode } from '../entity/units/urn_explosive';
 import { registerDeathmasonEvents } from '../entity/units/deathmason';
 // import trap from './trap';
+import { registerGripthuluAction } from '../entity/units/gripthulu';
 
 import * as config from '../config';
 
@@ -678,6 +679,7 @@ export function registerCards(overworld: Overworld) {
   registerUrnExplosiveExplode();
   registerDeathmasonEvents();
 
+  registerGripthuluAction();
   // Global Events
   registerAlwaysBounty()
   registerTestUnderworldEvents()

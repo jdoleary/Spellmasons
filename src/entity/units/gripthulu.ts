@@ -1,5 +1,5 @@
 import type * as PIXI from 'pixi.js';
-import type { UnitSource } from './index';
+import { allUnits, type UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
 import * as Unit from '../Unit';
 import * as math from '../../jmath/math';
@@ -10,6 +10,8 @@ import { containerProjectiles } from '../../graphics/PixiUtils';
 import { getAngleBetweenVec2s, Vec2 } from '../../jmath/Vec';
 import { forcePushToDestination } from '../../effects/force_move';
 import { getBestRangedLOSTarget, rangedLOSMovement } from './actions/rangedAction';
+import { registerEvents } from '../../cards';
+import { getOrInitModifier } from '../../cards/util';
 
 export const gripthulu_id = 'gripthulu';
 const unit: UnitSource = {
@@ -29,7 +31,7 @@ const unit: UnitSource = {
     bloodColor: bloodGripthulu,
   },
   spawnParams: {
-    probability: 0,
+    probability: 10,
     budgetCost: 4,
     unavailableUntilLevelIndex: 7,
   },
@@ -45,6 +47,9 @@ const unit: UnitSource = {
     death: 'poisonerDeath'
   },
   init: (unit: Unit.IUnit, underworld: Underworld) => {
+    const modifier = getOrInitModifier(unit, gripthuluAction, { isCurse: false, quantity: 1 }, () => {
+      Unit.addEvent(unit, gripthuluAction);
+    });
     if (unit.image && unit.image.sprite && unit.image.sprite.filters) {
       unit.image.sprite.filters.unshift(
         new MultiColorReplaceFilter(
@@ -69,15 +74,7 @@ const unit: UnitSource = {
     const attackTarget = attackTargets && attackTargets[0];
     // Attack
     if (attackTarget && unit.mana >= unit.manaCostToCast) {
-      Unit.orient(unit, attackTarget);
-      unit.mana -= unit.manaCostToCast;
-      // await Unit.playAnimation(unit, unit.animations.attack);
-      await Unit.playComboAnimation(unit, unit.animations.attack, () => {
-        return animateDrag(unit, attackTarget);
-      });
-      const pullPromise = forcePushToDestination(attackTarget, unit, 1, underworld, false, unit);
-      underworld.triggerGameLoopHeadless();
-      await pullPromise;
+
     } else {
       // If it gets to this block it means it is either out of range or cannot see enemy
       await rangedLOSMovement(unit, underworld);
@@ -167,3 +164,32 @@ export async function animateDrag(start: Vec2, end: Vec2) {
   });
 }
 export default unit;
+
+export const gripthuluAction = 'Gripthulu Magic';
+export function registerGripthuluAction() {
+
+  registerEvents(gripthuluAction, {
+
+    onTurnEnd: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
+      const unitSource = allUnits[unit.unitSourceId]
+      if (unitSource) {
+        const attackTargets = unitSource.getUnitAttackTargets(unit, underworld);
+        const attackTarget = attackTargets[0];
+        if (attackTarget && unit.mana >= unit.manaCostToCast) {
+          Unit.orient(unit, attackTarget);
+          unit.mana -= unit.manaCostToCast;
+          // CAUTION: Desync risk, having 2 awaits in headless causes a movement desync
+          // because the forcePush must be invoked syncronously such that the forceMove record
+          // is created when this function returns syncronously so that the headless engine will
+          // run forceMoves as soon as it is done
+          if (!globalThis.headless) {
+            await Unit.playComboAnimation(unit, unit.animations.attack, () => {
+              return animateDrag(unit, attackTarget);
+            });
+          }
+          return forcePushToDestination(attackTarget, unit, 1, underworld, false, unit);
+        }
+      }
+    },
+  });
+}
