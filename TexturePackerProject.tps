@@ -187,6 +187,15 @@
         <map type="IndividualSpriteSettingsMap">
             <key type="filename">images/units/ancient_0.png</key>
             <key type="filename">images/units/ancient_1.png</key>
+            <key type="filename">images/units/ancient_corrupted_0.png</key>
+            <key type="filename">images/units/ancient_corrupted_1.png</key>
+            <key type="filename">images/units/ancient_corrupted_dead_0.png</key>
+            <key type="filename">images/units/ancient_corrupted_dead_1.png</key>
+            <key type="filename">images/units/ancient_corrupted_dead_2.png</key>
+            <key type="filename">images/units/ancient_corrupted_dead_3.png</key>
+            <key type="filename">images/units/ancient_corrupted_dead_4.png</key>
+            <key type="filename">images/units/ancient_corrupted_dead_5.png</key>
+            <key type="filename">images/units/ancient_corrupted_dead_6.png</key>
             <key type="filename">images/units/ancient_dead_0.png</key>
             <key type="filename">images/units/ancient_dead_1.png</key>
             <key type="filename">images/units/ancient_dead_2.png</key>
@@ -555,41 +564,6 @@
                 <rect>17,17,34,34</rect>
                 <key>scale9Paddings</key>
                 <rect>17,17,34,34</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">images/units/companionBird_0.png</key>
-            <key type="filename">images/units/companionBird_1.png</key>
-            <key type="filename">images/units/companionBird_2.png</key>
-            <key type="filename">images/units/companionBird_3.png</key>
-            <key type="filename">images/units/companionBird_4.png</key>
-            <key type="filename">images/units/companionBird_5.png</key>
-            <key type="filename">images/units/companionBird_6.png</key>
-            <key type="filename">images/units/companionGhost_0.png</key>
-            <key type="filename">images/units/companionGhost_1.png</key>
-            <key type="filename">images/units/companionGhost_2.png</key>
-            <key type="filename">images/units/companionGhost_3.png</key>
-            <key type="filename">images/units/companionGhost_4.png</key>
-            <key type="filename">images/units/companionGhost_5.png</key>
-            <key type="filename">images/units/companionGhost_6.png</key>
-            <key type="filename">images/units/companionOcto_0.png</key>
-            <key type="filename">images/units/companionOcto_1.png</key>
-            <key type="filename">images/units/companionOcto_2.png</key>
-            <key type="filename">images/units/companionOcto_3.png</key>
-            <key type="filename">images/units/companionOcto_4.png</key>
-            <key type="filename">images/units/companionOcto_5.png</key>
-            <key type="filename">images/units/companionOcto_6.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0,0</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>16,32,32,64</rect>
-                <key>scale9Paddings</key>
-                <rect>16,32,32,64</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -1178,6 +1152,41 @@
                 <rect>40,21,79,41</rect>
                 <key>scale9Paddings</key>
                 <rect>40,21,79,41</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">images/units/octo_0.png</key>
+            <key type="filename">images/units/octo_1.png</key>
+            <key type="filename">images/units/octo_2.png</key>
+            <key type="filename">images/units/octo_3.png</key>
+            <key type="filename">images/units/octo_4.png</key>
+            <key type="filename">images/units/octo_5.png</key>
+            <key type="filename">images/units/octo_6.png</key>
+            <key type="filename">images/units/phoenix_0.png</key>
+            <key type="filename">images/units/phoenix_1.png</key>
+            <key type="filename">images/units/phoenix_2.png</key>
+            <key type="filename">images/units/phoenix_3.png</key>
+            <key type="filename">images/units/phoenix_4.png</key>
+            <key type="filename">images/units/phoenix_5.png</key>
+            <key type="filename">images/units/phoenix_6.png</key>
+            <key type="filename">images/units/spirit_0.png</key>
+            <key type="filename">images/units/spirit_1.png</key>
+            <key type="filename">images/units/spirit_2.png</key>
+            <key type="filename">images/units/spirit_3.png</key>
+            <key type="filename">images/units/spirit_4.png</key>
+            <key type="filename">images/units/spirit_5.png</key>
+            <key type="filename">images/units/spirit_6.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0,0</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,25,32,50</rect>
+                <key>scale9Paddings</key>
+                <rect>16,25,32,50</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

@@ -800,10 +800,12 @@
             <key type="filename">public/images/spell/spellIconArrowMulti.png</key>
             <key type="filename">public/images/spell/spellIconArrowRed.png</key>
             <key type="filename">public/images/spell/spellIconArrowTriple.png</key>
+            <key type="filename">public/images/spell/spellIconBlank.png</key>
             <key type="filename">public/images/spell/spellIconBleed.png</key>
             <key type="filename">public/images/spell/spellIconBloat.png</key>
             <key type="filename">public/images/spell/spellIconBloodCurse.png</key>
             <key type="filename">public/images/spell/spellIconBolt.png</key>
+            <key type="filename">public/images/spell/spellIconBorder.png</key>
             <key type="filename">public/images/spell/spellIconBurst.png</key>
             <key type="filename">public/images/spell/spellIconCaptureSoul.png</key>
             <key type="filename">public/images/spell/spellIconClone.png</key>
@@ -848,6 +850,7 @@
             <key type="filename">public/images/spell/spellIconNovaPain.png</key>
             <key type="filename">public/images/spell/spellIconNovaTarget.png</key>
             <key type="filename">public/images/spell/spellIconNukitsuke.png</key>
+            <key type="filename">public/images/spell/spellIconNukitsuke2.png</key>
             <key type="filename">public/images/spell/spellIconPierce.png</key>
             <key type="filename">public/images/spell/spellIconPlusRadius.png</key>
             <key type="filename">public/images/spell/spellIconPoison.png</key>
@@ -886,6 +889,7 @@
             <key type="filename">public/images/spell/spellIconSummon_archer.png</key>
             <key type="filename">public/images/spell/spellIconSummon_bloodarcher.png</key>
             <key type="filename">public/images/spell/spellIconSummon_bloodgolem.png</key>
+            <key type="filename">public/images/spell/spellIconSummon_corruptedancient.png</key>
             <key type="filename">public/images/spell/spellIconSummon_darkpriest.png</key>
             <key type="filename">public/images/spell/spellIconSummon_darksummoner.png</key>
             <key type="filename">public/images/spell/spellIconSummon_deathmason.png</key>
