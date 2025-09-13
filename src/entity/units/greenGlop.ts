@@ -6,14 +6,16 @@ import * as math from '../../jmath/math';
 import Underworld from '../../Underworld';
 import * as config from '../../config';
 import * as Image from '../../graphics/Image';
+import { animateMerge, mergeUnits } from '../../cards/merge';
 
 const greenGlopColorReplaceColors: [number, number][] = [
   [0x5fcde4, 0x63c572],
   [0x67c3d7, 0x58b866],
 ];
 const numberOfTargets = 6;
+const GREEN_GLOP_ID = 'Green Glop';
 const unit: UnitSource = {
-  id: 'Green Glop',
+  id: GREEN_GLOP_ID,
   info: {
     description: 'green_glop_copy',
     image: 'green_glop/lobberIdle',
@@ -98,12 +100,30 @@ const unit: UnitSource = {
       });
     } else {
       // Movement:
-      const closestEnemy = Unit.findClosestUnitInDifferentFactionSmartTarget(unit, underworld.units);
-      if (closestEnemy) {
-        const distanceToEnemy = math.distance(unit, closestEnemy);
-        // The following is a hacky way to make them not move too close to the enemy
-        unit.stamina = Math.min(unit.stamina, distanceToEnemy - config.COLLISION_MESH_RADIUS);
-        await Unit.moveTowards(unit, closestEnemy, underworld);
+
+      const closestGreenGlop = Unit.closestInListOfUnits(unit, Unit.livingUnitsInSameFaction(unit, underworld.units).filter(u => u.unitSourceId == GREEN_GLOP_ID))
+      if (closestGreenGlop) {
+        let dist = math.distance(unit, closestGreenGlop);
+        // Ensure they don't "pass each other"
+        unit.stamina = Math.min(dist / 2, unit.stamina)
+        await Unit.moveTowards(unit, closestGreenGlop, underworld);
+        dist = math.distance(unit, closestGreenGlop);
+        // @ts-ignore: soruceMerger ensures that both glops to try to merge at the same time and delete each other
+        if (!closestGreenGlop.sourceMerger && dist < 200) {
+          // @ts-ignore
+          unit.sourceMerger = true;
+          playSFXKey('clone');
+          await animateMerge(closestGreenGlop.image, unit);
+          mergeUnits(unit, [closestGreenGlop], underworld, false);
+        }
+      } else {
+        const closestEnemy = Unit.findClosestUnitInDifferentFactionSmartTarget(unit, underworld.units);
+        if (closestEnemy) {
+          const distanceToEnemy = math.distance(unit, closestEnemy);
+          // The following is a hacky way to make them not move too close to the enemy
+          unit.stamina = Math.min(unit.stamina, distanceToEnemy - config.COLLISION_MESH_RADIUS);
+          await Unit.moveTowards(unit, closestEnemy, underworld);
+        }
       }
     }
   },
